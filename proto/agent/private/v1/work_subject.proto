@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package agent.private.v1;
 
-option go_package = "github.com/talgent-work/contracts/gen/agent/private/v1;agentprivatev1";
+option go_package = "github.com/talgent-work/contracts/gen/go/agent/private/v1;agentprivatev1";
 
 // WorkSubject is the optional business object a Work is about, by a kind its
 // caller defines and an identity. Within one AgentDefinition a Subject has at

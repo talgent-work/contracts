@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Regenerates gen/ from proto/ and fails unless the result is exactly what is
-# committed: no changed, added or removed file.
+# Regenerates every language's tree under gen/ from proto/ and fails unless the
+# result is exactly what is committed: no changed, added or removed file.
 set -euo pipefail
 
 buf generate

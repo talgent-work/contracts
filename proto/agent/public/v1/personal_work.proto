@@ -8,7 +8,7 @@ import "agent/public/v1/model.proto";
 import "agent/public/v1/work.proto";
 import "agent/public/v1/work_start_options.proto";
 
-option go_package = "github.com/talgent-work/contracts/gen/agent/public/v1;agentpublicv1";
+option go_package = "github.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1";
 
 // PersonalWorkService is a person's own use of their Agent: the Personal
 // Works they start for themselves, which have no Subject and no Project,

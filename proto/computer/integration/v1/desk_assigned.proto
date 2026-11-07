@@ -4,7 +4,7 @@ package computer.integration.v1;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/talgent-work/contracts/gen/computer/integration/v1;computerintegrationv1";
+option go_package = "github.com/talgent-work/contracts/gen/go/computer/integration/v1;computerintegrationv1";
 
 // DeskAssignedV1 is the Desk Assigned Published Fact: a Computer seated a
 // waiting Desk, so its run may start now. It is published best effort after

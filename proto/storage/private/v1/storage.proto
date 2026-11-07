@@ -4,7 +4,7 @@ package storage.private.v1;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/talgent-work/contracts/gen/storage/private/v1;storageprivatev1";
+option go_package = "github.com/talgent-work/contracts/gen/go/storage/private/v1;storageprivatev1";
 
 // FileSpaceService is the File Space Contract. A caller names
 // each File Space by an owner identity Storage keeps opaque, and decides who

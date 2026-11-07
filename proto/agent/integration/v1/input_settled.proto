@@ -4,7 +4,7 @@ package agent.integration.v1;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/talgent-work/contracts/gen/agent/integration/v1;agentintegrationv1";
+option go_package = "github.com/talgent-work/contracts/gen/go/agent/integration/v1;agentintegrationv1";
 
 // PlatformInputOutcome is how a platform input delivered to a Work settled.
 enum PlatformInputOutcome {

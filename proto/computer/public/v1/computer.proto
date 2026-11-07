@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package computer.public.v1;
 
-option go_package = "github.com/talgent-work/contracts/gen/computer/public/v1;computerpublicv1";
+option go_package = "github.com/talgent-work/contracts/gen/go/computer/public/v1;computerpublicv1";
 
 // ComputerService serves the signed-in person's own Managed Computers. A
 // Cloud never appears here.

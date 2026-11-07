@@ -5,7 +5,7 @@ package storage.private.v1;
 import "google/protobuf/timestamp.proto";
 import "storage/private/v1/storage.proto";
 
-option go_package = "github.com/talgent-work/contracts/gen/storage/private/v1;storageprivatev1";
+option go_package = "github.com/talgent-work/contracts/gen/go/storage/private/v1;storageprivatev1";
 
 // SandboxMountService is the Sandbox Mount Contract; only Agent calls it.
 service SandboxMountService {

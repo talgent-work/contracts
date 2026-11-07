@@ -13,3 +13,17 @@ breaking:
     - FILE
   # Only stable packages (vN) promise to only grow; vNalphaM and vNbetaM may change.
   ignore_unstable_packages: true
+  # v0.2.0 moves the generated Go under gen/go, a Go import path change, not a
+  # wire change, released as a minor tagged by hand. The commit after v0.2.0
+  # removes this, once the check compares against v0.2.0. buf takes no module
+  # root here, so each context is named.
+  ignore_only:
+    FILE_SAME_GO_PACKAGE:
+      - proto/account
+      - proto/agent
+      - proto/computer
+      - proto/dispatcher
+      - proto/marketplace
+      - proto/storage
+      - proto/streamgateway
+      - proto/trace

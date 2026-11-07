@@ -5,7 +5,7 @@ package marketplace.public.v1;
 import "google/protobuf/struct.proto";
 import "marketplace/public/v1/connections.proto";
 
-option go_package = "github.com/talgent-work/contracts/gen/marketplace/public/v1;marketplacepublicv1";
+option go_package = "github.com/talgent-work/contracts/gen/go/marketplace/public/v1;marketplacepublicv1";
 
 // MarketplaceService publishes catalog metadata and the authenticated user's
 // personal installation commands. No public request accepts an owner identity.

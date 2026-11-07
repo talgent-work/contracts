@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package storage.private.v1;
 
-option go_package = "github.com/talgent-work/contracts/gen/storage/private/v1;storageprivatev1";
+option go_package = "github.com/talgent-work/contracts/gen/go/storage/private/v1;storageprivatev1";
 
 // ReferenceSpaceService is the Reference Space Contract: one owner's material
 // for others to consult read-only, replaced as a whole. Readers, mounted ones

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package trace.private.v1;
 
-option go_package = "github.com/talgent-work/contracts/gen/trace/private/v1;traceprivatev1";
+option go_package = "github.com/talgent-work/contracts/gen/go/trace/private/v1;traceprivatev1";
 
 // ProjectAccessService is the Project access decision Observability asks of
 // the context owning Project membership. Observability defines it and that

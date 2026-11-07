@@ -15,7 +15,7 @@ import "agent/public/v1/soul.proto";
 import "agent/public/v1/startup.proto";
 import "dispatcher/public/v1/unified_message.proto";
 
-option go_package = "github.com/talgent-work/contracts/gen/agent/public/v1;agentpublicv1";
+option go_package = "github.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1";
 
 // AgentWorkService is the neutral "my Work" API. Every Work operation is
 // admitted only for the Work's owner; ChangeWorkAgentAppearance addresses an

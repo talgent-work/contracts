@@ -7,7 +7,7 @@ import "agent/public/v1/startup.proto";
 import "agent/public/v1/subagents.proto";
 import "dispatcher/public/v1/unified_message.proto";
 
-option go_package = "github.com/talgent-work/contracts/gen/streamgateway/public/v1;streamgatewaypublicv1";
+option go_package = "github.com/talgent-work/contracts/gen/go/streamgateway/public/v1;streamgatewaypublicv1";
 
 // StreamGatewayService service.
 service StreamGatewayService {

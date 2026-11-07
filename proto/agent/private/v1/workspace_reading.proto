@@ -5,7 +5,7 @@ package agent.private.v1;
 import "google/protobuf/timestamp.proto";
 import "agent/private/v1/work_access.proto";
 
-option go_package = "github.com/talgent-work/contracts/gen/agent/private/v1;agentprivatev1";
+option go_package = "github.com/talgent-work/contracts/gen/go/agent/private/v1;agentprivatev1";
 
 // WorkspaceReadingService serves a Work's Session Workspace to the readers of
 // the Work: its owner, its Work Share holders, and, while public, the readers

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package agent.public.v1;
 
-option go_package = "github.com/talgent-work/contracts/gen/agent/public/v1;agentpublicv1";
+option go_package = "github.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1";
 
 // PermissionMode is a Work's Harness permission mode on a Managed Computer:
 // how much the Harness asks its person before it acts. A Cloud Work always

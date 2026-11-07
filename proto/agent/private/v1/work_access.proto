@@ -4,7 +4,7 @@ package agent.private.v1;
 
 import "streamgateway/public/v1/streamgateway.proto";
 
-option go_package = "github.com/talgent-work/contracts/gen/agent/private/v1;agentprivatev1";
+option go_package = "github.com/talgent-work/contracts/gen/go/agent/private/v1;agentprivatev1";
 
 // WorkAccessService decides who reads a Work's message stream from Agent's own
 // facts: its owner, Work Visibility and Work Shares. A trusted caller supplies

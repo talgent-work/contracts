@@ -11,7 +11,7 @@ import "agent/public/v1/progress.proto";
 import "agent/public/v1/work_start_options.proto";
 import "marketplace/public/v1/marketplace.proto";
 
-option go_package = "github.com/talgent-work/contracts/gen/agent/private/v1;agentprivatev1";
+option go_package = "github.com/talgent-work/contracts/gen/go/agent/private/v1;agentprivatev1";
 
 // AgentService is the authenticated internal control API used by Session callers.
 service AgentService {

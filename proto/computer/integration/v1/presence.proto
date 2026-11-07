@@ -4,7 +4,7 @@ package computer.integration.v1;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/talgent-work/contracts/gen/computer/integration/v1;computerintegrationv1";
+option go_package = "github.com/talgent-work/contracts/gen/go/computer/integration/v1;computerintegrationv1";
 
 // ComputerBecameUnreachableV1 is a Presence change Published Fact: the platform
 // lost reach of a Managed Computer, its machine's connection having ended

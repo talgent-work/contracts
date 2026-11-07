@@ -6,7 +6,7 @@ import "google/protobuf/timestamp.proto";
 import "agent/public/v1/progress.proto";
 import "agent/public/v1/subagents.proto";
 
-option go_package = "github.com/talgent-work/contracts/gen/agent/private/v1;agentprivatev1";
+option go_package = "github.com/talgent-work/contracts/gen/go/agent/private/v1;agentprivatev1";
 
 // ExecutionFeedbackService receives trusted Harness feedback. Feedback is a hint,
 // not a fact attributed to one process run; exit and failure only prompt reconciliation.

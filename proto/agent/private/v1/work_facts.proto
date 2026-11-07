@@ -8,7 +8,7 @@ import "agent/public/v1/progress.proto";
 import "agent/public/v1/startup.proto";
 import "agent/public/v1/work.proto";
 
-option go_package = "github.com/talgent-work/contracts/gen/agent/private/v1;agentprivatev1";
+option go_package = "github.com/talgent-work/contracts/gen/go/agent/private/v1;agentprivatev1";
 
 // WorkFactsService supplies Works' collaboration facts to trusted callers, which
 // authorize their own scope and compose the facts with their own. Selection is

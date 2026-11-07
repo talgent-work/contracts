@@ -4,7 +4,7 @@ package dispatcher.public.v1;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/talgent-work/contracts/gen/dispatcher/public/v1;dispatcherpublicv1";
+option go_package = "github.com/talgent-work/contracts/gen/go/dispatcher/public/v1;dispatcherpublicv1";
 
 // UnifiedMessageKind is the product meaning of a Harness message, independent
 // of the Harness that produced it.

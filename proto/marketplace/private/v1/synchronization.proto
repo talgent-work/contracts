@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package marketplace.private.v1;
 
-option go_package = "github.com/talgent-work/contracts/gen/marketplace/private/v1;marketplaceprivatev1";
+option go_package = "github.com/talgent-work/contracts/gen/go/marketplace/private/v1;marketplaceprivatev1";
 
 // SynchronizationService is available only to authenticated platform operations.
 service SynchronizationService {

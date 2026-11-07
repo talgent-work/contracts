@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package dispatcher.private.v1;
 
-option go_package = "github.com/talgent-work/contracts/gen/dispatcher/private/v1;dispatcherprivatev1";
+option go_package = "github.com/talgent-work/contracts/gen/go/dispatcher/private/v1;dispatcherprivatev1";
 
 // GetCapabilitiesRequest addresses the current native connection by Work.
 message GetCapabilitiesRequest {

@@ -4,7 +4,7 @@ package storage.integration.v1;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/talgent-work/contracts/gen/storage/integration/v1;storageintegrationv1";
+option go_package = "github.com/talgent-work/contracts/gen/go/storage/integration/v1;storageintegrationv1";
 
 // FileKind tells an Attachment from an Artifact.
 enum FileKind {

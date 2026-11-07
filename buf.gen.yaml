@@ -1,12 +1,24 @@
 version: v2
-# Both generators run from the go.mod tool directives, so the generated code
-# always matches the runtime versions this module requires.
+# Each language has its own tree under gen/. A new language adds gen/<language>.
 plugins:
+  # Go: both generators run from the go.mod tool directives, so the generated
+  # code always matches the runtime versions this module requires.
   - local: [go, tool, protoc-gen-go]
-    out: gen
+    out: gen/go
     opt: paths=source_relative
   - local: [go, tool, protoc-gen-connect-go]
-    out: gen
+    out: gen/go
     opt: paths=source_relative
+  # TypeScript: the package @talgent/contracts (gen/ts), for protobuf-es v2 and
+  # Connect-ES 2, whose services protoc-gen-es generates. JavaScript with its
+  # declarations, so Vite and tsc consume it without building it; the
+  # generator's version matches the @bufbuild/protobuf the package asks for.
+  # Generated into gen/ts/dist, since clean empties a plugin's whole output
+  # directory and gen/ts holds the package's own files.
+  - remote: buf.build/bufbuild/es:v2.11.0
+    out: gen/ts/dist
+    opt:
+      - target=js+dts
+      - import_extension=js
 # Output of a removed proto file is deleted with it.
 clean: true

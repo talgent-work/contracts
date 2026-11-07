@@ -4,7 +4,7 @@ package trace.public.v1;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/talgent-work/contracts/gen/trace/public/v1;tracepublicv1";
+option go_package = "github.com/talgent-work/contracts/gen/go/trace/public/v1;tracepublicv1";
 
 // TraceQueryService reads observations by Work, Project or person. A Work's
 // observations are scoped by its Project when it has one: the reader is

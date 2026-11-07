@@ -5,7 +5,7 @@ package dispatcher.private.v1;
 import "dispatcher/private/v1/capability.proto";
 import "dispatcher/public/v1/unified_message.proto";
 
-option go_package = "github.com/talgent-work/contracts/gen/dispatcher/private/v1;dispatcherprivatev1";
+option go_package = "github.com/talgent-work/contracts/gen/go/dispatcher/private/v1;dispatcherprivatev1";
 
 // ExecutionService controls the native Harness process of an admitted Work start.
 // A Work has at most one Harness process at a time, so the Work addresses it.

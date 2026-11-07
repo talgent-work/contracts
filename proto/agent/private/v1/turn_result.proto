@@ -4,7 +4,7 @@ package agent.private.v1;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/talgent-work/contracts/gen/agent/private/v1;agentprivatev1";
+option go_package = "github.com/talgent-work/contracts/gen/go/agent/private/v1;agentprivatev1";
 
 // WorkTurnResultService supplies the turn results of a Work's root message
 // stream to authenticated internal consumers. It gives them no control of the

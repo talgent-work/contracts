@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package agent.public.v1;
 
-option go_package = "github.com/talgent-work/contracts/gen/agent/public/v1;agentpublicv1";
+option go_package = "github.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1";
 
 // WorkModelSelection is what a Work's conversation uses for its model: a
 // Model Configuration, or, on a Managed Computer, the machine's own Claude

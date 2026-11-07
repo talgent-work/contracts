@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package marketplace.public.v1;
 
-option go_package = "github.com/talgent-work/contracts/gen/marketplace/public/v1;marketplacepublicv1";
+option go_package = "github.com/talgent-work/contracts/gen/go/marketplace/public/v1;marketplacepublicv1";
 
 // ProviderAuthorization describes a provider authorization owned by a user.
 message ProviderAuthorization {

@@ -4,7 +4,7 @@ package agent.public.v1;
 
 import "agent/public/v1/model.proto";
 
-option go_package = "github.com/talgent-work/contracts/gen/agent/public/v1;agentpublicv1";
+option go_package = "github.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1";
 
 // GetWorkStartOptionsResponse reports actual configured model capabilities.
 message GetWorkStartOptionsResponse {

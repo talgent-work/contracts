@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package account.public.v1;
 
-option go_package = "github.com/talgent-work/contracts/gen/account/public/v1;accountpublicv1";
+option go_package = "github.com/talgent-work/contracts/gen/go/account/public/v1;accountpublicv1";
 
 // SessionService tells the browser who is signed in, from the identity the
 // gateway verified; it reads and changes nothing else.

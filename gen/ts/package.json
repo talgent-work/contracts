@@ -1,0 +1,28 @@
+{
+  "name": "@talgent/contracts",
+  "version": "0.0.0",
+  "description": "The Talgent contracts generated for TypeScript. Taken as a git dependency on a release tag of github.com/talgent-work/contracts, which is its version.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/talgent-work/contracts.git",
+    "directory": "gen/ts"
+  },
+  "type": "module",
+  "exports": {
+    "./*.js": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js"
+    },
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "peerDependencies": {
+    "@bufbuild/protobuf": "^2.11.0"
+  }
+}

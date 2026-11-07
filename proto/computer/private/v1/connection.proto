@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package computer.private.v1;
 
-option go_package = "github.com/talgent-work/contracts/gen/computer/private/v1;computerprivatev1";
+option go_package = "github.com/talgent-work/contracts/gen/go/computer/private/v1;computerprivatev1";
 
 // ConnectionService is Computer's contract for the Computer Gateway, which
 // holds each Managed Computer's one outbound connection.

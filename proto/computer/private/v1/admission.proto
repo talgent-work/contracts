@@ -4,7 +4,7 @@ package computer.private.v1;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/talgent-work/contracts/gen/computer/private/v1;computerprivatev1";
+option go_package = "github.com/talgent-work/contracts/gen/go/computer/private/v1;computerprivatev1";
 
 // AdmissionService is Computer's admission contract for Agent: which
 // Computers a person may run a Work on, and whether a Computer takes one run

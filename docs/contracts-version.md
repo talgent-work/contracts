@@ -1,7 +1,9 @@
 # Contracts Version Header
 
 Every response of the Workbench's Connect services, the controlplane's and the stream
-gateway's included, carries the version of this repository the Workbench was built with:
+gateway's included, carries the version of this repository the Workbench was built with. So does
+every response of a native API, its own refusals and identity answers included, since a caller
+that reaches only the native API checks the version there:
 
 ```http
 talgent-contracts-version: v0.4.2

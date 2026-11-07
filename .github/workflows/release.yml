@@ -1,0 +1,74 @@
+name: Release
+
+# Every push to master is a release: the contracts are checked, then the
+# commit is tagged with the next patch. A minor tagged by hand restarts the
+# patch count (scripts/ci/release-version.sh).
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+
+# Releases run one at a time in push order, so each sees the tag before it.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+
+      - uses: bufbuild/buf-action@v1
+        with:
+          version: 1.67.0
+          setup_only: true
+
+      - name: Lint
+        run: buf lint
+
+      - name: Check stable packages only grow
+        run: |
+          previous=$(bash scripts/ci/release-version.sh previous)
+          if [ -z "$previous" ]; then
+            echo "No release before this commit; nothing to compare."
+            exit 0
+          fi
+          echo "Comparing with $previous."
+          buf breaking --against ".git#tag=$previous"
+
+      - name: Check generated code is current
+        run: bash scripts/ci/check-generated.sh
+
+      - name: Build
+        run: |
+          go mod tidy -diff
+          go vet ./...
+
+      - name: Test release scripts
+        run: |
+          bash test/release-version-test.sh
+          bash test/check-generated-test.sh
+
+      - name: Tag the next patch
+        run: |
+          tag=$(bash scripts/ci/release-version.sh next)
+          if [ -z "$tag" ]; then
+            echo "No tag: this commit already carries a release, or none was tagged by hand yet."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$tag" -m "Release $tag" "$GITHUB_SHA"
+          git push origin "refs/tags/$tag"
+          echo "Released $tag at $GITHUB_SHA." >> "$GITHUB_STEP_SUMMARY"

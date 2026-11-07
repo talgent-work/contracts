@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package computer.integration.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/talgent-work/contracts/gen/computer/integration/v1;computerintegrationv1";
+
+// ComputerBecameUnreachableV1 is a Presence change Published Fact: the platform
+// lost reach of a Managed Computer, its machine's connection having ended
+// with no newer connection of it open. It is published best effort after the
+// change commits and keyed by the Computer; Agent also reads each Computer's
+// Presence while its Works run, so a lost or reordered fact only delays
+// recording their Disconnection.
+message ComputerBecameUnreachableV1 {
+  // Unique identity of this publication.
+  string event_id = 1;
+  // When the change was committed.
+  google.protobuf.Timestamp occurred_at = 2;
+  // The Managed Computer.
+  string computer_id = 3;
+  // When the platform lost reach of it, the origin of its Works'
+  // Disconnection.
+  google.protobuf.Timestamp since = 4;
+}
+
+// ComputerBecameReachableV1 is a Presence change Published Fact: the platform
+// reaches a Managed Computer again, its authenticated machine having
+// connected. Published and keyed as ComputerBecameUnreachableV1.
+message ComputerBecameReachableV1 {
+  // Unique identity of this publication.
+  string event_id = 1;
+  // When the change was committed.
+  google.protobuf.Timestamp occurred_at = 2;
+  // The Managed Computer.
+  string computer_id = 3;
+}

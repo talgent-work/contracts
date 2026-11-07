@@ -1,0 +1,12 @@
+version: v2
+# Both generators run from the go.mod tool directives, so the generated code
+# always matches the runtime versions this module requires.
+plugins:
+  - local: [go, tool, protoc-gen-go]
+    out: gen
+    opt: paths=source_relative
+  - local: [go, tool, protoc-gen-connect-go]
+    out: gen
+    opt: paths=source_relative
+# Output of a removed proto file is deleted with it.
+clean: true

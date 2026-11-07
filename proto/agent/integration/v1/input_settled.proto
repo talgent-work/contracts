@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package agent.integration.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/talgent-work/contracts/gen/agent/integration/v1;agentintegrationv1";
+
+// PlatformInputOutcome is how a platform input delivered to a Work settled.
+enum PlatformInputOutcome {
+  // Unknown outcome.
+  PLATFORM_INPUT_OUTCOME_UNSPECIFIED = 0;
+  // A Turn processed it.
+  PLATFORM_INPUT_OUTCOME_COMPLETED = 1;
+  // The Turn processing it ended without completing.
+  PLATFORM_INPUT_OUTCOME_ABANDONED = 2;
+  // It was dropped before any Turn processed it.
+  PLATFORM_INPUT_OUTCOME_DROPPED = 3;
+}
+
+// PlatformInputSettledV1 publishes that a platform input a caller delivered to
+// a Work settled, whatever the outcome (Platform Input Settlement). It carries
+// no input content.
+message PlatformInputSettledV1 {
+  // Event ID for this Integration Message.
+  string event_id = 1;
+  // Time the input settled.
+  google.protobuf.Timestamp occurred_at = 2;
+  // The Work the input was delivered to.
+  string work_id = 3;
+  // The caller's delivery identity of the input.
+  string input_id = 4;
+  // How it settled.
+  PlatformInputOutcome outcome = 5;
+}

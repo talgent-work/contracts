@@ -1,0 +1,2 @@
+# Collapse generated code in diffs and keep it out of language statistics.
+gen/** linguist-generated=true

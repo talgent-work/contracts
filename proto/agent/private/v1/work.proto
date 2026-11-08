@@ -33,8 +33,7 @@ service AgentService {
   rpc ListSubmittedPreparations(ListSubmittedPreparationsRequest) returns (ListSubmittedPreparationsResponse);
   // PrepareWorkExecution retains an explicit first-input request and coordinates execution preparation.
   // With creation, request_id is the caller's creation request identity: it
-  // yields at most one Work, a repeat returns the original outcome, and a
-  // cancelled identity answers FailedPrecondition and creates nothing.
+  // yields at most one Work and a repeat returns the same Work.
   rpc PrepareWorkExecution(PrepareWorkExecutionRequest) returns (PrepareWorkExecutionResponse);
   // VerifyWorkCredential authenticates a native process by the credential of its Work's current live sandbox.
   rpc VerifyWorkCredential(VerifyWorkCredentialRequest) returns (VerifyWorkCredentialResponse);

@@ -331,8 +331,7 @@ type AgentServiceClient interface {
 	ListSubmittedPreparations(context.Context, *v1.ListSubmittedPreparationsRequest) (*v1.ListSubmittedPreparationsResponse, error)
 	// PrepareWorkExecution retains an explicit first-input request and coordinates execution preparation.
 	// With creation, request_id is the caller's creation request identity: it
-	// yields at most one Work, a repeat returns the original outcome, and a
-	// cancelled identity answers FailedPrecondition and creates nothing.
+	// yields at most one Work and a repeat returns the same Work.
 	PrepareWorkExecution(context.Context, *v1.PrepareWorkExecutionRequest) (*v1.PrepareWorkExecutionResponse, error)
 	// VerifyWorkCredential authenticates a native process by the credential of its Work's current live sandbox.
 	VerifyWorkCredential(context.Context, *v1.VerifyWorkCredentialRequest) (*v1.VerifyWorkCredentialResponse, error)
@@ -409,8 +408,7 @@ type AgentServiceHandler interface {
 	ListSubmittedPreparations(context.Context, *v1.ListSubmittedPreparationsRequest) (*v1.ListSubmittedPreparationsResponse, error)
 	// PrepareWorkExecution retains an explicit first-input request and coordinates execution preparation.
 	// With creation, request_id is the caller's creation request identity: it
-	// yields at most one Work, a repeat returns the original outcome, and a
-	// cancelled identity answers FailedPrecondition and creates nothing.
+	// yields at most one Work and a repeat returns the same Work.
 	PrepareWorkExecution(context.Context, *v1.PrepareWorkExecutionRequest) (*v1.PrepareWorkExecutionResponse, error)
 	// VerifyWorkCredential authenticates a native process by the credential of its Work's current live sandbox.
 	VerifyWorkCredential(context.Context, *v1.VerifyWorkCredentialRequest) (*v1.VerifyWorkCredentialResponse, error)

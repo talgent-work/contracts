@@ -2768,8 +2768,7 @@ export declare const AgentService: GenService<{
   /**
    * PrepareWorkExecution retains an explicit first-input request and coordinates execution preparation.
    * With creation, request_id is the caller's creation request identity: it
-   * yields at most one Work, a repeat returns the original outcome, and a
-   * cancelled identity answers FailedPrecondition and creates nothing.
+   * yields at most one Work and a repeat returns the same Work.
    *
    * @generated from rpc agent.private.v1.AgentService.PrepareWorkExecution
    */

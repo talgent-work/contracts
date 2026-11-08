@@ -31,9 +31,6 @@ const (
 	// AgentServiceListWorkStartRepositoriesProcedure is the procedure name of the AgentService's
 	// ListWorkStartRepositories RPC.
 	AgentServiceListWorkStartRepositoriesProcedure = "/agent.private.v1.AgentService/ListWorkStartRepositories"
-	// AgentServiceGetWorkStartupProcedure is the procedure name of the AgentService's GetWorkStartup
-	// RPC.
-	AgentServiceGetWorkStartupProcedure = "/agent.private.v1.AgentService/GetWorkStartup"
 	// AgentServiceGetWorkOriginProcedure is the procedure name of the AgentService's GetWorkOrigin RPC.
 	AgentServiceGetWorkOriginProcedure = "/agent.private.v1.AgentService/GetWorkOrigin"
 	// AgentServiceResolveWorkContextPositionProcedure is the procedure name of the AgentService's
@@ -51,18 +48,9 @@ const (
 	// AgentServicePrepareWorkExecutionProcedure is the procedure name of the AgentService's
 	// PrepareWorkExecution RPC.
 	AgentServicePrepareWorkExecutionProcedure = "/agent.private.v1.AgentService/PrepareWorkExecution"
-	// AgentServiceGetWorkCreationProcedure is the procedure name of the AgentService's GetWorkCreation
-	// RPC.
-	AgentServiceGetWorkCreationProcedure = "/agent.private.v1.AgentService/GetWorkCreation"
-	// AgentServiceCancelWorkCreationProcedure is the procedure name of the AgentService's
-	// CancelWorkCreation RPC.
-	AgentServiceCancelWorkCreationProcedure = "/agent.private.v1.AgentService/CancelWorkCreation"
 	// AgentServiceVerifyWorkCredentialProcedure is the procedure name of the AgentService's
 	// VerifyWorkCredential RPC.
 	AgentServiceVerifyWorkCredentialProcedure = "/agent.private.v1.AgentService/VerifyWorkCredential"
-	// AgentServiceGetStartAdmissionProcedure is the procedure name of the AgentService's
-	// GetStartAdmission RPC.
-	AgentServiceGetStartAdmissionProcedure = "/agent.private.v1.AgentService/GetStartAdmission"
 	// AgentServiceChangeAgentDefinitionCapabilitiesProcedure is the procedure name of the
 	// AgentService's ChangeAgentDefinitionCapabilities RPC.
 	AgentServiceChangeAgentDefinitionCapabilitiesProcedure = "/agent.private.v1.AgentService/ChangeAgentDefinitionCapabilities"
@@ -95,9 +83,6 @@ const (
 	AgentServiceTransferAgentDefinitionOwnersProcedure = "/agent.private.v1.AgentService/TransferAgentDefinitionOwners"
 	// AgentServiceCreateWorkProcedure is the procedure name of the AgentService's CreateWork RPC.
 	AgentServiceCreateWorkProcedure = "/agent.private.v1.AgentService/CreateWork"
-	// AgentServiceCancelWorkRegistrationProcedure is the procedure name of the AgentService's
-	// CancelWorkRegistration RPC.
-	AgentServiceCancelWorkRegistrationProcedure = "/agent.private.v1.AgentService/CancelWorkRegistration"
 	// AgentServiceLocateWorkProcedure is the procedure name of the AgentService's LocateWork RPC.
 	AgentServiceLocateWorkProcedure = "/agent.private.v1.AgentService/LocateWork"
 	// AgentServiceResumeWorkProcedure is the procedure name of the AgentService's ResumeWork RPC.
@@ -133,13 +118,6 @@ var (
 			StreamType: connect.StreamTypeUnary,
 			Schema:     v1.File_agent_private_v1_work_proto.Services().ByName("AgentService").Methods().ByName("ListWorkStartRepositories"),
 			Procedure:  AgentServiceListWorkStartRepositoriesProcedure,
-		}
-	})
-	agentServiceGetWorkStartupSpec = sync.OnceValue(func() connect.Spec {
-		return connect.Spec{
-			StreamType: connect.StreamTypeUnary,
-			Schema:     v1.File_agent_private_v1_work_proto.Services().ByName("AgentService").Methods().ByName("GetWorkStartup"),
-			Procedure:  AgentServiceGetWorkStartupProcedure,
 		}
 	})
 	agentServiceGetWorkOriginSpec = sync.OnceValue(func() connect.Spec {
@@ -184,32 +162,11 @@ var (
 			Procedure:  AgentServicePrepareWorkExecutionProcedure,
 		}
 	})
-	agentServiceGetWorkCreationSpec = sync.OnceValue(func() connect.Spec {
-		return connect.Spec{
-			StreamType: connect.StreamTypeUnary,
-			Schema:     v1.File_agent_private_v1_work_proto.Services().ByName("AgentService").Methods().ByName("GetWorkCreation"),
-			Procedure:  AgentServiceGetWorkCreationProcedure,
-		}
-	})
-	agentServiceCancelWorkCreationSpec = sync.OnceValue(func() connect.Spec {
-		return connect.Spec{
-			StreamType: connect.StreamTypeUnary,
-			Schema:     v1.File_agent_private_v1_work_proto.Services().ByName("AgentService").Methods().ByName("CancelWorkCreation"),
-			Procedure:  AgentServiceCancelWorkCreationProcedure,
-		}
-	})
 	agentServiceVerifyWorkCredentialSpec = sync.OnceValue(func() connect.Spec {
 		return connect.Spec{
 			StreamType: connect.StreamTypeUnary,
 			Schema:     v1.File_agent_private_v1_work_proto.Services().ByName("AgentService").Methods().ByName("VerifyWorkCredential"),
 			Procedure:  AgentServiceVerifyWorkCredentialProcedure,
-		}
-	})
-	agentServiceGetStartAdmissionSpec = sync.OnceValue(func() connect.Spec {
-		return connect.Spec{
-			StreamType: connect.StreamTypeUnary,
-			Schema:     v1.File_agent_private_v1_work_proto.Services().ByName("AgentService").Methods().ByName("GetStartAdmission"),
-			Procedure:  AgentServiceGetStartAdmissionProcedure,
 		}
 	})
 	agentServiceChangeAgentDefinitionCapabilitiesSpec = sync.OnceValue(func() connect.Spec {
@@ -289,13 +246,6 @@ var (
 			Procedure:  AgentServiceCreateWorkProcedure,
 		}
 	})
-	agentServiceCancelWorkRegistrationSpec = sync.OnceValue(func() connect.Spec {
-		return connect.Spec{
-			StreamType: connect.StreamTypeUnary,
-			Schema:     v1.File_agent_private_v1_work_proto.Services().ByName("AgentService").Methods().ByName("CancelWorkRegistration"),
-			Procedure:  AgentServiceCancelWorkRegistrationProcedure,
-		}
-	})
 	agentServiceLocateWorkSpec = sync.OnceValue(func() connect.Spec {
 		return connect.Spec{
 			StreamType: connect.StreamTypeUnary,
@@ -367,8 +317,6 @@ type AgentServiceClient interface {
 	GetWorkStartOptions(context.Context, *v1.GetWorkStartOptionsRequest) (*v11.GetWorkStartOptionsResponse, error)
 	// ListWorkStartRepositories discovers the repositories an admitted owner may check out.
 	ListWorkStartRepositories(context.Context, *v1.ListWorkStartRepositoriesRequest) (*v11.WorkStartRepositories, error)
-	// GetWorkStartup reads initial rejection, cleanup and outstanding creation facts.
-	GetWorkStartup(context.Context, *v1.GetWorkStartupRequest) (*v1.GetWorkStartupResponse, error)
 	// GetWorkOrigin reads retained source attribution for authenticated internal consumers.
 	GetWorkOrigin(context.Context, *v1.GetWorkOriginRequest) (*v1.GetWorkOriginResponse, error)
 	// ResolveWorkContextPosition is the Work Context Position Query: it names the
@@ -386,16 +334,8 @@ type AgentServiceClient interface {
 	// yields at most one Work, a repeat returns the original outcome, and a
 	// cancelled identity answers FailedPrecondition and creates nothing.
 	PrepareWorkExecution(context.Context, *v1.PrepareWorkExecutionRequest) (*v1.PrepareWorkExecutionResponse, error)
-	// GetWorkCreation reads a creation request identity's outcome without advancing it.
-	GetWorkCreation(context.Context, *v1.GetWorkCreationRequest) (*v1.GetWorkCreationResponse, error)
-	// CancelWorkCreation settles an unanswered creation request identity: it
-	// returns the Work the identity already created, or cancels the identity so
-	// that a delayed repeat creates nothing.
-	CancelWorkCreation(context.Context, *v1.CancelWorkCreationRequest) (*v1.CancelWorkCreationResponse, error)
 	// VerifyWorkCredential authenticates a native process by the credential of its Work's current live sandbox.
 	VerifyWorkCredential(context.Context, *v1.VerifyWorkCredentialRequest) (*v1.VerifyWorkCredentialResponse, error)
-	// GetStartAdmission reads whether a start request was admitted after Work authorization.
-	GetStartAdmission(context.Context, *v1.GetStartAdmissionRequest) (*v1.GetStartAdmissionResponse, error)
 	// ChangeAgentDefinitionCapabilities updates future Session capabilities without changing existing snapshots.
 	ChangeAgentDefinitionCapabilities(context.Context, *v1.ChangeAgentDefinitionCapabilitiesRequest) (*v1.ChangeAgentDefinitionCapabilitiesResponse, error)
 	// GetAgentDefinition reads the current reusable capability configuration.
@@ -420,8 +360,6 @@ type AgentServiceClient interface {
 	TransferAgentDefinitionOwners(context.Context, *v1.TransferAgentDefinitionOwnersRequest) (*v1.TransferAgentDefinitionOwnersResponse, error)
 	// CreateWork returns the definition's Work for the Subject, creating it when none exists.
 	CreateWork(context.Context, *v1.CreateWorkRequest) (*v1.CreateWorkResponse, error)
-	// CancelWorkRegistration fences an unknown initial creation or returns its already admitted Work.
-	CancelWorkRegistration(context.Context, *v1.CancelWorkRegistrationRequest) (*v1.CancelWorkRegistrationResponse, error)
 	// LocateWork resolves an existing business binding without creating or starting execution.
 	LocateWork(context.Context, *v1.LocateWorkRequest) (*v1.LocateWorkResponse, error)
 	// ResumeWork delegates to the Agent application; acceptance does not imply completion.
@@ -457,8 +395,6 @@ type AgentServiceHandler interface {
 	GetWorkStartOptions(context.Context, *v1.GetWorkStartOptionsRequest) (*v11.GetWorkStartOptionsResponse, error)
 	// ListWorkStartRepositories discovers the repositories an admitted owner may check out.
 	ListWorkStartRepositories(context.Context, *v1.ListWorkStartRepositoriesRequest) (*v11.WorkStartRepositories, error)
-	// GetWorkStartup reads initial rejection, cleanup and outstanding creation facts.
-	GetWorkStartup(context.Context, *v1.GetWorkStartupRequest) (*v1.GetWorkStartupResponse, error)
 	// GetWorkOrigin reads retained source attribution for authenticated internal consumers.
 	GetWorkOrigin(context.Context, *v1.GetWorkOriginRequest) (*v1.GetWorkOriginResponse, error)
 	// ResolveWorkContextPosition is the Work Context Position Query: it names the
@@ -476,16 +412,8 @@ type AgentServiceHandler interface {
 	// yields at most one Work, a repeat returns the original outcome, and a
 	// cancelled identity answers FailedPrecondition and creates nothing.
 	PrepareWorkExecution(context.Context, *v1.PrepareWorkExecutionRequest) (*v1.PrepareWorkExecutionResponse, error)
-	// GetWorkCreation reads a creation request identity's outcome without advancing it.
-	GetWorkCreation(context.Context, *v1.GetWorkCreationRequest) (*v1.GetWorkCreationResponse, error)
-	// CancelWorkCreation settles an unanswered creation request identity: it
-	// returns the Work the identity already created, or cancels the identity so
-	// that a delayed repeat creates nothing.
-	CancelWorkCreation(context.Context, *v1.CancelWorkCreationRequest) (*v1.CancelWorkCreationResponse, error)
 	// VerifyWorkCredential authenticates a native process by the credential of its Work's current live sandbox.
 	VerifyWorkCredential(context.Context, *v1.VerifyWorkCredentialRequest) (*v1.VerifyWorkCredentialResponse, error)
-	// GetStartAdmission reads whether a start request was admitted after Work authorization.
-	GetStartAdmission(context.Context, *v1.GetStartAdmissionRequest) (*v1.GetStartAdmissionResponse, error)
 	// ChangeAgentDefinitionCapabilities updates future Session capabilities without changing existing snapshots.
 	ChangeAgentDefinitionCapabilities(context.Context, *v1.ChangeAgentDefinitionCapabilitiesRequest) (*v1.ChangeAgentDefinitionCapabilitiesResponse, error)
 	// GetAgentDefinition reads the current reusable capability configuration.
@@ -510,8 +438,6 @@ type AgentServiceHandler interface {
 	TransferAgentDefinitionOwners(context.Context, *v1.TransferAgentDefinitionOwnersRequest) (*v1.TransferAgentDefinitionOwnersResponse, error)
 	// CreateWork returns the definition's Work for the Subject, creating it when none exists.
 	CreateWork(context.Context, *v1.CreateWorkRequest) (*v1.CreateWorkResponse, error)
-	// CancelWorkRegistration fences an unknown initial creation or returns its already admitted Work.
-	CancelWorkRegistration(context.Context, *v1.CancelWorkRegistrationRequest) (*v1.CancelWorkRegistrationResponse, error)
 	// LocateWork resolves an existing business binding without creating or starting execution.
 	LocateWork(context.Context, *v1.LocateWorkRequest) (*v1.LocateWorkResponse, error)
 	// ResumeWork delegates to the Agent application; acceptance does not imply completion.
@@ -542,17 +468,13 @@ func RegisterAgentServiceHandler(server *connect.Server, svc AgentServiceHandler
 	server.Register(
 		connect.Method{Spec: agentServiceGetWorkStartOptionsSpec(), Handler: adapter.getWorkStartOptions},
 		connect.Method{Spec: agentServiceListWorkStartRepositoriesSpec(), Handler: adapter.listWorkStartRepositories},
-		connect.Method{Spec: agentServiceGetWorkStartupSpec(), Handler: adapter.getWorkStartup},
 		connect.Method{Spec: agentServiceGetWorkOriginSpec(), Handler: adapter.getWorkOrigin},
 		connect.Method{Spec: agentServiceResolveWorkContextPositionSpec(), Handler: adapter.resolveWorkContextPosition},
 		connect.Method{Spec: agentServiceResolveWorkStartsSpec(), Handler: adapter.resolveWorkStarts},
 		connect.Method{Spec: agentServiceGetWorkPreparationSpec(), Handler: adapter.getWorkPreparation},
 		connect.Method{Spec: agentServiceListSubmittedPreparationsSpec(), Handler: adapter.listSubmittedPreparations},
 		connect.Method{Spec: agentServicePrepareWorkExecutionSpec(), Handler: adapter.prepareWorkExecution},
-		connect.Method{Spec: agentServiceGetWorkCreationSpec(), Handler: adapter.getWorkCreation},
-		connect.Method{Spec: agentServiceCancelWorkCreationSpec(), Handler: adapter.cancelWorkCreation},
 		connect.Method{Spec: agentServiceVerifyWorkCredentialSpec(), Handler: adapter.verifyWorkCredential},
-		connect.Method{Spec: agentServiceGetStartAdmissionSpec(), Handler: adapter.getStartAdmission},
 		connect.Method{Spec: agentServiceChangeAgentDefinitionCapabilitiesSpec(), Handler: adapter.changeAgentDefinitionCapabilities},
 		connect.Method{Spec: agentServiceGetAgentDefinitionSpec(), Handler: adapter.getAgentDefinition},
 		connect.Method{Spec: agentServiceGetAgentDefinitionForPurposeSpec(), Handler: adapter.getAgentDefinitionForPurpose},
@@ -564,7 +486,6 @@ func RegisterAgentServiceHandler(server *connect.Server, svc AgentServiceHandler
 		connect.Method{Spec: agentServiceEnsureEmployeeAgentSpec(), Handler: adapter.ensureEmployeeAgent},
 		connect.Method{Spec: agentServiceTransferAgentDefinitionOwnersSpec(), Handler: adapter.transferAgentDefinitionOwners},
 		connect.Method{Spec: agentServiceCreateWorkSpec(), Handler: adapter.createWork},
-		connect.Method{Spec: agentServiceCancelWorkRegistrationSpec(), Handler: adapter.cancelWorkRegistration},
 		connect.Method{Spec: agentServiceLocateWorkSpec(), Handler: adapter.locateWork},
 		connect.Method{Spec: agentServiceResumeWorkSpec(), Handler: adapter.resumeWork},
 		connect.Method{Spec: agentServiceRestartWorkSpec(), Handler: adapter.restartWork},
@@ -586,10 +507,6 @@ func (UnimplementedAgentServiceHandler) GetWorkStartOptions(context.Context, *v1
 
 func (UnimplementedAgentServiceHandler) ListWorkStartRepositories(context.Context, *v1.ListWorkStartRepositoriesRequest) (*v11.WorkStartRepositories, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, "agent.private.v1.AgentService.ListWorkStartRepositories is not implemented")
-}
-
-func (UnimplementedAgentServiceHandler) GetWorkStartup(context.Context, *v1.GetWorkStartupRequest) (*v1.GetWorkStartupResponse, error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, "agent.private.v1.AgentService.GetWorkStartup is not implemented")
 }
 
 func (UnimplementedAgentServiceHandler) GetWorkOrigin(context.Context, *v1.GetWorkOriginRequest) (*v1.GetWorkOriginResponse, error) {
@@ -616,20 +533,8 @@ func (UnimplementedAgentServiceHandler) PrepareWorkExecution(context.Context, *v
 	return nil, connect.NewError(connect.CodeUnimplemented, "agent.private.v1.AgentService.PrepareWorkExecution is not implemented")
 }
 
-func (UnimplementedAgentServiceHandler) GetWorkCreation(context.Context, *v1.GetWorkCreationRequest) (*v1.GetWorkCreationResponse, error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, "agent.private.v1.AgentService.GetWorkCreation is not implemented")
-}
-
-func (UnimplementedAgentServiceHandler) CancelWorkCreation(context.Context, *v1.CancelWorkCreationRequest) (*v1.CancelWorkCreationResponse, error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, "agent.private.v1.AgentService.CancelWorkCreation is not implemented")
-}
-
 func (UnimplementedAgentServiceHandler) VerifyWorkCredential(context.Context, *v1.VerifyWorkCredentialRequest) (*v1.VerifyWorkCredentialResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, "agent.private.v1.AgentService.VerifyWorkCredential is not implemented")
-}
-
-func (UnimplementedAgentServiceHandler) GetStartAdmission(context.Context, *v1.GetStartAdmissionRequest) (*v1.GetStartAdmissionResponse, error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, "agent.private.v1.AgentService.GetStartAdmission is not implemented")
 }
 
 func (UnimplementedAgentServiceHandler) ChangeAgentDefinitionCapabilities(context.Context, *v1.ChangeAgentDefinitionCapabilitiesRequest) (*v1.ChangeAgentDefinitionCapabilitiesResponse, error) {
@@ -674,10 +579,6 @@ func (UnimplementedAgentServiceHandler) TransferAgentDefinitionOwners(context.Co
 
 func (UnimplementedAgentServiceHandler) CreateWork(context.Context, *v1.CreateWorkRequest) (*v1.CreateWorkResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, "agent.private.v1.AgentService.CreateWork is not implemented")
-}
-
-func (UnimplementedAgentServiceHandler) CancelWorkRegistration(context.Context, *v1.CancelWorkRegistrationRequest) (*v1.CancelWorkRegistrationResponse, error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, "agent.private.v1.AgentService.CancelWorkRegistration is not implemented")
 }
 
 func (UnimplementedAgentServiceHandler) LocateWork(context.Context, *v1.LocateWorkRequest) (*v1.LocateWorkResponse, error) {
@@ -736,14 +637,6 @@ func (c *agentServiceClient) ListWorkStartRepositories(ctx context.Context, req 
 	return &res, nil
 }
 
-func (c *agentServiceClient) GetWorkStartup(ctx context.Context, req *v1.GetWorkStartupRequest) (*v1.GetWorkStartupResponse, error) {
-	var res v1.GetWorkStartupResponse
-	if err := c.client.CallUnary(ctx, agentServiceGetWorkStartupSpec(), req, &res); err != nil {
-		return nil, err
-	}
-	return &res, nil
-}
-
 func (c *agentServiceClient) GetWorkOrigin(ctx context.Context, req *v1.GetWorkOriginRequest) (*v1.GetWorkOriginResponse, error) {
 	var res v1.GetWorkOriginResponse
 	if err := c.client.CallUnary(ctx, agentServiceGetWorkOriginSpec(), req, &res); err != nil {
@@ -792,33 +685,9 @@ func (c *agentServiceClient) PrepareWorkExecution(ctx context.Context, req *v1.P
 	return &res, nil
 }
 
-func (c *agentServiceClient) GetWorkCreation(ctx context.Context, req *v1.GetWorkCreationRequest) (*v1.GetWorkCreationResponse, error) {
-	var res v1.GetWorkCreationResponse
-	if err := c.client.CallUnary(ctx, agentServiceGetWorkCreationSpec(), req, &res); err != nil {
-		return nil, err
-	}
-	return &res, nil
-}
-
-func (c *agentServiceClient) CancelWorkCreation(ctx context.Context, req *v1.CancelWorkCreationRequest) (*v1.CancelWorkCreationResponse, error) {
-	var res v1.CancelWorkCreationResponse
-	if err := c.client.CallUnary(ctx, agentServiceCancelWorkCreationSpec(), req, &res); err != nil {
-		return nil, err
-	}
-	return &res, nil
-}
-
 func (c *agentServiceClient) VerifyWorkCredential(ctx context.Context, req *v1.VerifyWorkCredentialRequest) (*v1.VerifyWorkCredentialResponse, error) {
 	var res v1.VerifyWorkCredentialResponse
 	if err := c.client.CallUnary(ctx, agentServiceVerifyWorkCredentialSpec(), req, &res); err != nil {
-		return nil, err
-	}
-	return &res, nil
-}
-
-func (c *agentServiceClient) GetStartAdmission(ctx context.Context, req *v1.GetStartAdmissionRequest) (*v1.GetStartAdmissionResponse, error) {
-	var res v1.GetStartAdmissionResponse
-	if err := c.client.CallUnary(ctx, agentServiceGetStartAdmissionSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
@@ -907,14 +776,6 @@ func (c *agentServiceClient) TransferAgentDefinitionOwners(ctx context.Context, 
 func (c *agentServiceClient) CreateWork(ctx context.Context, req *v1.CreateWorkRequest) (*v1.CreateWorkResponse, error) {
 	var res v1.CreateWorkResponse
 	if err := c.client.CallUnary(ctx, agentServiceCreateWorkSpec(), req, &res); err != nil {
-		return nil, err
-	}
-	return &res, nil
-}
-
-func (c *agentServiceClient) CancelWorkRegistration(ctx context.Context, req *v1.CancelWorkRegistrationRequest) (*v1.CancelWorkRegistrationResponse, error) {
-	var res v1.CancelWorkRegistrationResponse
-	if err := c.client.CallUnary(ctx, agentServiceCancelWorkRegistrationSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
@@ -1018,18 +879,6 @@ func (h agentServiceHandler) listWorkStartRepositories(ctx context.Context, _ co
 	return stream.Send(res)
 }
 
-func (h agentServiceHandler) getWorkStartup(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
-	var req v1.GetWorkStartupRequest
-	if err := stream.Receive(&req); err != nil {
-		return err
-	}
-	res, err := h.svc.GetWorkStartup(ctx, &req)
-	if err != nil {
-		return err
-	}
-	return stream.Send(res)
-}
-
 func (h agentServiceHandler) getWorkOrigin(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
 	var req v1.GetWorkOriginRequest
 	if err := stream.Receive(&req); err != nil {
@@ -1102,48 +951,12 @@ func (h agentServiceHandler) prepareWorkExecution(ctx context.Context, _ connect
 	return stream.Send(res)
 }
 
-func (h agentServiceHandler) getWorkCreation(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
-	var req v1.GetWorkCreationRequest
-	if err := stream.Receive(&req); err != nil {
-		return err
-	}
-	res, err := h.svc.GetWorkCreation(ctx, &req)
-	if err != nil {
-		return err
-	}
-	return stream.Send(res)
-}
-
-func (h agentServiceHandler) cancelWorkCreation(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
-	var req v1.CancelWorkCreationRequest
-	if err := stream.Receive(&req); err != nil {
-		return err
-	}
-	res, err := h.svc.CancelWorkCreation(ctx, &req)
-	if err != nil {
-		return err
-	}
-	return stream.Send(res)
-}
-
 func (h agentServiceHandler) verifyWorkCredential(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
 	var req v1.VerifyWorkCredentialRequest
 	if err := stream.Receive(&req); err != nil {
 		return err
 	}
 	res, err := h.svc.VerifyWorkCredential(ctx, &req)
-	if err != nil {
-		return err
-	}
-	return stream.Send(res)
-}
-
-func (h agentServiceHandler) getStartAdmission(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
-	var req v1.GetStartAdmissionRequest
-	if err := stream.Receive(&req); err != nil {
-		return err
-	}
-	res, err := h.svc.GetStartAdmission(ctx, &req)
 	if err != nil {
 		return err
 	}
@@ -1276,18 +1089,6 @@ func (h agentServiceHandler) createWork(ctx context.Context, _ connect.Spec, str
 		return err
 	}
 	res, err := h.svc.CreateWork(ctx, &req)
-	if err != nil {
-		return err
-	}
-	return stream.Send(res)
-}
-
-func (h agentServiceHandler) cancelWorkRegistration(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
-	var req v1.CancelWorkRegistrationRequest
-	if err := stream.Receive(&req); err != nil {
-		return err
-	}
-	res, err := h.svc.CancelWorkRegistration(ctx, &req)
 	if err != nil {
 		return err
 	}

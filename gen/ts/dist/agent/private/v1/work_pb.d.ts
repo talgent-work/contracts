@@ -1424,67 +1424,6 @@ export declare type RespondToInteractionResponse = Message<"agent.private.v1.Res
 export declare const RespondToInteractionResponseSchema: GenMessage<RespondToInteractionResponse>;
 
 /**
- * GetStartAdmissionRequest identifies the caller and its start request.
- *
- * @generated from message agent.private.v1.GetStartAdmissionRequest
- */
-export declare type GetStartAdmissionRequest = Message<"agent.private.v1.GetStartAdmissionRequest"> & {
-  /**
-   * Principal delegated by the authenticated caller.
-   *
-   * @generated from field: string subject_id = 1;
-   */
-  subjectId: string;
-
-  /**
-   * Work whose start request is being inspected.
-   *
-   * @generated from field: string work_id = 2;
-   */
-  workId: string;
-
-  /**
-   * Caller-selected start request identity.
-   *
-   * @generated from field: string request_id = 3;
-   */
-  requestId: string;
-};
-
-/**
- * Describes the message agent.private.v1.GetStartAdmissionRequest.
- * Use `create(GetStartAdmissionRequestSchema)` to create a new message.
- */
-export declare const GetStartAdmissionRequestSchema: GenMessage<GetStartAdmissionRequest>;
-
-/**
- * GetStartAdmissionResponse is independent of the Work's current lifecycle.
- *
- * @generated from message agent.private.v1.GetStartAdmissionResponse
- */
-export declare type GetStartAdmissionResponse = Message<"agent.private.v1.GetStartAdmissionResponse"> & {
-  /**
-   * True only when this start request was admitted for this Work.
-   *
-   * @generated from field: bool accepted = 1;
-   */
-  accepted: boolean;
-
-  /**
-   * Admitted operation, or unspecified when no admission was found.
-   *
-   * @generated from field: agent.private.v1.StartKind kind = 2;
-   */
-  kind: StartKind;
-};
-
-/**
- * Describes the message agent.private.v1.GetStartAdmissionResponse.
- * Use `create(GetStartAdmissionResponseSchema)` to create a new message.
- */
-export declare const GetStartAdmissionResponseSchema: GenMessage<GetStartAdmissionResponse>;
-
-/**
  * VerifyWorkCredentialRequest carries the native process credential, not caller-declared product authority.
  *
  * @generated from message agent.private.v1.VerifyWorkCredentialRequest
@@ -2395,96 +2334,6 @@ export declare type GetWorkOriginResponse = Message<"agent.private.v1.GetWorkOri
 export declare const GetWorkOriginResponseSchema: GenMessage<GetWorkOriginResponse>;
 
 /**
- * GetWorkStartupRequest selects an authorized conversation's startup facts.
- *
- * @generated from message agent.private.v1.GetWorkStartupRequest
- */
-export declare type GetWorkStartupRequest = Message<"agent.private.v1.GetWorkStartupRequest"> & {
-  /**
-   * Principal delegated by the authenticated internal consumer.
-   *
-   * @generated from field: string subject_id = 1;
-   */
-  subjectId: string;
-
-  /**
-   * Existing conversation identity.
-   *
-   * @generated from field: string work_id = 2;
-   */
-  workId: string;
-};
-
-/**
- * Describes the message agent.private.v1.GetWorkStartupRequest.
- * Use `create(GetWorkStartupRequestSchema)` to create a new message.
- */
-export declare const GetWorkStartupRequestSchema: GenMessage<GetWorkStartupRequest>;
-
-/**
- * GetWorkStartupResponse contains request facts, not an archive decision.
- *
- * @generated from message agent.private.v1.GetWorkStartupResponse
- */
-export declare type GetWorkStartupResponse = Message<"agent.private.v1.GetWorkStartupResponse"> & {
-  /**
-   * Existing conversation identity.
-   *
-   * @generated from field: string work_id = 1;
-   */
-  workId: string;
-
-  /**
-   * Current initial-input request; empty when no such record exists.
-   *
-   * @generated from field: string initial_request_id = 2;
-   */
-  initialRequestId: string;
-
-  /**
-   * The initial-input request was definitively rejected.
-   *
-   * @generated from field: bool rejected = 3;
-   */
-  rejected: boolean;
-
-  /**
-   * Its preparation resources have been released.
-   *
-   * @generated from field: bool cleanup_confirmed = 4;
-   */
-  cleanupConfirmed: boolean;
-
-  /**
-   * A creation or retry request for this Work still awaits handoff or cleanup.
-   * This can be true while the preceding initial request is rejected and clean.
-   *
-   * @generated from field: bool creation_pending = 5;
-   */
-  creationPending: boolean;
-
-  /**
-   * Retained explicit Resume request, when present.
-   *
-   * @generated from field: string continuation_request_id = 6;
-   */
-  continuationRequestId: string;
-
-  /**
-   * Its admission outcome is still unconfirmed.
-   *
-   * @generated from field: bool continuation_pending = 7;
-   */
-  continuationPending: boolean;
-};
-
-/**
- * Describes the message agent.private.v1.GetWorkStartupResponse.
- * Use `create(GetWorkStartupResponseSchema)` to create a new message.
- */
-export declare const GetWorkStartupResponseSchema: GenMessage<GetWorkStartupResponse>;
-
-/**
  * EnsureAgentDefinitionRequest is accepted only from authenticated internal callers.
  *
  * @generated from message agent.private.v1.EnsureAgentDefinitionRequest
@@ -2723,169 +2572,6 @@ export declare type ListWorkStartRepositoriesRequest = Message<"agent.private.v1
 export declare const ListWorkStartRepositoriesRequestSchema: GenMessage<ListWorkStartRepositoriesRequest>;
 
 /**
- * CancelWorkRegistrationRequest retains the original caller-authorized creation scope.
- *
- * @generated from message agent.private.v1.CancelWorkRegistrationRequest
- */
-export declare type CancelWorkRegistrationRequest = Message<"agent.private.v1.CancelWorkRegistrationRequest"> & {
-  /**
-   * Original CreateWork request UUID; not a new cancellation identity.
-   *
-   * @generated from field: string request_id = 1;
-   */
-  requestId: string;
-
-  /**
-   * Principal delegated by the authenticated business caller.
-   *
-   * @generated from field: string subject_id = 2;
-   */
-  subjectId: string;
-
-  /**
-   * Original definition selected by the business caller.
-   *
-   * @generated from field: string agent_id = 3;
-   */
-  agentId: string;
-
-  /**
-   * Original Subject.
-   *
-   * @generated from field: agent.private.v1.WorkSubject subject = 4;
-   */
-  subject?: WorkSubject;
-
-  /**
-   * Original Project.
-   *
-   * @generated from field: string project_id = 5;
-   */
-  projectId: string;
-
-  /**
-   * Original caller-selected workspace reference.
-   *
-   * @generated from field: string workspace_reference = 6;
-   */
-  workspaceReference: string;
-};
-
-/**
- * Describes the message agent.private.v1.CancelWorkRegistrationRequest.
- * Use `create(CancelWorkRegistrationRequestSchema)` to create a new message.
- */
-export declare const CancelWorkRegistrationRequestSchema: GenMessage<CancelWorkRegistrationRequest>;
-
-/**
- * CancelWorkRegistrationResponse reports which side of initial admission committed.
- *
- * @generated from message agent.private.v1.CancelWorkRegistrationResponse
- */
-export declare type CancelWorkRegistrationResponse = Message<"agent.private.v1.CancelWorkRegistrationResponse"> & {
-  /**
-   * Already admitted Work; empty means the original creation is durably canceled.
-   * A returned Work still needs EndWorkExecution to retain its cleanup obligation.
-   *
-   * @generated from field: string work_id = 1;
-   */
-  workId: string;
-};
-
-/**
- * Describes the message agent.private.v1.CancelWorkRegistrationResponse.
- * Use `create(CancelWorkRegistrationResponseSchema)` to create a new message.
- */
-export declare const CancelWorkRegistrationResponseSchema: GenMessage<CancelWorkRegistrationResponse>;
-
-/**
- * GetWorkCreationRequest names a creation request identity.
- *
- * @generated from message agent.private.v1.GetWorkCreationRequest
- */
-export declare type GetWorkCreationRequest = Message<"agent.private.v1.GetWorkCreationRequest"> & {
-  /**
-   * The caller's creation request identity.
-   *
-   * @generated from field: string request_id = 1;
-   */
-  requestId: string;
-};
-
-/**
- * Describes the message agent.private.v1.GetWorkCreationRequest.
- * Use `create(GetWorkCreationRequestSchema)` to create a new message.
- */
-export declare const GetWorkCreationRequestSchema: GenMessage<GetWorkCreationRequest>;
-
-/**
- * GetWorkCreationResponse reports the identity's outcome.
- *
- * @generated from message agent.private.v1.GetWorkCreationResponse
- */
-export declare type GetWorkCreationResponse = Message<"agent.private.v1.GetWorkCreationResponse"> & {
-  /**
-   * The outcome so far.
-   *
-   * @generated from field: agent.private.v1.WorkCreationOutcome outcome = 1;
-   */
-  outcome: WorkCreationOutcome;
-
-  /**
-   * The Work, for CREATED.
-   *
-   * @generated from field: string work_id = 2;
-   */
-  workId: string;
-};
-
-/**
- * Describes the message agent.private.v1.GetWorkCreationResponse.
- * Use `create(GetWorkCreationResponseSchema)` to create a new message.
- */
-export declare const GetWorkCreationResponseSchema: GenMessage<GetWorkCreationResponse>;
-
-/**
- * CancelWorkCreationRequest names the identity to settle.
- *
- * @generated from message agent.private.v1.CancelWorkCreationRequest
- */
-export declare type CancelWorkCreationRequest = Message<"agent.private.v1.CancelWorkCreationRequest"> & {
-  /**
-   * The caller's creation request identity.
-   *
-   * @generated from field: string request_id = 1;
-   */
-  requestId: string;
-};
-
-/**
- * Describes the message agent.private.v1.CancelWorkCreationRequest.
- * Use `create(CancelWorkCreationRequestSchema)` to create a new message.
- */
-export declare const CancelWorkCreationRequestSchema: GenMessage<CancelWorkCreationRequest>;
-
-/**
- * CancelWorkCreationResponse reports how the identity settled.
- *
- * @generated from message agent.private.v1.CancelWorkCreationResponse
- */
-export declare type CancelWorkCreationResponse = Message<"agent.private.v1.CancelWorkCreationResponse"> & {
-  /**
-   * The Work the identity already created; empty means it is cancelled.
-   *
-   * @generated from field: string work_id = 1;
-   */
-  workId: string;
-};
-
-/**
- * Describes the message agent.private.v1.CancelWorkCreationResponse.
- * Use `create(CancelWorkCreationResponseSchema)` to create a new message.
- */
-export declare const CancelWorkCreationResponseSchema: GenMessage<CancelWorkCreationResponse>;
-
-/**
  * TransferAgentDefinitionOwnersRequest names the definition and its new Owners.
  *
  * @generated from message agent.private.v1.TransferAgentDefinitionOwnersRequest
@@ -3002,93 +2688,6 @@ export enum WorkState {
 export declare const WorkStateSchema: GenEnum<WorkState>;
 
 /**
- * StartKind distinguishes first start from explicit continuation or failure retry.
- *
- * @generated from enum agent.private.v1.StartKind
- */
-export enum StartKind {
-  /**
-   * No admitted start was found.
-   *
-   * @generated from enum value: START_KIND_UNSPECIFIED = 0;
-   */
-  UNSPECIFIED = 0,
-
-  /**
-   * First Work start.
-   *
-   * @generated from enum value: START_KIND_START = 1;
-   */
-  START = 1,
-
-  /**
-   * Continuation of the retained Harness Session after a normal stop.
-   *
-   * @generated from enum value: START_KIND_RESUME = 2;
-   */
-  RESUME = 2,
-
-  /**
-   * Explicit retry after failure.
-   *
-   * @generated from enum value: START_KIND_RESTART = 3;
-   */
-  RESTART = 3,
-}
-
-/**
- * Describes the enum agent.private.v1.StartKind.
- */
-export declare const StartKindSchema: GenEnum<StartKind>;
-
-/**
- * WorkCreationOutcome is a creation request identity's answer so far.
- *
- * @generated from enum agent.private.v1.WorkCreationOutcome
- */
-export enum WorkCreationOutcome {
-  /**
-   * Unspecified.
-   *
-   * @generated from enum value: WORK_CREATION_OUTCOME_UNSPECIFIED = 0;
-   */
-  UNSPECIFIED = 0,
-
-  /**
-   * Agent never received the identity.
-   *
-   * @generated from enum value: WORK_CREATION_OUTCOME_UNKNOWN = 1;
-   */
-  UNKNOWN = 1,
-
-  /**
-   * Received and not yet answered; Agent's own recovery advances it.
-   *
-   * @generated from enum value: WORK_CREATION_OUTCOME_PENDING = 2;
-   */
-  PENDING = 2,
-
-  /**
-   * The identity created or reused work_id.
-   *
-   * @generated from enum value: WORK_CREATION_OUTCOME_CREATED = 3;
-   */
-  CREATED = 3,
-
-  /**
-   * The identity was refused or cancelled and creates nothing.
-   *
-   * @generated from enum value: WORK_CREATION_OUTCOME_CANCELLED = 4;
-   */
-  CANCELLED = 4,
-}
-
-/**
- * Describes the enum agent.private.v1.WorkCreationOutcome.
- */
-export declare const WorkCreationOutcomeSchema: GenEnum<WorkCreationOutcome>;
-
-/**
  * AgentService is the authenticated internal control API used by Session callers.
  *
  * @generated from service agent.private.v1.AgentService
@@ -3113,16 +2712,6 @@ export declare const AgentService: GenService<{
     methodKind: "unary";
     input: typeof ListWorkStartRepositoriesRequestSchema;
     output: typeof WorkStartRepositoriesSchema;
-  },
-  /**
-   * GetWorkStartup reads initial rejection, cleanup and outstanding creation facts.
-   *
-   * @generated from rpc agent.private.v1.AgentService.GetWorkStartup
-   */
-  getWorkStartup: {
-    methodKind: "unary";
-    input: typeof GetWorkStartupRequestSchema;
-    output: typeof GetWorkStartupResponseSchema;
   },
   /**
    * GetWorkOrigin reads retained source attribution for authenticated internal consumers.
@@ -3190,28 +2779,6 @@ export declare const AgentService: GenService<{
     output: typeof PrepareWorkExecutionResponseSchema;
   },
   /**
-   * GetWorkCreation reads a creation request identity's outcome without advancing it.
-   *
-   * @generated from rpc agent.private.v1.AgentService.GetWorkCreation
-   */
-  getWorkCreation: {
-    methodKind: "unary";
-    input: typeof GetWorkCreationRequestSchema;
-    output: typeof GetWorkCreationResponseSchema;
-  },
-  /**
-   * CancelWorkCreation settles an unanswered creation request identity: it
-   * returns the Work the identity already created, or cancels the identity so
-   * that a delayed repeat creates nothing.
-   *
-   * @generated from rpc agent.private.v1.AgentService.CancelWorkCreation
-   */
-  cancelWorkCreation: {
-    methodKind: "unary";
-    input: typeof CancelWorkCreationRequestSchema;
-    output: typeof CancelWorkCreationResponseSchema;
-  },
-  /**
    * VerifyWorkCredential authenticates a native process by the credential of its Work's current live sandbox.
    *
    * @generated from rpc agent.private.v1.AgentService.VerifyWorkCredential
@@ -3220,16 +2787,6 @@ export declare const AgentService: GenService<{
     methodKind: "unary";
     input: typeof VerifyWorkCredentialRequestSchema;
     output: typeof VerifyWorkCredentialResponseSchema;
-  },
-  /**
-   * GetStartAdmission reads whether a start request was admitted after Work authorization.
-   *
-   * @generated from rpc agent.private.v1.AgentService.GetStartAdmission
-   */
-  getStartAdmission: {
-    methodKind: "unary";
-    input: typeof GetStartAdmissionRequestSchema;
-    output: typeof GetStartAdmissionResponseSchema;
   },
   /**
    * ChangeAgentDefinitionCapabilities updates future Session capabilities without changing existing snapshots.
@@ -3342,16 +2899,6 @@ export declare const AgentService: GenService<{
     methodKind: "unary";
     input: typeof CreateWorkRequestSchema;
     output: typeof CreateWorkResponseSchema;
-  },
-  /**
-   * CancelWorkRegistration fences an unknown initial creation or returns its already admitted Work.
-   *
-   * @generated from rpc agent.private.v1.AgentService.CancelWorkRegistration
-   */
-  cancelWorkRegistration: {
-    methodKind: "unary";
-    input: typeof CancelWorkRegistrationRequestSchema;
-    output: typeof CancelWorkRegistrationResponseSchema;
   },
   /**
    * LocateWork resolves an existing business binding without creating or starting execution.

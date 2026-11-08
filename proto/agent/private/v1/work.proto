@@ -19,8 +19,6 @@ service AgentService {
   rpc GetWorkStartOptions(GetWorkStartOptionsRequest) returns (agent.public.v1.GetWorkStartOptionsResponse);
   // ListWorkStartRepositories discovers the repositories an admitted owner may check out.
   rpc ListWorkStartRepositories(ListWorkStartRepositoriesRequest) returns (agent.public.v1.WorkStartRepositories);
-  // GetWorkStartup reads initial rejection, cleanup and outstanding creation facts.
-  rpc GetWorkStartup(GetWorkStartupRequest) returns (GetWorkStartupResponse);
   // GetWorkOrigin reads retained source attribution for authenticated internal consumers.
   rpc GetWorkOrigin(GetWorkOriginRequest) returns (GetWorkOriginResponse);
   // ResolveWorkContextPosition is the Work Context Position Query: it names the
@@ -38,16 +36,8 @@ service AgentService {
   // yields at most one Work, a repeat returns the original outcome, and a
   // cancelled identity answers FailedPrecondition and creates nothing.
   rpc PrepareWorkExecution(PrepareWorkExecutionRequest) returns (PrepareWorkExecutionResponse);
-  // GetWorkCreation reads a creation request identity's outcome without advancing it.
-  rpc GetWorkCreation(GetWorkCreationRequest) returns (GetWorkCreationResponse);
-  // CancelWorkCreation settles an unanswered creation request identity: it
-  // returns the Work the identity already created, or cancels the identity so
-  // that a delayed repeat creates nothing.
-  rpc CancelWorkCreation(CancelWorkCreationRequest) returns (CancelWorkCreationResponse);
   // VerifyWorkCredential authenticates a native process by the credential of its Work's current live sandbox.
   rpc VerifyWorkCredential(VerifyWorkCredentialRequest) returns (VerifyWorkCredentialResponse);
-  // GetStartAdmission reads whether a start request was admitted after Work authorization.
-  rpc GetStartAdmission(GetStartAdmissionRequest) returns (GetStartAdmissionResponse);
   // ChangeAgentDefinitionCapabilities updates future Session capabilities without changing existing snapshots.
   rpc ChangeAgentDefinitionCapabilities(ChangeAgentDefinitionCapabilitiesRequest) returns (ChangeAgentDefinitionCapabilitiesResponse);
   // GetAgentDefinition reads the current reusable capability configuration.
@@ -72,8 +62,6 @@ service AgentService {
   rpc TransferAgentDefinitionOwners(TransferAgentDefinitionOwnersRequest) returns (TransferAgentDefinitionOwnersResponse);
   // CreateWork returns the definition's Work for the Subject, creating it when none exists.
   rpc CreateWork(CreateWorkRequest) returns (CreateWorkResponse);
-  // CancelWorkRegistration fences an unknown initial creation or returns its already admitted Work.
-  rpc CancelWorkRegistration(CancelWorkRegistrationRequest) returns (CancelWorkRegistrationResponse);
   // LocateWork resolves an existing business binding without creating or starting execution.
   rpc LocateWork(LocateWorkRequest) returns (LocateWorkResponse);
   // ResumeWork delegates to the Agent application; acceptance does not imply completion.
@@ -546,35 +534,8 @@ message RespondToInteractionRequest {
 // RespondToInteractionResponse confirms response delivery, not interaction resolution.
 message RespondToInteractionResponse {}
 
-// GetStartAdmissionRequest identifies the caller and its start request.
-message GetStartAdmissionRequest {
-  // Principal delegated by the authenticated caller.
-  string subject_id = 1;
-  // Work whose start request is being inspected.
-  string work_id = 2;
-  // Caller-selected start request identity.
-  string request_id = 3;
-}
 
-// GetStartAdmissionResponse is independent of the Work's current lifecycle.
-message GetStartAdmissionResponse {
-  // True only when this start request was admitted for this Work.
-  bool accepted = 1;
-  // Admitted operation, or unspecified when no admission was found.
-  StartKind kind = 2;
-}
 
-// StartKind distinguishes first start from explicit continuation or failure retry.
-enum StartKind {
-  // No admitted start was found.
-  START_KIND_UNSPECIFIED = 0;
-  // First Work start.
-  START_KIND_START = 1;
-  // Continuation of the retained Harness Session after a normal stop.
-  START_KIND_RESUME = 2;
-  // Explicit retry after failure.
-  START_KIND_RESTART = 3;
-}
 
 // VerifyWorkCredentialRequest carries the native process credential, not caller-declared product authority.
 message VerifyWorkCredentialRequest {
@@ -846,32 +807,7 @@ message GetWorkOriginResponse {
   string project_id = 5;
 }
 
-// GetWorkStartupRequest selects an authorized conversation's startup facts.
-message GetWorkStartupRequest {
-  // Principal delegated by the authenticated internal consumer.
-  string subject_id = 1;
-  // Existing conversation identity.
-  string work_id = 2;
-}
 
-// GetWorkStartupResponse contains request facts, not an archive decision.
-message GetWorkStartupResponse {
-  // Existing conversation identity.
-  string work_id = 1;
-  // Current initial-input request; empty when no such record exists.
-  string initial_request_id = 2;
-  // The initial-input request was definitively rejected.
-  bool rejected = 3;
-  // Its preparation resources have been released.
-  bool cleanup_confirmed = 4;
-  // A creation or retry request for this Work still awaits handoff or cleanup.
-  // This can be true while the preceding initial request is rejected and clean.
-  bool creation_pending = 5;
-  // Retained explicit Resume request, when present.
-  string continuation_request_id = 6;
-  // Its admission outcome is still unconfirmed.
-  bool continuation_pending = 7;
-}
 
 // EnsureAgentDefinitionRequest is accepted only from authenticated internal callers.
 message EnsureAgentDefinitionRequest {
@@ -947,68 +883,12 @@ message ListWorkStartRepositoriesRequest {
   string repository_owner_id = 1;
 }
 
-// CancelWorkRegistrationRequest retains the original caller-authorized creation scope.
-message CancelWorkRegistrationRequest {
-  // Original CreateWork request UUID; not a new cancellation identity.
-  string request_id = 1;
-  // Principal delegated by the authenticated business caller.
-  string subject_id = 2;
-  // Original definition selected by the business caller.
-  string agent_id = 3;
-  // Original Subject.
-  WorkSubject subject = 4;
-  // Original Project.
-  string project_id = 5;
-  // Original caller-selected workspace reference.
-  string workspace_reference = 6;
-}
 
-// CancelWorkRegistrationResponse reports which side of initial admission committed.
-message CancelWorkRegistrationResponse {
-  // Already admitted Work; empty means the original creation is durably canceled.
-  // A returned Work still needs EndWorkExecution to retain its cleanup obligation.
-  string work_id = 1;
-}
 
-// GetWorkCreationRequest names a creation request identity.
-message GetWorkCreationRequest {
-  // The caller's creation request identity.
-  string request_id = 1;
-}
 
-// WorkCreationOutcome is a creation request identity's answer so far.
-enum WorkCreationOutcome {
-  // Unspecified.
-  WORK_CREATION_OUTCOME_UNSPECIFIED = 0;
-  // Agent never received the identity.
-  WORK_CREATION_OUTCOME_UNKNOWN = 1;
-  // Received and not yet answered; Agent's own recovery advances it.
-  WORK_CREATION_OUTCOME_PENDING = 2;
-  // The identity created or reused work_id.
-  WORK_CREATION_OUTCOME_CREATED = 3;
-  // The identity was refused or cancelled and creates nothing.
-  WORK_CREATION_OUTCOME_CANCELLED = 4;
-}
 
-// GetWorkCreationResponse reports the identity's outcome.
-message GetWorkCreationResponse {
-  // The outcome so far.
-  WorkCreationOutcome outcome = 1;
-  // The Work, for CREATED.
-  string work_id = 2;
-}
 
-// CancelWorkCreationRequest names the identity to settle.
-message CancelWorkCreationRequest {
-  // The caller's creation request identity.
-  string request_id = 1;
-}
 
-// CancelWorkCreationResponse reports how the identity settled.
-message CancelWorkCreationResponse {
-  // The Work the identity already created; empty means it is cancelled.
-  string work_id = 1;
-}
 
 // TransferAgentDefinitionOwnersRequest names the definition and its new Owners.
 message TransferAgentDefinitionOwnersRequest {

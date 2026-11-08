@@ -13,3 +13,13 @@ breaking:
     - FILE
   # Only stable packages (vN) promise to only grow; vNalphaM and vNbetaM may change.
   ignore_unstable_packages: true
+  # Removes the private Agent start-request RPCs no consumer uses
+  # (talgent-work/orchestra#80), released as a minor tagged by hand. The commit
+  # after that release removes this, once the check compares against it.
+  ignore_only:
+    ENUM_NO_DELETE:
+      - proto/agent/private
+    MESSAGE_NO_DELETE:
+      - proto/agent/private
+    RPC_NO_DELETE:
+      - proto/agent/private

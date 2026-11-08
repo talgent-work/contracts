@@ -95,7 +95,7 @@ protobuf runtime; a library built on the contracts, such as `workbench-ui`, decl
   credential headers and gateway token
 - [Content path](docs/storage-content.md): `/v1/storage/content`
 - [Originals mount](docs/originals-mount.md): layout, extended attributes and guarantees of the
-  read-only mount of every File Space, and the claim a reader references
+  read-only mount of every JuiceFS Directory, and the claim a reader references
 - [Contracts version header](docs/contracts-version.md): `talgent-contracts-version`
 
 ## Development

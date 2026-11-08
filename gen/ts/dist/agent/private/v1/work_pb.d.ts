@@ -9,6 +9,7 @@ import type { WorkSubject } from "./work_subject_pb.js";
 import type { WorkModelSelection } from "../../public/v1/model_pb.js";
 import type { HarnessChoice } from "../../public/v1/harness_pb.js";
 import type { WorkProgress } from "../../public/v1/progress_pb.js";
+import type { WorkspaceLayout } from "../../../storage/private/v1/workspace_pb.js";
 import type { AgentAppearance, AgentIcon } from "../../public/v1/appearance_pb.js";
 import type { GetWorkStartOptionsResponseSchema, WorkStartRepositoriesSchema } from "../../public/v1/work_start_options_pb.js";
 
@@ -1502,13 +1503,6 @@ export declare type VerifyWorkCredentialResponse = Message<"agent.private.v1.Ver
   subjectId: string;
 
   /**
-   * Caller-authorized opaque workspace binding; not product authority by itself.
-   *
-   * @generated from field: string workspace_reference = 5;
-   */
-  workspaceReference: string;
-
-  /**
    * The Work's Project; empty for a Work without one.
    *
    * @generated from field: string project_id = 6;
@@ -1528,6 +1522,16 @@ export declare type VerifyWorkCredentialResponse = Message<"agent.private.v1.Ver
    * @generated from field: string purpose = 8;
    */
   purpose: string;
+
+  /**
+   * The Work's Session Workspace as its sandbox sees it, from its located
+   * layout: the Work Directory a publication copies from, outside every
+   * Directory mounted in it. Absent for a Work without one, such as a Work
+   * on a Managed Computer.
+   *
+   * @generated from field: storage.private.v1.WorkspaceLayout workspace = 9;
+   */
+  workspace?: WorkspaceLayout;
 };
 
 /**

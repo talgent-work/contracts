@@ -13,3 +13,22 @@ breaking:
     - FILE
   # Only stable packages (vN) promise to only grow; vNalphaM and vNbetaM may change.
   ignore_unstable_packages: true
+  # Storage's File Space, Reference Space and workspace contracts become the
+  # Directory, and Agent's contracts carry only facts
+  # (talgent-work/orchestra#58), released together with the Workbench and
+  # Orchestra as a minor tagged by hand. The commit after that release removes
+  # this, once the check compares against it.
+  ignore:
+    - proto/storage/private
+    - proto/storage/integration
+  ignore_only:
+    ENUM_NO_DELETE:
+      - proto/agent/private
+    ENUM_VALUE_NO_DELETE:
+      - proto/agent/private
+    FIELD_NO_DELETE:
+      - proto/agent/private
+    MESSAGE_NO_DELETE:
+      - proto/agent/private
+    RPC_NO_DELETE:
+      - proto/agent/private

@@ -5,6 +5,7 @@ package agent.private.v1;
 import "google/protobuf/struct.proto";
 import "agent/private/v1/work_subject.proto";
 import "agent/public/v1/appearance.proto";
+import "storage/private/v1/workspace.proto";
 import "agent/public/v1/harness.proto";
 import "agent/public/v1/model.proto";
 import "agent/public/v1/progress.proto";
@@ -566,14 +567,19 @@ message VerifyWorkCredentialResponse {
   string agent_id = 3;
   // Immutable controlling principal registered by the Work caller.
   string subject_id = 4;
-  // Caller-authorized opaque workspace binding; not product authority by itself.
-  string workspace_reference = 5;
+  reserved 5;
+  reserved "workspace_reference";
   // The Work's Project; empty for a Work without one.
   string project_id = 6;
   // The Work's Subject, absent for a Work without one.
   WorkSubject subject = 7;
   // The definition's purpose.
   string purpose = 8;
+  // The Work's Session Workspace as its sandbox sees it, from its located
+  // layout: the Work Directory a publication copies from, outside every
+  // Directory mounted in it. Absent for a Work without one, such as a Work
+  // on a Managed Computer.
+  storage.private.v1.WorkspaceLayout workspace = 9;
 }
 
 // LocateWorkRequest selects an existing association under its retained rules.

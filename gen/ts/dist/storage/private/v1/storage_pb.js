@@ -9,252 +9,308 @@ import { file_google_protobuf_timestamp } from "@bufbuild/protobuf/wkt";
  * Describes the file storage/private/v1/storage.proto.
  */
 export const file_storage_private_v1_storage = /*@__PURE__*/
-  fileDesc("CiBzdG9yYWdlL3ByaXZhdGUvdjEvc3RvcmFnZS5wcm90bxISc3RvcmFnZS5wcml2YXRlLnYxInMKCVNoYXJlTGluaxINCgV0b2tlbhgBIAEoCRILCgN1cmwYAiABKAkSGgoSY3JlYXRlZF9ieV91c2VyX2lkGAMgASgJEi4KCmNyZWF0ZWRfYXQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIogCCgRGaWxlEg0KBW93bmVyGAEgASgJEioKBGtpbmQYAiABKA4yHC5zdG9yYWdlLnByaXZhdGUudjEuRmlsZUtpbmQSDAoEbmFtZRgDIAEoCRISCgpzaXplX2J5dGVzGAQgASgDEhQKDGNvbnRlbnRfdHlwZRgFIAEoCRIuCgp1cGRhdGVkX2F0GAYgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIYChB1cGxvYWRlcl91c2VyX2lkGAcgASgJEg8KB3dvcmtfaWQYCCABKAkSMgoLc2hhcmVfbGlua3MYCSADKAsyHS5zdG9yYWdlLnByaXZhdGUudjEuU2hhcmVMaW5rIiUKFE9wZW5GaWxlU3BhY2VSZXF1ZXN0Eg0KBW93bmVyGAEgASgJIkIKFU9wZW5GaWxlU3BhY2VSZXNwb25zZRITCgtzcGFjZV90b2tlbhgBIAEoCRIUCgxpbnB1dF9zb3VyY2UYAiABKAkiIQoQTGlzdEZpbGVzUmVxdWVzdBINCgVvd25lchgBIAEoCSI8ChFMaXN0RmlsZXNSZXNwb25zZRInCgVmaWxlcxgBIAMoCzIYLnN0b3JhZ2UucHJpdmF0ZS52MS5GaWxlIicKFUxpc3RPd25lckZpbGVzUmVxdWVzdBIOCgZvd25lcnMYASADKAkiQQoWTGlzdE93bmVyRmlsZXNSZXNwb25zZRInCgVmaWxlcxgBIAMoCzIYLnN0b3JhZ2UucHJpdmF0ZS52MS5GaWxlIjMKGlJlc29sdmVJbnB1dFNvdXJjZXNSZXF1ZXN0EhUKDWlucHV0X3NvdXJjZXMYASADKAkiOgoTUmVzb2x2ZWRJbnB1dFNvdXJjZRIUCgxpbnB1dF9zb3VyY2UYASABKAkSDQoFb3duZXIYAiABKAkiXQobUmVzb2x2ZUlucHV0U291cmNlc1Jlc3BvbnNlEj4KDWlucHV0X3NvdXJjZXMYASADKAsyJy5zdG9yYWdlLnByaXZhdGUudjEuUmVzb2x2ZWRJbnB1dFNvdXJjZSKRAQocSXNzdWVBdHRhY2htZW50VXBsb2FkUmVxdWVzdBINCgVvd25lchgBIAEoCRITCgtzcGFjZV90b2tlbhgCIAEoCRIMCgRuYW1lGAMgASgJEg8KB3JlcGxhY2UYBCABKAgSGAoQdXBsb2FkZXJfdXNlcl9pZBgFIAEoCRIUCgxjb250ZW50X3R5cGUYBiABKAkiYwodSXNzdWVBdHRhY2htZW50VXBsb2FkUmVzcG9uc2USEgoKdXBsb2FkX3VybBgBIAEoCRIuCgpleHBpcmVzX2F0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcCJ0ChdSZW5hbWVBdHRhY2htZW50UmVxdWVzdBINCgVvd25lchgBIAEoCRITCgtzcGFjZV90b2tlbhgCIAEoCRIMCgRuYW1lGAMgASgJEhAKCG5ld19uYW1lGAQgASgJEhUKDWFjdG9yX3VzZXJfaWQYBSABKAkiQgoYUmVuYW1lQXR0YWNobWVudFJlc3BvbnNlEiYKBGZpbGUYASABKAsyGC5zdG9yYWdlLnByaXZhdGUudjEuRmlsZSKIAQoRRGVsZXRlRmlsZVJlcXVlc3QSDQoFb3duZXIYASABKAkSEwoLc3BhY2VfdG9rZW4YAiABKAkSKgoEa2luZBgDIAEoDjIcLnN0b3JhZ2UucHJpdmF0ZS52MS5GaWxlS2luZBIMCgRuYW1lGAQgASgJEhUKDWFjdG9yX3VzZXJfaWQYBSABKAkiFAoSRGVsZXRlRmlsZVJlc3BvbnNlIp0BChZJc3N1ZUFjY2Vzc0xpbmtSZXF1ZXN0Eg0KBW93bmVyGAEgASgJEioKBGtpbmQYAiABKA4yHC5zdG9yYWdlLnByaXZhdGUudjEuRmlsZUtpbmQSDAoEbmFtZRgDIAEoCRI6CgtkaXNwb3NpdGlvbhgEIAEoDjIlLnN0b3JhZ2UucHJpdmF0ZS52MS5BY2Nlc3NEaXNwb3NpdGlvbiJyChdJc3N1ZUFjY2Vzc0xpbmtSZXNwb25zZRISCgphY2Nlc3NfdXJsGAEgASgJEi4KCmV4cGlyZXNfYXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhMKC2FjY2Vzc19wYXRoGAMgASgJImAKFUdldEZpbGVQcmV2aWV3UmVxdWVzdBINCgVvd25lchgBIAEoCRIqCgRraW5kGAIgASgOMhwuc3RvcmFnZS5wcml2YXRlLnYxLkZpbGVLaW5kEgwKBG5hbWUYAyABKAkiSgoWR2V0RmlsZVByZXZpZXdSZXNwb25zZRIwCgdwcmV2aWV3GAEgASgLMh8uc3RvcmFnZS5wcml2YXRlLnYxLkZpbGVQcmV2aWV3ImQKGVJlcXVlc3RGaWxlUHJldmlld1JlcXVlc3QSDQoFb3duZXIYASABKAkSKgoEa2luZBgCIAEoDjIcLnN0b3JhZ2UucHJpdmF0ZS52MS5GaWxlS2luZBIMCgRuYW1lGAMgASgJIk4KGlJlcXVlc3RGaWxlUHJldmlld1Jlc3BvbnNlEjAKB3ByZXZpZXcYASABKAsyHy5zdG9yYWdlLnByaXZhdGUudjEuRmlsZVByZXZpZXcipwIKC0ZpbGVQcmV2aWV3Ei0KBG1vZGUYASABKA4yHy5zdG9yYWdlLnByaXZhdGUudjEuUHJldmlld01vZGUSMwoHZGlzcGxheRgCIAEoDjIiLnN0b3JhZ2UucHJpdmF0ZS52MS5QcmV2aWV3RGlzcGxheRIzCgdyZWZ1c2FsGAMgASgOMiIuc3RvcmFnZS5wcml2YXRlLnYxLlByZXZpZXdSZWZ1c2FsEhMKC2xpbWl0X2J5dGVzGAQgASgDEhIKCmFjY2Vzc191cmwYBSABKAkSEwoLYWNjZXNzX3BhdGgYBiABKAkSLgoKZXhwaXJlc19hdBgHIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASEQoJcmVuZGVyaW5nGAggASgIIn0KFkNyZWF0ZVNoYXJlTGlua1JlcXVlc3QSDQoFb3duZXIYASABKAkSKgoEa2luZBgCIAEoDjIcLnN0b3JhZ2UucHJpdmF0ZS52MS5GaWxlS2luZBIMCgRuYW1lGAMgASgJEhoKEmNyZWF0ZWRfYnlfdXNlcl9pZBgEIAEoCSJMChdDcmVhdGVTaGFyZUxpbmtSZXNwb25zZRIxCgpzaGFyZV9saW5rGAEgASgLMh0uc3RvcmFnZS5wcml2YXRlLnYxLlNoYXJlTGluayJ+ChdSZXZva2VTaGFyZUxpbmtzUmVxdWVzdBINCgVvd25lchgBIAEoCRIqCgRraW5kGAIgASgOMhwuc3RvcmFnZS5wcml2YXRlLnYxLkZpbGVLaW5kEgwKBG5hbWUYAyABKAkSGgoSY3JlYXRlZF9ieV91c2VyX2lkGAQgASgJIj4KGFJldm9rZVNoYXJlTGlua3NSZXNwb25zZRIPCgdyZXZva2VkGAEgASgFEhEKCXJlbWFpbmluZxgCIAEoBSI9Cg9BcnRpZmFjdE91dGNvbWUSKgoIYXJ0aWZhY3QYASABKAsyGC5zdG9yYWdlLnByaXZhdGUudjEuRmlsZSJVChVDcmVhdGVBcnRpZmFjdFJlcXVlc3QSDAoEbmFtZRgBIAEoCRIMCgRwYXRoGAIgASgJEhQKB2NvbnRlbnQYAyABKAxIAIgBAUIKCghfY29udGVudCJOChZDcmVhdGVBcnRpZmFjdFJlc3BvbnNlEjQKB291dGNvbWUYASABKAsyIy5zdG9yYWdlLnByaXZhdGUudjEuQXJ0aWZhY3RPdXRjb21lIlYKFlJlcGxhY2VBcnRpZmFjdFJlcXVlc3QSDAoEbmFtZRgBIAEoCRIMCgRwYXRoGAIgASgJEhQKB2NvbnRlbnQYAyABKAxIAIgBAUIKCghfY29udGVudCJPChdSZXBsYWNlQXJ0aWZhY3RSZXNwb25zZRI0CgdvdXRjb21lGAEgASgLMiMuc3RvcmFnZS5wcml2YXRlLnYxLkFydGlmYWN0T3V0Y29tZSIlChVEZWxldGVBcnRpZmFjdFJlcXVlc3QSDAoEbmFtZRgBIAEoCSIYChZEZWxldGVBcnRpZmFjdFJlc3BvbnNlKoYDCgtFcnJvclJlYXNvbhIcChhFUlJPUl9SRUFTT05fVU5TUEVDSUZJRUQQABIfChtFUlJPUl9SRUFTT05fRklMRV9OT1RfRk9VTkQQARIhCh1FUlJPUl9SRUFTT05fU09VUkNFX05PVF9GT1VORBACEh8KG0VSUk9SX1JFQVNPTl9JTlZBTElEX1NPVVJDRRADEh0KGUVSUk9SX1JFQVNPTl9JTlZBTElEX05BTUUQBBIgChxFUlJPUl9SRUFTT05fSU5WQUxJRF9SRVFVRVNUEAUSJwojRVJST1JfUkVBU09OX0lOVkFMSURfV09SS1NQQUNFX1BBVEgQBhIbChdFUlJPUl9SRUFTT05fTkFNRV9UQUtFThAHEh8KG0VSUk9SX1JFQVNPTl9TUEFDRV9OT1RfT1BFThAIEiYKIkVSUk9SX1JFQVNPTl9XT1JLU1BBQ0VfTk9UX0NSRUFURUQQCRIkCiBFUlJPUl9SRUFTT05fV09SS1NQQUNFX1JFQ0xBSU1FRBAKKlcKCEZpbGVLaW5kEhkKFUZJTEVfS0lORF9VTlNQRUNJRklFRBAAEhgKFEZJTEVfS0lORF9BVFRBQ0hNRU5UEAESFgoSRklMRV9LSU5EX0FSVElGQUNUEAIqeAoRQWNjZXNzRGlzcG9zaXRpb24SIgoeQUNDRVNTX0RJU1BPU0lUSU9OX1VOU1BFQ0lGSUVEEAASHwobQUNDRVNTX0RJU1BPU0lUSU9OX0RPV05MT0FEEAESHgoaQUNDRVNTX0RJU1BPU0lUSU9OX1BSRVZJRVcQAiqyAQoLUHJldmlld01vZGUSHAoYUFJFVklFV19NT0RFX1VOU1BFQ0lGSUVEEAASGAoUUFJFVklFV19NT0RFX1JFRlVTRUQQARIdChlQUkVWSUVXX01PREVfUFJFVklFV19DT1BZEAISFwoTUFJFVklFV19NT0RFX1JFTkRFUhADEhcKE1BSRVZJRVdfTU9ERV9ESVJFQ1QQBBIaChZQUkVWSUVXX01PREVfVFJVTkNBVEVEEAUqfwoOUHJldmlld0Rpc3BsYXkSHwobUFJFVklFV19ESVNQTEFZX1VOU1BFQ0lGSUVEEAASGAoUUFJFVklFV19ESVNQTEFZX1RFWFQQARIXChNQUkVWSUVXX0RJU1BMQVlfUERGEAISGQoVUFJFVklFV19ESVNQTEFZX0lNQUdFEAMqpQIKDlByZXZpZXdSZWZ1c2FsEh8KG1BSRVZJRVdfUkVGVVNBTF9VTlNQRUNJRklFRBAAEh8KG1BSRVZJRVdfUkVGVVNBTF9VTlNVUFBPUlRFRBABEiYKIlBSRVZJRVdfUkVGVVNBTF9TVFJVQ1RVUkVfTUlTTUFUQ0gQAhIdChlQUkVWSUVXX1JFRlVTQUxfRU5DUllQVEVEEAMSHQoZUFJFVklFV19SRUZVU0FMX1RPT19MQVJHRRAEEhsKF1BSRVZJRVdfUkVGVVNBTF9DT1JSVVBUEAUSJQohUFJFVklFV19SRUZVU0FMX0NPTlZFUlRFUl9SRUZVU0VEEAYSJwojUFJFVklFV19SRUZVU0FMX1JFTkRFUklOR19UT09fTEFSR0UQBzKiCgoQRmlsZVNwYWNlU2VydmljZRJkCg1PcGVuRmlsZVNwYWNlEiguc3RvcmFnZS5wcml2YXRlLnYxLk9wZW5GaWxlU3BhY2VSZXF1ZXN0Gikuc3RvcmFnZS5wcml2YXRlLnYxLk9wZW5GaWxlU3BhY2VSZXNwb25zZRJYCglMaXN0RmlsZXMSJC5zdG9yYWdlLnByaXZhdGUudjEuTGlzdEZpbGVzUmVxdWVzdBolLnN0b3JhZ2UucHJpdmF0ZS52MS5MaXN0RmlsZXNSZXNwb25zZRJnCg5MaXN0T3duZXJGaWxlcxIpLnN0b3JhZ2UucHJpdmF0ZS52MS5MaXN0T3duZXJGaWxlc1JlcXVlc3QaKi5zdG9yYWdlLnByaXZhdGUudjEuTGlzdE93bmVyRmlsZXNSZXNwb25zZRJ2ChNSZXNvbHZlSW5wdXRTb3VyY2VzEi4uc3RvcmFnZS5wcml2YXRlLnYxLlJlc29sdmVJbnB1dFNvdXJjZXNSZXF1ZXN0Gi8uc3RvcmFnZS5wcml2YXRlLnYxLlJlc29sdmVJbnB1dFNvdXJjZXNSZXNwb25zZRJ8ChVJc3N1ZUF0dGFjaG1lbnRVcGxvYWQSMC5zdG9yYWdlLnByaXZhdGUudjEuSXNzdWVBdHRhY2htZW50VXBsb2FkUmVxdWVzdBoxLnN0b3JhZ2UucHJpdmF0ZS52MS5Jc3N1ZUF0dGFjaG1lbnRVcGxvYWRSZXNwb25zZRJtChBSZW5hbWVBdHRhY2htZW50Eisuc3RvcmFnZS5wcml2YXRlLnYxLlJlbmFtZUF0dGFjaG1lbnRSZXF1ZXN0Giwuc3RvcmFnZS5wcml2YXRlLnYxLlJlbmFtZUF0dGFjaG1lbnRSZXNwb25zZRJbCgpEZWxldGVGaWxlEiUuc3RvcmFnZS5wcml2YXRlLnYxLkRlbGV0ZUZpbGVSZXF1ZXN0GiYuc3RvcmFnZS5wcml2YXRlLnYxLkRlbGV0ZUZpbGVSZXNwb25zZRJqCg9Jc3N1ZUFjY2Vzc0xpbmsSKi5zdG9yYWdlLnByaXZhdGUudjEuSXNzdWVBY2Nlc3NMaW5rUmVxdWVzdBorLnN0b3JhZ2UucHJpdmF0ZS52MS5Jc3N1ZUFjY2Vzc0xpbmtSZXNwb25zZRJqCg9DcmVhdGVTaGFyZUxpbmsSKi5zdG9yYWdlLnByaXZhdGUudjEuQ3JlYXRlU2hhcmVMaW5rUmVxdWVzdBorLnN0b3JhZ2UucHJpdmF0ZS52MS5DcmVhdGVTaGFyZUxpbmtSZXNwb25zZRJtChBSZXZva2VTaGFyZUxpbmtzEisuc3RvcmFnZS5wcml2YXRlLnYxLlJldm9rZVNoYXJlTGlua3NSZXF1ZXN0Giwuc3RvcmFnZS5wcml2YXRlLnYxLlJldm9rZVNoYXJlTGlua3NSZXNwb25zZRJnCg5HZXRGaWxlUHJldmlldxIpLnN0b3JhZ2UucHJpdmF0ZS52MS5HZXRGaWxlUHJldmlld1JlcXVlc3QaKi5zdG9yYWdlLnByaXZhdGUudjEuR2V0RmlsZVByZXZpZXdSZXNwb25zZRJzChJSZXF1ZXN0RmlsZVByZXZpZXcSLS5zdG9yYWdlLnByaXZhdGUudjEuUmVxdWVzdEZpbGVQcmV2aWV3UmVxdWVzdBouLnN0b3JhZ2UucHJpdmF0ZS52MS5SZXF1ZXN0RmlsZVByZXZpZXdSZXNwb25zZTLPAgoPQXJ0aWZhY3RTZXJ2aWNlEmcKDkNyZWF0ZUFydGlmYWN0Eikuc3RvcmFnZS5wcml2YXRlLnYxLkNyZWF0ZUFydGlmYWN0UmVxdWVzdBoqLnN0b3JhZ2UucHJpdmF0ZS52MS5DcmVhdGVBcnRpZmFjdFJlc3BvbnNlEmoKD1JlcGxhY2VBcnRpZmFjdBIqLnN0b3JhZ2UucHJpdmF0ZS52MS5SZXBsYWNlQXJ0aWZhY3RSZXF1ZXN0Gisuc3RvcmFnZS5wcml2YXRlLnYxLlJlcGxhY2VBcnRpZmFjdFJlc3BvbnNlEmcKDkRlbGV0ZUFydGlmYWN0Eikuc3RvcmFnZS5wcml2YXRlLnYxLkRlbGV0ZUFydGlmYWN0UmVxdWVzdBoqLnN0b3JhZ2UucHJpdmF0ZS52MS5EZWxldGVBcnRpZmFjdFJlc3BvbnNlQk5aTGdpdGh1Yi5jb20vdGFsZ2VudC13b3JrL2NvbnRyYWN0cy9nZW4vZ28vc3RvcmFnZS9wcml2YXRlL3YxO3N0b3JhZ2Vwcml2YXRldjFiBnByb3RvMw", [file_google_protobuf_timestamp]);
+  fileDesc("CiBzdG9yYWdlL3ByaXZhdGUvdjEvc3RvcmFnZS5wcm90bxISc3RvcmFnZS5wcml2YXRlLnYxIpIBChBEaXJlY3RvcnlMb2NhdG9yEhIKCmNvbmRpdGlvbnMYASADKAkSDAoEbmFtZRgCIAEoCRIsCgdiYWNrZW5kGAMgASgOMhsuc3RvcmFnZS5wcml2YXRlLnYxLkJhY2tlbmQSLgoIbGlmZXRpbWUYBCABKA4yHC5zdG9yYWdlLnByaXZhdGUudjEuTGlmZXRpbWUiLQoJT3duZXJGYWN0EhEKCWNvbmRpdGlvbhgBIAEoCRINCgV2YWx1ZRgCIAEoCSI+Cg5EaXJlY3RvcnlPd25lchIsCgVmYWN0cxgBIAMoCzIdLnN0b3JhZ2UucHJpdmF0ZS52MS5Pd25lckZhY3QiTAoJRGlyZWN0b3J5EjEKBW93bmVyGAEgASgLMiIuc3RvcmFnZS5wcml2YXRlLnYxLkRpcmVjdG9yeU93bmVyEgwKBG5hbWUYAiABKAkiogEKEExvY2F0ZWREaXJlY3RvcnkSMAoJZGlyZWN0b3J5GAEgASgLMh0uc3RvcmFnZS5wcml2YXRlLnYxLkRpcmVjdG9yeRIsCgdiYWNrZW5kGAIgASgOMhsuc3RvcmFnZS5wcml2YXRlLnYxLkJhY2tlbmQSLgoIbGlmZXRpbWUYAyABKA4yHC5zdG9yYWdlLnByaXZhdGUudjEuTGlmZXRpbWUiTgoMRmlsZVBvc2l0aW9uEjAKCWRpcmVjdG9yeRgBIAEoCzIdLnN0b3JhZ2UucHJpdmF0ZS52MS5EaXJlY3RvcnkSDAoEbmFtZRgCIAEoCSJzCglTaGFyZUxpbmsSDQoFdG9rZW4YASABKAkSCwoDdXJsGAIgASgJEhoKEmNyZWF0ZWRfYnlfdXNlcl9pZBgDIAEoCRIuCgpjcmVhdGVkX2F0GAQgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcCKLAgoERmlsZRIyCghwb3NpdGlvbhgBIAEoCzIgLnN0b3JhZ2UucHJpdmF0ZS52MS5GaWxlUG9zaXRpb24SEgoKc2l6ZV9ieXRlcxgEIAEoAxIUCgxjb250ZW50X3R5cGUYBSABKAkSLgoKdXBkYXRlZF9hdBgGIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASGAoQdXBsb2FkZXJfdXNlcl9pZBgHIAEoCRIPCgd3b3JrX2lkGAggASgJEjIKC3NoYXJlX2xpbmtzGAkgAygLMh0uc3RvcmFnZS5wcml2YXRlLnYxLlNoYXJlTGlua0oECAIQA0oECAMQBFIEa2luZFIEbmFtZSJPChRPcGVuRGlyZWN0b3J5UmVxdWVzdBI3CglkaXJlY3RvcnkYASABKAsyJC5zdG9yYWdlLnByaXZhdGUudjEuTG9jYXRlZERpcmVjdG9yeSIsChVPcGVuRGlyZWN0b3J5UmVzcG9uc2USEwoLc3BhY2VfdG9rZW4YASABKAkiRAoQTGlzdEZpbGVzUmVxdWVzdBIwCglkaXJlY3RvcnkYASABKAsyHS5zdG9yYWdlLnByaXZhdGUudjEuRGlyZWN0b3J5IjwKEUxpc3RGaWxlc1Jlc3BvbnNlEicKBWZpbGVzGAEgAygLMhguc3RvcmFnZS5wcml2YXRlLnYxLkZpbGUiTwoZTGlzdERpcmVjdG9yeUZpbGVzUmVxdWVzdBIyCgtkaXJlY3RvcmllcxgBIAMoCzIdLnN0b3JhZ2UucHJpdmF0ZS52MS5EaXJlY3RvcnkiRQoaTGlzdERpcmVjdG9yeUZpbGVzUmVzcG9uc2USJwoFZmlsZXMYASADKAsyGC5zdG9yYWdlLnByaXZhdGUudjEuRmlsZSKeAQoSSXNzdWVVcGxvYWRSZXF1ZXN0EjIKCHBvc2l0aW9uGAEgASgLMiAuc3RvcmFnZS5wcml2YXRlLnYxLkZpbGVQb3NpdGlvbhITCgtzcGFjZV90b2tlbhgCIAEoCRIPCgdyZXBsYWNlGAMgASgIEhgKEHVwbG9hZGVyX3VzZXJfaWQYBCABKAkSFAoMY29udGVudF90eXBlGAUgASgJIlkKE0lzc3VlVXBsb2FkUmVzcG9uc2USEgoKdXBsb2FkX3VybBgBIAEoCRIuCgpleHBpcmVzX2F0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcCKFAQoRUmVuYW1lRmlsZVJlcXVlc3QSMgoIcG9zaXRpb24YASABKAsyIC5zdG9yYWdlLnByaXZhdGUudjEuRmlsZVBvc2l0aW9uEhMKC3NwYWNlX3Rva2VuGAIgASgJEhAKCG5ld19uYW1lGAMgASgJEhUKDWFjdG9yX3VzZXJfaWQYBCABKAkiPAoSUmVuYW1lRmlsZVJlc3BvbnNlEiYKBGZpbGUYASABKAsyGC5zdG9yYWdlLnByaXZhdGUudjEuRmlsZSJzChFEZWxldGVGaWxlUmVxdWVzdBIyCghwb3NpdGlvbhgBIAEoCzIgLnN0b3JhZ2UucHJpdmF0ZS52MS5GaWxlUG9zaXRpb24SEwoLc3BhY2VfdG9rZW4YAiABKAkSFQoNYWN0b3JfdXNlcl9pZBgDIAEoCSIUChJEZWxldGVGaWxlUmVzcG9uc2UiiAEKFklzc3VlQWNjZXNzTGlua1JlcXVlc3QSMgoIcG9zaXRpb24YASABKAsyIC5zdG9yYWdlLnByaXZhdGUudjEuRmlsZVBvc2l0aW9uEjoKC2Rpc3Bvc2l0aW9uGAIgASgOMiUuc3RvcmFnZS5wcml2YXRlLnYxLkFjY2Vzc0Rpc3Bvc2l0aW9uInIKF0lzc3VlQWNjZXNzTGlua1Jlc3BvbnNlEhIKCmFjY2Vzc191cmwYASABKAkSLgoKZXhwaXJlc19hdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASEwoLYWNjZXNzX3BhdGgYAyABKAkiSwoVR2V0RmlsZVByZXZpZXdSZXF1ZXN0EjIKCHBvc2l0aW9uGAEgASgLMiAuc3RvcmFnZS5wcml2YXRlLnYxLkZpbGVQb3NpdGlvbiJKChZHZXRGaWxlUHJldmlld1Jlc3BvbnNlEjAKB3ByZXZpZXcYASABKAsyHy5zdG9yYWdlLnByaXZhdGUudjEuRmlsZVByZXZpZXciTwoZUmVxdWVzdEZpbGVQcmV2aWV3UmVxdWVzdBIyCghwb3NpdGlvbhgBIAEoCzIgLnN0b3JhZ2UucHJpdmF0ZS52MS5GaWxlUG9zaXRpb24iTgoaUmVxdWVzdEZpbGVQcmV2aWV3UmVzcG9uc2USMAoHcHJldmlldxgBIAEoCzIfLnN0b3JhZ2UucHJpdmF0ZS52MS5GaWxlUHJldmlldyIsCgtDb250ZW50RmlsZRIMCgRwYXRoGAEgASgJEg8KB2NvbnRlbnQYAiABKAwijgEKFVJlcGxhY2VDb250ZW50UmVxdWVzdBIwCglkaXJlY3RvcnkYASABKAsyHS5zdG9yYWdlLnByaXZhdGUudjEuRGlyZWN0b3J5EhMKC3NwYWNlX3Rva2VuGAIgASgJEi4KBWZpbGVzGAMgAygLMh8uc3RvcmFnZS5wcml2YXRlLnYxLkNvbnRlbnRGaWxlIhgKFlJlcGxhY2VDb250ZW50UmVzcG9uc2UiVQoSUmVhZENvbnRlbnRSZXF1ZXN0EjAKCWRpcmVjdG9yeRgBIAEoCzIdLnN0b3JhZ2UucHJpdmF0ZS52MS5EaXJlY3RvcnkSDQoFcGF0aHMYAiADKAkiRQoTUmVhZENvbnRlbnRSZXNwb25zZRIuCgVmaWxlcxgBIAMoCzIfLnN0b3JhZ2UucHJpdmF0ZS52MS5Db250ZW50RmlsZSKnAgoLRmlsZVByZXZpZXcSLQoEbW9kZRgBIAEoDjIfLnN0b3JhZ2UucHJpdmF0ZS52MS5QcmV2aWV3TW9kZRIzCgdkaXNwbGF5GAIgASgOMiIuc3RvcmFnZS5wcml2YXRlLnYxLlByZXZpZXdEaXNwbGF5EjMKB3JlZnVzYWwYAyABKA4yIi5zdG9yYWdlLnByaXZhdGUudjEuUHJldmlld1JlZnVzYWwSEwoLbGltaXRfYnl0ZXMYBCABKAMSEgoKYWNjZXNzX3VybBgFIAEoCRITCgthY2Nlc3NfcGF0aBgGIAEoCRIuCgpleHBpcmVzX2F0GAcgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIRCglyZW5kZXJpbmcYCCABKAgiaAoWQ3JlYXRlU2hhcmVMaW5rUmVxdWVzdBIyCghwb3NpdGlvbhgBIAEoCzIgLnN0b3JhZ2UucHJpdmF0ZS52MS5GaWxlUG9zaXRpb24SGgoSY3JlYXRlZF9ieV91c2VyX2lkGAIgASgJIkwKF0NyZWF0ZVNoYXJlTGlua1Jlc3BvbnNlEjEKCnNoYXJlX2xpbmsYASABKAsyHS5zdG9yYWdlLnByaXZhdGUudjEuU2hhcmVMaW5rImkKF1Jldm9rZVNoYXJlTGlua3NSZXF1ZXN0EjIKCHBvc2l0aW9uGAEgASgLMiAuc3RvcmFnZS5wcml2YXRlLnYxLkZpbGVQb3NpdGlvbhIaChJjcmVhdGVkX2J5X3VzZXJfaWQYAiABKAkiPgoYUmV2b2tlU2hhcmVMaW5rc1Jlc3BvbnNlEg8KB3Jldm9rZWQYASABKAUSEQoJcmVtYWluaW5nGAIgASgFIj0KD0FydGlmYWN0T3V0Y29tZRIqCghhcnRpZmFjdBgBIAEoCzIYLnN0b3JhZ2UucHJpdmF0ZS52MS5GaWxlIlUKFUNyZWF0ZUFydGlmYWN0UmVxdWVzdBIMCgRuYW1lGAEgASgJEgwKBHBhdGgYAiABKAkSFAoHY29udGVudBgDIAEoDEgAiAEBQgoKCF9jb250ZW50Ik4KFkNyZWF0ZUFydGlmYWN0UmVzcG9uc2USNAoHb3V0Y29tZRgBIAEoCzIjLnN0b3JhZ2UucHJpdmF0ZS52MS5BcnRpZmFjdE91dGNvbWUiVgoWUmVwbGFjZUFydGlmYWN0UmVxdWVzdBIMCgRuYW1lGAEgASgJEgwKBHBhdGgYAiABKAkSFAoHY29udGVudBgDIAEoDEgAiAEBQgoKCF9jb250ZW50Ik8KF1JlcGxhY2VBcnRpZmFjdFJlc3BvbnNlEjQKB291dGNvbWUYASABKAsyIy5zdG9yYWdlLnByaXZhdGUudjEuQXJ0aWZhY3RPdXRjb21lIiUKFURlbGV0ZUFydGlmYWN0UmVxdWVzdBIMCgRuYW1lGAEgASgJIhgKFkRlbGV0ZUFydGlmYWN0UmVzcG9uc2Uq1AMKC0Vycm9yUmVhc29uEhwKGEVSUk9SX1JFQVNPTl9VTlNQRUNJRklFRBAAEh8KG0VSUk9SX1JFQVNPTl9GSUxFX05PVF9GT1VORBABEiEKHUVSUk9SX1JFQVNPTl9TT1VSQ0VfTk9UX0ZPVU5EEAISHwobRVJST1JfUkVBU09OX0lOVkFMSURfU09VUkNFEAMSHQoZRVJST1JfUkVBU09OX0lOVkFMSURfTkFNRRAEEiAKHEVSUk9SX1JFQVNPTl9JTlZBTElEX1JFUVVFU1QQBRInCiNFUlJPUl9SRUFTT05fSU5WQUxJRF9XT1JLU1BBQ0VfUEFUSBAGEhsKF0VSUk9SX1JFQVNPTl9OQU1FX1RBS0VOEAcSIwofRVJST1JfUkVBU09OX0RJUkVDVE9SWV9OT1RfT1BFThAIEigKJEVSUk9SX1JFQVNPTl9ESVJFQ1RPUllfTk9UX0FMTE9DQVRFRBAJEiQKIEVSUk9SX1JFQVNPTl9ESVJFQ1RPUllfUkVDTEFJTUVEEAoSIAocRVJST1JfUkVBU09OX0lOVkFMSURfTE9DQVRPUhALEiQKIEVSUk9SX1JFQVNPTl9QRVJNQU5FTlRfRElSRUNUT1JZEAwqSAoHQmFja2VuZBIXChNCQUNLRU5EX1VOU1BFQ0lGSUVEEAASDwoLQkFDS0VORF9OQVMQARITCg9CQUNLRU5EX0pVSUNFRlMQAipPCghMaWZldGltZRIYChRMSUZFVElNRV9VTlNQRUNJRklFRBAAEhEKDUxJRkVUSU1FX1dPUksQARIWChJMSUZFVElNRV9QRVJNQU5FTlQQAip4ChFBY2Nlc3NEaXNwb3NpdGlvbhIiCh5BQ0NFU1NfRElTUE9TSVRJT05fVU5TUEVDSUZJRUQQABIfChtBQ0NFU1NfRElTUE9TSVRJT05fRE9XTkxPQUQQARIeChpBQ0NFU1NfRElTUE9TSVRJT05fUFJFVklFVxACKrIBCgtQcmV2aWV3TW9kZRIcChhQUkVWSUVXX01PREVfVU5TUEVDSUZJRUQQABIYChRQUkVWSUVXX01PREVfUkVGVVNFRBABEh0KGVBSRVZJRVdfTU9ERV9QUkVWSUVXX0NPUFkQAhIXChNQUkVWSUVXX01PREVfUkVOREVSEAMSFwoTUFJFVklFV19NT0RFX0RJUkVDVBAEEhoKFlBSRVZJRVdfTU9ERV9UUlVOQ0FURUQQBSp/Cg5QcmV2aWV3RGlzcGxheRIfChtQUkVWSUVXX0RJU1BMQVlfVU5TUEVDSUZJRUQQABIYChRQUkVWSUVXX0RJU1BMQVlfVEVYVBABEhcKE1BSRVZJRVdfRElTUExBWV9QREYQAhIZChVQUkVWSUVXX0RJU1BMQVlfSU1BR0UQAyqlAgoOUHJldmlld1JlZnVzYWwSHwobUFJFVklFV19SRUZVU0FMX1VOU1BFQ0lGSUVEEAASHwobUFJFVklFV19SRUZVU0FMX1VOU1VQUE9SVEVEEAESJgoiUFJFVklFV19SRUZVU0FMX1NUUlVDVFVSRV9NSVNNQVRDSBACEh0KGVBSRVZJRVdfUkVGVVNBTF9FTkNSWVBURUQQAxIdChlQUkVWSUVXX1JFRlVTQUxfVE9PX0xBUkdFEAQSGwoXUFJFVklFV19SRUZVU0FMX0NPUlJVUFQQBRIlCiFQUkVWSUVXX1JFRlVTQUxfQ09OVkVSVEVSX1JFRlVTRUQQBhInCiNQUkVWSUVXX1JFRlVTQUxfUkVOREVSSU5HX1RPT19MQVJHRRAHMs8KChBEaXJlY3RvcnlTZXJ2aWNlEmQKDU9wZW5EaXJlY3RvcnkSKC5zdG9yYWdlLnByaXZhdGUudjEuT3BlbkRpcmVjdG9yeVJlcXVlc3QaKS5zdG9yYWdlLnByaXZhdGUudjEuT3BlbkRpcmVjdG9yeVJlc3BvbnNlElgKCUxpc3RGaWxlcxIkLnN0b3JhZ2UucHJpdmF0ZS52MS5MaXN0RmlsZXNSZXF1ZXN0GiUuc3RvcmFnZS5wcml2YXRlLnYxLkxpc3RGaWxlc1Jlc3BvbnNlEnMKEkxpc3REaXJlY3RvcnlGaWxlcxItLnN0b3JhZ2UucHJpdmF0ZS52MS5MaXN0RGlyZWN0b3J5RmlsZXNSZXF1ZXN0Gi4uc3RvcmFnZS5wcml2YXRlLnYxLkxpc3REaXJlY3RvcnlGaWxlc1Jlc3BvbnNlEl4KC0lzc3VlVXBsb2FkEiYuc3RvcmFnZS5wcml2YXRlLnYxLklzc3VlVXBsb2FkUmVxdWVzdBonLnN0b3JhZ2UucHJpdmF0ZS52MS5Jc3N1ZVVwbG9hZFJlc3BvbnNlElsKClJlbmFtZUZpbGUSJS5zdG9yYWdlLnByaXZhdGUudjEuUmVuYW1lRmlsZVJlcXVlc3QaJi5zdG9yYWdlLnByaXZhdGUudjEuUmVuYW1lRmlsZVJlc3BvbnNlElsKCkRlbGV0ZUZpbGUSJS5zdG9yYWdlLnByaXZhdGUudjEuRGVsZXRlRmlsZVJlcXVlc3QaJi5zdG9yYWdlLnByaXZhdGUudjEuRGVsZXRlRmlsZVJlc3BvbnNlEmoKD0lzc3VlQWNjZXNzTGluaxIqLnN0b3JhZ2UucHJpdmF0ZS52MS5Jc3N1ZUFjY2Vzc0xpbmtSZXF1ZXN0Gisuc3RvcmFnZS5wcml2YXRlLnYxLklzc3VlQWNjZXNzTGlua1Jlc3BvbnNlEmoKD0NyZWF0ZVNoYXJlTGluaxIqLnN0b3JhZ2UucHJpdmF0ZS52MS5DcmVhdGVTaGFyZUxpbmtSZXF1ZXN0Gisuc3RvcmFnZS5wcml2YXRlLnYxLkNyZWF0ZVNoYXJlTGlua1Jlc3BvbnNlEm0KEFJldm9rZVNoYXJlTGlua3MSKy5zdG9yYWdlLnByaXZhdGUudjEuUmV2b2tlU2hhcmVMaW5rc1JlcXVlc3QaLC5zdG9yYWdlLnByaXZhdGUudjEuUmV2b2tlU2hhcmVMaW5rc1Jlc3BvbnNlEmcKDkdldEZpbGVQcmV2aWV3Eikuc3RvcmFnZS5wcml2YXRlLnYxLkdldEZpbGVQcmV2aWV3UmVxdWVzdBoqLnN0b3JhZ2UucHJpdmF0ZS52MS5HZXRGaWxlUHJldmlld1Jlc3BvbnNlEnMKElJlcXVlc3RGaWxlUHJldmlldxItLnN0b3JhZ2UucHJpdmF0ZS52MS5SZXF1ZXN0RmlsZVByZXZpZXdSZXF1ZXN0Gi4uc3RvcmFnZS5wcml2YXRlLnYxLlJlcXVlc3RGaWxlUHJldmlld1Jlc3BvbnNlEmcKDlJlcGxhY2VDb250ZW50Eikuc3RvcmFnZS5wcml2YXRlLnYxLlJlcGxhY2VDb250ZW50UmVxdWVzdBoqLnN0b3JhZ2UucHJpdmF0ZS52MS5SZXBsYWNlQ29udGVudFJlc3BvbnNlEl4KC1JlYWRDb250ZW50EiYuc3RvcmFnZS5wcml2YXRlLnYxLlJlYWRDb250ZW50UmVxdWVzdBonLnN0b3JhZ2UucHJpdmF0ZS52MS5SZWFkQ29udGVudFJlc3BvbnNlMs8CCg9BcnRpZmFjdFNlcnZpY2USZwoOQ3JlYXRlQXJ0aWZhY3QSKS5zdG9yYWdlLnByaXZhdGUudjEuQ3JlYXRlQXJ0aWZhY3RSZXF1ZXN0Giouc3RvcmFnZS5wcml2YXRlLnYxLkNyZWF0ZUFydGlmYWN0UmVzcG9uc2USagoPUmVwbGFjZUFydGlmYWN0Eiouc3RvcmFnZS5wcml2YXRlLnYxLlJlcGxhY2VBcnRpZmFjdFJlcXVlc3QaKy5zdG9yYWdlLnByaXZhdGUudjEuUmVwbGFjZUFydGlmYWN0UmVzcG9uc2USZwoORGVsZXRlQXJ0aWZhY3QSKS5zdG9yYWdlLnByaXZhdGUudjEuRGVsZXRlQXJ0aWZhY3RSZXF1ZXN0Giouc3RvcmFnZS5wcml2YXRlLnYxLkRlbGV0ZUFydGlmYWN0UmVzcG9uc2VCTlpMZ2l0aHViLmNvbS90YWxnZW50LXdvcmsvY29udHJhY3RzL2dlbi9nby9zdG9yYWdlL3ByaXZhdGUvdjE7c3RvcmFnZXByaXZhdGV2MWIGcHJvdG8z", [file_google_protobuf_timestamp]);
+
+/**
+ * Describes the message storage.private.v1.DirectoryLocator.
+ * Use `create(DirectoryLocatorSchema)` to create a new message.
+ */
+export const DirectoryLocatorSchema = /*@__PURE__*/
+  messageDesc(file_storage_private_v1_storage, 0);
+
+/**
+ * Describes the message storage.private.v1.OwnerFact.
+ * Use `create(OwnerFactSchema)` to create a new message.
+ */
+export const OwnerFactSchema = /*@__PURE__*/
+  messageDesc(file_storage_private_v1_storage, 1);
+
+/**
+ * Describes the message storage.private.v1.DirectoryOwner.
+ * Use `create(DirectoryOwnerSchema)` to create a new message.
+ */
+export const DirectoryOwnerSchema = /*@__PURE__*/
+  messageDesc(file_storage_private_v1_storage, 2);
+
+/**
+ * Describes the message storage.private.v1.Directory.
+ * Use `create(DirectorySchema)` to create a new message.
+ */
+export const DirectorySchema = /*@__PURE__*/
+  messageDesc(file_storage_private_v1_storage, 3);
+
+/**
+ * Describes the message storage.private.v1.LocatedDirectory.
+ * Use `create(LocatedDirectorySchema)` to create a new message.
+ */
+export const LocatedDirectorySchema = /*@__PURE__*/
+  messageDesc(file_storage_private_v1_storage, 4);
+
+/**
+ * Describes the message storage.private.v1.FilePosition.
+ * Use `create(FilePositionSchema)` to create a new message.
+ */
+export const FilePositionSchema = /*@__PURE__*/
+  messageDesc(file_storage_private_v1_storage, 5);
 
 /**
  * Describes the message storage.private.v1.ShareLink.
  * Use `create(ShareLinkSchema)` to create a new message.
  */
 export const ShareLinkSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 0);
+  messageDesc(file_storage_private_v1_storage, 6);
 
 /**
  * Describes the message storage.private.v1.File.
  * Use `create(FileSchema)` to create a new message.
  */
 export const FileSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 1);
+  messageDesc(file_storage_private_v1_storage, 7);
 
 /**
- * Describes the message storage.private.v1.OpenFileSpaceRequest.
- * Use `create(OpenFileSpaceRequestSchema)` to create a new message.
+ * Describes the message storage.private.v1.OpenDirectoryRequest.
+ * Use `create(OpenDirectoryRequestSchema)` to create a new message.
  */
-export const OpenFileSpaceRequestSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 2);
+export const OpenDirectoryRequestSchema = /*@__PURE__*/
+  messageDesc(file_storage_private_v1_storage, 8);
 
 /**
- * Describes the message storage.private.v1.OpenFileSpaceResponse.
- * Use `create(OpenFileSpaceResponseSchema)` to create a new message.
+ * Describes the message storage.private.v1.OpenDirectoryResponse.
+ * Use `create(OpenDirectoryResponseSchema)` to create a new message.
  */
-export const OpenFileSpaceResponseSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 3);
+export const OpenDirectoryResponseSchema = /*@__PURE__*/
+  messageDesc(file_storage_private_v1_storage, 9);
 
 /**
  * Describes the message storage.private.v1.ListFilesRequest.
  * Use `create(ListFilesRequestSchema)` to create a new message.
  */
 export const ListFilesRequestSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 4);
+  messageDesc(file_storage_private_v1_storage, 10);
 
 /**
  * Describes the message storage.private.v1.ListFilesResponse.
  * Use `create(ListFilesResponseSchema)` to create a new message.
  */
 export const ListFilesResponseSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 5);
-
-/**
- * Describes the message storage.private.v1.ListOwnerFilesRequest.
- * Use `create(ListOwnerFilesRequestSchema)` to create a new message.
- */
-export const ListOwnerFilesRequestSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 6);
-
-/**
- * Describes the message storage.private.v1.ListOwnerFilesResponse.
- * Use `create(ListOwnerFilesResponseSchema)` to create a new message.
- */
-export const ListOwnerFilesResponseSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 7);
-
-/**
- * Describes the message storage.private.v1.ResolveInputSourcesRequest.
- * Use `create(ResolveInputSourcesRequestSchema)` to create a new message.
- */
-export const ResolveInputSourcesRequestSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 8);
-
-/**
- * Describes the message storage.private.v1.ResolvedInputSource.
- * Use `create(ResolvedInputSourceSchema)` to create a new message.
- */
-export const ResolvedInputSourceSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 9);
-
-/**
- * Describes the message storage.private.v1.ResolveInputSourcesResponse.
- * Use `create(ResolveInputSourcesResponseSchema)` to create a new message.
- */
-export const ResolveInputSourcesResponseSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 10);
-
-/**
- * Describes the message storage.private.v1.IssueAttachmentUploadRequest.
- * Use `create(IssueAttachmentUploadRequestSchema)` to create a new message.
- */
-export const IssueAttachmentUploadRequestSchema = /*@__PURE__*/
   messageDesc(file_storage_private_v1_storage, 11);
 
 /**
- * Describes the message storage.private.v1.IssueAttachmentUploadResponse.
- * Use `create(IssueAttachmentUploadResponseSchema)` to create a new message.
+ * Describes the message storage.private.v1.ListDirectoryFilesRequest.
+ * Use `create(ListDirectoryFilesRequestSchema)` to create a new message.
  */
-export const IssueAttachmentUploadResponseSchema = /*@__PURE__*/
+export const ListDirectoryFilesRequestSchema = /*@__PURE__*/
   messageDesc(file_storage_private_v1_storage, 12);
 
 /**
- * Describes the message storage.private.v1.RenameAttachmentRequest.
- * Use `create(RenameAttachmentRequestSchema)` to create a new message.
+ * Describes the message storage.private.v1.ListDirectoryFilesResponse.
+ * Use `create(ListDirectoryFilesResponseSchema)` to create a new message.
  */
-export const RenameAttachmentRequestSchema = /*@__PURE__*/
+export const ListDirectoryFilesResponseSchema = /*@__PURE__*/
   messageDesc(file_storage_private_v1_storage, 13);
 
 /**
- * Describes the message storage.private.v1.RenameAttachmentResponse.
- * Use `create(RenameAttachmentResponseSchema)` to create a new message.
+ * Describes the message storage.private.v1.IssueUploadRequest.
+ * Use `create(IssueUploadRequestSchema)` to create a new message.
  */
-export const RenameAttachmentResponseSchema = /*@__PURE__*/
+export const IssueUploadRequestSchema = /*@__PURE__*/
   messageDesc(file_storage_private_v1_storage, 14);
+
+/**
+ * Describes the message storage.private.v1.IssueUploadResponse.
+ * Use `create(IssueUploadResponseSchema)` to create a new message.
+ */
+export const IssueUploadResponseSchema = /*@__PURE__*/
+  messageDesc(file_storage_private_v1_storage, 15);
+
+/**
+ * Describes the message storage.private.v1.RenameFileRequest.
+ * Use `create(RenameFileRequestSchema)` to create a new message.
+ */
+export const RenameFileRequestSchema = /*@__PURE__*/
+  messageDesc(file_storage_private_v1_storage, 16);
+
+/**
+ * Describes the message storage.private.v1.RenameFileResponse.
+ * Use `create(RenameFileResponseSchema)` to create a new message.
+ */
+export const RenameFileResponseSchema = /*@__PURE__*/
+  messageDesc(file_storage_private_v1_storage, 17);
 
 /**
  * Describes the message storage.private.v1.DeleteFileRequest.
  * Use `create(DeleteFileRequestSchema)` to create a new message.
  */
 export const DeleteFileRequestSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 15);
+  messageDesc(file_storage_private_v1_storage, 18);
 
 /**
  * Describes the message storage.private.v1.DeleteFileResponse.
  * Use `create(DeleteFileResponseSchema)` to create a new message.
  */
 export const DeleteFileResponseSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 16);
+  messageDesc(file_storage_private_v1_storage, 19);
 
 /**
  * Describes the message storage.private.v1.IssueAccessLinkRequest.
  * Use `create(IssueAccessLinkRequestSchema)` to create a new message.
  */
 export const IssueAccessLinkRequestSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 17);
+  messageDesc(file_storage_private_v1_storage, 20);
 
 /**
  * Describes the message storage.private.v1.IssueAccessLinkResponse.
  * Use `create(IssueAccessLinkResponseSchema)` to create a new message.
  */
 export const IssueAccessLinkResponseSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 18);
+  messageDesc(file_storage_private_v1_storage, 21);
 
 /**
  * Describes the message storage.private.v1.GetFilePreviewRequest.
  * Use `create(GetFilePreviewRequestSchema)` to create a new message.
  */
 export const GetFilePreviewRequestSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 19);
+  messageDesc(file_storage_private_v1_storage, 22);
 
 /**
  * Describes the message storage.private.v1.GetFilePreviewResponse.
  * Use `create(GetFilePreviewResponseSchema)` to create a new message.
  */
 export const GetFilePreviewResponseSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 20);
+  messageDesc(file_storage_private_v1_storage, 23);
 
 /**
  * Describes the message storage.private.v1.RequestFilePreviewRequest.
  * Use `create(RequestFilePreviewRequestSchema)` to create a new message.
  */
 export const RequestFilePreviewRequestSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 21);
+  messageDesc(file_storage_private_v1_storage, 24);
 
 /**
  * Describes the message storage.private.v1.RequestFilePreviewResponse.
  * Use `create(RequestFilePreviewResponseSchema)` to create a new message.
  */
 export const RequestFilePreviewResponseSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 22);
+  messageDesc(file_storage_private_v1_storage, 25);
+
+/**
+ * Describes the message storage.private.v1.ContentFile.
+ * Use `create(ContentFileSchema)` to create a new message.
+ */
+export const ContentFileSchema = /*@__PURE__*/
+  messageDesc(file_storage_private_v1_storage, 26);
+
+/**
+ * Describes the message storage.private.v1.ReplaceContentRequest.
+ * Use `create(ReplaceContentRequestSchema)` to create a new message.
+ */
+export const ReplaceContentRequestSchema = /*@__PURE__*/
+  messageDesc(file_storage_private_v1_storage, 27);
+
+/**
+ * Describes the message storage.private.v1.ReplaceContentResponse.
+ * Use `create(ReplaceContentResponseSchema)` to create a new message.
+ */
+export const ReplaceContentResponseSchema = /*@__PURE__*/
+  messageDesc(file_storage_private_v1_storage, 28);
+
+/**
+ * Describes the message storage.private.v1.ReadContentRequest.
+ * Use `create(ReadContentRequestSchema)` to create a new message.
+ */
+export const ReadContentRequestSchema = /*@__PURE__*/
+  messageDesc(file_storage_private_v1_storage, 29);
+
+/**
+ * Describes the message storage.private.v1.ReadContentResponse.
+ * Use `create(ReadContentResponseSchema)` to create a new message.
+ */
+export const ReadContentResponseSchema = /*@__PURE__*/
+  messageDesc(file_storage_private_v1_storage, 30);
 
 /**
  * Describes the message storage.private.v1.FilePreview.
  * Use `create(FilePreviewSchema)` to create a new message.
  */
 export const FilePreviewSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 23);
+  messageDesc(file_storage_private_v1_storage, 31);
 
 /**
  * Describes the message storage.private.v1.CreateShareLinkRequest.
  * Use `create(CreateShareLinkRequestSchema)` to create a new message.
  */
 export const CreateShareLinkRequestSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 24);
+  messageDesc(file_storage_private_v1_storage, 32);
 
 /**
  * Describes the message storage.private.v1.CreateShareLinkResponse.
  * Use `create(CreateShareLinkResponseSchema)` to create a new message.
  */
 export const CreateShareLinkResponseSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 25);
+  messageDesc(file_storage_private_v1_storage, 33);
 
 /**
  * Describes the message storage.private.v1.RevokeShareLinksRequest.
  * Use `create(RevokeShareLinksRequestSchema)` to create a new message.
  */
 export const RevokeShareLinksRequestSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 26);
+  messageDesc(file_storage_private_v1_storage, 34);
 
 /**
  * Describes the message storage.private.v1.RevokeShareLinksResponse.
  * Use `create(RevokeShareLinksResponseSchema)` to create a new message.
  */
 export const RevokeShareLinksResponseSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 27);
+  messageDesc(file_storage_private_v1_storage, 35);
 
 /**
  * Describes the message storage.private.v1.ArtifactOutcome.
  * Use `create(ArtifactOutcomeSchema)` to create a new message.
  */
 export const ArtifactOutcomeSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 28);
+  messageDesc(file_storage_private_v1_storage, 36);
 
 /**
  * Describes the message storage.private.v1.CreateArtifactRequest.
  * Use `create(CreateArtifactRequestSchema)` to create a new message.
  */
 export const CreateArtifactRequestSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 29);
+  messageDesc(file_storage_private_v1_storage, 37);
 
 /**
  * Describes the message storage.private.v1.CreateArtifactResponse.
  * Use `create(CreateArtifactResponseSchema)` to create a new message.
  */
 export const CreateArtifactResponseSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 30);
+  messageDesc(file_storage_private_v1_storage, 38);
 
 /**
  * Describes the message storage.private.v1.ReplaceArtifactRequest.
  * Use `create(ReplaceArtifactRequestSchema)` to create a new message.
  */
 export const ReplaceArtifactRequestSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 31);
+  messageDesc(file_storage_private_v1_storage, 39);
 
 /**
  * Describes the message storage.private.v1.ReplaceArtifactResponse.
  * Use `create(ReplaceArtifactResponseSchema)` to create a new message.
  */
 export const ReplaceArtifactResponseSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 32);
+  messageDesc(file_storage_private_v1_storage, 40);
 
 /**
  * Describes the message storage.private.v1.DeleteArtifactRequest.
  * Use `create(DeleteArtifactRequestSchema)` to create a new message.
  */
 export const DeleteArtifactRequestSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 33);
+  messageDesc(file_storage_private_v1_storage, 41);
 
 /**
  * Describes the message storage.private.v1.DeleteArtifactResponse.
  * Use `create(DeleteArtifactResponseSchema)` to create a new message.
  */
 export const DeleteArtifactResponseSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_storage, 34);
+  messageDesc(file_storage_private_v1_storage, 42);
 
 /**
  * Describes the enum storage.private.v1.ErrorReason.
@@ -273,24 +329,38 @@ export const ErrorReason = /*@__PURE__*/
   tsEnum(ErrorReasonSchema);
 
 /**
- * Describes the enum storage.private.v1.FileKind.
+ * Describes the enum storage.private.v1.Backend.
  */
-export const FileKindSchema = /*@__PURE__*/
+export const BackendSchema = /*@__PURE__*/
   enumDesc(file_storage_private_v1_storage, 1);
 
 /**
- * FileKind is the kind of a File position.
+ * Backend is where a Directory's files live, fixed at its first allocation.
  *
- * @generated from enum storage.private.v1.FileKind
+ * @generated from enum storage.private.v1.Backend
  */
-export const FileKind = /*@__PURE__*/
-  tsEnum(FileKindSchema);
+export const Backend = /*@__PURE__*/
+  tsEnum(BackendSchema);
+
+/**
+ * Describes the enum storage.private.v1.Lifetime.
+ */
+export const LifetimeSchema = /*@__PURE__*/
+  enumDesc(file_storage_private_v1_storage, 2);
+
+/**
+ * Lifetime is how long a Directory is kept, fixed at its first allocation.
+ *
+ * @generated from enum storage.private.v1.Lifetime
+ */
+export const Lifetime = /*@__PURE__*/
+  tsEnum(LifetimeSchema);
 
 /**
  * Describes the enum storage.private.v1.AccessDisposition.
  */
 export const AccessDispositionSchema = /*@__PURE__*/
-  enumDesc(file_storage_private_v1_storage, 2);
+  enumDesc(file_storage_private_v1_storage, 3);
 
 /**
  * AccessDisposition says how an Access Link presents the file.
@@ -304,7 +374,7 @@ export const AccessDisposition = /*@__PURE__*/
  * Describes the enum storage.private.v1.PreviewMode.
  */
 export const PreviewModeSchema = /*@__PURE__*/
-  enumDesc(file_storage_private_v1_storage, 3);
+  enumDesc(file_storage_private_v1_storage, 4);
 
 /**
  * PreviewMode is how a file is shown.
@@ -318,7 +388,7 @@ export const PreviewMode = /*@__PURE__*/
  * Describes the enum storage.private.v1.PreviewDisplay.
  */
 export const PreviewDisplaySchema = /*@__PURE__*/
-  enumDesc(file_storage_private_v1_storage, 4);
+  enumDesc(file_storage_private_v1_storage, 5);
 
 /**
  * PreviewDisplay is what the shown bytes are.
@@ -332,7 +402,7 @@ export const PreviewDisplay = /*@__PURE__*/
  * Describes the enum storage.private.v1.PreviewRefusal.
  */
 export const PreviewRefusalSchema = /*@__PURE__*/
-  enumDesc(file_storage_private_v1_storage, 5);
+  enumDesc(file_storage_private_v1_storage, 6);
 
 /**
  * PreviewRefusal is why a file is not shown, as a reader can recognize it.
@@ -343,23 +413,24 @@ export const PreviewRefusal = /*@__PURE__*/
   tsEnum(PreviewRefusalSchema);
 
 /**
- * FileSpaceService is the File Space Contract. A caller names
- * each File Space by an owner identity Storage keeps opaque, and decides who
- * may read, write or share before calling; Storage checks only the Space
- * Token on writes.
+ * DirectoryService is the File Space Command and Query Contracts and the
+ * Reference Space Command and Query Contracts over Storage's one kind of
+ * space, the Directory. A caller locates each Directory by applying a
+ * DirectoryLocator to its own facts and decides who may read, write or share
+ * before calling; Storage checks only the Space Token on writes.
  *
- * @generated from service storage.private.v1.FileSpaceService
+ * @generated from service storage.private.v1.DirectoryService
  */
-export const FileSpaceService = /*@__PURE__*/
+export const DirectoryService = /*@__PURE__*/
   serviceDesc(file_storage_private_v1_storage, 0);
 
 /**
  * ArtifactService is the Storage Agent Command Contract: a Work Agent's
- * Artifact commands on the File Space its Work was given, each completed
+ * Artifact commands on the File Space its Work publishes into, each completed
  * within its request. The platform Connector calls it under the Work Agent's
- * verified Work credential and its Space Token; the Work and its workspace
- * come from that identity and the File Space from the token, never from the
- * request. A retry meets each
+ * verified Work credential and its Space Token; the Work and its Session
+ * Workspace layout come from that identity and the File Space from the token,
+ * never from the request. A retry meets each
  * command's own semantics: Create refuses a taken name, Replace writes
  * again and Delete finds nothing left to delete.
  *

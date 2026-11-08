@@ -4,8 +4,8 @@
 
 import type { GenEnum, GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
+import type { Directory, FilePosition, FilePreview, LocatedDirectory } from "./storage_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
-import type { FilePreview } from "./storage_pb.js";
 
 /**
  * Describes the file storage/private/v1/workspace.proto.
@@ -13,56 +13,60 @@ import type { FilePreview } from "./storage_pb.js";
 export declare const file_storage_private_v1_workspace: GenFile;
 
 /**
- * AcquireMountsRequest names the spaces by business identity.
+ * MountRequest is one located Directory a Work's sandbox mounts.
+ *
+ * @generated from message storage.private.v1.MountRequest
+ */
+export declare type MountRequest = Message<"storage.private.v1.MountRequest"> & {
+  /**
+   * The Directory with the backend and lifetime of its first allocation.
+   *
+   * @generated from field: storage.private.v1.LocatedDirectory directory = 1;
+   */
+  directory?: LocatedDirectory;
+
+  /**
+   * True to mount it read-only; false read-write.
+   *
+   * @generated from field: bool read_only = 2;
+   */
+  readOnly: boolean;
+
+  /**
+   * Clean relative paths inside the Directory where Agent mounts other
+   * Directories; each is prepared, with every parent, owned by the sandbox
+   * user.
+   *
+   * @generated from field: repeated string mount_points = 3;
+   */
+  mountPoints: string[];
+};
+
+/**
+ * Describes the message storage.private.v1.MountRequest.
+ * Use `create(MountRequestSchema)` to create a new message.
+ */
+export declare const MountRequestSchema: GenMessage<MountRequest>;
+
+/**
+ * AcquireMountsRequest names the Directories of one Work's located layout.
  *
  * @generated from message storage.private.v1.AcquireMountsRequest
  */
 export declare type AcquireMountsRequest = Message<"storage.private.v1.AcquireMountsRequest"> & {
   /**
-   * Owner of the HOME the Work uses, as its caller named it; opaque to
-   * Storage, which decides where each HOME lives. The same owner always
-   * reaches the same HOME.
+   * The Work whose sandbox mounts them.
    *
-   * @generated from field: string home_owner = 1;
-   */
-  homeOwner: string;
-
-  /**
-   * The Work.
-   *
-   * @generated from field: string work_id = 2;
+   * @generated from field: string work_id = 1;
    */
   workId: string;
 
   /**
-   * Reference naming the Work's Session Workspace; empty for a Work that has
-   * none, such as a project-scoped definition's Agent.
+   * The Directories, each once.
    *
-   * @generated from field: string workspace_reference = 3;
+   * @generated from field: repeated storage.private.v1.MountRequest mounts = 2;
    */
-  workspaceReference: string;
-
-  /**
-   * Opaque input source of the Work; empty when it has none.
-   *
-   * @generated from field: string input_source = 4;
-   */
-  inputSource: string;
-
-  /**
-   * Space Token supplied with the input source.
-   *
-   * @generated from field: string space_token = 5;
-   */
-  spaceToken: string;
-
-  /**
-   * Reference Spaces the Work's sandbox mounts read-only, each opened on
-   * its first request.
-   *
-   * @generated from field: repeated storage.private.v1.ReferenceMount reference_mounts = 6;
-   */
-  referenceMounts: ReferenceMount[];
+  mounts: MountRequest[];
 };
 
 /**
@@ -72,82 +76,28 @@ export declare type AcquireMountsRequest = Message<"storage.private.v1.AcquireMo
 export declare const AcquireMountsRequestSchema: GenMessage<AcquireMountsRequest>;
 
 /**
- * ReferenceMount is a Reference Space mounted read-only in a workspace at a
- * name its caller gives.
- *
- * @generated from message storage.private.v1.ReferenceMount
- */
-export declare type ReferenceMount = Message<"storage.private.v1.ReferenceMount"> & {
-  /**
-   * Directory under /workspace: one visible path element other than inputs.
-   *
-   * @generated from field: string name = 1;
-   */
-  name: string;
-
-  /**
-   * Owner of the Reference Space.
-   *
-   * @generated from field: string owner = 2;
-   */
-  owner: string;
-};
-
-/**
- * Describes the message storage.private.v1.ReferenceMount.
- * Use `create(ReferenceMountSchema)` to create a new message.
- */
-export declare const ReferenceMountSchema: GenMessage<ReferenceMount>;
-
-/**
- * MountedReference is the grant of one Reference Space mount.
- *
- * @generated from message storage.private.v1.MountedReference
- */
-export declare type MountedReference = Message<"storage.private.v1.MountedReference"> & {
-  /**
-   * The mount's name under /workspace.
-   *
-   * @generated from field: string name = 1;
-   */
-  name: string;
-
-  /**
-   * The Reference Space, read-only, following its current content.
-   *
-   * @generated from field: storage.private.v1.MountGrant grant = 2;
-   */
-  grant?: MountGrant;
-};
-
-/**
- * Describes the message storage.private.v1.MountedReference.
- * Use `create(MountedReferenceSchema)` to create a new message.
- */
-export declare const MountedReferenceSchema: GenMessage<MountedReference>;
-
-/**
- * MountGrant is one space's location and access mode, opaque to the caller.
+ * MountGrant is one Directory's location and access mode, opaque to the
+ * caller.
  *
  * @generated from message storage.private.v1.MountGrant
  */
 export declare type MountGrant = Message<"storage.private.v1.MountGrant"> & {
   /**
-   * Persistent volume claim holding the space.
+   * Persistent volume claim holding the Directory.
    *
    * @generated from field: string claim_name = 1;
    */
   claimName: string;
 
   /**
-   * Path of the space within the claim.
+   * Path of the Directory within the claim.
    *
    * @generated from field: string sub_path = 2;
    */
   subPath: string;
 
   /**
-   * True when the space is mounted read-only.
+   * True when the Directory is mounted read-only.
    *
    * @generated from field: bool read_only = 3;
    */
@@ -167,32 +117,11 @@ export declare const MountGrantSchema: GenMessage<MountGrant>;
  */
 export declare type AcquireMountsResponse = Message<"storage.private.v1.AcquireMountsResponse"> & {
   /**
-   * The HOME, read-write.
+   * One grant per requested Directory, in request order.
    *
-   * @generated from field: storage.private.v1.MountGrant home = 1;
+   * @generated from field: repeated storage.private.v1.MountGrant grants = 1;
    */
-  home?: MountGrant;
-
-  /**
-   * The Session Workspace, read-write; absent for a Work without one.
-   *
-   * @generated from field: storage.private.v1.MountGrant workspace = 2;
-   */
-  workspace?: MountGrant;
-
-  /**
-   * The input source's Attachments, read-only; absent without one.
-   *
-   * @generated from field: storage.private.v1.MountGrant inputs = 3;
-   */
-  inputs?: MountGrant;
-
-  /**
-   * The requested Reference Spaces, in request order.
-   *
-   * @generated from field: repeated storage.private.v1.MountedReference references = 4;
-   */
-  references: MountedReference[];
+  grants: MountGrant[];
 };
 
 /**
@@ -202,38 +131,79 @@ export declare type AcquireMountsResponse = Message<"storage.private.v1.AcquireM
 export declare const AcquireMountsResponseSchema: GenMessage<AcquireMountsResponse>;
 
 /**
+ * MountedDirectory is a Directory mounted inside a Work Directory.
+ *
+ * @generated from message storage.private.v1.MountedDirectory
+ */
+export declare type MountedDirectory = Message<"storage.private.v1.MountedDirectory"> & {
+  /**
+   * Clean relative path inside the Work Directory where it is mounted.
+   *
+   * @generated from field: string path = 1;
+   */
+  path: string;
+
+  /**
+   * The mounted Directory.
+   *
+   * @generated from field: storage.private.v1.Directory directory = 2;
+   */
+  directory?: Directory;
+};
+
+/**
+ * Describes the message storage.private.v1.MountedDirectory.
+ * Use `create(MountedDirectorySchema)` to create a new message.
+ */
+export declare const MountedDirectorySchema: GenMessage<MountedDirectory>;
+
+/**
+ * WorkspaceLayout is a Work Directory as its sandbox sees it: the Directory
+ * and the Directories mounted inside it.
+ *
+ * @generated from message storage.private.v1.WorkspaceLayout
+ */
+export declare type WorkspaceLayout = Message<"storage.private.v1.WorkspaceLayout"> & {
+  /**
+   * The Work Directory.
+   *
+   * @generated from field: storage.private.v1.Directory workspace = 1;
+   */
+  workspace?: Directory;
+
+  /**
+   * Directories mounted inside it, each at its own path.
+   *
+   * @generated from field: repeated storage.private.v1.MountedDirectory mounts = 2;
+   */
+  mounts: MountedDirectory[];
+};
+
+/**
+ * Describes the message storage.private.v1.WorkspaceLayout.
+ * Use `create(WorkspaceLayoutSchema)` to create a new message.
+ */
+export declare const WorkspaceLayoutSchema: GenMessage<WorkspaceLayout>;
+
+/**
  * GetWorkspaceViewRequest names the workspace and the directory.
  *
  * @generated from message storage.private.v1.GetWorkspaceViewRequest
  */
 export declare type GetWorkspaceViewRequest = Message<"storage.private.v1.GetWorkspaceViewRequest"> & {
   /**
-   * Reference naming the Work's Session Workspace.
+   * The Work Directory and what is mounted in it.
    *
-   * @generated from field: string workspace_reference = 1;
+   * @generated from field: storage.private.v1.WorkspaceLayout layout = 1;
    */
-  workspaceReference: string;
+  layout?: WorkspaceLayout;
 
   /**
-   * Opaque input source of the Work; empty when it has none.
+   * Directory relative to the Work Directory; empty for its root.
    *
-   * @generated from field: string input_source = 2;
-   */
-  inputSource: string;
-
-  /**
-   * Directory relative to /workspace; empty for its root.
-   *
-   * @generated from field: string path = 3;
+   * @generated from field: string path = 2;
    */
   path: string;
-
-  /**
-   * Reference Spaces the Work's sandbox mounts.
-   *
-   * @generated from field: repeated storage.private.v1.ReferenceMount reference_mounts = 4;
-   */
-  referenceMounts: ReferenceMount[];
 };
 
 /**
@@ -277,12 +247,12 @@ export declare type WorkspaceEntry = Message<"storage.private.v1.WorkspaceEntry"
   kind: WorkspaceEntryKind;
 
   /**
-   * Under inputs/: the Attachment's name in the input source's File Space,
-   * read as that Attachment.
+   * A file Storage wrote into a mounted Directory: its position, read and
+   * previewed as that file.
    *
-   * @generated from field: string attachment_name = 5;
+   * @generated from field: storage.private.v1.FilePosition position = 6;
    */
-  attachmentName: string;
+  position?: FilePosition;
 };
 
 /**
@@ -325,25 +295,18 @@ export declare const GetWorkspaceViewResponseSchema: GenMessage<GetWorkspaceView
  */
 export declare type GetWorkspaceFilePreviewRequest = Message<"storage.private.v1.GetWorkspaceFilePreviewRequest"> & {
   /**
-   * Reference naming the Work's Session Workspace.
+   * The Work Directory and what is mounted in it.
    *
-   * @generated from field: string workspace_reference = 1;
+   * @generated from field: storage.private.v1.WorkspaceLayout layout = 1;
    */
-  workspaceReference: string;
+  layout?: WorkspaceLayout;
 
   /**
-   * File relative to /workspace, outside inputs/.
+   * File relative to the Work Directory.
    *
    * @generated from field: string path = 2;
    */
   path: string;
-
-  /**
-   * Reference Spaces the Work's sandbox mounts.
-   *
-   * @generated from field: repeated storage.private.v1.ReferenceMount reference_mounts = 3;
-   */
-  referenceMounts: ReferenceMount[];
 };
 
 /**
@@ -379,25 +342,18 @@ export declare const GetWorkspaceFilePreviewResponseSchema: GenMessage<GetWorksp
  */
 export declare type IssueWorkspaceFileLinkRequest = Message<"storage.private.v1.IssueWorkspaceFileLinkRequest"> & {
   /**
-   * Reference naming the Work's Session Workspace.
+   * The Work Directory and what is mounted in it.
    *
-   * @generated from field: string workspace_reference = 1;
+   * @generated from field: storage.private.v1.WorkspaceLayout layout = 1;
    */
-  workspaceReference: string;
+  layout?: WorkspaceLayout;
 
   /**
-   * File relative to /workspace, outside inputs/.
+   * File relative to the Work Directory.
    *
    * @generated from field: string path = 2;
    */
   path: string;
-
-  /**
-   * Reference Spaces the Work's sandbox mounts.
-   *
-   * @generated from field: repeated storage.private.v1.ReferenceMount reference_mounts = 3;
-   */
-  referenceMounts: ReferenceMount[];
 };
 
 /**
@@ -434,45 +390,38 @@ export declare type IssueWorkspaceFileLinkResponse = Message<"storage.private.v1
 export declare const IssueWorkspaceFileLinkResponseSchema: GenMessage<IssueWorkspaceFileLinkResponse>;
 
 /**
- * RequestWorkspaceReclamationRequest names the closed Work's workspace.
+ * RequestWorkReclamationRequest names the closed Work.
  *
- * @generated from message storage.private.v1.RequestWorkspaceReclamationRequest
+ * @generated from message storage.private.v1.RequestWorkReclamationRequest
  */
-export declare type RequestWorkspaceReclamationRequest = Message<"storage.private.v1.RequestWorkspaceReclamationRequest"> & {
+export declare type RequestWorkReclamationRequest = Message<"storage.private.v1.RequestWorkReclamationRequest"> & {
   /**
    * The closed Work.
    *
    * @generated from field: string work_id = 1;
    */
   workId: string;
-
-  /**
-   * Reference naming its Session Workspace.
-   *
-   * @generated from field: string workspace_reference = 2;
-   */
-  workspaceReference: string;
 };
 
 /**
- * Describes the message storage.private.v1.RequestWorkspaceReclamationRequest.
- * Use `create(RequestWorkspaceReclamationRequestSchema)` to create a new message.
+ * Describes the message storage.private.v1.RequestWorkReclamationRequest.
+ * Use `create(RequestWorkReclamationRequestSchema)` to create a new message.
  */
-export declare const RequestWorkspaceReclamationRequestSchema: GenMessage<RequestWorkspaceReclamationRequest>;
+export declare const RequestWorkReclamationRequestSchema: GenMessage<RequestWorkReclamationRequest>;
 
 /**
- * RequestWorkspaceReclamationResponse confirms durable acceptance.
+ * RequestWorkReclamationResponse confirms durable acceptance.
  *
- * @generated from message storage.private.v1.RequestWorkspaceReclamationResponse
+ * @generated from message storage.private.v1.RequestWorkReclamationResponse
  */
-export declare type RequestWorkspaceReclamationResponse = Message<"storage.private.v1.RequestWorkspaceReclamationResponse"> & {
+export declare type RequestWorkReclamationResponse = Message<"storage.private.v1.RequestWorkReclamationResponse"> & {
 };
 
 /**
- * Describes the message storage.private.v1.RequestWorkspaceReclamationResponse.
- * Use `create(RequestWorkspaceReclamationResponseSchema)` to create a new message.
+ * Describes the message storage.private.v1.RequestWorkReclamationResponse.
+ * Use `create(RequestWorkReclamationResponseSchema)` to create a new message.
  */
-export declare const RequestWorkspaceReclamationResponseSchema: GenMessage<RequestWorkspaceReclamationResponse>;
+export declare const RequestWorkReclamationResponseSchema: GenMessage<RequestWorkReclamationResponse>;
 
 /**
  * JudgeFilePreviewRequest is what a workspace file Storage does not hold
@@ -579,14 +528,18 @@ export enum WorkspaceEntryKind {
 export declare const WorkspaceEntryKindSchema: GenEnum<WorkspaceEntryKind>;
 
 /**
- * SandboxMountService is the Sandbox Mount Contract; only Agent calls it.
+ * SandboxMountService is the Sandbox Mount, Workspace View Query and Work
+ * Reclamation Intent Contracts; only Agent calls it.
  *
  * @generated from service storage.private.v1.SandboxMountService
  */
 export declare const SandboxMountService: GenService<{
   /**
-   * AcquireMounts returns the Mount Grants of a Work's HOME, Session Workspace
-   * and input source, creating each on its first request.
+   * AcquireMounts opens each requested located Directory, completing its
+   * allocation, prepares the mount points named inside it with every parent
+   * owned by the sandbox user, and returns one Mount Grant per Directory in
+   * request order. A Mount Grant is issued, never held: there is no unmount.
+   * A reclaimed Directory refuses with DIRECTORY_RECLAIMED.
    *
    * @generated from rpc storage.private.v1.SandboxMountService.AcquireMounts
    */
@@ -596,9 +549,9 @@ export declare const SandboxMountService: GenService<{
     output: typeof AcquireMountsResponseSchema;
   },
   /**
-   * GetWorkspaceView lists one directory of a Work's workspace as its sandbox
-   * sees it, Attachments included under inputs/ and each Reference Space's
-   * current content under the name its caller mounted it at.
+   * GetWorkspaceView lists one directory of a Work Directory as its sandbox
+   * sees it, with each Directory mounted inside it shown where Agent placed
+   * it.
    *
    * @generated from rpc storage.private.v1.SandboxMountService.GetWorkspaceView
    */
@@ -608,9 +561,10 @@ export declare const SandboxMountService: GenService<{
     output: typeof GetWorkspaceViewResponseSchema;
   },
   /**
-   * GetWorkspaceFilePreview tells how one workspace file outside inputs/ is
-   * shown, with a link for one inline read when bytes are shown. Workspace
-   * files have no Preview Copies.
+   * GetWorkspaceFilePreview tells how one workspace file is shown, with a
+   * link for one inline read when bytes are shown. Workspace files have no
+   * Preview Copies; a file Storage wrote into a mounted Directory is read as
+   * that file.
    *
    * @generated from rpc storage.private.v1.SandboxMountService.GetWorkspaceFilePreview
    */
@@ -621,7 +575,7 @@ export declare const SandboxMountService: GenService<{
   },
   /**
    * IssueWorkspaceFileLink issues a short-lived link to download one
-   * workspace file outside inputs/ under its own name.
+   * workspace file under its own name.
    *
    * @generated from rpc storage.private.v1.SandboxMountService.IssueWorkspaceFileLink
    */
@@ -631,15 +585,17 @@ export declare const SandboxMountService: GenService<{
     output: typeof IssueWorkspaceFileLinkResponseSchema;
   },
   /**
-   * RequestWorkspaceReclamation accepts the reclamation of a closed Work's
-   * workspace; Storage completes it on its own schedule.
+   * RequestWorkReclamation accepts the reclamation of every Directory whose
+   * owner names a closed Work and whose lifetime is that Work's; Storage
+   * removes their content once publications copying from them finish.
+   * Repeating it changes nothing.
    *
-   * @generated from rpc storage.private.v1.SandboxMountService.RequestWorkspaceReclamation
+   * @generated from rpc storage.private.v1.SandboxMountService.RequestWorkReclamation
    */
-  requestWorkspaceReclamation: {
+  requestWorkReclamation: {
     methodKind: "unary";
-    input: typeof RequestWorkspaceReclamationRequestSchema;
-    output: typeof RequestWorkspaceReclamationResponseSchema;
+    input: typeof RequestWorkReclamationRequestSchema;
+    output: typeof RequestWorkReclamationResponseSchema;
   },
   /**
    * JudgeFilePreview tells how a workspace file Storage does not hold is

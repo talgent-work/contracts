@@ -10,119 +10,126 @@ import { file_storage_private_v1_storage } from "./storage_pb.js";
  * Describes the file storage/private/v1/workspace.proto.
  */
 export const file_storage_private_v1_workspace = /*@__PURE__*/
-  fileDesc("CiJzdG9yYWdlL3ByaXZhdGUvdjEvd29ya3NwYWNlLnByb3RvEhJzdG9yYWdlLnByaXZhdGUudjEiwQEKFEFjcXVpcmVNb3VudHNSZXF1ZXN0EhIKCmhvbWVfb3duZXIYASABKAkSDwoHd29ya19pZBgCIAEoCRIbChN3b3Jrc3BhY2VfcmVmZXJlbmNlGAMgASgJEhQKDGlucHV0X3NvdXJjZRgEIAEoCRITCgtzcGFjZV90b2tlbhgFIAEoCRI8ChByZWZlcmVuY2VfbW91bnRzGAYgAygLMiIuc3RvcmFnZS5wcml2YXRlLnYxLlJlZmVyZW5jZU1vdW50Ii0KDlJlZmVyZW5jZU1vdW50EgwKBG5hbWUYASABKAkSDQoFb3duZXIYAiABKAkiTwoQTW91bnRlZFJlZmVyZW5jZRIMCgRuYW1lGAEgASgJEi0KBWdyYW50GAIgASgLMh4uc3RvcmFnZS5wcml2YXRlLnYxLk1vdW50R3JhbnQiRQoKTW91bnRHcmFudBISCgpjbGFpbV9uYW1lGAEgASgJEhAKCHN1Yl9wYXRoGAIgASgJEhEKCXJlYWRfb25seRgDIAEoCCLiAQoVQWNxdWlyZU1vdW50c1Jlc3BvbnNlEiwKBGhvbWUYASABKAsyHi5zdG9yYWdlLnByaXZhdGUudjEuTW91bnRHcmFudBIxCgl3b3Jrc3BhY2UYAiABKAsyHi5zdG9yYWdlLnByaXZhdGUudjEuTW91bnRHcmFudBIuCgZpbnB1dHMYAyABKAsyHi5zdG9yYWdlLnByaXZhdGUudjEuTW91bnRHcmFudBI4CgpyZWZlcmVuY2VzGAQgAygLMiQuc3RvcmFnZS5wcml2YXRlLnYxLk1vdW50ZWRSZWZlcmVuY2UimAEKF0dldFdvcmtzcGFjZVZpZXdSZXF1ZXN0EhsKE3dvcmtzcGFjZV9yZWZlcmVuY2UYASABKAkSFAoMaW5wdXRfc291cmNlGAIgASgJEgwKBHBhdGgYAyABKAkSPAoQcmVmZXJlbmNlX21vdW50cxgEIAMoCzIiLnN0b3JhZ2UucHJpdmF0ZS52MS5SZWZlcmVuY2VNb3VudCKyAQoOV29ya3NwYWNlRW50cnkSDAoEbmFtZRgBIAEoCRISCgpzaXplX2J5dGVzGAIgASgDEi8KC21vZGlmaWVkX2F0GAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBI0CgRraW5kGAQgASgOMiYuc3RvcmFnZS5wcml2YXRlLnYxLldvcmtzcGFjZUVudHJ5S2luZBIXCg9hdHRhY2htZW50X25hbWUYBSABKAkiXgoYR2V0V29ya3NwYWNlVmlld1Jlc3BvbnNlEjMKB2VudHJpZXMYASADKAsyIi5zdG9yYWdlLnByaXZhdGUudjEuV29ya3NwYWNlRW50cnkSDQoFdG90YWwYAiABKA0iiQEKHkdldFdvcmtzcGFjZUZpbGVQcmV2aWV3UmVxdWVzdBIbChN3b3Jrc3BhY2VfcmVmZXJlbmNlGAEgASgJEgwKBHBhdGgYAiABKAkSPAoQcmVmZXJlbmNlX21vdW50cxgDIAMoCzIiLnN0b3JhZ2UucHJpdmF0ZS52MS5SZWZlcmVuY2VNb3VudCJTCh9HZXRXb3Jrc3BhY2VGaWxlUHJldmlld1Jlc3BvbnNlEjAKB3ByZXZpZXcYASABKAsyHy5zdG9yYWdlLnByaXZhdGUudjEuRmlsZVByZXZpZXciiAEKHUlzc3VlV29ya3NwYWNlRmlsZUxpbmtSZXF1ZXN0EhsKE3dvcmtzcGFjZV9yZWZlcmVuY2UYASABKAkSDAoEcGF0aBgCIAEoCRI8ChByZWZlcmVuY2VfbW91bnRzGAMgAygLMiIuc3RvcmFnZS5wcml2YXRlLnYxLlJlZmVyZW5jZU1vdW50ImQKHklzc3VlV29ya3NwYWNlRmlsZUxpbmtSZXNwb25zZRISCgphY2Nlc3NfdXJsGAEgASgJEi4KCmV4cGlyZXNfYXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIlIKIlJlcXVlc3RXb3Jrc3BhY2VSZWNsYW1hdGlvblJlcXVlc3QSDwoHd29ya19pZBgBIAEoCRIbChN3b3Jrc3BhY2VfcmVmZXJlbmNlGAIgASgJIiUKI1JlcXVlc3RXb3Jrc3BhY2VSZWNsYW1hdGlvblJlc3BvbnNlIkkKF0p1ZGdlRmlsZVByZXZpZXdSZXF1ZXN0EgwKBG5hbWUYASABKAkSEgoKc2l6ZV9ieXRlcxgCIAEoAxIMCgRoZWFkGAMgASgMImYKGEp1ZGdlRmlsZVByZXZpZXdSZXNwb25zZRIwCgdwcmV2aWV3GAEgASgLMh8uc3RvcmFnZS5wcml2YXRlLnYxLkZpbGVQcmV2aWV3EhgKEHJlYWRfbGltaXRfYnl0ZXMYAiABKAMqnAEKEldvcmtzcGFjZUVudHJ5S2luZBIkCiBXT1JLU1BBQ0VfRU5UUllfS0lORF9VTlNQRUNJRklFRBAAEiIKHldPUktTUEFDRV9FTlRSWV9LSU5EX0RJUkVDVE9SWRABEh0KGVdPUktTUEFDRV9FTlRSWV9LSU5EX0ZJTEUQAhIdChlXT1JLU1BBQ0VfRU5UUllfS0lORF9MSU5LEAMy8AUKE1NhbmRib3hNb3VudFNlcnZpY2USZAoNQWNxdWlyZU1vdW50cxIoLnN0b3JhZ2UucHJpdmF0ZS52MS5BY3F1aXJlTW91bnRzUmVxdWVzdBopLnN0b3JhZ2UucHJpdmF0ZS52MS5BY3F1aXJlTW91bnRzUmVzcG9uc2USbQoQR2V0V29ya3NwYWNlVmlldxIrLnN0b3JhZ2UucHJpdmF0ZS52MS5HZXRXb3Jrc3BhY2VWaWV3UmVxdWVzdBosLnN0b3JhZ2UucHJpdmF0ZS52MS5HZXRXb3Jrc3BhY2VWaWV3UmVzcG9uc2USggEKF0dldFdvcmtzcGFjZUZpbGVQcmV2aWV3EjIuc3RvcmFnZS5wcml2YXRlLnYxLkdldFdvcmtzcGFjZUZpbGVQcmV2aWV3UmVxdWVzdBozLnN0b3JhZ2UucHJpdmF0ZS52MS5HZXRXb3Jrc3BhY2VGaWxlUHJldmlld1Jlc3BvbnNlEn8KFklzc3VlV29ya3NwYWNlRmlsZUxpbmsSMS5zdG9yYWdlLnByaXZhdGUudjEuSXNzdWVXb3Jrc3BhY2VGaWxlTGlua1JlcXVlc3QaMi5zdG9yYWdlLnByaXZhdGUudjEuSXNzdWVXb3Jrc3BhY2VGaWxlTGlua1Jlc3BvbnNlEo4BChtSZXF1ZXN0V29ya3NwYWNlUmVjbGFtYXRpb24SNi5zdG9yYWdlLnByaXZhdGUudjEuUmVxdWVzdFdvcmtzcGFjZVJlY2xhbWF0aW9uUmVxdWVzdBo3LnN0b3JhZ2UucHJpdmF0ZS52MS5SZXF1ZXN0V29ya3NwYWNlUmVjbGFtYXRpb25SZXNwb25zZRJtChBKdWRnZUZpbGVQcmV2aWV3Eisuc3RvcmFnZS5wcml2YXRlLnYxLkp1ZGdlRmlsZVByZXZpZXdSZXF1ZXN0Giwuc3RvcmFnZS5wcml2YXRlLnYxLkp1ZGdlRmlsZVByZXZpZXdSZXNwb25zZUJOWkxnaXRodWIuY29tL3RhbGdlbnQtd29yay9jb250cmFjdHMvZ2VuL2dvL3N0b3JhZ2UvcHJpdmF0ZS92MTtzdG9yYWdlcHJpdmF0ZXYxYgZwcm90bzM", [file_google_protobuf_timestamp, file_storage_private_v1_storage]);
+  fileDesc("CiJzdG9yYWdlL3ByaXZhdGUvdjEvd29ya3NwYWNlLnByb3RvEhJzdG9yYWdlLnByaXZhdGUudjEicAoMTW91bnRSZXF1ZXN0EjcKCWRpcmVjdG9yeRgBIAEoCzIkLnN0b3JhZ2UucHJpdmF0ZS52MS5Mb2NhdGVkRGlyZWN0b3J5EhEKCXJlYWRfb25seRgCIAEoCBIUCgxtb3VudF9wb2ludHMYAyADKAkiWQoUQWNxdWlyZU1vdW50c1JlcXVlc3QSDwoHd29ya19pZBgBIAEoCRIwCgZtb3VudHMYAiADKAsyIC5zdG9yYWdlLnByaXZhdGUudjEuTW91bnRSZXF1ZXN0IkUKCk1vdW50R3JhbnQSEgoKY2xhaW1fbmFtZRgBIAEoCRIQCghzdWJfcGF0aBgCIAEoCRIRCglyZWFkX29ubHkYAyABKAgiRwoVQWNxdWlyZU1vdW50c1Jlc3BvbnNlEi4KBmdyYW50cxgBIAMoCzIeLnN0b3JhZ2UucHJpdmF0ZS52MS5Nb3VudEdyYW50IlIKEE1vdW50ZWREaXJlY3RvcnkSDAoEcGF0aBgBIAEoCRIwCglkaXJlY3RvcnkYAiABKAsyHS5zdG9yYWdlLnByaXZhdGUudjEuRGlyZWN0b3J5InkKD1dvcmtzcGFjZUxheW91dBIwCgl3b3Jrc3BhY2UYASABKAsyHS5zdG9yYWdlLnByaXZhdGUudjEuRGlyZWN0b3J5EjQKBm1vdW50cxgCIAMoCzIkLnN0b3JhZ2UucHJpdmF0ZS52MS5Nb3VudGVkRGlyZWN0b3J5IlwKF0dldFdvcmtzcGFjZVZpZXdSZXF1ZXN0EjMKBmxheW91dBgBIAEoCzIjLnN0b3JhZ2UucHJpdmF0ZS52MS5Xb3Jrc3BhY2VMYXlvdXQSDAoEcGF0aBgCIAEoCSLkAQoOV29ya3NwYWNlRW50cnkSDAoEbmFtZRgBIAEoCRISCgpzaXplX2J5dGVzGAIgASgDEi8KC21vZGlmaWVkX2F0GAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBI0CgRraW5kGAQgASgOMiYuc3RvcmFnZS5wcml2YXRlLnYxLldvcmtzcGFjZUVudHJ5S2luZBIyCghwb3NpdGlvbhgGIAEoCzIgLnN0b3JhZ2UucHJpdmF0ZS52MS5GaWxlUG9zaXRpb25KBAgFEAZSD2F0dGFjaG1lbnRfbmFtZSJeChhHZXRXb3Jrc3BhY2VWaWV3UmVzcG9uc2USMwoHZW50cmllcxgBIAMoCzIiLnN0b3JhZ2UucHJpdmF0ZS52MS5Xb3Jrc3BhY2VFbnRyeRINCgV0b3RhbBgCIAEoDSJjCh5HZXRXb3Jrc3BhY2VGaWxlUHJldmlld1JlcXVlc3QSMwoGbGF5b3V0GAEgASgLMiMuc3RvcmFnZS5wcml2YXRlLnYxLldvcmtzcGFjZUxheW91dBIMCgRwYXRoGAIgASgJIlMKH0dldFdvcmtzcGFjZUZpbGVQcmV2aWV3UmVzcG9uc2USMAoHcHJldmlldxgBIAEoCzIfLnN0b3JhZ2UucHJpdmF0ZS52MS5GaWxlUHJldmlldyJiCh1Jc3N1ZVdvcmtzcGFjZUZpbGVMaW5rUmVxdWVzdBIzCgZsYXlvdXQYASABKAsyIy5zdG9yYWdlLnByaXZhdGUudjEuV29ya3NwYWNlTGF5b3V0EgwKBHBhdGgYAiABKAkiZAoeSXNzdWVXb3Jrc3BhY2VGaWxlTGlua1Jlc3BvbnNlEhIKCmFjY2Vzc191cmwYASABKAkSLgoKZXhwaXJlc19hdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAiMAodUmVxdWVzdFdvcmtSZWNsYW1hdGlvblJlcXVlc3QSDwoHd29ya19pZBgBIAEoCSIgCh5SZXF1ZXN0V29ya1JlY2xhbWF0aW9uUmVzcG9uc2UiSQoXSnVkZ2VGaWxlUHJldmlld1JlcXVlc3QSDAoEbmFtZRgBIAEoCRISCgpzaXplX2J5dGVzGAIgASgDEgwKBGhlYWQYAyABKAwiZgoYSnVkZ2VGaWxlUHJldmlld1Jlc3BvbnNlEjAKB3ByZXZpZXcYASABKAsyHy5zdG9yYWdlLnByaXZhdGUudjEuRmlsZVByZXZpZXcSGAoQcmVhZF9saW1pdF9ieXRlcxgCIAEoAyqcAQoSV29ya3NwYWNlRW50cnlLaW5kEiQKIFdPUktTUEFDRV9FTlRSWV9LSU5EX1VOU1BFQ0lGSUVEEAASIgoeV09SS1NQQUNFX0VOVFJZX0tJTkRfRElSRUNUT1JZEAESHQoZV09SS1NQQUNFX0VOVFJZX0tJTkRfRklMRRACEh0KGVdPUktTUEFDRV9FTlRSWV9LSU5EX0xJTksQAzLgBQoTU2FuZGJveE1vdW50U2VydmljZRJkCg1BY3F1aXJlTW91bnRzEiguc3RvcmFnZS5wcml2YXRlLnYxLkFjcXVpcmVNb3VudHNSZXF1ZXN0Gikuc3RvcmFnZS5wcml2YXRlLnYxLkFjcXVpcmVNb3VudHNSZXNwb25zZRJtChBHZXRXb3Jrc3BhY2VWaWV3Eisuc3RvcmFnZS5wcml2YXRlLnYxLkdldFdvcmtzcGFjZVZpZXdSZXF1ZXN0Giwuc3RvcmFnZS5wcml2YXRlLnYxLkdldFdvcmtzcGFjZVZpZXdSZXNwb25zZRKCAQoXR2V0V29ya3NwYWNlRmlsZVByZXZpZXcSMi5zdG9yYWdlLnByaXZhdGUudjEuR2V0V29ya3NwYWNlRmlsZVByZXZpZXdSZXF1ZXN0GjMuc3RvcmFnZS5wcml2YXRlLnYxLkdldFdvcmtzcGFjZUZpbGVQcmV2aWV3UmVzcG9uc2USfwoWSXNzdWVXb3Jrc3BhY2VGaWxlTGluaxIxLnN0b3JhZ2UucHJpdmF0ZS52MS5Jc3N1ZVdvcmtzcGFjZUZpbGVMaW5rUmVxdWVzdBoyLnN0b3JhZ2UucHJpdmF0ZS52MS5Jc3N1ZVdvcmtzcGFjZUZpbGVMaW5rUmVzcG9uc2USfwoWUmVxdWVzdFdvcmtSZWNsYW1hdGlvbhIxLnN0b3JhZ2UucHJpdmF0ZS52MS5SZXF1ZXN0V29ya1JlY2xhbWF0aW9uUmVxdWVzdBoyLnN0b3JhZ2UucHJpdmF0ZS52MS5SZXF1ZXN0V29ya1JlY2xhbWF0aW9uUmVzcG9uc2USbQoQSnVkZ2VGaWxlUHJldmlldxIrLnN0b3JhZ2UucHJpdmF0ZS52MS5KdWRnZUZpbGVQcmV2aWV3UmVxdWVzdBosLnN0b3JhZ2UucHJpdmF0ZS52MS5KdWRnZUZpbGVQcmV2aWV3UmVzcG9uc2VCTlpMZ2l0aHViLmNvbS90YWxnZW50LXdvcmsvY29udHJhY3RzL2dlbi9nby9zdG9yYWdlL3ByaXZhdGUvdjE7c3RvcmFnZXByaXZhdGV2MWIGcHJvdG8z", [file_google_protobuf_timestamp, file_storage_private_v1_storage]);
+
+/**
+ * Describes the message storage.private.v1.MountRequest.
+ * Use `create(MountRequestSchema)` to create a new message.
+ */
+export const MountRequestSchema = /*@__PURE__*/
+  messageDesc(file_storage_private_v1_workspace, 0);
 
 /**
  * Describes the message storage.private.v1.AcquireMountsRequest.
  * Use `create(AcquireMountsRequestSchema)` to create a new message.
  */
 export const AcquireMountsRequestSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_workspace, 0);
-
-/**
- * Describes the message storage.private.v1.ReferenceMount.
- * Use `create(ReferenceMountSchema)` to create a new message.
- */
-export const ReferenceMountSchema = /*@__PURE__*/
   messageDesc(file_storage_private_v1_workspace, 1);
-
-/**
- * Describes the message storage.private.v1.MountedReference.
- * Use `create(MountedReferenceSchema)` to create a new message.
- */
-export const MountedReferenceSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_workspace, 2);
 
 /**
  * Describes the message storage.private.v1.MountGrant.
  * Use `create(MountGrantSchema)` to create a new message.
  */
 export const MountGrantSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_workspace, 3);
+  messageDesc(file_storage_private_v1_workspace, 2);
 
 /**
  * Describes the message storage.private.v1.AcquireMountsResponse.
  * Use `create(AcquireMountsResponseSchema)` to create a new message.
  */
 export const AcquireMountsResponseSchema = /*@__PURE__*/
+  messageDesc(file_storage_private_v1_workspace, 3);
+
+/**
+ * Describes the message storage.private.v1.MountedDirectory.
+ * Use `create(MountedDirectorySchema)` to create a new message.
+ */
+export const MountedDirectorySchema = /*@__PURE__*/
   messageDesc(file_storage_private_v1_workspace, 4);
+
+/**
+ * Describes the message storage.private.v1.WorkspaceLayout.
+ * Use `create(WorkspaceLayoutSchema)` to create a new message.
+ */
+export const WorkspaceLayoutSchema = /*@__PURE__*/
+  messageDesc(file_storage_private_v1_workspace, 5);
 
 /**
  * Describes the message storage.private.v1.GetWorkspaceViewRequest.
  * Use `create(GetWorkspaceViewRequestSchema)` to create a new message.
  */
 export const GetWorkspaceViewRequestSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_workspace, 5);
+  messageDesc(file_storage_private_v1_workspace, 6);
 
 /**
  * Describes the message storage.private.v1.WorkspaceEntry.
  * Use `create(WorkspaceEntrySchema)` to create a new message.
  */
 export const WorkspaceEntrySchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_workspace, 6);
+  messageDesc(file_storage_private_v1_workspace, 7);
 
 /**
  * Describes the message storage.private.v1.GetWorkspaceViewResponse.
  * Use `create(GetWorkspaceViewResponseSchema)` to create a new message.
  */
 export const GetWorkspaceViewResponseSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_workspace, 7);
+  messageDesc(file_storage_private_v1_workspace, 8);
 
 /**
  * Describes the message storage.private.v1.GetWorkspaceFilePreviewRequest.
  * Use `create(GetWorkspaceFilePreviewRequestSchema)` to create a new message.
  */
 export const GetWorkspaceFilePreviewRequestSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_workspace, 8);
+  messageDesc(file_storage_private_v1_workspace, 9);
 
 /**
  * Describes the message storage.private.v1.GetWorkspaceFilePreviewResponse.
  * Use `create(GetWorkspaceFilePreviewResponseSchema)` to create a new message.
  */
 export const GetWorkspaceFilePreviewResponseSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_workspace, 9);
+  messageDesc(file_storage_private_v1_workspace, 10);
 
 /**
  * Describes the message storage.private.v1.IssueWorkspaceFileLinkRequest.
  * Use `create(IssueWorkspaceFileLinkRequestSchema)` to create a new message.
  */
 export const IssueWorkspaceFileLinkRequestSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_workspace, 10);
+  messageDesc(file_storage_private_v1_workspace, 11);
 
 /**
  * Describes the message storage.private.v1.IssueWorkspaceFileLinkResponse.
  * Use `create(IssueWorkspaceFileLinkResponseSchema)` to create a new message.
  */
 export const IssueWorkspaceFileLinkResponseSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_workspace, 11);
-
-/**
- * Describes the message storage.private.v1.RequestWorkspaceReclamationRequest.
- * Use `create(RequestWorkspaceReclamationRequestSchema)` to create a new message.
- */
-export const RequestWorkspaceReclamationRequestSchema = /*@__PURE__*/
   messageDesc(file_storage_private_v1_workspace, 12);
 
 /**
- * Describes the message storage.private.v1.RequestWorkspaceReclamationResponse.
- * Use `create(RequestWorkspaceReclamationResponseSchema)` to create a new message.
+ * Describes the message storage.private.v1.RequestWorkReclamationRequest.
+ * Use `create(RequestWorkReclamationRequestSchema)` to create a new message.
  */
-export const RequestWorkspaceReclamationResponseSchema = /*@__PURE__*/
+export const RequestWorkReclamationRequestSchema = /*@__PURE__*/
   messageDesc(file_storage_private_v1_workspace, 13);
+
+/**
+ * Describes the message storage.private.v1.RequestWorkReclamationResponse.
+ * Use `create(RequestWorkReclamationResponseSchema)` to create a new message.
+ */
+export const RequestWorkReclamationResponseSchema = /*@__PURE__*/
+  messageDesc(file_storage_private_v1_workspace, 14);
 
 /**
  * Describes the message storage.private.v1.JudgeFilePreviewRequest.
  * Use `create(JudgeFilePreviewRequestSchema)` to create a new message.
  */
 export const JudgeFilePreviewRequestSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_workspace, 14);
+  messageDesc(file_storage_private_v1_workspace, 15);
 
 /**
  * Describes the message storage.private.v1.JudgeFilePreviewResponse.
  * Use `create(JudgeFilePreviewResponseSchema)` to create a new message.
  */
 export const JudgeFilePreviewResponseSchema = /*@__PURE__*/
-  messageDesc(file_storage_private_v1_workspace, 15);
+  messageDesc(file_storage_private_v1_workspace, 16);
 
 /**
  * Describes the enum storage.private.v1.WorkspaceEntryKind.
@@ -139,7 +146,8 @@ export const WorkspaceEntryKind = /*@__PURE__*/
   tsEnum(WorkspaceEntryKindSchema);
 
 /**
- * SandboxMountService is the Sandbox Mount Contract; only Agent calls it.
+ * SandboxMountService is the Sandbox Mount, Workspace View Query and Work
+ * Reclamation Intent Contracts; only Agent calls it.
  *
  * @generated from service storage.private.v1.SandboxMountService
  */

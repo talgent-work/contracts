@@ -12,11 +12,66 @@ import type { Timestamp } from "@bufbuild/protobuf/wkt";
 export declare const file_storage_integration_v1_file_changed: GenFile;
 
 /**
+ * OwnerFact is one condition of the Directory's owner with its value.
+ *
+ * @generated from message storage.integration.v1.OwnerFact
+ */
+export declare type OwnerFact = Message<"storage.integration.v1.OwnerFact"> & {
+  /**
+   * The condition's name, such as "subject".
+   *
+   * @generated from field: string condition = 1;
+   */
+  condition: string;
+
+  /**
+   * The value the locating caller supplied.
+   *
+   * @generated from field: string value = 2;
+   */
+  value: string;
+};
+
+/**
+ * Describes the message storage.integration.v1.OwnerFact.
+ * Use `create(OwnerFactSchema)` to create a new message.
+ */
+export declare const OwnerFactSchema: GenMessage<OwnerFact>;
+
+/**
+ * Directory identifies the Directory a file changed in: its owner, as the
+ * locating caller's facts in condition order, and its name.
+ *
+ * @generated from message storage.integration.v1.Directory
+ */
+export declare type Directory = Message<"storage.integration.v1.Directory"> & {
+  /**
+   * Owner facts ordered by condition name.
+   *
+   * @generated from field: repeated storage.integration.v1.OwnerFact owner = 1;
+   */
+  owner: OwnerFact[];
+
+  /**
+   * Name within the owner.
+   *
+   * @generated from field: string name = 2;
+   */
+  name: string;
+};
+
+/**
+ * Describes the message storage.integration.v1.Directory.
+ * Use `create(DirectorySchema)` to create a new message.
+ */
+export declare const DirectorySchema: GenMessage<Directory>;
+
+/**
  * FileChangedV1 is the File Change Published Fact: one committed change of a
- * file in a File Space, published best-effort. It names the space
- * only by its opaque owner identity, which each subscriber claims or ignores,
- * and names the file but carries no content. Exactly one of actor_user_id and
- * actor_work_id is set.
+ * file Storage carried out, published best-effort. It names the Directory by
+ * its owner and name, which each subscriber claims or ignores, and names the
+ * file but carries no content. Changes a Harness makes through a mount are
+ * never published. Exactly one of actor_user_id and actor_work_id is set.
  *
  * @generated from message storage.integration.v1.FileChangedV1
  */
@@ -36,18 +91,11 @@ export declare type FileChangedV1 = Message<"storage.integration.v1.FileChangedV
   occurredAt?: Timestamp;
 
   /**
-   * Owner of the File Space, as its caller named it.
+   * The Directory the file is in.
    *
-   * @generated from field: string owner = 3;
+   * @generated from field: storage.integration.v1.Directory directory = 10;
    */
-  owner: string;
-
-  /**
-   * Attachment or Artifact.
-   *
-   * @generated from field: storage.integration.v1.FileKind kind = 4;
-   */
-  kind: FileKind;
+  directory?: Directory;
 
   /**
    * The file's name after the change; for a deletion, the name it had.
@@ -57,7 +105,7 @@ export declare type FileChangedV1 = Message<"storage.integration.v1.FileChangedV
   name: string;
 
   /**
-   * The former name of a renamed Attachment; empty otherwise.
+   * The former name of a renamed file; empty otherwise.
    *
    * @generated from field: string previous_name = 6;
    */
@@ -92,40 +140,7 @@ export declare type FileChangedV1 = Message<"storage.integration.v1.FileChangedV
 export declare const FileChangedV1Schema: GenMessage<FileChangedV1>;
 
 /**
- * FileKind tells an Attachment from an Artifact.
- *
- * @generated from enum storage.integration.v1.FileKind
- */
-export enum FileKind {
-  /**
-   * Unspecified kind; never published.
-   *
-   * @generated from enum value: FILE_KIND_UNSPECIFIED = 0;
-   */
-  UNSPECIFIED = 0,
-
-  /**
-   * An input file of the space's owner.
-   *
-   * @generated from enum value: FILE_KIND_ATTACHMENT = 1;
-   */
-  ATTACHMENT = 1,
-
-  /**
-   * A file a Work Agent published.
-   *
-   * @generated from enum value: FILE_KIND_ARTIFACT = 2;
-   */
-  ARTIFACT = 2,
-}
-
-/**
- * Describes the enum storage.integration.v1.FileKind.
- */
-export declare const FileKindSchema: GenEnum<FileKind>;
-
-/**
- * FileOperation is how a file in a File Space changed.
+ * FileOperation is how a file Storage wrote changed.
  *
  * @generated from enum storage.integration.v1.FileOperation
  */
@@ -153,7 +168,7 @@ export enum FileOperation {
   REPLACED = 2,
 
   /**
-   * An Attachment moved to a new name.
+   * A file moved to a new name.
    *
    * @generated from enum value: FILE_OPERATION_RENAMED = 3;
    */

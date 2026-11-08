@@ -275,6 +275,9 @@ message ListDirectoryFilesRequest {
 message ListDirectoryFilesResponse {
   // Files of the Directories.
   repeated File files = 1;
+  // The requested Directories that were reclaimed, as requested; they list
+  // no files, unlike one never opened, which is simply absent.
+  repeated Directory reclaimed = 2;
 }
 
 // IssueUploadRequest describes the intended write.

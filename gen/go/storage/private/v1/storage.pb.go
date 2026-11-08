@@ -1244,7 +1244,10 @@ func (x *ListDirectoryFilesRequest) GetDirectories() []*Directory {
 type ListDirectoryFilesResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Files of the Directories.
-	Files         []*File `protobuf:"bytes,1,rep,name=files,proto3" json:"files,omitempty"`
+	Files []*File `protobuf:"bytes,1,rep,name=files,proto3" json:"files,omitempty"`
+	// The requested Directories that were reclaimed, as requested; they list
+	// no files, unlike one never opened, which is simply absent.
+	Reclaimed     []*Directory `protobuf:"bytes,2,rep,name=reclaimed,proto3" json:"reclaimed,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1282,6 +1285,13 @@ func (*ListDirectoryFilesResponse) Descriptor() ([]byte, []int) {
 func (x *ListDirectoryFilesResponse) GetFiles() []*File {
 	if x != nil {
 		return x.Files
+	}
+	return nil
+}
+
+func (x *ListDirectoryFilesResponse) GetReclaimed() []*Directory {
+	if x != nil {
+		return x.Reclaimed
 	}
 	return nil
 }
@@ -2937,9 +2947,10 @@ const file_storage_private_v1_storage_proto_rawDesc = "" +
 	"\x11ListFilesResponse\x12.\n" +
 	"\x05files\x18\x01 \x03(\v2\x18.storage.private.v1.FileR\x05files\"\\\n" +
 	"\x19ListDirectoryFilesRequest\x12?\n" +
-	"\vdirectories\x18\x01 \x03(\v2\x1d.storage.private.v1.DirectoryR\vdirectories\"L\n" +
+	"\vdirectories\x18\x01 \x03(\v2\x1d.storage.private.v1.DirectoryR\vdirectories\"\x89\x01\n" +
 	"\x1aListDirectoryFilesResponse\x12.\n" +
-	"\x05files\x18\x01 \x03(\v2\x18.storage.private.v1.FileR\x05files\"\xda\x01\n" +
+	"\x05files\x18\x01 \x03(\v2\x18.storage.private.v1.FileR\x05files\x12;\n" +
+	"\treclaimed\x18\x02 \x03(\v2\x1d.storage.private.v1.DirectoryR\treclaimed\"\xda\x01\n" +
 	"\x12IssueUploadRequest\x12<\n" +
 	"\bposition\x18\x01 \x01(\v2 .storage.private.v1.FilePositionR\bposition\x12\x1f\n" +
 	"\vspace_token\x18\x02 \x01(\tR\n" +
@@ -3199,69 +3210,70 @@ var file_storage_private_v1_storage_proto_depIdxs = []int32{
 	14, // 14: storage.private.v1.ListFilesResponse.files:type_name -> storage.private.v1.File
 	10, // 15: storage.private.v1.ListDirectoryFilesRequest.directories:type_name -> storage.private.v1.Directory
 	14, // 16: storage.private.v1.ListDirectoryFilesResponse.files:type_name -> storage.private.v1.File
-	12, // 17: storage.private.v1.IssueUploadRequest.position:type_name -> storage.private.v1.FilePosition
-	50, // 18: storage.private.v1.IssueUploadResponse.expires_at:type_name -> google.protobuf.Timestamp
-	12, // 19: storage.private.v1.RenameFileRequest.position:type_name -> storage.private.v1.FilePosition
-	14, // 20: storage.private.v1.RenameFileResponse.file:type_name -> storage.private.v1.File
-	12, // 21: storage.private.v1.DeleteFileRequest.position:type_name -> storage.private.v1.FilePosition
-	12, // 22: storage.private.v1.IssueAccessLinkRequest.position:type_name -> storage.private.v1.FilePosition
-	3,  // 23: storage.private.v1.IssueAccessLinkRequest.disposition:type_name -> storage.private.v1.AccessDisposition
-	50, // 24: storage.private.v1.IssueAccessLinkResponse.expires_at:type_name -> google.protobuf.Timestamp
-	12, // 25: storage.private.v1.GetFilePreviewRequest.position:type_name -> storage.private.v1.FilePosition
-	38, // 26: storage.private.v1.GetFilePreviewResponse.preview:type_name -> storage.private.v1.FilePreview
-	12, // 27: storage.private.v1.RequestFilePreviewRequest.position:type_name -> storage.private.v1.FilePosition
-	38, // 28: storage.private.v1.RequestFilePreviewResponse.preview:type_name -> storage.private.v1.FilePreview
-	10, // 29: storage.private.v1.ReplaceContentRequest.directory:type_name -> storage.private.v1.Directory
-	33, // 30: storage.private.v1.ReplaceContentRequest.files:type_name -> storage.private.v1.ContentFile
-	10, // 31: storage.private.v1.ReadContentRequest.directory:type_name -> storage.private.v1.Directory
-	33, // 32: storage.private.v1.ReadContentResponse.files:type_name -> storage.private.v1.ContentFile
-	4,  // 33: storage.private.v1.FilePreview.mode:type_name -> storage.private.v1.PreviewMode
-	5,  // 34: storage.private.v1.FilePreview.display:type_name -> storage.private.v1.PreviewDisplay
-	6,  // 35: storage.private.v1.FilePreview.refusal:type_name -> storage.private.v1.PreviewRefusal
-	50, // 36: storage.private.v1.FilePreview.expires_at:type_name -> google.protobuf.Timestamp
-	12, // 37: storage.private.v1.CreateShareLinkRequest.position:type_name -> storage.private.v1.FilePosition
-	13, // 38: storage.private.v1.CreateShareLinkResponse.share_link:type_name -> storage.private.v1.ShareLink
-	12, // 39: storage.private.v1.RevokeShareLinksRequest.position:type_name -> storage.private.v1.FilePosition
-	14, // 40: storage.private.v1.ArtifactOutcome.artifact:type_name -> storage.private.v1.File
-	43, // 41: storage.private.v1.CreateArtifactResponse.outcome:type_name -> storage.private.v1.ArtifactOutcome
-	43, // 42: storage.private.v1.ReplaceArtifactResponse.outcome:type_name -> storage.private.v1.ArtifactOutcome
-	15, // 43: storage.private.v1.DirectoryService.OpenDirectory:input_type -> storage.private.v1.OpenDirectoryRequest
-	17, // 44: storage.private.v1.DirectoryService.ListFiles:input_type -> storage.private.v1.ListFilesRequest
-	19, // 45: storage.private.v1.DirectoryService.ListDirectoryFiles:input_type -> storage.private.v1.ListDirectoryFilesRequest
-	21, // 46: storage.private.v1.DirectoryService.IssueUpload:input_type -> storage.private.v1.IssueUploadRequest
-	23, // 47: storage.private.v1.DirectoryService.RenameFile:input_type -> storage.private.v1.RenameFileRequest
-	25, // 48: storage.private.v1.DirectoryService.DeleteFile:input_type -> storage.private.v1.DeleteFileRequest
-	27, // 49: storage.private.v1.DirectoryService.IssueAccessLink:input_type -> storage.private.v1.IssueAccessLinkRequest
-	39, // 50: storage.private.v1.DirectoryService.CreateShareLink:input_type -> storage.private.v1.CreateShareLinkRequest
-	41, // 51: storage.private.v1.DirectoryService.RevokeShareLinks:input_type -> storage.private.v1.RevokeShareLinksRequest
-	29, // 52: storage.private.v1.DirectoryService.GetFilePreview:input_type -> storage.private.v1.GetFilePreviewRequest
-	31, // 53: storage.private.v1.DirectoryService.RequestFilePreview:input_type -> storage.private.v1.RequestFilePreviewRequest
-	34, // 54: storage.private.v1.DirectoryService.ReplaceContent:input_type -> storage.private.v1.ReplaceContentRequest
-	36, // 55: storage.private.v1.DirectoryService.ReadContent:input_type -> storage.private.v1.ReadContentRequest
-	44, // 56: storage.private.v1.ArtifactService.CreateArtifact:input_type -> storage.private.v1.CreateArtifactRequest
-	46, // 57: storage.private.v1.ArtifactService.ReplaceArtifact:input_type -> storage.private.v1.ReplaceArtifactRequest
-	48, // 58: storage.private.v1.ArtifactService.DeleteArtifact:input_type -> storage.private.v1.DeleteArtifactRequest
-	16, // 59: storage.private.v1.DirectoryService.OpenDirectory:output_type -> storage.private.v1.OpenDirectoryResponse
-	18, // 60: storage.private.v1.DirectoryService.ListFiles:output_type -> storage.private.v1.ListFilesResponse
-	20, // 61: storage.private.v1.DirectoryService.ListDirectoryFiles:output_type -> storage.private.v1.ListDirectoryFilesResponse
-	22, // 62: storage.private.v1.DirectoryService.IssueUpload:output_type -> storage.private.v1.IssueUploadResponse
-	24, // 63: storage.private.v1.DirectoryService.RenameFile:output_type -> storage.private.v1.RenameFileResponse
-	26, // 64: storage.private.v1.DirectoryService.DeleteFile:output_type -> storage.private.v1.DeleteFileResponse
-	28, // 65: storage.private.v1.DirectoryService.IssueAccessLink:output_type -> storage.private.v1.IssueAccessLinkResponse
-	40, // 66: storage.private.v1.DirectoryService.CreateShareLink:output_type -> storage.private.v1.CreateShareLinkResponse
-	42, // 67: storage.private.v1.DirectoryService.RevokeShareLinks:output_type -> storage.private.v1.RevokeShareLinksResponse
-	30, // 68: storage.private.v1.DirectoryService.GetFilePreview:output_type -> storage.private.v1.GetFilePreviewResponse
-	32, // 69: storage.private.v1.DirectoryService.RequestFilePreview:output_type -> storage.private.v1.RequestFilePreviewResponse
-	35, // 70: storage.private.v1.DirectoryService.ReplaceContent:output_type -> storage.private.v1.ReplaceContentResponse
-	37, // 71: storage.private.v1.DirectoryService.ReadContent:output_type -> storage.private.v1.ReadContentResponse
-	45, // 72: storage.private.v1.ArtifactService.CreateArtifact:output_type -> storage.private.v1.CreateArtifactResponse
-	47, // 73: storage.private.v1.ArtifactService.ReplaceArtifact:output_type -> storage.private.v1.ReplaceArtifactResponse
-	49, // 74: storage.private.v1.ArtifactService.DeleteArtifact:output_type -> storage.private.v1.DeleteArtifactResponse
-	59, // [59:75] is the sub-list for method output_type
-	43, // [43:59] is the sub-list for method input_type
-	43, // [43:43] is the sub-list for extension type_name
-	43, // [43:43] is the sub-list for extension extendee
-	0,  // [0:43] is the sub-list for field type_name
+	10, // 17: storage.private.v1.ListDirectoryFilesResponse.reclaimed:type_name -> storage.private.v1.Directory
+	12, // 18: storage.private.v1.IssueUploadRequest.position:type_name -> storage.private.v1.FilePosition
+	50, // 19: storage.private.v1.IssueUploadResponse.expires_at:type_name -> google.protobuf.Timestamp
+	12, // 20: storage.private.v1.RenameFileRequest.position:type_name -> storage.private.v1.FilePosition
+	14, // 21: storage.private.v1.RenameFileResponse.file:type_name -> storage.private.v1.File
+	12, // 22: storage.private.v1.DeleteFileRequest.position:type_name -> storage.private.v1.FilePosition
+	12, // 23: storage.private.v1.IssueAccessLinkRequest.position:type_name -> storage.private.v1.FilePosition
+	3,  // 24: storage.private.v1.IssueAccessLinkRequest.disposition:type_name -> storage.private.v1.AccessDisposition
+	50, // 25: storage.private.v1.IssueAccessLinkResponse.expires_at:type_name -> google.protobuf.Timestamp
+	12, // 26: storage.private.v1.GetFilePreviewRequest.position:type_name -> storage.private.v1.FilePosition
+	38, // 27: storage.private.v1.GetFilePreviewResponse.preview:type_name -> storage.private.v1.FilePreview
+	12, // 28: storage.private.v1.RequestFilePreviewRequest.position:type_name -> storage.private.v1.FilePosition
+	38, // 29: storage.private.v1.RequestFilePreviewResponse.preview:type_name -> storage.private.v1.FilePreview
+	10, // 30: storage.private.v1.ReplaceContentRequest.directory:type_name -> storage.private.v1.Directory
+	33, // 31: storage.private.v1.ReplaceContentRequest.files:type_name -> storage.private.v1.ContentFile
+	10, // 32: storage.private.v1.ReadContentRequest.directory:type_name -> storage.private.v1.Directory
+	33, // 33: storage.private.v1.ReadContentResponse.files:type_name -> storage.private.v1.ContentFile
+	4,  // 34: storage.private.v1.FilePreview.mode:type_name -> storage.private.v1.PreviewMode
+	5,  // 35: storage.private.v1.FilePreview.display:type_name -> storage.private.v1.PreviewDisplay
+	6,  // 36: storage.private.v1.FilePreview.refusal:type_name -> storage.private.v1.PreviewRefusal
+	50, // 37: storage.private.v1.FilePreview.expires_at:type_name -> google.protobuf.Timestamp
+	12, // 38: storage.private.v1.CreateShareLinkRequest.position:type_name -> storage.private.v1.FilePosition
+	13, // 39: storage.private.v1.CreateShareLinkResponse.share_link:type_name -> storage.private.v1.ShareLink
+	12, // 40: storage.private.v1.RevokeShareLinksRequest.position:type_name -> storage.private.v1.FilePosition
+	14, // 41: storage.private.v1.ArtifactOutcome.artifact:type_name -> storage.private.v1.File
+	43, // 42: storage.private.v1.CreateArtifactResponse.outcome:type_name -> storage.private.v1.ArtifactOutcome
+	43, // 43: storage.private.v1.ReplaceArtifactResponse.outcome:type_name -> storage.private.v1.ArtifactOutcome
+	15, // 44: storage.private.v1.DirectoryService.OpenDirectory:input_type -> storage.private.v1.OpenDirectoryRequest
+	17, // 45: storage.private.v1.DirectoryService.ListFiles:input_type -> storage.private.v1.ListFilesRequest
+	19, // 46: storage.private.v1.DirectoryService.ListDirectoryFiles:input_type -> storage.private.v1.ListDirectoryFilesRequest
+	21, // 47: storage.private.v1.DirectoryService.IssueUpload:input_type -> storage.private.v1.IssueUploadRequest
+	23, // 48: storage.private.v1.DirectoryService.RenameFile:input_type -> storage.private.v1.RenameFileRequest
+	25, // 49: storage.private.v1.DirectoryService.DeleteFile:input_type -> storage.private.v1.DeleteFileRequest
+	27, // 50: storage.private.v1.DirectoryService.IssueAccessLink:input_type -> storage.private.v1.IssueAccessLinkRequest
+	39, // 51: storage.private.v1.DirectoryService.CreateShareLink:input_type -> storage.private.v1.CreateShareLinkRequest
+	41, // 52: storage.private.v1.DirectoryService.RevokeShareLinks:input_type -> storage.private.v1.RevokeShareLinksRequest
+	29, // 53: storage.private.v1.DirectoryService.GetFilePreview:input_type -> storage.private.v1.GetFilePreviewRequest
+	31, // 54: storage.private.v1.DirectoryService.RequestFilePreview:input_type -> storage.private.v1.RequestFilePreviewRequest
+	34, // 55: storage.private.v1.DirectoryService.ReplaceContent:input_type -> storage.private.v1.ReplaceContentRequest
+	36, // 56: storage.private.v1.DirectoryService.ReadContent:input_type -> storage.private.v1.ReadContentRequest
+	44, // 57: storage.private.v1.ArtifactService.CreateArtifact:input_type -> storage.private.v1.CreateArtifactRequest
+	46, // 58: storage.private.v1.ArtifactService.ReplaceArtifact:input_type -> storage.private.v1.ReplaceArtifactRequest
+	48, // 59: storage.private.v1.ArtifactService.DeleteArtifact:input_type -> storage.private.v1.DeleteArtifactRequest
+	16, // 60: storage.private.v1.DirectoryService.OpenDirectory:output_type -> storage.private.v1.OpenDirectoryResponse
+	18, // 61: storage.private.v1.DirectoryService.ListFiles:output_type -> storage.private.v1.ListFilesResponse
+	20, // 62: storage.private.v1.DirectoryService.ListDirectoryFiles:output_type -> storage.private.v1.ListDirectoryFilesResponse
+	22, // 63: storage.private.v1.DirectoryService.IssueUpload:output_type -> storage.private.v1.IssueUploadResponse
+	24, // 64: storage.private.v1.DirectoryService.RenameFile:output_type -> storage.private.v1.RenameFileResponse
+	26, // 65: storage.private.v1.DirectoryService.DeleteFile:output_type -> storage.private.v1.DeleteFileResponse
+	28, // 66: storage.private.v1.DirectoryService.IssueAccessLink:output_type -> storage.private.v1.IssueAccessLinkResponse
+	40, // 67: storage.private.v1.DirectoryService.CreateShareLink:output_type -> storage.private.v1.CreateShareLinkResponse
+	42, // 68: storage.private.v1.DirectoryService.RevokeShareLinks:output_type -> storage.private.v1.RevokeShareLinksResponse
+	30, // 69: storage.private.v1.DirectoryService.GetFilePreview:output_type -> storage.private.v1.GetFilePreviewResponse
+	32, // 70: storage.private.v1.DirectoryService.RequestFilePreview:output_type -> storage.private.v1.RequestFilePreviewResponse
+	35, // 71: storage.private.v1.DirectoryService.ReplaceContent:output_type -> storage.private.v1.ReplaceContentResponse
+	37, // 72: storage.private.v1.DirectoryService.ReadContent:output_type -> storage.private.v1.ReadContentResponse
+	45, // 73: storage.private.v1.ArtifactService.CreateArtifact:output_type -> storage.private.v1.CreateArtifactResponse
+	47, // 74: storage.private.v1.ArtifactService.ReplaceArtifact:output_type -> storage.private.v1.ReplaceArtifactResponse
+	49, // 75: storage.private.v1.ArtifactService.DeleteArtifact:output_type -> storage.private.v1.DeleteArtifactResponse
+	60, // [60:76] is the sub-list for method output_type
+	44, // [44:60] is the sub-list for method input_type
+	44, // [44:44] is the sub-list for extension type_name
+	44, // [44:44] is the sub-list for extension extendee
+	0,  // [0:44] is the sub-list for field type_name
 }
 
 func init() { file_storage_private_v1_storage_proto_init() }

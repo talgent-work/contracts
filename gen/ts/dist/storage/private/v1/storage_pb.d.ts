@@ -416,6 +416,14 @@ export declare type ListDirectoryFilesResponse = Message<"storage.private.v1.Lis
    * @generated from field: repeated storage.private.v1.File files = 1;
    */
   files: File[];
+
+  /**
+   * The requested Directories that were reclaimed, as requested; they list
+   * no files, unlike one never opened, which is simply absent.
+   *
+   * @generated from field: repeated storage.private.v1.Directory reclaimed = 2;
+   */
+  reclaimed: Directory[];
 };
 
 /**

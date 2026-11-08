@@ -777,7 +777,8 @@ func (x *RevokeWorkShareResponse) GetWork() *WorkInfo {
 // It is a read projection, not an instruction to send that input again.
 type WorkStartupRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Identity of the retained initial preparation request.
+	// Identity of the initial preparation: the Work's identity, which the
+	// caller's creation request identity derives.
 	RequestId string `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
 	// Ordinary initial input; excludes the capability/system prompt.
 	InitialMessage string `protobuf:"bytes,2,opt,name=initial_message,json=initialMessage,proto3" json:"initial_message,omitempty"`

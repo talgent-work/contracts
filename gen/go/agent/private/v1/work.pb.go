@@ -2968,7 +2968,9 @@ type EndWorkExecutionRequest struct {
 	SubjectId string `protobuf:"bytes,1,opt,name=subject_id,json=subjectId,proto3" json:"subject_id,omitempty"`
 	// Persistent conversation identity.
 	WorkId string `protobuf:"bytes,2,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
-	// Caller's start request; a not-yet-admitted request is canceled instead of admitted.
+	// The caller's start request whose run is ended. The Work's current run ends
+	// whichever start admitted it; a request not yet received starts nothing once
+	// its Desk has left.
 	StartRequestId string `protobuf:"bytes,3,opt,name=start_request_id,json=startRequestId,proto3" json:"start_request_id,omitempty"`
 	// Stable control request correlation.
 	RequestId     string `protobuf:"bytes,4,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
@@ -3819,7 +3821,7 @@ type WorkPreparation struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Conversation identity.
 	WorkId string `protobuf:"bytes,1,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
-	// Original startup request identity.
+	// The Work's identity, which the caller's creation request identity derives.
 	RequestId string `protobuf:"bytes,2,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
 	// Persisted authorized principal.
 	SubjectId string `protobuf:"bytes,3,opt,name=subject_id,json=subjectId,proto3" json:"subject_id,omitempty"`

@@ -17,7 +17,8 @@ export declare const file_agent_public_v1_startup: GenFile;
  */
 export declare type StartupProgress = Message<"agent.public.v1.StartupProgress"> & {
   /**
-   * Retained startup or continuation request, including before execution admission.
+   * The start this progress describes: the Work's identity for its first start,
+   * the start's Desk for a Resume or Restart.
    *
    * @generated from field: string request_id = 1;
    */

@@ -441,7 +441,8 @@ export declare const RevokeWorkShareResponseSchema: GenMessage<RevokeWorkShareRe
  */
 export declare type WorkStartupRequest = Message<"agent.public.v1.WorkStartupRequest"> & {
   /**
-   * Identity of the retained initial preparation request.
+   * Identity of the initial preparation: the Work's identity, which the
+   * caller's creation request identity derives.
    *
    * @generated from field: string request_id = 1;
    */

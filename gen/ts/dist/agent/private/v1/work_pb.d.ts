@@ -1612,7 +1612,9 @@ export declare type EndWorkExecutionRequest = Message<"agent.private.v1.EndWorkE
   workId: string;
 
   /**
-   * Caller's start request; a not-yet-admitted request is canceled instead of admitted.
+   * The caller's start request whose run is ended. The Work's current run ends
+   * whichever start admitted it; a request not yet received starts nothing once
+   * its Desk has left.
    *
    * @generated from field: string start_request_id = 3;
    */
@@ -2017,7 +2019,7 @@ export declare type WorkPreparation = Message<"agent.private.v1.WorkPreparation"
   workId: string;
 
   /**
-   * Original startup request identity.
+   * The Work's identity, which the caller's creation request identity derives.
    *
    * @generated from field: string request_id = 2;
    */

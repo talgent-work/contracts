@@ -24,7 +24,8 @@ const (
 // StartupProgress presents committed preparation facts, never a second lifecycle.
 type StartupProgress struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Retained startup or continuation request, including before execution admission.
+	// The start this progress describes: the Work's identity for its first start,
+	// the start's Desk for a Resume or Restart.
 	RequestId string `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
 	// True once the start request has been admitted.
 	Admitted bool `protobuf:"varint,2,opt,name=admitted,proto3" json:"admitted,omitempty"`

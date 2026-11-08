@@ -594,7 +594,9 @@ message EndWorkExecutionRequest {
   string subject_id = 1;
   // Persistent conversation identity.
   string work_id = 2;
-  // Caller's start request; a not-yet-admitted request is canceled instead of admitted.
+  // The caller's start request whose run is ended. The Work's current run ends
+  // whichever start admitted it; a request not yet received starts nothing once
+  // its Desk has left.
   string start_request_id = 3;
   // Stable control request correlation.
   string request_id = 4;
@@ -713,7 +715,7 @@ message ListSubmittedPreparationsResponse {
 message WorkPreparation {
   // Conversation identity.
   string work_id = 1;
-  // Original startup request identity.
+  // The Work's identity, which the caller's creation request identity derives.
   string request_id = 2;
   // Persisted authorized principal.
   string subject_id = 3;

@@ -217,7 +217,8 @@ message RevokeWorkShareResponse {
 // WorkStartupRequest restores the original startup input across page reloads.
 // It is a read projection, not an instruction to send that input again.
 message WorkStartupRequest {
-  // Identity of the retained initial preparation request.
+  // Identity of the initial preparation: the Work's identity, which the
+  // caller's creation request identity derives.
   string request_id = 1;
   // Ordinary initial input; excludes the capability/system prompt.
   string initial_message = 2;

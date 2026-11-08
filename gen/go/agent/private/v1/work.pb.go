@@ -1013,7 +1013,9 @@ type CreateWorkRequest struct {
 	// Trusted human initiating creation, distinct from the represented owner.
 	// Empty for automated starts, which do not load personal Plugin defaults.
 	StartingUserId string `protobuf:"bytes,1,opt,name=starting_user_id,json=startingUserId,proto3" json:"starting_user_id,omitempty"`
-	// Original creation/admission request identity for uncertain-response recovery.
+	// The caller's creation request identity, which derives the Work's identity:
+	// a repeat with it returns the same Work, so a caller retries an unknown
+	// outcome with the same identity.
 	RequestId string `protobuf:"bytes,2,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
 	// Principal delegated by the authenticated caller.
 	SubjectId string `protobuf:"bytes,3,opt,name=subject_id,json=subjectId,proto3" json:"subject_id,omitempty"`
@@ -1726,7 +1728,9 @@ type ResumeWorkRequest struct {
 	SubjectId string `protobuf:"bytes,1,opt,name=subject_id,json=subjectId,proto3" json:"subject_id,omitempty"`
 	// Stable conversation identity.
 	WorkId string `protobuf:"bytes,2,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
-	// Caller-selected start request UUID, retained when retrying this operation.
+	// The caller's start request identity, which derives the start's Desk: a
+	// repeat while that start holds its Desk returns the same admission, and a
+	// repeat after its Desk left starts nothing.
 	RequestId     string `protobuf:"bytes,3,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1836,7 +1840,9 @@ type RestartWorkRequest struct {
 	SubjectId string `protobuf:"bytes,1,opt,name=subject_id,json=subjectId,proto3" json:"subject_id,omitempty"`
 	// Stable conversation identity.
 	WorkId string `protobuf:"bytes,2,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
-	// Caller-selected start request UUID, retained when retrying this operation.
+	// The caller's start request identity, which derives the start's Desk: a
+	// repeat while that start holds its Desk returns the same admission, and a
+	// repeat after its Desk left starts nothing.
 	RequestId     string `protobuf:"bytes,3,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache

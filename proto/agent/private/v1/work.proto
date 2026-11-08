@@ -235,7 +235,9 @@ message CreateWorkRequest {
   // Trusted human initiating creation, distinct from the represented owner.
   // Empty for automated starts, which do not load personal Plugin defaults.
   string starting_user_id = 1;
-  // Original creation/admission request identity for uncertain-response recovery.
+  // The caller's creation request identity, which derives the Work's identity:
+  // a repeat with it returns the same Work, so a caller retries an unknown
+  // outcome with the same identity.
   string request_id = 2;
   // Principal delegated by the authenticated caller.
   string subject_id = 3;
@@ -397,7 +399,9 @@ message ResumeWorkRequest {
   string subject_id = 1;
   // Stable conversation identity.
   string work_id = 2;
-  // Caller-selected start request UUID, retained when retrying this operation.
+  // The caller's start request identity, which derives the start's Desk: a
+  // repeat while that start holds its Desk returns the same admission, and a
+  // repeat after its Desk left starts nothing.
   string request_id = 3;
 }
 
@@ -413,7 +417,9 @@ message RestartWorkRequest {
   string subject_id = 1;
   // Stable conversation identity.
   string work_id = 2;
-  // Caller-selected start request UUID, retained when retrying this operation.
+  // The caller's start request identity, which derives the start's Desk: a
+  // repeat while that start holds its Desk returns the same admission, and a
+  // repeat after its Desk left starts nothing.
   string request_id = 3;
 }
 

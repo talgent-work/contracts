@@ -519,7 +519,9 @@ export declare type CreateWorkRequest = Message<"agent.private.v1.CreateWorkRequ
   startingUserId: string;
 
   /**
-   * Original creation/admission request identity for uncertain-response recovery.
+   * The caller's creation request identity, which derives the Work's identity:
+   * a repeat with it returns the same Work, so a caller retries an unknown
+   * outcome with the same identity.
    *
    * @generated from field: string request_id = 2;
    */
@@ -957,7 +959,9 @@ export declare type ResumeWorkRequest = Message<"agent.private.v1.ResumeWorkRequ
   workId: string;
 
   /**
-   * Caller-selected start request UUID, retained when retrying this operation.
+   * The caller's start request identity, which derives the start's Desk: a
+   * repeat while that start holds its Desk returns the same admission, and a
+   * repeat after its Desk left starts nothing.
    *
    * @generated from field: string request_id = 3;
    */
@@ -1011,7 +1015,9 @@ export declare type RestartWorkRequest = Message<"agent.private.v1.RestartWorkRe
   workId: string;
 
   /**
-   * Caller-selected start request UUID, retained when retrying this operation.
+   * The caller's start request identity, which derives the start's Desk: a
+   * repeat while that start holds its Desk returns the same admission, and a
+   * repeat after its Desk left starts nothing.
    *
    * @generated from field: string request_id = 3;
    */

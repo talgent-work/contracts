@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	// FileSpaceServiceName is the fully-qualified name of the FileSpaceService service.
-	FileSpaceServiceName = "storage.private.v1.FileSpaceService"
+	// DirectoryServiceName is the fully-qualified name of the DirectoryService service.
+	DirectoryServiceName = "storage.private.v1.DirectoryService"
 	// ArtifactServiceName is the fully-qualified name of the ArtifactService service.
 	ArtifactServiceName = "storage.private.v1.ArtifactService"
 )
@@ -26,41 +26,44 @@ const (
 // reflection-formatted method names, remove the leading slash and convert the remaining slash to a
 // period.
 const (
-	// FileSpaceServiceOpenFileSpaceProcedure is the procedure name of the FileSpaceService's
-	// OpenFileSpace RPC.
-	FileSpaceServiceOpenFileSpaceProcedure = "/storage.private.v1.FileSpaceService/OpenFileSpace"
-	// FileSpaceServiceListFilesProcedure is the procedure name of the FileSpaceService's ListFiles RPC.
-	FileSpaceServiceListFilesProcedure = "/storage.private.v1.FileSpaceService/ListFiles"
-	// FileSpaceServiceListOwnerFilesProcedure is the procedure name of the FileSpaceService's
-	// ListOwnerFiles RPC.
-	FileSpaceServiceListOwnerFilesProcedure = "/storage.private.v1.FileSpaceService/ListOwnerFiles"
-	// FileSpaceServiceResolveInputSourcesProcedure is the procedure name of the FileSpaceService's
-	// ResolveInputSources RPC.
-	FileSpaceServiceResolveInputSourcesProcedure = "/storage.private.v1.FileSpaceService/ResolveInputSources"
-	// FileSpaceServiceIssueAttachmentUploadProcedure is the procedure name of the FileSpaceService's
-	// IssueAttachmentUpload RPC.
-	FileSpaceServiceIssueAttachmentUploadProcedure = "/storage.private.v1.FileSpaceService/IssueAttachmentUpload"
-	// FileSpaceServiceRenameAttachmentProcedure is the procedure name of the FileSpaceService's
-	// RenameAttachment RPC.
-	FileSpaceServiceRenameAttachmentProcedure = "/storage.private.v1.FileSpaceService/RenameAttachment"
-	// FileSpaceServiceDeleteFileProcedure is the procedure name of the FileSpaceService's DeleteFile
+	// DirectoryServiceOpenDirectoryProcedure is the procedure name of the DirectoryService's
+	// OpenDirectory RPC.
+	DirectoryServiceOpenDirectoryProcedure = "/storage.private.v1.DirectoryService/OpenDirectory"
+	// DirectoryServiceListFilesProcedure is the procedure name of the DirectoryService's ListFiles RPC.
+	DirectoryServiceListFilesProcedure = "/storage.private.v1.DirectoryService/ListFiles"
+	// DirectoryServiceListDirectoryFilesProcedure is the procedure name of the DirectoryService's
+	// ListDirectoryFiles RPC.
+	DirectoryServiceListDirectoryFilesProcedure = "/storage.private.v1.DirectoryService/ListDirectoryFiles"
+	// DirectoryServiceIssueUploadProcedure is the procedure name of the DirectoryService's IssueUpload
 	// RPC.
-	FileSpaceServiceDeleteFileProcedure = "/storage.private.v1.FileSpaceService/DeleteFile"
-	// FileSpaceServiceIssueAccessLinkProcedure is the procedure name of the FileSpaceService's
+	DirectoryServiceIssueUploadProcedure = "/storage.private.v1.DirectoryService/IssueUpload"
+	// DirectoryServiceRenameFileProcedure is the procedure name of the DirectoryService's RenameFile
+	// RPC.
+	DirectoryServiceRenameFileProcedure = "/storage.private.v1.DirectoryService/RenameFile"
+	// DirectoryServiceDeleteFileProcedure is the procedure name of the DirectoryService's DeleteFile
+	// RPC.
+	DirectoryServiceDeleteFileProcedure = "/storage.private.v1.DirectoryService/DeleteFile"
+	// DirectoryServiceIssueAccessLinkProcedure is the procedure name of the DirectoryService's
 	// IssueAccessLink RPC.
-	FileSpaceServiceIssueAccessLinkProcedure = "/storage.private.v1.FileSpaceService/IssueAccessLink"
-	// FileSpaceServiceCreateShareLinkProcedure is the procedure name of the FileSpaceService's
+	DirectoryServiceIssueAccessLinkProcedure = "/storage.private.v1.DirectoryService/IssueAccessLink"
+	// DirectoryServiceCreateShareLinkProcedure is the procedure name of the DirectoryService's
 	// CreateShareLink RPC.
-	FileSpaceServiceCreateShareLinkProcedure = "/storage.private.v1.FileSpaceService/CreateShareLink"
-	// FileSpaceServiceRevokeShareLinksProcedure is the procedure name of the FileSpaceService's
+	DirectoryServiceCreateShareLinkProcedure = "/storage.private.v1.DirectoryService/CreateShareLink"
+	// DirectoryServiceRevokeShareLinksProcedure is the procedure name of the DirectoryService's
 	// RevokeShareLinks RPC.
-	FileSpaceServiceRevokeShareLinksProcedure = "/storage.private.v1.FileSpaceService/RevokeShareLinks"
-	// FileSpaceServiceGetFilePreviewProcedure is the procedure name of the FileSpaceService's
+	DirectoryServiceRevokeShareLinksProcedure = "/storage.private.v1.DirectoryService/RevokeShareLinks"
+	// DirectoryServiceGetFilePreviewProcedure is the procedure name of the DirectoryService's
 	// GetFilePreview RPC.
-	FileSpaceServiceGetFilePreviewProcedure = "/storage.private.v1.FileSpaceService/GetFilePreview"
-	// FileSpaceServiceRequestFilePreviewProcedure is the procedure name of the FileSpaceService's
+	DirectoryServiceGetFilePreviewProcedure = "/storage.private.v1.DirectoryService/GetFilePreview"
+	// DirectoryServiceRequestFilePreviewProcedure is the procedure name of the DirectoryService's
 	// RequestFilePreview RPC.
-	FileSpaceServiceRequestFilePreviewProcedure = "/storage.private.v1.FileSpaceService/RequestFilePreview"
+	DirectoryServiceRequestFilePreviewProcedure = "/storage.private.v1.DirectoryService/RequestFilePreview"
+	// DirectoryServiceReplaceContentProcedure is the procedure name of the DirectoryService's
+	// ReplaceContent RPC.
+	DirectoryServiceReplaceContentProcedure = "/storage.private.v1.DirectoryService/ReplaceContent"
+	// DirectoryServiceReadContentProcedure is the procedure name of the DirectoryService's ReadContent
+	// RPC.
+	DirectoryServiceReadContentProcedure = "/storage.private.v1.DirectoryService/ReadContent"
 	// ArtifactServiceCreateArtifactProcedure is the procedure name of the ArtifactService's
 	// CreateArtifact RPC.
 	ArtifactServiceCreateArtifactProcedure = "/storage.private.v1.ArtifactService/CreateArtifact"
@@ -73,115 +76,122 @@ const (
 )
 
 var (
-	fileSpaceServiceOpenFileSpaceSpec = sync.OnceValue(func() connect.Spec {
+	directoryServiceOpenDirectorySpec = sync.OnceValue(func() connect.Spec {
 		return connect.Spec{
 			StreamType: connect.StreamTypeUnary,
-			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("FileSpaceService").Methods().ByName("OpenFileSpace"),
-			Procedure:  FileSpaceServiceOpenFileSpaceProcedure,
+			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("DirectoryService").Methods().ByName("OpenDirectory"),
+			Procedure:  DirectoryServiceOpenDirectoryProcedure,
 		}
 	})
-	fileSpaceServiceListFilesSpec = sync.OnceValue(func() connect.Spec {
+	directoryServiceListFilesSpec = sync.OnceValue(func() connect.Spec {
 		return connect.Spec{
 			StreamType: connect.StreamTypeUnary,
-			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("FileSpaceService").Methods().ByName("ListFiles"),
-			Procedure:  FileSpaceServiceListFilesProcedure,
+			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("DirectoryService").Methods().ByName("ListFiles"),
+			Procedure:  DirectoryServiceListFilesProcedure,
 		}
 	})
-	fileSpaceServiceListOwnerFilesSpec = sync.OnceValue(func() connect.Spec {
+	directoryServiceListDirectoryFilesSpec = sync.OnceValue(func() connect.Spec {
 		return connect.Spec{
 			StreamType: connect.StreamTypeUnary,
-			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("FileSpaceService").Methods().ByName("ListOwnerFiles"),
-			Procedure:  FileSpaceServiceListOwnerFilesProcedure,
+			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("DirectoryService").Methods().ByName("ListDirectoryFiles"),
+			Procedure:  DirectoryServiceListDirectoryFilesProcedure,
 		}
 	})
-	fileSpaceServiceResolveInputSourcesSpec = sync.OnceValue(func() connect.Spec {
+	directoryServiceIssueUploadSpec = sync.OnceValue(func() connect.Spec {
 		return connect.Spec{
 			StreamType: connect.StreamTypeUnary,
-			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("FileSpaceService").Methods().ByName("ResolveInputSources"),
-			Procedure:  FileSpaceServiceResolveInputSourcesProcedure,
+			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("DirectoryService").Methods().ByName("IssueUpload"),
+			Procedure:  DirectoryServiceIssueUploadProcedure,
 		}
 	})
-	fileSpaceServiceIssueAttachmentUploadSpec = sync.OnceValue(func() connect.Spec {
+	directoryServiceRenameFileSpec = sync.OnceValue(func() connect.Spec {
 		return connect.Spec{
 			StreamType: connect.StreamTypeUnary,
-			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("FileSpaceService").Methods().ByName("IssueAttachmentUpload"),
-			Procedure:  FileSpaceServiceIssueAttachmentUploadProcedure,
+			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("DirectoryService").Methods().ByName("RenameFile"),
+			Procedure:  DirectoryServiceRenameFileProcedure,
 		}
 	})
-	fileSpaceServiceRenameAttachmentSpec = sync.OnceValue(func() connect.Spec {
+	directoryServiceDeleteFileSpec = sync.OnceValue(func() connect.Spec {
 		return connect.Spec{
 			StreamType: connect.StreamTypeUnary,
-			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("FileSpaceService").Methods().ByName("RenameAttachment"),
-			Procedure:  FileSpaceServiceRenameAttachmentProcedure,
+			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("DirectoryService").Methods().ByName("DeleteFile"),
+			Procedure:  DirectoryServiceDeleteFileProcedure,
 		}
 	})
-	fileSpaceServiceDeleteFileSpec = sync.OnceValue(func() connect.Spec {
+	directoryServiceIssueAccessLinkSpec = sync.OnceValue(func() connect.Spec {
 		return connect.Spec{
 			StreamType: connect.StreamTypeUnary,
-			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("FileSpaceService").Methods().ByName("DeleteFile"),
-			Procedure:  FileSpaceServiceDeleteFileProcedure,
+			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("DirectoryService").Methods().ByName("IssueAccessLink"),
+			Procedure:  DirectoryServiceIssueAccessLinkProcedure,
 		}
 	})
-	fileSpaceServiceIssueAccessLinkSpec = sync.OnceValue(func() connect.Spec {
+	directoryServiceCreateShareLinkSpec = sync.OnceValue(func() connect.Spec {
 		return connect.Spec{
 			StreamType: connect.StreamTypeUnary,
-			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("FileSpaceService").Methods().ByName("IssueAccessLink"),
-			Procedure:  FileSpaceServiceIssueAccessLinkProcedure,
+			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("DirectoryService").Methods().ByName("CreateShareLink"),
+			Procedure:  DirectoryServiceCreateShareLinkProcedure,
 		}
 	})
-	fileSpaceServiceCreateShareLinkSpec = sync.OnceValue(func() connect.Spec {
+	directoryServiceRevokeShareLinksSpec = sync.OnceValue(func() connect.Spec {
 		return connect.Spec{
 			StreamType: connect.StreamTypeUnary,
-			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("FileSpaceService").Methods().ByName("CreateShareLink"),
-			Procedure:  FileSpaceServiceCreateShareLinkProcedure,
+			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("DirectoryService").Methods().ByName("RevokeShareLinks"),
+			Procedure:  DirectoryServiceRevokeShareLinksProcedure,
 		}
 	})
-	fileSpaceServiceRevokeShareLinksSpec = sync.OnceValue(func() connect.Spec {
+	directoryServiceGetFilePreviewSpec = sync.OnceValue(func() connect.Spec {
 		return connect.Spec{
 			StreamType: connect.StreamTypeUnary,
-			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("FileSpaceService").Methods().ByName("RevokeShareLinks"),
-			Procedure:  FileSpaceServiceRevokeShareLinksProcedure,
+			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("DirectoryService").Methods().ByName("GetFilePreview"),
+			Procedure:  DirectoryServiceGetFilePreviewProcedure,
 		}
 	})
-	fileSpaceServiceGetFilePreviewSpec = sync.OnceValue(func() connect.Spec {
+	directoryServiceRequestFilePreviewSpec = sync.OnceValue(func() connect.Spec {
 		return connect.Spec{
 			StreamType: connect.StreamTypeUnary,
-			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("FileSpaceService").Methods().ByName("GetFilePreview"),
-			Procedure:  FileSpaceServiceGetFilePreviewProcedure,
+			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("DirectoryService").Methods().ByName("RequestFilePreview"),
+			Procedure:  DirectoryServiceRequestFilePreviewProcedure,
 		}
 	})
-	fileSpaceServiceRequestFilePreviewSpec = sync.OnceValue(func() connect.Spec {
+	directoryServiceReplaceContentSpec = sync.OnceValue(func() connect.Spec {
 		return connect.Spec{
 			StreamType: connect.StreamTypeUnary,
-			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("FileSpaceService").Methods().ByName("RequestFilePreview"),
-			Procedure:  FileSpaceServiceRequestFilePreviewProcedure,
+			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("DirectoryService").Methods().ByName("ReplaceContent"),
+			Procedure:  DirectoryServiceReplaceContentProcedure,
+		}
+	})
+	directoryServiceReadContentSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("DirectoryService").Methods().ByName("ReadContent"),
+			Procedure:  DirectoryServiceReadContentProcedure,
 		}
 	})
 )
 
-// FileSpaceServiceClient is a client for the storage.private.v1.FileSpaceService service.
-type FileSpaceServiceClient interface {
-	// OpenFileSpace opens an owner's space on its first need; repeating it
-	// returns the same Space Token and input source.
-	OpenFileSpace(context.Context, *v1.OpenFileSpaceRequest) (*v1.OpenFileSpaceResponse, error)
-	// ListFiles lists an owner's Attachments and Artifacts with their active
-	// Share Links; an unopened space lists nothing.
+// DirectoryServiceClient is a client for the storage.private.v1.DirectoryService service.
+type DirectoryServiceClient interface {
+	// OpenDirectory opens a located Directory on its first need, allocating it
+	// on its backend for its lifetime; repeating it returns the same Space
+	// Token and completes an allocation that failed half-way. The first
+	// opening fixes backend and lifetime. A reclaimed Directory refuses with
+	// DIRECTORY_RECLAIMED.
+	OpenDirectory(context.Context, *v1.OpenDirectoryRequest) (*v1.OpenDirectoryResponse, error)
+	// ListFiles lists the files Storage wrote into one Directory with their
+	// active Share Links; an unopened Directory lists nothing.
 	ListFiles(context.Context, *v1.ListFilesRequest) (*v1.ListFilesResponse, error)
-	// ListOwnerFiles is the Owner File Query: the files in the File Spaces of
-	// the given owners. The caller names only owners whose files it has
-	// authorized its reader to see.
-	ListOwnerFiles(context.Context, *v1.ListOwnerFilesRequest) (*v1.ListOwnerFilesResponse, error)
-	// ResolveInputSources names the owner of the File Space each input source
-	// Storage issued opens, so a caller holding only input sources can name
-	// their spaces by owner; a source that names no File Space is unknown.
-	ResolveInputSources(context.Context, *v1.ResolveInputSourcesRequest) (*v1.ResolveInputSourcesResponse, error)
-	// IssueAttachmentUpload issues the link through which one Attachment is
-	// created or replaced. Create refuses a taken name; Replace refuses a free one.
-	IssueAttachmentUpload(context.Context, *v1.IssueAttachmentUploadRequest) (*v1.IssueAttachmentUploadResponse, error)
-	// RenameAttachment moves an Attachment and its Share Links to a free name.
-	RenameAttachment(context.Context, *v1.RenameAttachmentRequest) (*v1.RenameAttachmentResponse, error)
-	// DeleteFile deletes an Attachment or an Artifact and revokes its Share
-	// Links; deleting an absent file succeeds.
+	// ListDirectoryFiles is the Directory file query: the files Storage wrote
+	// into the given Directories. The caller names only Directories whose files
+	// it has authorized its reader to see.
+	ListDirectoryFiles(context.Context, *v1.ListDirectoryFilesRequest) (*v1.ListDirectoryFilesResponse, error)
+	// IssueUpload issues the link through which one file is created or
+	// replaced by a person. Create refuses a taken name; Replace refuses a
+	// free one.
+	IssueUpload(context.Context, *v1.IssueUploadRequest) (*v1.IssueUploadResponse, error)
+	// RenameFile moves a file and its Share Links to a free name.
+	RenameFile(context.Context, *v1.RenameFileRequest) (*v1.RenameFileResponse, error)
+	// DeleteFile deletes a file and revokes its Share Links; deleting an absent
+	// file succeeds.
 	DeleteFile(context.Context, *v1.DeleteFileRequest) (*v1.DeleteFileResponse, error)
 	// IssueAccessLink issues a short-lived link for one read of a file.
 	IssueAccessLink(context.Context, *v1.IssueAccessLinkRequest) (*v1.IssueAccessLinkResponse, error)
@@ -197,37 +207,45 @@ type FileSpaceServiceClient interface {
 	// content when its preview mode is RENDER; a content already rendering,
 	// rendered or found unrenderable is not rendered again.
 	RequestFilePreview(context.Context, *v1.RequestFilePreviewRequest) (*v1.RequestFilePreviewResponse, error)
+	// ReplaceContent makes the given files a Directory's whole content in one
+	// atomic switch, and completes only once the earlier content is removed.
+	// Repeating it writes the same content again. Readers, mounted ones
+	// included, always see one complete current content.
+	ReplaceContent(context.Context, *v1.ReplaceContentRequest) (*v1.ReplaceContentResponse, error)
+	// ReadContent reads files of a Directory's current content by clean
+	// relative path; before its first replacement it has no files.
+	ReadContent(context.Context, *v1.ReadContentRequest) (*v1.ReadContentResponse, error)
 }
 
-// NewFileSpaceServiceClient constructs a client for the storage.private.v1.FileSpaceService
+// NewDirectoryServiceClient constructs a client for the storage.private.v1.DirectoryService
 // service. Multiple service clients may share a single connect.Client.
-func NewFileSpaceServiceClient(client *connect.Client) FileSpaceServiceClient {
-	return &fileSpaceServiceClient{client: client}
+func NewDirectoryServiceClient(client *connect.Client) DirectoryServiceClient {
+	return &directoryServiceClient{client: client}
 }
 
-// FileSpaceServiceHandler is an implementation of the storage.private.v1.FileSpaceService service.
-type FileSpaceServiceHandler interface {
-	// OpenFileSpace opens an owner's space on its first need; repeating it
-	// returns the same Space Token and input source.
-	OpenFileSpace(context.Context, *v1.OpenFileSpaceRequest) (*v1.OpenFileSpaceResponse, error)
-	// ListFiles lists an owner's Attachments and Artifacts with their active
-	// Share Links; an unopened space lists nothing.
+// DirectoryServiceHandler is an implementation of the storage.private.v1.DirectoryService service.
+type DirectoryServiceHandler interface {
+	// OpenDirectory opens a located Directory on its first need, allocating it
+	// on its backend for its lifetime; repeating it returns the same Space
+	// Token and completes an allocation that failed half-way. The first
+	// opening fixes backend and lifetime. A reclaimed Directory refuses with
+	// DIRECTORY_RECLAIMED.
+	OpenDirectory(context.Context, *v1.OpenDirectoryRequest) (*v1.OpenDirectoryResponse, error)
+	// ListFiles lists the files Storage wrote into one Directory with their
+	// active Share Links; an unopened Directory lists nothing.
 	ListFiles(context.Context, *v1.ListFilesRequest) (*v1.ListFilesResponse, error)
-	// ListOwnerFiles is the Owner File Query: the files in the File Spaces of
-	// the given owners. The caller names only owners whose files it has
-	// authorized its reader to see.
-	ListOwnerFiles(context.Context, *v1.ListOwnerFilesRequest) (*v1.ListOwnerFilesResponse, error)
-	// ResolveInputSources names the owner of the File Space each input source
-	// Storage issued opens, so a caller holding only input sources can name
-	// their spaces by owner; a source that names no File Space is unknown.
-	ResolveInputSources(context.Context, *v1.ResolveInputSourcesRequest) (*v1.ResolveInputSourcesResponse, error)
-	// IssueAttachmentUpload issues the link through which one Attachment is
-	// created or replaced. Create refuses a taken name; Replace refuses a free one.
-	IssueAttachmentUpload(context.Context, *v1.IssueAttachmentUploadRequest) (*v1.IssueAttachmentUploadResponse, error)
-	// RenameAttachment moves an Attachment and its Share Links to a free name.
-	RenameAttachment(context.Context, *v1.RenameAttachmentRequest) (*v1.RenameAttachmentResponse, error)
-	// DeleteFile deletes an Attachment or an Artifact and revokes its Share
-	// Links; deleting an absent file succeeds.
+	// ListDirectoryFiles is the Directory file query: the files Storage wrote
+	// into the given Directories. The caller names only Directories whose files
+	// it has authorized its reader to see.
+	ListDirectoryFiles(context.Context, *v1.ListDirectoryFilesRequest) (*v1.ListDirectoryFilesResponse, error)
+	// IssueUpload issues the link through which one file is created or
+	// replaced by a person. Create refuses a taken name; Replace refuses a
+	// free one.
+	IssueUpload(context.Context, *v1.IssueUploadRequest) (*v1.IssueUploadResponse, error)
+	// RenameFile moves a file and its Share Links to a free name.
+	RenameFile(context.Context, *v1.RenameFileRequest) (*v1.RenameFileResponse, error)
+	// DeleteFile deletes a file and revokes its Share Links; deleting an absent
+	// file succeeds.
 	DeleteFile(context.Context, *v1.DeleteFileRequest) (*v1.DeleteFileResponse, error)
 	// IssueAccessLink issues a short-lived link for one read of a file.
 	IssueAccessLink(context.Context, *v1.IssueAccessLinkRequest) (*v1.IssueAccessLinkResponse, error)
@@ -243,194 +261,215 @@ type FileSpaceServiceHandler interface {
 	// content when its preview mode is RENDER; a content already rendering,
 	// rendered or found unrenderable is not rendered again.
 	RequestFilePreview(context.Context, *v1.RequestFilePreviewRequest) (*v1.RequestFilePreviewResponse, error)
+	// ReplaceContent makes the given files a Directory's whole content in one
+	// atomic switch, and completes only once the earlier content is removed.
+	// Repeating it writes the same content again. Readers, mounted ones
+	// included, always see one complete current content.
+	ReplaceContent(context.Context, *v1.ReplaceContentRequest) (*v1.ReplaceContentResponse, error)
+	// ReadContent reads files of a Directory's current content by clean
+	// relative path; before its first replacement it has no files.
+	ReadContent(context.Context, *v1.ReadContentRequest) (*v1.ReadContentResponse, error)
 }
 
-// RegisterFileSpaceServiceHandler registers svc as the storage.private.v1.FileSpaceService
+// RegisterDirectoryServiceHandler registers svc as the storage.private.v1.DirectoryService
 // implementation on server.
-func RegisterFileSpaceServiceHandler(server *connect.Server, svc FileSpaceServiceHandler) {
-	adapter := fileSpaceServiceHandler{svc: svc}
+func RegisterDirectoryServiceHandler(server *connect.Server, svc DirectoryServiceHandler) {
+	adapter := directoryServiceHandler{svc: svc}
 	server.Register(
-		connect.Method{Spec: fileSpaceServiceOpenFileSpaceSpec(), Handler: adapter.openFileSpace},
-		connect.Method{Spec: fileSpaceServiceListFilesSpec(), Handler: adapter.listFiles},
-		connect.Method{Spec: fileSpaceServiceListOwnerFilesSpec(), Handler: adapter.listOwnerFiles},
-		connect.Method{Spec: fileSpaceServiceResolveInputSourcesSpec(), Handler: adapter.resolveInputSources},
-		connect.Method{Spec: fileSpaceServiceIssueAttachmentUploadSpec(), Handler: adapter.issueAttachmentUpload},
-		connect.Method{Spec: fileSpaceServiceRenameAttachmentSpec(), Handler: adapter.renameAttachment},
-		connect.Method{Spec: fileSpaceServiceDeleteFileSpec(), Handler: adapter.deleteFile},
-		connect.Method{Spec: fileSpaceServiceIssueAccessLinkSpec(), Handler: adapter.issueAccessLink},
-		connect.Method{Spec: fileSpaceServiceCreateShareLinkSpec(), Handler: adapter.createShareLink},
-		connect.Method{Spec: fileSpaceServiceRevokeShareLinksSpec(), Handler: adapter.revokeShareLinks},
-		connect.Method{Spec: fileSpaceServiceGetFilePreviewSpec(), Handler: adapter.getFilePreview},
-		connect.Method{Spec: fileSpaceServiceRequestFilePreviewSpec(), Handler: adapter.requestFilePreview},
+		connect.Method{Spec: directoryServiceOpenDirectorySpec(), Handler: adapter.openDirectory},
+		connect.Method{Spec: directoryServiceListFilesSpec(), Handler: adapter.listFiles},
+		connect.Method{Spec: directoryServiceListDirectoryFilesSpec(), Handler: adapter.listDirectoryFiles},
+		connect.Method{Spec: directoryServiceIssueUploadSpec(), Handler: adapter.issueUpload},
+		connect.Method{Spec: directoryServiceRenameFileSpec(), Handler: adapter.renameFile},
+		connect.Method{Spec: directoryServiceDeleteFileSpec(), Handler: adapter.deleteFile},
+		connect.Method{Spec: directoryServiceIssueAccessLinkSpec(), Handler: adapter.issueAccessLink},
+		connect.Method{Spec: directoryServiceCreateShareLinkSpec(), Handler: adapter.createShareLink},
+		connect.Method{Spec: directoryServiceRevokeShareLinksSpec(), Handler: adapter.revokeShareLinks},
+		connect.Method{Spec: directoryServiceGetFilePreviewSpec(), Handler: adapter.getFilePreview},
+		connect.Method{Spec: directoryServiceRequestFilePreviewSpec(), Handler: adapter.requestFilePreview},
+		connect.Method{Spec: directoryServiceReplaceContentSpec(), Handler: adapter.replaceContent},
+		connect.Method{Spec: directoryServiceReadContentSpec(), Handler: adapter.readContent},
 	)
 }
 
-// UnimplementedFileSpaceServiceHandler returns CodeUnimplemented from all methods.
-type UnimplementedFileSpaceServiceHandler struct{}
+// UnimplementedDirectoryServiceHandler returns CodeUnimplemented from all methods.
+type UnimplementedDirectoryServiceHandler struct{}
 
-func (UnimplementedFileSpaceServiceHandler) OpenFileSpace(context.Context, *v1.OpenFileSpaceRequest) (*v1.OpenFileSpaceResponse, error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.FileSpaceService.OpenFileSpace is not implemented")
+func (UnimplementedDirectoryServiceHandler) OpenDirectory(context.Context, *v1.OpenDirectoryRequest) (*v1.OpenDirectoryResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.DirectoryService.OpenDirectory is not implemented")
 }
 
-func (UnimplementedFileSpaceServiceHandler) ListFiles(context.Context, *v1.ListFilesRequest) (*v1.ListFilesResponse, error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.FileSpaceService.ListFiles is not implemented")
+func (UnimplementedDirectoryServiceHandler) ListFiles(context.Context, *v1.ListFilesRequest) (*v1.ListFilesResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.DirectoryService.ListFiles is not implemented")
 }
 
-func (UnimplementedFileSpaceServiceHandler) ListOwnerFiles(context.Context, *v1.ListOwnerFilesRequest) (*v1.ListOwnerFilesResponse, error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.FileSpaceService.ListOwnerFiles is not implemented")
+func (UnimplementedDirectoryServiceHandler) ListDirectoryFiles(context.Context, *v1.ListDirectoryFilesRequest) (*v1.ListDirectoryFilesResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.DirectoryService.ListDirectoryFiles is not implemented")
 }
 
-func (UnimplementedFileSpaceServiceHandler) ResolveInputSources(context.Context, *v1.ResolveInputSourcesRequest) (*v1.ResolveInputSourcesResponse, error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.FileSpaceService.ResolveInputSources is not implemented")
+func (UnimplementedDirectoryServiceHandler) IssueUpload(context.Context, *v1.IssueUploadRequest) (*v1.IssueUploadResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.DirectoryService.IssueUpload is not implemented")
 }
 
-func (UnimplementedFileSpaceServiceHandler) IssueAttachmentUpload(context.Context, *v1.IssueAttachmentUploadRequest) (*v1.IssueAttachmentUploadResponse, error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.FileSpaceService.IssueAttachmentUpload is not implemented")
+func (UnimplementedDirectoryServiceHandler) RenameFile(context.Context, *v1.RenameFileRequest) (*v1.RenameFileResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.DirectoryService.RenameFile is not implemented")
 }
 
-func (UnimplementedFileSpaceServiceHandler) RenameAttachment(context.Context, *v1.RenameAttachmentRequest) (*v1.RenameAttachmentResponse, error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.FileSpaceService.RenameAttachment is not implemented")
+func (UnimplementedDirectoryServiceHandler) DeleteFile(context.Context, *v1.DeleteFileRequest) (*v1.DeleteFileResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.DirectoryService.DeleteFile is not implemented")
 }
 
-func (UnimplementedFileSpaceServiceHandler) DeleteFile(context.Context, *v1.DeleteFileRequest) (*v1.DeleteFileResponse, error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.FileSpaceService.DeleteFile is not implemented")
+func (UnimplementedDirectoryServiceHandler) IssueAccessLink(context.Context, *v1.IssueAccessLinkRequest) (*v1.IssueAccessLinkResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.DirectoryService.IssueAccessLink is not implemented")
 }
 
-func (UnimplementedFileSpaceServiceHandler) IssueAccessLink(context.Context, *v1.IssueAccessLinkRequest) (*v1.IssueAccessLinkResponse, error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.FileSpaceService.IssueAccessLink is not implemented")
+func (UnimplementedDirectoryServiceHandler) CreateShareLink(context.Context, *v1.CreateShareLinkRequest) (*v1.CreateShareLinkResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.DirectoryService.CreateShareLink is not implemented")
 }
 
-func (UnimplementedFileSpaceServiceHandler) CreateShareLink(context.Context, *v1.CreateShareLinkRequest) (*v1.CreateShareLinkResponse, error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.FileSpaceService.CreateShareLink is not implemented")
+func (UnimplementedDirectoryServiceHandler) RevokeShareLinks(context.Context, *v1.RevokeShareLinksRequest) (*v1.RevokeShareLinksResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.DirectoryService.RevokeShareLinks is not implemented")
 }
 
-func (UnimplementedFileSpaceServiceHandler) RevokeShareLinks(context.Context, *v1.RevokeShareLinksRequest) (*v1.RevokeShareLinksResponse, error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.FileSpaceService.RevokeShareLinks is not implemented")
+func (UnimplementedDirectoryServiceHandler) GetFilePreview(context.Context, *v1.GetFilePreviewRequest) (*v1.GetFilePreviewResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.DirectoryService.GetFilePreview is not implemented")
 }
 
-func (UnimplementedFileSpaceServiceHandler) GetFilePreview(context.Context, *v1.GetFilePreviewRequest) (*v1.GetFilePreviewResponse, error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.FileSpaceService.GetFilePreview is not implemented")
+func (UnimplementedDirectoryServiceHandler) RequestFilePreview(context.Context, *v1.RequestFilePreviewRequest) (*v1.RequestFilePreviewResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.DirectoryService.RequestFilePreview is not implemented")
 }
 
-func (UnimplementedFileSpaceServiceHandler) RequestFilePreview(context.Context, *v1.RequestFilePreviewRequest) (*v1.RequestFilePreviewResponse, error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.FileSpaceService.RequestFilePreview is not implemented")
+func (UnimplementedDirectoryServiceHandler) ReplaceContent(context.Context, *v1.ReplaceContentRequest) (*v1.ReplaceContentResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.DirectoryService.ReplaceContent is not implemented")
 }
 
-type fileSpaceServiceClient struct {
+func (UnimplementedDirectoryServiceHandler) ReadContent(context.Context, *v1.ReadContentRequest) (*v1.ReadContentResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.DirectoryService.ReadContent is not implemented")
+}
+
+type directoryServiceClient struct {
 	client *connect.Client
 }
 
-func (c *fileSpaceServiceClient) OpenFileSpace(ctx context.Context, req *v1.OpenFileSpaceRequest) (*v1.OpenFileSpaceResponse, error) {
-	var res v1.OpenFileSpaceResponse
-	if err := c.client.CallUnary(ctx, fileSpaceServiceOpenFileSpaceSpec(), req, &res); err != nil {
+func (c *directoryServiceClient) OpenDirectory(ctx context.Context, req *v1.OpenDirectoryRequest) (*v1.OpenDirectoryResponse, error) {
+	var res v1.OpenDirectoryResponse
+	if err := c.client.CallUnary(ctx, directoryServiceOpenDirectorySpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
 }
 
-func (c *fileSpaceServiceClient) ListFiles(ctx context.Context, req *v1.ListFilesRequest) (*v1.ListFilesResponse, error) {
+func (c *directoryServiceClient) ListFiles(ctx context.Context, req *v1.ListFilesRequest) (*v1.ListFilesResponse, error) {
 	var res v1.ListFilesResponse
-	if err := c.client.CallUnary(ctx, fileSpaceServiceListFilesSpec(), req, &res); err != nil {
+	if err := c.client.CallUnary(ctx, directoryServiceListFilesSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
 }
 
-func (c *fileSpaceServiceClient) ListOwnerFiles(ctx context.Context, req *v1.ListOwnerFilesRequest) (*v1.ListOwnerFilesResponse, error) {
-	var res v1.ListOwnerFilesResponse
-	if err := c.client.CallUnary(ctx, fileSpaceServiceListOwnerFilesSpec(), req, &res); err != nil {
+func (c *directoryServiceClient) ListDirectoryFiles(ctx context.Context, req *v1.ListDirectoryFilesRequest) (*v1.ListDirectoryFilesResponse, error) {
+	var res v1.ListDirectoryFilesResponse
+	if err := c.client.CallUnary(ctx, directoryServiceListDirectoryFilesSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
 }
 
-func (c *fileSpaceServiceClient) ResolveInputSources(ctx context.Context, req *v1.ResolveInputSourcesRequest) (*v1.ResolveInputSourcesResponse, error) {
-	var res v1.ResolveInputSourcesResponse
-	if err := c.client.CallUnary(ctx, fileSpaceServiceResolveInputSourcesSpec(), req, &res); err != nil {
+func (c *directoryServiceClient) IssueUpload(ctx context.Context, req *v1.IssueUploadRequest) (*v1.IssueUploadResponse, error) {
+	var res v1.IssueUploadResponse
+	if err := c.client.CallUnary(ctx, directoryServiceIssueUploadSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
 }
 
-func (c *fileSpaceServiceClient) IssueAttachmentUpload(ctx context.Context, req *v1.IssueAttachmentUploadRequest) (*v1.IssueAttachmentUploadResponse, error) {
-	var res v1.IssueAttachmentUploadResponse
-	if err := c.client.CallUnary(ctx, fileSpaceServiceIssueAttachmentUploadSpec(), req, &res); err != nil {
+func (c *directoryServiceClient) RenameFile(ctx context.Context, req *v1.RenameFileRequest) (*v1.RenameFileResponse, error) {
+	var res v1.RenameFileResponse
+	if err := c.client.CallUnary(ctx, directoryServiceRenameFileSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
 }
 
-func (c *fileSpaceServiceClient) RenameAttachment(ctx context.Context, req *v1.RenameAttachmentRequest) (*v1.RenameAttachmentResponse, error) {
-	var res v1.RenameAttachmentResponse
-	if err := c.client.CallUnary(ctx, fileSpaceServiceRenameAttachmentSpec(), req, &res); err != nil {
-		return nil, err
-	}
-	return &res, nil
-}
-
-func (c *fileSpaceServiceClient) DeleteFile(ctx context.Context, req *v1.DeleteFileRequest) (*v1.DeleteFileResponse, error) {
+func (c *directoryServiceClient) DeleteFile(ctx context.Context, req *v1.DeleteFileRequest) (*v1.DeleteFileResponse, error) {
 	var res v1.DeleteFileResponse
-	if err := c.client.CallUnary(ctx, fileSpaceServiceDeleteFileSpec(), req, &res); err != nil {
+	if err := c.client.CallUnary(ctx, directoryServiceDeleteFileSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
 }
 
-func (c *fileSpaceServiceClient) IssueAccessLink(ctx context.Context, req *v1.IssueAccessLinkRequest) (*v1.IssueAccessLinkResponse, error) {
+func (c *directoryServiceClient) IssueAccessLink(ctx context.Context, req *v1.IssueAccessLinkRequest) (*v1.IssueAccessLinkResponse, error) {
 	var res v1.IssueAccessLinkResponse
-	if err := c.client.CallUnary(ctx, fileSpaceServiceIssueAccessLinkSpec(), req, &res); err != nil {
+	if err := c.client.CallUnary(ctx, directoryServiceIssueAccessLinkSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
 }
 
-func (c *fileSpaceServiceClient) CreateShareLink(ctx context.Context, req *v1.CreateShareLinkRequest) (*v1.CreateShareLinkResponse, error) {
+func (c *directoryServiceClient) CreateShareLink(ctx context.Context, req *v1.CreateShareLinkRequest) (*v1.CreateShareLinkResponse, error) {
 	var res v1.CreateShareLinkResponse
-	if err := c.client.CallUnary(ctx, fileSpaceServiceCreateShareLinkSpec(), req, &res); err != nil {
+	if err := c.client.CallUnary(ctx, directoryServiceCreateShareLinkSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
 }
 
-func (c *fileSpaceServiceClient) RevokeShareLinks(ctx context.Context, req *v1.RevokeShareLinksRequest) (*v1.RevokeShareLinksResponse, error) {
+func (c *directoryServiceClient) RevokeShareLinks(ctx context.Context, req *v1.RevokeShareLinksRequest) (*v1.RevokeShareLinksResponse, error) {
 	var res v1.RevokeShareLinksResponse
-	if err := c.client.CallUnary(ctx, fileSpaceServiceRevokeShareLinksSpec(), req, &res); err != nil {
+	if err := c.client.CallUnary(ctx, directoryServiceRevokeShareLinksSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
 }
 
-func (c *fileSpaceServiceClient) GetFilePreview(ctx context.Context, req *v1.GetFilePreviewRequest) (*v1.GetFilePreviewResponse, error) {
+func (c *directoryServiceClient) GetFilePreview(ctx context.Context, req *v1.GetFilePreviewRequest) (*v1.GetFilePreviewResponse, error) {
 	var res v1.GetFilePreviewResponse
-	if err := c.client.CallUnary(ctx, fileSpaceServiceGetFilePreviewSpec(), req, &res); err != nil {
+	if err := c.client.CallUnary(ctx, directoryServiceGetFilePreviewSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
 }
 
-func (c *fileSpaceServiceClient) RequestFilePreview(ctx context.Context, req *v1.RequestFilePreviewRequest) (*v1.RequestFilePreviewResponse, error) {
+func (c *directoryServiceClient) RequestFilePreview(ctx context.Context, req *v1.RequestFilePreviewRequest) (*v1.RequestFilePreviewResponse, error) {
 	var res v1.RequestFilePreviewResponse
-	if err := c.client.CallUnary(ctx, fileSpaceServiceRequestFilePreviewSpec(), req, &res); err != nil {
+	if err := c.client.CallUnary(ctx, directoryServiceRequestFilePreviewSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
 }
 
-type fileSpaceServiceHandler struct{ svc FileSpaceServiceHandler }
+func (c *directoryServiceClient) ReplaceContent(ctx context.Context, req *v1.ReplaceContentRequest) (*v1.ReplaceContentResponse, error) {
+	var res v1.ReplaceContentResponse
+	if err := c.client.CallUnary(ctx, directoryServiceReplaceContentSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
 
-func (h fileSpaceServiceHandler) openFileSpace(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
-	var req v1.OpenFileSpaceRequest
+func (c *directoryServiceClient) ReadContent(ctx context.Context, req *v1.ReadContentRequest) (*v1.ReadContentResponse, error) {
+	var res v1.ReadContentResponse
+	if err := c.client.CallUnary(ctx, directoryServiceReadContentSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+type directoryServiceHandler struct{ svc DirectoryServiceHandler }
+
+func (h directoryServiceHandler) openDirectory(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.OpenDirectoryRequest
 	if err := stream.Receive(&req); err != nil {
 		return err
 	}
-	res, err := h.svc.OpenFileSpace(ctx, &req)
+	res, err := h.svc.OpenDirectory(ctx, &req)
 	if err != nil {
 		return err
 	}
 	return stream.Send(res)
 }
 
-func (h fileSpaceServiceHandler) listFiles(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+func (h directoryServiceHandler) listFiles(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
 	var req v1.ListFilesRequest
 	if err := stream.Receive(&req); err != nil {
 		return err
@@ -442,55 +481,43 @@ func (h fileSpaceServiceHandler) listFiles(ctx context.Context, _ connect.Spec, 
 	return stream.Send(res)
 }
 
-func (h fileSpaceServiceHandler) listOwnerFiles(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
-	var req v1.ListOwnerFilesRequest
+func (h directoryServiceHandler) listDirectoryFiles(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.ListDirectoryFilesRequest
 	if err := stream.Receive(&req); err != nil {
 		return err
 	}
-	res, err := h.svc.ListOwnerFiles(ctx, &req)
+	res, err := h.svc.ListDirectoryFiles(ctx, &req)
 	if err != nil {
 		return err
 	}
 	return stream.Send(res)
 }
 
-func (h fileSpaceServiceHandler) resolveInputSources(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
-	var req v1.ResolveInputSourcesRequest
+func (h directoryServiceHandler) issueUpload(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.IssueUploadRequest
 	if err := stream.Receive(&req); err != nil {
 		return err
 	}
-	res, err := h.svc.ResolveInputSources(ctx, &req)
+	res, err := h.svc.IssueUpload(ctx, &req)
 	if err != nil {
 		return err
 	}
 	return stream.Send(res)
 }
 
-func (h fileSpaceServiceHandler) issueAttachmentUpload(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
-	var req v1.IssueAttachmentUploadRequest
+func (h directoryServiceHandler) renameFile(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.RenameFileRequest
 	if err := stream.Receive(&req); err != nil {
 		return err
 	}
-	res, err := h.svc.IssueAttachmentUpload(ctx, &req)
+	res, err := h.svc.RenameFile(ctx, &req)
 	if err != nil {
 		return err
 	}
 	return stream.Send(res)
 }
 
-func (h fileSpaceServiceHandler) renameAttachment(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
-	var req v1.RenameAttachmentRequest
-	if err := stream.Receive(&req); err != nil {
-		return err
-	}
-	res, err := h.svc.RenameAttachment(ctx, &req)
-	if err != nil {
-		return err
-	}
-	return stream.Send(res)
-}
-
-func (h fileSpaceServiceHandler) deleteFile(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+func (h directoryServiceHandler) deleteFile(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
 	var req v1.DeleteFileRequest
 	if err := stream.Receive(&req); err != nil {
 		return err
@@ -502,7 +529,7 @@ func (h fileSpaceServiceHandler) deleteFile(ctx context.Context, _ connect.Spec,
 	return stream.Send(res)
 }
 
-func (h fileSpaceServiceHandler) issueAccessLink(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+func (h directoryServiceHandler) issueAccessLink(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
 	var req v1.IssueAccessLinkRequest
 	if err := stream.Receive(&req); err != nil {
 		return err
@@ -514,7 +541,7 @@ func (h fileSpaceServiceHandler) issueAccessLink(ctx context.Context, _ connect.
 	return stream.Send(res)
 }
 
-func (h fileSpaceServiceHandler) createShareLink(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+func (h directoryServiceHandler) createShareLink(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
 	var req v1.CreateShareLinkRequest
 	if err := stream.Receive(&req); err != nil {
 		return err
@@ -526,7 +553,7 @@ func (h fileSpaceServiceHandler) createShareLink(ctx context.Context, _ connect.
 	return stream.Send(res)
 }
 
-func (h fileSpaceServiceHandler) revokeShareLinks(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+func (h directoryServiceHandler) revokeShareLinks(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
 	var req v1.RevokeShareLinksRequest
 	if err := stream.Receive(&req); err != nil {
 		return err
@@ -538,7 +565,7 @@ func (h fileSpaceServiceHandler) revokeShareLinks(ctx context.Context, _ connect
 	return stream.Send(res)
 }
 
-func (h fileSpaceServiceHandler) getFilePreview(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+func (h directoryServiceHandler) getFilePreview(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
 	var req v1.GetFilePreviewRequest
 	if err := stream.Receive(&req); err != nil {
 		return err
@@ -550,12 +577,36 @@ func (h fileSpaceServiceHandler) getFilePreview(ctx context.Context, _ connect.S
 	return stream.Send(res)
 }
 
-func (h fileSpaceServiceHandler) requestFilePreview(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+func (h directoryServiceHandler) requestFilePreview(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
 	var req v1.RequestFilePreviewRequest
 	if err := stream.Receive(&req); err != nil {
 		return err
 	}
 	res, err := h.svc.RequestFilePreview(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h directoryServiceHandler) replaceContent(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.ReplaceContentRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.ReplaceContent(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h directoryServiceHandler) readContent(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.ReadContentRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.ReadContent(ctx, &req)
 	if err != nil {
 		return err
 	}

@@ -9,37 +9,37 @@ import { file_google_protobuf_timestamp } from "@bufbuild/protobuf/wkt";
  * Describes the file storage/integration/v1/file_changed.proto.
  */
 export const file_storage_integration_v1_file_changed = /*@__PURE__*/
-  fileDesc("CilzdG9yYWdlL2ludGVncmF0aW9uL3YxL2ZpbGVfY2hhbmdlZC5wcm90bxIWc3RvcmFnZS5pbnRlZ3JhdGlvbi52MSKeAgoNRmlsZUNoYW5nZWRWMRIQCghldmVudF9pZBgBIAEoCRIvCgtvY2N1cnJlZF9hdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASDQoFb3duZXIYAyABKAkSLgoEa2luZBgEIAEoDjIgLnN0b3JhZ2UuaW50ZWdyYXRpb24udjEuRmlsZUtpbmQSDAoEbmFtZRgFIAEoCRIVCg1wcmV2aW91c19uYW1lGAYgASgJEjgKCW9wZXJhdGlvbhgHIAEoDjIlLnN0b3JhZ2UuaW50ZWdyYXRpb24udjEuRmlsZU9wZXJhdGlvbhIVCg1hY3Rvcl91c2VyX2lkGAggASgJEhUKDWFjdG9yX3dvcmtfaWQYCSABKAkqVwoIRmlsZUtpbmQSGQoVRklMRV9LSU5EX1VOU1BFQ0lGSUVEEAASGAoURklMRV9LSU5EX0FUVEFDSE1FTlQQARIWChJGSUxFX0tJTkRfQVJUSUZBQ1QQAiqgAQoNRmlsZU9wZXJhdGlvbhIeChpGSUxFX09QRVJBVElPTl9VTlNQRUNJRklFRBAAEhoKFkZJTEVfT1BFUkFUSU9OX0NSRUFURUQQARIbChdGSUxFX09QRVJBVElPTl9SRVBMQUNFRBACEhoKFkZJTEVfT1BFUkFUSU9OX1JFTkFNRUQQAxIaChZGSUxFX09QRVJBVElPTl9ERUxFVEVEEARCVlpUZ2l0aHViLmNvbS90YWxnZW50LXdvcmsvY29udHJhY3RzL2dlbi9nby9zdG9yYWdlL2ludGVncmF0aW9uL3YxO3N0b3JhZ2VpbnRlZ3JhdGlvbnYxYgZwcm90bzM", [file_google_protobuf_timestamp]);
+  fileDesc("CilzdG9yYWdlL2ludGVncmF0aW9uL3YxL2ZpbGVfY2hhbmdlZC5wcm90bxIWc3RvcmFnZS5pbnRlZ3JhdGlvbi52MSItCglPd25lckZhY3QSEQoJY29uZGl0aW9uGAEgASgJEg0KBXZhbHVlGAIgASgJIksKCURpcmVjdG9yeRIwCgVvd25lchgBIAMoCzIhLnN0b3JhZ2UuaW50ZWdyYXRpb24udjEuT3duZXJGYWN0EgwKBG5hbWUYAiABKAkirgIKDUZpbGVDaGFuZ2VkVjESEAoIZXZlbnRfaWQYASABKAkSLwoLb2NjdXJyZWRfYXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEjQKCWRpcmVjdG9yeRgKIAEoCzIhLnN0b3JhZ2UuaW50ZWdyYXRpb24udjEuRGlyZWN0b3J5EgwKBG5hbWUYBSABKAkSFQoNcHJldmlvdXNfbmFtZRgGIAEoCRI4CglvcGVyYXRpb24YByABKA4yJS5zdG9yYWdlLmludGVncmF0aW9uLnYxLkZpbGVPcGVyYXRpb24SFQoNYWN0b3JfdXNlcl9pZBgIIAEoCRIVCg1hY3Rvcl93b3JrX2lkGAkgASgJSgQIAxAESgQIBBAFUgVvd25lclIEa2luZCqgAQoNRmlsZU9wZXJhdGlvbhIeChpGSUxFX09QRVJBVElPTl9VTlNQRUNJRklFRBAAEhoKFkZJTEVfT1BFUkFUSU9OX0NSRUFURUQQARIbChdGSUxFX09QRVJBVElPTl9SRVBMQUNFRBACEhoKFkZJTEVfT1BFUkFUSU9OX1JFTkFNRUQQAxIaChZGSUxFX09QRVJBVElPTl9ERUxFVEVEEARCVlpUZ2l0aHViLmNvbS90YWxnZW50LXdvcmsvY29udHJhY3RzL2dlbi9nby9zdG9yYWdlL2ludGVncmF0aW9uL3YxO3N0b3JhZ2VpbnRlZ3JhdGlvbnYxYgZwcm90bzM", [file_google_protobuf_timestamp]);
+
+/**
+ * Describes the message storage.integration.v1.OwnerFact.
+ * Use `create(OwnerFactSchema)` to create a new message.
+ */
+export const OwnerFactSchema = /*@__PURE__*/
+  messageDesc(file_storage_integration_v1_file_changed, 0);
+
+/**
+ * Describes the message storage.integration.v1.Directory.
+ * Use `create(DirectorySchema)` to create a new message.
+ */
+export const DirectorySchema = /*@__PURE__*/
+  messageDesc(file_storage_integration_v1_file_changed, 1);
 
 /**
  * Describes the message storage.integration.v1.FileChangedV1.
  * Use `create(FileChangedV1Schema)` to create a new message.
  */
 export const FileChangedV1Schema = /*@__PURE__*/
-  messageDesc(file_storage_integration_v1_file_changed, 0);
-
-/**
- * Describes the enum storage.integration.v1.FileKind.
- */
-export const FileKindSchema = /*@__PURE__*/
-  enumDesc(file_storage_integration_v1_file_changed, 0);
-
-/**
- * FileKind tells an Attachment from an Artifact.
- *
- * @generated from enum storage.integration.v1.FileKind
- */
-export const FileKind = /*@__PURE__*/
-  tsEnum(FileKindSchema);
+  messageDesc(file_storage_integration_v1_file_changed, 2);
 
 /**
  * Describes the enum storage.integration.v1.FileOperation.
  */
 export const FileOperationSchema = /*@__PURE__*/
-  enumDesc(file_storage_integration_v1_file_changed, 1);
+  enumDesc(file_storage_integration_v1_file_changed, 0);
 
 /**
- * FileOperation is how a file in a File Space changed.
+ * FileOperation is how a file Storage wrote changed.
  *
  * @generated from enum storage.integration.v1.FileOperation
  */

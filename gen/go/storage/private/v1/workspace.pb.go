@@ -79,32 +79,86 @@ func (WorkspaceEntryKind) EnumDescriptor() ([]byte, []int) {
 	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{0}
 }
 
-// AcquireMountsRequest names the spaces by business identity.
+// MountRequest is one located Directory a Work's sandbox mounts.
+type MountRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The Directory with the backend and lifetime of its first allocation.
+	Directory *LocatedDirectory `protobuf:"bytes,1,opt,name=directory,proto3" json:"directory,omitempty"`
+	// True to mount it read-only; false read-write.
+	ReadOnly bool `protobuf:"varint,2,opt,name=read_only,json=readOnly,proto3" json:"read_only,omitempty"`
+	// Clean relative paths inside the Directory where Agent mounts other
+	// Directories; each is prepared, with every parent, owned by the sandbox
+	// user.
+	MountPoints   []string `protobuf:"bytes,3,rep,name=mount_points,json=mountPoints,proto3" json:"mount_points,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MountRequest) Reset() {
+	*x = MountRequest{}
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MountRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MountRequest) ProtoMessage() {}
+
+func (x *MountRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MountRequest.ProtoReflect.Descriptor instead.
+func (*MountRequest) Descriptor() ([]byte, []int) {
+	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *MountRequest) GetDirectory() *LocatedDirectory {
+	if x != nil {
+		return x.Directory
+	}
+	return nil
+}
+
+func (x *MountRequest) GetReadOnly() bool {
+	if x != nil {
+		return x.ReadOnly
+	}
+	return false
+}
+
+func (x *MountRequest) GetMountPoints() []string {
+	if x != nil {
+		return x.MountPoints
+	}
+	return nil
+}
+
+// AcquireMountsRequest names the Directories of one Work's located layout.
 type AcquireMountsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Owner of the HOME the Work uses, as its caller named it; opaque to
-	// Storage, which decides where each HOME lives. The same owner always
-	// reaches the same HOME.
-	HomeOwner string `protobuf:"bytes,1,opt,name=home_owner,json=homeOwner,proto3" json:"home_owner,omitempty"`
-	// The Work.
-	WorkId string `protobuf:"bytes,2,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
-	// Reference naming the Work's Session Workspace; empty for a Work that has
-	// none, such as a project-scoped definition's Agent.
-	WorkspaceReference string `protobuf:"bytes,3,opt,name=workspace_reference,json=workspaceReference,proto3" json:"workspace_reference,omitempty"`
-	// Opaque input source of the Work; empty when it has none.
-	InputSource string `protobuf:"bytes,4,opt,name=input_source,json=inputSource,proto3" json:"input_source,omitempty"`
-	// Space Token supplied with the input source.
-	SpaceToken string `protobuf:"bytes,5,opt,name=space_token,json=spaceToken,proto3" json:"space_token,omitempty"`
-	// Reference Spaces the Work's sandbox mounts read-only, each opened on
-	// its first request.
-	ReferenceMounts []*ReferenceMount `protobuf:"bytes,6,rep,name=reference_mounts,json=referenceMounts,proto3" json:"reference_mounts,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	// The Work whose sandbox mounts them.
+	WorkId string `protobuf:"bytes,1,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
+	// The Directories, each once.
+	Mounts        []*MountRequest `protobuf:"bytes,2,rep,name=mounts,proto3" json:"mounts,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *AcquireMountsRequest) Reset() {
 	*x = AcquireMountsRequest{}
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[0]
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -116,7 +170,7 @@ func (x *AcquireMountsRequest) String() string {
 func (*AcquireMountsRequest) ProtoMessage() {}
 
 func (x *AcquireMountsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[0]
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -129,14 +183,7 @@ func (x *AcquireMountsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AcquireMountsRequest.ProtoReflect.Descriptor instead.
 func (*AcquireMountsRequest) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *AcquireMountsRequest) GetHomeOwner() string {
-	if x != nil {
-		return x.HomeOwner
-	}
-	return ""
+	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *AcquireMountsRequest) GetWorkId() string {
@@ -146,153 +193,22 @@ func (x *AcquireMountsRequest) GetWorkId() string {
 	return ""
 }
 
-func (x *AcquireMountsRequest) GetWorkspaceReference() string {
+func (x *AcquireMountsRequest) GetMounts() []*MountRequest {
 	if x != nil {
-		return x.WorkspaceReference
-	}
-	return ""
-}
-
-func (x *AcquireMountsRequest) GetInputSource() string {
-	if x != nil {
-		return x.InputSource
-	}
-	return ""
-}
-
-func (x *AcquireMountsRequest) GetSpaceToken() string {
-	if x != nil {
-		return x.SpaceToken
-	}
-	return ""
-}
-
-func (x *AcquireMountsRequest) GetReferenceMounts() []*ReferenceMount {
-	if x != nil {
-		return x.ReferenceMounts
+		return x.Mounts
 	}
 	return nil
 }
 
-// ReferenceMount is a Reference Space mounted read-only in a workspace at a
-// name its caller gives.
-type ReferenceMount struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Directory under /workspace: one visible path element other than inputs.
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	// Owner of the Reference Space.
-	Owner         string `protobuf:"bytes,2,opt,name=owner,proto3" json:"owner,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ReferenceMount) Reset() {
-	*x = ReferenceMount{}
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ReferenceMount) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ReferenceMount) ProtoMessage() {}
-
-func (x *ReferenceMount) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ReferenceMount.ProtoReflect.Descriptor instead.
-func (*ReferenceMount) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *ReferenceMount) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *ReferenceMount) GetOwner() string {
-	if x != nil {
-		return x.Owner
-	}
-	return ""
-}
-
-// MountedReference is the grant of one Reference Space mount.
-type MountedReference struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// The mount's name under /workspace.
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	// The Reference Space, read-only, following its current content.
-	Grant         *MountGrant `protobuf:"bytes,2,opt,name=grant,proto3" json:"grant,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *MountedReference) Reset() {
-	*x = MountedReference{}
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *MountedReference) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*MountedReference) ProtoMessage() {}
-
-func (x *MountedReference) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use MountedReference.ProtoReflect.Descriptor instead.
-func (*MountedReference) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *MountedReference) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *MountedReference) GetGrant() *MountGrant {
-	if x != nil {
-		return x.Grant
-	}
-	return nil
-}
-
-// MountGrant is one space's location and access mode, opaque to the caller.
+// MountGrant is one Directory's location and access mode, opaque to the
+// caller.
 type MountGrant struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Persistent volume claim holding the space.
+	// Persistent volume claim holding the Directory.
 	ClaimName string `protobuf:"bytes,1,opt,name=claim_name,json=claimName,proto3" json:"claim_name,omitempty"`
-	// Path of the space within the claim.
+	// Path of the Directory within the claim.
 	SubPath string `protobuf:"bytes,2,opt,name=sub_path,json=subPath,proto3" json:"sub_path,omitempty"`
-	// True when the space is mounted read-only.
+	// True when the Directory is mounted read-only.
 	ReadOnly      bool `protobuf:"varint,3,opt,name=read_only,json=readOnly,proto3" json:"read_only,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -300,7 +216,7 @@ type MountGrant struct {
 
 func (x *MountGrant) Reset() {
 	*x = MountGrant{}
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[3]
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -312,7 +228,7 @@ func (x *MountGrant) String() string {
 func (*MountGrant) ProtoMessage() {}
 
 func (x *MountGrant) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[3]
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -325,7 +241,7 @@ func (x *MountGrant) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MountGrant.ProtoReflect.Descriptor instead.
 func (*MountGrant) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{3}
+	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *MountGrant) GetClaimName() string {
@@ -352,21 +268,15 @@ func (x *MountGrant) GetReadOnly() bool {
 // AcquireMountsResponse returns the grants.
 type AcquireMountsResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The HOME, read-write.
-	Home *MountGrant `protobuf:"bytes,1,opt,name=home,proto3" json:"home,omitempty"`
-	// The Session Workspace, read-write; absent for a Work without one.
-	Workspace *MountGrant `protobuf:"bytes,2,opt,name=workspace,proto3" json:"workspace,omitempty"`
-	// The input source's Attachments, read-only; absent without one.
-	Inputs *MountGrant `protobuf:"bytes,3,opt,name=inputs,proto3" json:"inputs,omitempty"`
-	// The requested Reference Spaces, in request order.
-	References    []*MountedReference `protobuf:"bytes,4,rep,name=references,proto3" json:"references,omitempty"`
+	// One grant per requested Directory, in request order.
+	Grants        []*MountGrant `protobuf:"bytes,1,rep,name=grants,proto3" json:"grants,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *AcquireMountsResponse) Reset() {
 	*x = AcquireMountsResponse{}
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[4]
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -378,7 +288,7 @@ func (x *AcquireMountsResponse) String() string {
 func (*AcquireMountsResponse) ProtoMessage() {}
 
 func (x *AcquireMountsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[4]
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -391,33 +301,123 @@ func (x *AcquireMountsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AcquireMountsResponse.ProtoReflect.Descriptor instead.
 func (*AcquireMountsResponse) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{4}
+	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *AcquireMountsResponse) GetHome() *MountGrant {
+func (x *AcquireMountsResponse) GetGrants() []*MountGrant {
 	if x != nil {
-		return x.Home
+		return x.Grants
 	}
 	return nil
 }
 
-func (x *AcquireMountsResponse) GetWorkspace() *MountGrant {
+// MountedDirectory is a Directory mounted inside a Work Directory.
+type MountedDirectory struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Clean relative path inside the Work Directory where it is mounted.
+	Path string `protobuf:"bytes,1,opt,name=path,proto3" json:"path,omitempty"`
+	// The mounted Directory.
+	Directory     *Directory `protobuf:"bytes,2,opt,name=directory,proto3" json:"directory,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MountedDirectory) Reset() {
+	*x = MountedDirectory{}
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MountedDirectory) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MountedDirectory) ProtoMessage() {}
+
+func (x *MountedDirectory) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MountedDirectory.ProtoReflect.Descriptor instead.
+func (*MountedDirectory) Descriptor() ([]byte, []int) {
+	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *MountedDirectory) GetPath() string {
+	if x != nil {
+		return x.Path
+	}
+	return ""
+}
+
+func (x *MountedDirectory) GetDirectory() *Directory {
+	if x != nil {
+		return x.Directory
+	}
+	return nil
+}
+
+// WorkspaceLayout is a Work Directory as its sandbox sees it: the Directory
+// and the Directories mounted inside it.
+type WorkspaceLayout struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The Work Directory.
+	Workspace *Directory `protobuf:"bytes,1,opt,name=workspace,proto3" json:"workspace,omitempty"`
+	// Directories mounted inside it, each at its own path.
+	Mounts        []*MountedDirectory `protobuf:"bytes,2,rep,name=mounts,proto3" json:"mounts,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *WorkspaceLayout) Reset() {
+	*x = WorkspaceLayout{}
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WorkspaceLayout) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WorkspaceLayout) ProtoMessage() {}
+
+func (x *WorkspaceLayout) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WorkspaceLayout.ProtoReflect.Descriptor instead.
+func (*WorkspaceLayout) Descriptor() ([]byte, []int) {
+	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *WorkspaceLayout) GetWorkspace() *Directory {
 	if x != nil {
 		return x.Workspace
 	}
 	return nil
 }
 
-func (x *AcquireMountsResponse) GetInputs() *MountGrant {
+func (x *WorkspaceLayout) GetMounts() []*MountedDirectory {
 	if x != nil {
-		return x.Inputs
-	}
-	return nil
-}
-
-func (x *AcquireMountsResponse) GetReferences() []*MountedReference {
-	if x != nil {
-		return x.References
+		return x.Mounts
 	}
 	return nil
 }
@@ -425,21 +425,17 @@ func (x *AcquireMountsResponse) GetReferences() []*MountedReference {
 // GetWorkspaceViewRequest names the workspace and the directory.
 type GetWorkspaceViewRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Reference naming the Work's Session Workspace.
-	WorkspaceReference string `protobuf:"bytes,1,opt,name=workspace_reference,json=workspaceReference,proto3" json:"workspace_reference,omitempty"`
-	// Opaque input source of the Work; empty when it has none.
-	InputSource string `protobuf:"bytes,2,opt,name=input_source,json=inputSource,proto3" json:"input_source,omitempty"`
-	// Directory relative to /workspace; empty for its root.
-	Path string `protobuf:"bytes,3,opt,name=path,proto3" json:"path,omitempty"`
-	// Reference Spaces the Work's sandbox mounts.
-	ReferenceMounts []*ReferenceMount `protobuf:"bytes,4,rep,name=reference_mounts,json=referenceMounts,proto3" json:"reference_mounts,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	// The Work Directory and what is mounted in it.
+	Layout *WorkspaceLayout `protobuf:"bytes,1,opt,name=layout,proto3" json:"layout,omitempty"`
+	// Directory relative to the Work Directory; empty for its root.
+	Path          string `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetWorkspaceViewRequest) Reset() {
 	*x = GetWorkspaceViewRequest{}
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[5]
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -451,7 +447,7 @@ func (x *GetWorkspaceViewRequest) String() string {
 func (*GetWorkspaceViewRequest) ProtoMessage() {}
 
 func (x *GetWorkspaceViewRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[5]
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -464,21 +460,14 @@ func (x *GetWorkspaceViewRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWorkspaceViewRequest.ProtoReflect.Descriptor instead.
 func (*GetWorkspaceViewRequest) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{5}
+	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *GetWorkspaceViewRequest) GetWorkspaceReference() string {
+func (x *GetWorkspaceViewRequest) GetLayout() *WorkspaceLayout {
 	if x != nil {
-		return x.WorkspaceReference
+		return x.Layout
 	}
-	return ""
-}
-
-func (x *GetWorkspaceViewRequest) GetInputSource() string {
-	if x != nil {
-		return x.InputSource
-	}
-	return ""
+	return nil
 }
 
 func (x *GetWorkspaceViewRequest) GetPath() string {
@@ -486,13 +475,6 @@ func (x *GetWorkspaceViewRequest) GetPath() string {
 		return x.Path
 	}
 	return ""
-}
-
-func (x *GetWorkspaceViewRequest) GetReferenceMounts() []*ReferenceMount {
-	if x != nil {
-		return x.ReferenceMounts
-	}
-	return nil
 }
 
 // WorkspaceEntry is one entry of a workspace directory.
@@ -506,16 +488,16 @@ type WorkspaceEntry struct {
 	ModifiedAt *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=modified_at,json=modifiedAt,proto3" json:"modified_at,omitempty"`
 	// What the entry is.
 	Kind WorkspaceEntryKind `protobuf:"varint,4,opt,name=kind,proto3,enum=storage.private.v1.WorkspaceEntryKind" json:"kind,omitempty"`
-	// Under inputs/: the Attachment's name in the input source's File Space,
-	// read as that Attachment.
-	AttachmentName string `protobuf:"bytes,5,opt,name=attachment_name,json=attachmentName,proto3" json:"attachment_name,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	// A file Storage wrote into a mounted Directory: its position, read and
+	// previewed as that file.
+	Position      *FilePosition `protobuf:"bytes,6,opt,name=position,proto3" json:"position,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *WorkspaceEntry) Reset() {
 	*x = WorkspaceEntry{}
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[6]
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -527,7 +509,7 @@ func (x *WorkspaceEntry) String() string {
 func (*WorkspaceEntry) ProtoMessage() {}
 
 func (x *WorkspaceEntry) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[6]
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -540,7 +522,7 @@ func (x *WorkspaceEntry) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WorkspaceEntry.ProtoReflect.Descriptor instead.
 func (*WorkspaceEntry) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{6}
+	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *WorkspaceEntry) GetName() string {
@@ -571,11 +553,11 @@ func (x *WorkspaceEntry) GetKind() WorkspaceEntryKind {
 	return WorkspaceEntryKind_WORKSPACE_ENTRY_KIND_UNSPECIFIED
 }
 
-func (x *WorkspaceEntry) GetAttachmentName() string {
+func (x *WorkspaceEntry) GetPosition() *FilePosition {
 	if x != nil {
-		return x.AttachmentName
+		return x.Position
 	}
-	return ""
+	return nil
 }
 
 // GetWorkspaceViewResponse lists the directory's first entries by name.
@@ -591,7 +573,7 @@ type GetWorkspaceViewResponse struct {
 
 func (x *GetWorkspaceViewResponse) Reset() {
 	*x = GetWorkspaceViewResponse{}
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[7]
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -603,7 +585,7 @@ func (x *GetWorkspaceViewResponse) String() string {
 func (*GetWorkspaceViewResponse) ProtoMessage() {}
 
 func (x *GetWorkspaceViewResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[7]
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -616,7 +598,7 @@ func (x *GetWorkspaceViewResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWorkspaceViewResponse.ProtoReflect.Descriptor instead.
 func (*GetWorkspaceViewResponse) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{7}
+	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *GetWorkspaceViewResponse) GetEntries() []*WorkspaceEntry {
@@ -636,19 +618,17 @@ func (x *GetWorkspaceViewResponse) GetTotal() uint32 {
 // GetWorkspaceFilePreviewRequest names the workspace file.
 type GetWorkspaceFilePreviewRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Reference naming the Work's Session Workspace.
-	WorkspaceReference string `protobuf:"bytes,1,opt,name=workspace_reference,json=workspaceReference,proto3" json:"workspace_reference,omitempty"`
-	// File relative to /workspace, outside inputs/.
-	Path string `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`
-	// Reference Spaces the Work's sandbox mounts.
-	ReferenceMounts []*ReferenceMount `protobuf:"bytes,3,rep,name=reference_mounts,json=referenceMounts,proto3" json:"reference_mounts,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	// The Work Directory and what is mounted in it.
+	Layout *WorkspaceLayout `protobuf:"bytes,1,opt,name=layout,proto3" json:"layout,omitempty"`
+	// File relative to the Work Directory.
+	Path          string `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetWorkspaceFilePreviewRequest) Reset() {
 	*x = GetWorkspaceFilePreviewRequest{}
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[8]
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -660,7 +640,7 @@ func (x *GetWorkspaceFilePreviewRequest) String() string {
 func (*GetWorkspaceFilePreviewRequest) ProtoMessage() {}
 
 func (x *GetWorkspaceFilePreviewRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[8]
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -673,14 +653,14 @@ func (x *GetWorkspaceFilePreviewRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWorkspaceFilePreviewRequest.ProtoReflect.Descriptor instead.
 func (*GetWorkspaceFilePreviewRequest) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{8}
+	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *GetWorkspaceFilePreviewRequest) GetWorkspaceReference() string {
+func (x *GetWorkspaceFilePreviewRequest) GetLayout() *WorkspaceLayout {
 	if x != nil {
-		return x.WorkspaceReference
+		return x.Layout
 	}
-	return ""
+	return nil
 }
 
 func (x *GetWorkspaceFilePreviewRequest) GetPath() string {
@@ -688,13 +668,6 @@ func (x *GetWorkspaceFilePreviewRequest) GetPath() string {
 		return x.Path
 	}
 	return ""
-}
-
-func (x *GetWorkspaceFilePreviewRequest) GetReferenceMounts() []*ReferenceMount {
-	if x != nil {
-		return x.ReferenceMounts
-	}
-	return nil
 }
 
 // GetWorkspaceFilePreviewResponse is the file's preview.
@@ -708,7 +681,7 @@ type GetWorkspaceFilePreviewResponse struct {
 
 func (x *GetWorkspaceFilePreviewResponse) Reset() {
 	*x = GetWorkspaceFilePreviewResponse{}
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[9]
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -720,7 +693,7 @@ func (x *GetWorkspaceFilePreviewResponse) String() string {
 func (*GetWorkspaceFilePreviewResponse) ProtoMessage() {}
 
 func (x *GetWorkspaceFilePreviewResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[9]
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -733,7 +706,7 @@ func (x *GetWorkspaceFilePreviewResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWorkspaceFilePreviewResponse.ProtoReflect.Descriptor instead.
 func (*GetWorkspaceFilePreviewResponse) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{9}
+	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *GetWorkspaceFilePreviewResponse) GetPreview() *FilePreview {
@@ -746,19 +719,17 @@ func (x *GetWorkspaceFilePreviewResponse) GetPreview() *FilePreview {
 // IssueWorkspaceFileLinkRequest names the workspace file.
 type IssueWorkspaceFileLinkRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Reference naming the Work's Session Workspace.
-	WorkspaceReference string `protobuf:"bytes,1,opt,name=workspace_reference,json=workspaceReference,proto3" json:"workspace_reference,omitempty"`
-	// File relative to /workspace, outside inputs/.
-	Path string `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`
-	// Reference Spaces the Work's sandbox mounts.
-	ReferenceMounts []*ReferenceMount `protobuf:"bytes,3,rep,name=reference_mounts,json=referenceMounts,proto3" json:"reference_mounts,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	// The Work Directory and what is mounted in it.
+	Layout *WorkspaceLayout `protobuf:"bytes,1,opt,name=layout,proto3" json:"layout,omitempty"`
+	// File relative to the Work Directory.
+	Path          string `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *IssueWorkspaceFileLinkRequest) Reset() {
 	*x = IssueWorkspaceFileLinkRequest{}
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[10]
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -770,7 +741,7 @@ func (x *IssueWorkspaceFileLinkRequest) String() string {
 func (*IssueWorkspaceFileLinkRequest) ProtoMessage() {}
 
 func (x *IssueWorkspaceFileLinkRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[10]
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -783,14 +754,14 @@ func (x *IssueWorkspaceFileLinkRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IssueWorkspaceFileLinkRequest.ProtoReflect.Descriptor instead.
 func (*IssueWorkspaceFileLinkRequest) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{10}
+	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *IssueWorkspaceFileLinkRequest) GetWorkspaceReference() string {
+func (x *IssueWorkspaceFileLinkRequest) GetLayout() *WorkspaceLayout {
 	if x != nil {
-		return x.WorkspaceReference
+		return x.Layout
 	}
-	return ""
+	return nil
 }
 
 func (x *IssueWorkspaceFileLinkRequest) GetPath() string {
@@ -798,13 +769,6 @@ func (x *IssueWorkspaceFileLinkRequest) GetPath() string {
 		return x.Path
 	}
 	return ""
-}
-
-func (x *IssueWorkspaceFileLinkRequest) GetReferenceMounts() []*ReferenceMount {
-	if x != nil {
-		return x.ReferenceMounts
-	}
-	return nil
 }
 
 // IssueWorkspaceFileLinkResponse carries the download link.
@@ -820,7 +784,7 @@ type IssueWorkspaceFileLinkResponse struct {
 
 func (x *IssueWorkspaceFileLinkResponse) Reset() {
 	*x = IssueWorkspaceFileLinkResponse{}
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[11]
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -832,7 +796,7 @@ func (x *IssueWorkspaceFileLinkResponse) String() string {
 func (*IssueWorkspaceFileLinkResponse) ProtoMessage() {}
 
 func (x *IssueWorkspaceFileLinkResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[11]
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -845,7 +809,7 @@ func (x *IssueWorkspaceFileLinkResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IssueWorkspaceFileLinkResponse.ProtoReflect.Descriptor instead.
 func (*IssueWorkspaceFileLinkResponse) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{11}
+	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *IssueWorkspaceFileLinkResponse) GetAccessUrl() string {
@@ -862,32 +826,30 @@ func (x *IssueWorkspaceFileLinkResponse) GetExpiresAt() *timestamppb.Timestamp {
 	return nil
 }
 
-// RequestWorkspaceReclamationRequest names the closed Work's workspace.
-type RequestWorkspaceReclamationRequest struct {
+// RequestWorkReclamationRequest names the closed Work.
+type RequestWorkReclamationRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The closed Work.
-	WorkId string `protobuf:"bytes,1,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
-	// Reference naming its Session Workspace.
-	WorkspaceReference string `protobuf:"bytes,2,opt,name=workspace_reference,json=workspaceReference,proto3" json:"workspace_reference,omitempty"`
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
+	WorkId        string `protobuf:"bytes,1,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RequestWorkspaceReclamationRequest) Reset() {
-	*x = RequestWorkspaceReclamationRequest{}
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[12]
+func (x *RequestWorkReclamationRequest) Reset() {
+	*x = RequestWorkReclamationRequest{}
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RequestWorkspaceReclamationRequest) String() string {
+func (x *RequestWorkReclamationRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RequestWorkspaceReclamationRequest) ProtoMessage() {}
+func (*RequestWorkReclamationRequest) ProtoMessage() {}
 
-func (x *RequestWorkspaceReclamationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[12]
+func (x *RequestWorkReclamationRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -898,47 +860,40 @@ func (x *RequestWorkspaceReclamationRequest) ProtoReflect() protoreflect.Message
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RequestWorkspaceReclamationRequest.ProtoReflect.Descriptor instead.
-func (*RequestWorkspaceReclamationRequest) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{12}
+// Deprecated: Use RequestWorkReclamationRequest.ProtoReflect.Descriptor instead.
+func (*RequestWorkReclamationRequest) Descriptor() ([]byte, []int) {
+	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *RequestWorkspaceReclamationRequest) GetWorkId() string {
+func (x *RequestWorkReclamationRequest) GetWorkId() string {
 	if x != nil {
 		return x.WorkId
 	}
 	return ""
 }
 
-func (x *RequestWorkspaceReclamationRequest) GetWorkspaceReference() string {
-	if x != nil {
-		return x.WorkspaceReference
-	}
-	return ""
-}
-
-// RequestWorkspaceReclamationResponse confirms durable acceptance.
-type RequestWorkspaceReclamationResponse struct {
+// RequestWorkReclamationResponse confirms durable acceptance.
+type RequestWorkReclamationResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RequestWorkspaceReclamationResponse) Reset() {
-	*x = RequestWorkspaceReclamationResponse{}
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[13]
+func (x *RequestWorkReclamationResponse) Reset() {
+	*x = RequestWorkReclamationResponse{}
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RequestWorkspaceReclamationResponse) String() string {
+func (x *RequestWorkReclamationResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RequestWorkspaceReclamationResponse) ProtoMessage() {}
+func (*RequestWorkReclamationResponse) ProtoMessage() {}
 
-func (x *RequestWorkspaceReclamationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[13]
+func (x *RequestWorkReclamationResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -949,9 +904,9 @@ func (x *RequestWorkspaceReclamationResponse) ProtoReflect() protoreflect.Messag
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RequestWorkspaceReclamationResponse.ProtoReflect.Descriptor instead.
-func (*RequestWorkspaceReclamationResponse) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{13}
+// Deprecated: Use RequestWorkReclamationResponse.ProtoReflect.Descriptor instead.
+func (*RequestWorkReclamationResponse) Descriptor() ([]byte, []int) {
+	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{14}
 }
 
 // JudgeFilePreviewRequest is what a workspace file Storage does not hold
@@ -971,7 +926,7 @@ type JudgeFilePreviewRequest struct {
 
 func (x *JudgeFilePreviewRequest) Reset() {
 	*x = JudgeFilePreviewRequest{}
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[14]
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -983,7 +938,7 @@ func (x *JudgeFilePreviewRequest) String() string {
 func (*JudgeFilePreviewRequest) ProtoMessage() {}
 
 func (x *JudgeFilePreviewRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[14]
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -996,7 +951,7 @@ func (x *JudgeFilePreviewRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use JudgeFilePreviewRequest.ProtoReflect.Descriptor instead.
 func (*JudgeFilePreviewRequest) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{14}
+	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *JudgeFilePreviewRequest) GetName() string {
@@ -1034,7 +989,7 @@ type JudgeFilePreviewResponse struct {
 
 func (x *JudgeFilePreviewResponse) Reset() {
 	*x = JudgeFilePreviewResponse{}
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[15]
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1046,7 +1001,7 @@ func (x *JudgeFilePreviewResponse) String() string {
 func (*JudgeFilePreviewResponse) ProtoMessage() {}
 
 func (x *JudgeFilePreviewResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_workspace_proto_msgTypes[15]
+	mi := &file_storage_private_v1_workspace_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1059,7 +1014,7 @@ func (x *JudgeFilePreviewResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use JudgeFilePreviewResponse.ProtoReflect.Descriptor instead.
 func (*JudgeFilePreviewResponse) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{15}
+	return file_storage_private_v1_workspace_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *JudgeFilePreviewResponse) GetPreview() *FilePreview {
@@ -1080,70 +1035,58 @@ var File_storage_private_v1_workspace_proto protoreflect.FileDescriptor
 
 const file_storage_private_v1_workspace_proto_rawDesc = "" +
 	"\n" +
-	"\"storage/private/v1/workspace.proto\x12\x12storage.private.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a storage/private/v1/storage.proto\"\x92\x02\n" +
-	"\x14AcquireMountsRequest\x12\x1d\n" +
-	"\n" +
-	"home_owner\x18\x01 \x01(\tR\thomeOwner\x12\x17\n" +
-	"\awork_id\x18\x02 \x01(\tR\x06workId\x12/\n" +
-	"\x13workspace_reference\x18\x03 \x01(\tR\x12workspaceReference\x12!\n" +
-	"\finput_source\x18\x04 \x01(\tR\vinputSource\x12\x1f\n" +
-	"\vspace_token\x18\x05 \x01(\tR\n" +
-	"spaceToken\x12M\n" +
-	"\x10reference_mounts\x18\x06 \x03(\v2\".storage.private.v1.ReferenceMountR\x0freferenceMounts\":\n" +
-	"\x0eReferenceMount\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x14\n" +
-	"\x05owner\x18\x02 \x01(\tR\x05owner\"\\\n" +
-	"\x10MountedReference\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x124\n" +
-	"\x05grant\x18\x02 \x01(\v2\x1e.storage.private.v1.MountGrantR\x05grant\"c\n" +
+	"\"storage/private/v1/workspace.proto\x12\x12storage.private.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a storage/private/v1/storage.proto\"\x92\x01\n" +
+	"\fMountRequest\x12B\n" +
+	"\tdirectory\x18\x01 \x01(\v2$.storage.private.v1.LocatedDirectoryR\tdirectory\x12\x1b\n" +
+	"\tread_only\x18\x02 \x01(\bR\breadOnly\x12!\n" +
+	"\fmount_points\x18\x03 \x03(\tR\vmountPoints\"i\n" +
+	"\x14AcquireMountsRequest\x12\x17\n" +
+	"\awork_id\x18\x01 \x01(\tR\x06workId\x128\n" +
+	"\x06mounts\x18\x02 \x03(\v2 .storage.private.v1.MountRequestR\x06mounts\"c\n" +
 	"\n" +
 	"MountGrant\x12\x1d\n" +
 	"\n" +
 	"claim_name\x18\x01 \x01(\tR\tclaimName\x12\x19\n" +
 	"\bsub_path\x18\x02 \x01(\tR\asubPath\x12\x1b\n" +
-	"\tread_only\x18\x03 \x01(\bR\breadOnly\"\x87\x02\n" +
-	"\x15AcquireMountsResponse\x122\n" +
-	"\x04home\x18\x01 \x01(\v2\x1e.storage.private.v1.MountGrantR\x04home\x12<\n" +
-	"\tworkspace\x18\x02 \x01(\v2\x1e.storage.private.v1.MountGrantR\tworkspace\x126\n" +
-	"\x06inputs\x18\x03 \x01(\v2\x1e.storage.private.v1.MountGrantR\x06inputs\x12D\n" +
-	"\n" +
-	"references\x18\x04 \x03(\v2$.storage.private.v1.MountedReferenceR\n" +
-	"references\"\xd0\x01\n" +
-	"\x17GetWorkspaceViewRequest\x12/\n" +
-	"\x13workspace_reference\x18\x01 \x01(\tR\x12workspaceReference\x12!\n" +
-	"\finput_source\x18\x02 \x01(\tR\vinputSource\x12\x12\n" +
-	"\x04path\x18\x03 \x01(\tR\x04path\x12M\n" +
-	"\x10reference_mounts\x18\x04 \x03(\v2\".storage.private.v1.ReferenceMountR\x0freferenceMounts\"\xe5\x01\n" +
+	"\tread_only\x18\x03 \x01(\bR\breadOnly\"O\n" +
+	"\x15AcquireMountsResponse\x126\n" +
+	"\x06grants\x18\x01 \x03(\v2\x1e.storage.private.v1.MountGrantR\x06grants\"c\n" +
+	"\x10MountedDirectory\x12\x12\n" +
+	"\x04path\x18\x01 \x01(\tR\x04path\x12;\n" +
+	"\tdirectory\x18\x02 \x01(\v2\x1d.storage.private.v1.DirectoryR\tdirectory\"\x8c\x01\n" +
+	"\x0fWorkspaceLayout\x12;\n" +
+	"\tworkspace\x18\x01 \x01(\v2\x1d.storage.private.v1.DirectoryR\tworkspace\x12<\n" +
+	"\x06mounts\x18\x02 \x03(\v2$.storage.private.v1.MountedDirectoryR\x06mounts\"j\n" +
+	"\x17GetWorkspaceViewRequest\x12;\n" +
+	"\x06layout\x18\x01 \x01(\v2#.storage.private.v1.WorkspaceLayoutR\x06layout\x12\x12\n" +
+	"\x04path\x18\x02 \x01(\tR\x04path\"\x91\x02\n" +
 	"\x0eWorkspaceEntry\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1d\n" +
 	"\n" +
 	"size_bytes\x18\x02 \x01(\x03R\tsizeBytes\x12;\n" +
 	"\vmodified_at\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
 	"modifiedAt\x12:\n" +
-	"\x04kind\x18\x04 \x01(\x0e2&.storage.private.v1.WorkspaceEntryKindR\x04kind\x12'\n" +
-	"\x0fattachment_name\x18\x05 \x01(\tR\x0eattachmentName\"n\n" +
+	"\x04kind\x18\x04 \x01(\x0e2&.storage.private.v1.WorkspaceEntryKindR\x04kind\x12<\n" +
+	"\bposition\x18\x06 \x01(\v2 .storage.private.v1.FilePositionR\bpositionJ\x04\b\x05\x10\x06R\x0fattachment_name\"n\n" +
 	"\x18GetWorkspaceViewResponse\x12<\n" +
 	"\aentries\x18\x01 \x03(\v2\".storage.private.v1.WorkspaceEntryR\aentries\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\rR\x05total\"\xb4\x01\n" +
-	"\x1eGetWorkspaceFilePreviewRequest\x12/\n" +
-	"\x13workspace_reference\x18\x01 \x01(\tR\x12workspaceReference\x12\x12\n" +
-	"\x04path\x18\x02 \x01(\tR\x04path\x12M\n" +
-	"\x10reference_mounts\x18\x03 \x03(\v2\".storage.private.v1.ReferenceMountR\x0freferenceMounts\"\\\n" +
+	"\x05total\x18\x02 \x01(\rR\x05total\"q\n" +
+	"\x1eGetWorkspaceFilePreviewRequest\x12;\n" +
+	"\x06layout\x18\x01 \x01(\v2#.storage.private.v1.WorkspaceLayoutR\x06layout\x12\x12\n" +
+	"\x04path\x18\x02 \x01(\tR\x04path\"\\\n" +
 	"\x1fGetWorkspaceFilePreviewResponse\x129\n" +
-	"\apreview\x18\x01 \x01(\v2\x1f.storage.private.v1.FilePreviewR\apreview\"\xb3\x01\n" +
-	"\x1dIssueWorkspaceFileLinkRequest\x12/\n" +
-	"\x13workspace_reference\x18\x01 \x01(\tR\x12workspaceReference\x12\x12\n" +
-	"\x04path\x18\x02 \x01(\tR\x04path\x12M\n" +
-	"\x10reference_mounts\x18\x03 \x03(\v2\".storage.private.v1.ReferenceMountR\x0freferenceMounts\"z\n" +
+	"\apreview\x18\x01 \x01(\v2\x1f.storage.private.v1.FilePreviewR\apreview\"p\n" +
+	"\x1dIssueWorkspaceFileLinkRequest\x12;\n" +
+	"\x06layout\x18\x01 \x01(\v2#.storage.private.v1.WorkspaceLayoutR\x06layout\x12\x12\n" +
+	"\x04path\x18\x02 \x01(\tR\x04path\"z\n" +
 	"\x1eIssueWorkspaceFileLinkResponse\x12\x1d\n" +
 	"\n" +
 	"access_url\x18\x01 \x01(\tR\taccessUrl\x129\n" +
 	"\n" +
-	"expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"n\n" +
-	"\"RequestWorkspaceReclamationRequest\x12\x17\n" +
-	"\awork_id\x18\x01 \x01(\tR\x06workId\x12/\n" +
-	"\x13workspace_reference\x18\x02 \x01(\tR\x12workspaceReference\"%\n" +
-	"#RequestWorkspaceReclamationResponse\"`\n" +
+	"expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"8\n" +
+	"\x1dRequestWorkReclamationRequest\x12\x17\n" +
+	"\awork_id\x18\x01 \x01(\tR\x06workId\" \n" +
+	"\x1eRequestWorkReclamationResponse\"`\n" +
 	"\x17JudgeFilePreviewRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1d\n" +
 	"\n" +
@@ -1156,13 +1099,13 @@ const file_storage_private_v1_workspace_proto_rawDesc = "" +
 	" WORKSPACE_ENTRY_KIND_UNSPECIFIED\x10\x00\x12\"\n" +
 	"\x1eWORKSPACE_ENTRY_KIND_DIRECTORY\x10\x01\x12\x1d\n" +
 	"\x19WORKSPACE_ENTRY_KIND_FILE\x10\x02\x12\x1d\n" +
-	"\x19WORKSPACE_ENTRY_KIND_LINK\x10\x032\xf0\x05\n" +
+	"\x19WORKSPACE_ENTRY_KIND_LINK\x10\x032\xe0\x05\n" +
 	"\x13SandboxMountService\x12d\n" +
 	"\rAcquireMounts\x12(.storage.private.v1.AcquireMountsRequest\x1a).storage.private.v1.AcquireMountsResponse\x12m\n" +
 	"\x10GetWorkspaceView\x12+.storage.private.v1.GetWorkspaceViewRequest\x1a,.storage.private.v1.GetWorkspaceViewResponse\x12\x82\x01\n" +
 	"\x17GetWorkspaceFilePreview\x122.storage.private.v1.GetWorkspaceFilePreviewRequest\x1a3.storage.private.v1.GetWorkspaceFilePreviewResponse\x12\x7f\n" +
-	"\x16IssueWorkspaceFileLink\x121.storage.private.v1.IssueWorkspaceFileLinkRequest\x1a2.storage.private.v1.IssueWorkspaceFileLinkResponse\x12\x8e\x01\n" +
-	"\x1bRequestWorkspaceReclamation\x126.storage.private.v1.RequestWorkspaceReclamationRequest\x1a7.storage.private.v1.RequestWorkspaceReclamationResponse\x12m\n" +
+	"\x16IssueWorkspaceFileLink\x121.storage.private.v1.IssueWorkspaceFileLinkRequest\x1a2.storage.private.v1.IssueWorkspaceFileLinkResponse\x12\x7f\n" +
+	"\x16RequestWorkReclamation\x121.storage.private.v1.RequestWorkReclamationRequest\x1a2.storage.private.v1.RequestWorkReclamationResponse\x12m\n" +
 	"\x10JudgeFilePreview\x12+.storage.private.v1.JudgeFilePreviewRequest\x1a,.storage.private.v1.JudgeFilePreviewResponseBNZLgithub.com/talgent-work/contracts/gen/go/storage/private/v1;storageprivatev1b\x06proto3"
 
 var (
@@ -1178,61 +1121,66 @@ func file_storage_private_v1_workspace_proto_rawDescGZIP() []byte {
 }
 
 var file_storage_private_v1_workspace_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_storage_private_v1_workspace_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_storage_private_v1_workspace_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_storage_private_v1_workspace_proto_goTypes = []any{
-	(WorkspaceEntryKind)(0),                     // 0: storage.private.v1.WorkspaceEntryKind
-	(*AcquireMountsRequest)(nil),                // 1: storage.private.v1.AcquireMountsRequest
-	(*ReferenceMount)(nil),                      // 2: storage.private.v1.ReferenceMount
-	(*MountedReference)(nil),                    // 3: storage.private.v1.MountedReference
-	(*MountGrant)(nil),                          // 4: storage.private.v1.MountGrant
-	(*AcquireMountsResponse)(nil),               // 5: storage.private.v1.AcquireMountsResponse
-	(*GetWorkspaceViewRequest)(nil),             // 6: storage.private.v1.GetWorkspaceViewRequest
-	(*WorkspaceEntry)(nil),                      // 7: storage.private.v1.WorkspaceEntry
-	(*GetWorkspaceViewResponse)(nil),            // 8: storage.private.v1.GetWorkspaceViewResponse
-	(*GetWorkspaceFilePreviewRequest)(nil),      // 9: storage.private.v1.GetWorkspaceFilePreviewRequest
-	(*GetWorkspaceFilePreviewResponse)(nil),     // 10: storage.private.v1.GetWorkspaceFilePreviewResponse
-	(*IssueWorkspaceFileLinkRequest)(nil),       // 11: storage.private.v1.IssueWorkspaceFileLinkRequest
-	(*IssueWorkspaceFileLinkResponse)(nil),      // 12: storage.private.v1.IssueWorkspaceFileLinkResponse
-	(*RequestWorkspaceReclamationRequest)(nil),  // 13: storage.private.v1.RequestWorkspaceReclamationRequest
-	(*RequestWorkspaceReclamationResponse)(nil), // 14: storage.private.v1.RequestWorkspaceReclamationResponse
-	(*JudgeFilePreviewRequest)(nil),             // 15: storage.private.v1.JudgeFilePreviewRequest
-	(*JudgeFilePreviewResponse)(nil),            // 16: storage.private.v1.JudgeFilePreviewResponse
-	(*timestamppb.Timestamp)(nil),               // 17: google.protobuf.Timestamp
-	(*FilePreview)(nil),                         // 18: storage.private.v1.FilePreview
+	(WorkspaceEntryKind)(0),                 // 0: storage.private.v1.WorkspaceEntryKind
+	(*MountRequest)(nil),                    // 1: storage.private.v1.MountRequest
+	(*AcquireMountsRequest)(nil),            // 2: storage.private.v1.AcquireMountsRequest
+	(*MountGrant)(nil),                      // 3: storage.private.v1.MountGrant
+	(*AcquireMountsResponse)(nil),           // 4: storage.private.v1.AcquireMountsResponse
+	(*MountedDirectory)(nil),                // 5: storage.private.v1.MountedDirectory
+	(*WorkspaceLayout)(nil),                 // 6: storage.private.v1.WorkspaceLayout
+	(*GetWorkspaceViewRequest)(nil),         // 7: storage.private.v1.GetWorkspaceViewRequest
+	(*WorkspaceEntry)(nil),                  // 8: storage.private.v1.WorkspaceEntry
+	(*GetWorkspaceViewResponse)(nil),        // 9: storage.private.v1.GetWorkspaceViewResponse
+	(*GetWorkspaceFilePreviewRequest)(nil),  // 10: storage.private.v1.GetWorkspaceFilePreviewRequest
+	(*GetWorkspaceFilePreviewResponse)(nil), // 11: storage.private.v1.GetWorkspaceFilePreviewResponse
+	(*IssueWorkspaceFileLinkRequest)(nil),   // 12: storage.private.v1.IssueWorkspaceFileLinkRequest
+	(*IssueWorkspaceFileLinkResponse)(nil),  // 13: storage.private.v1.IssueWorkspaceFileLinkResponse
+	(*RequestWorkReclamationRequest)(nil),   // 14: storage.private.v1.RequestWorkReclamationRequest
+	(*RequestWorkReclamationResponse)(nil),  // 15: storage.private.v1.RequestWorkReclamationResponse
+	(*JudgeFilePreviewRequest)(nil),         // 16: storage.private.v1.JudgeFilePreviewRequest
+	(*JudgeFilePreviewResponse)(nil),        // 17: storage.private.v1.JudgeFilePreviewResponse
+	(*LocatedDirectory)(nil),                // 18: storage.private.v1.LocatedDirectory
+	(*Directory)(nil),                       // 19: storage.private.v1.Directory
+	(*timestamppb.Timestamp)(nil),           // 20: google.protobuf.Timestamp
+	(*FilePosition)(nil),                    // 21: storage.private.v1.FilePosition
+	(*FilePreview)(nil),                     // 22: storage.private.v1.FilePreview
 }
 var file_storage_private_v1_workspace_proto_depIdxs = []int32{
-	2,  // 0: storage.private.v1.AcquireMountsRequest.reference_mounts:type_name -> storage.private.v1.ReferenceMount
-	4,  // 1: storage.private.v1.MountedReference.grant:type_name -> storage.private.v1.MountGrant
-	4,  // 2: storage.private.v1.AcquireMountsResponse.home:type_name -> storage.private.v1.MountGrant
-	4,  // 3: storage.private.v1.AcquireMountsResponse.workspace:type_name -> storage.private.v1.MountGrant
-	4,  // 4: storage.private.v1.AcquireMountsResponse.inputs:type_name -> storage.private.v1.MountGrant
-	3,  // 5: storage.private.v1.AcquireMountsResponse.references:type_name -> storage.private.v1.MountedReference
-	2,  // 6: storage.private.v1.GetWorkspaceViewRequest.reference_mounts:type_name -> storage.private.v1.ReferenceMount
-	17, // 7: storage.private.v1.WorkspaceEntry.modified_at:type_name -> google.protobuf.Timestamp
+	18, // 0: storage.private.v1.MountRequest.directory:type_name -> storage.private.v1.LocatedDirectory
+	1,  // 1: storage.private.v1.AcquireMountsRequest.mounts:type_name -> storage.private.v1.MountRequest
+	3,  // 2: storage.private.v1.AcquireMountsResponse.grants:type_name -> storage.private.v1.MountGrant
+	19, // 3: storage.private.v1.MountedDirectory.directory:type_name -> storage.private.v1.Directory
+	19, // 4: storage.private.v1.WorkspaceLayout.workspace:type_name -> storage.private.v1.Directory
+	5,  // 5: storage.private.v1.WorkspaceLayout.mounts:type_name -> storage.private.v1.MountedDirectory
+	6,  // 6: storage.private.v1.GetWorkspaceViewRequest.layout:type_name -> storage.private.v1.WorkspaceLayout
+	20, // 7: storage.private.v1.WorkspaceEntry.modified_at:type_name -> google.protobuf.Timestamp
 	0,  // 8: storage.private.v1.WorkspaceEntry.kind:type_name -> storage.private.v1.WorkspaceEntryKind
-	7,  // 9: storage.private.v1.GetWorkspaceViewResponse.entries:type_name -> storage.private.v1.WorkspaceEntry
-	2,  // 10: storage.private.v1.GetWorkspaceFilePreviewRequest.reference_mounts:type_name -> storage.private.v1.ReferenceMount
-	18, // 11: storage.private.v1.GetWorkspaceFilePreviewResponse.preview:type_name -> storage.private.v1.FilePreview
-	2,  // 12: storage.private.v1.IssueWorkspaceFileLinkRequest.reference_mounts:type_name -> storage.private.v1.ReferenceMount
-	17, // 13: storage.private.v1.IssueWorkspaceFileLinkResponse.expires_at:type_name -> google.protobuf.Timestamp
-	18, // 14: storage.private.v1.JudgeFilePreviewResponse.preview:type_name -> storage.private.v1.FilePreview
-	1,  // 15: storage.private.v1.SandboxMountService.AcquireMounts:input_type -> storage.private.v1.AcquireMountsRequest
-	6,  // 16: storage.private.v1.SandboxMountService.GetWorkspaceView:input_type -> storage.private.v1.GetWorkspaceViewRequest
-	9,  // 17: storage.private.v1.SandboxMountService.GetWorkspaceFilePreview:input_type -> storage.private.v1.GetWorkspaceFilePreviewRequest
-	11, // 18: storage.private.v1.SandboxMountService.IssueWorkspaceFileLink:input_type -> storage.private.v1.IssueWorkspaceFileLinkRequest
-	13, // 19: storage.private.v1.SandboxMountService.RequestWorkspaceReclamation:input_type -> storage.private.v1.RequestWorkspaceReclamationRequest
-	15, // 20: storage.private.v1.SandboxMountService.JudgeFilePreview:input_type -> storage.private.v1.JudgeFilePreviewRequest
-	5,  // 21: storage.private.v1.SandboxMountService.AcquireMounts:output_type -> storage.private.v1.AcquireMountsResponse
-	8,  // 22: storage.private.v1.SandboxMountService.GetWorkspaceView:output_type -> storage.private.v1.GetWorkspaceViewResponse
-	10, // 23: storage.private.v1.SandboxMountService.GetWorkspaceFilePreview:output_type -> storage.private.v1.GetWorkspaceFilePreviewResponse
-	12, // 24: storage.private.v1.SandboxMountService.IssueWorkspaceFileLink:output_type -> storage.private.v1.IssueWorkspaceFileLinkResponse
-	14, // 25: storage.private.v1.SandboxMountService.RequestWorkspaceReclamation:output_type -> storage.private.v1.RequestWorkspaceReclamationResponse
-	16, // 26: storage.private.v1.SandboxMountService.JudgeFilePreview:output_type -> storage.private.v1.JudgeFilePreviewResponse
-	21, // [21:27] is the sub-list for method output_type
-	15, // [15:21] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	21, // 9: storage.private.v1.WorkspaceEntry.position:type_name -> storage.private.v1.FilePosition
+	8,  // 10: storage.private.v1.GetWorkspaceViewResponse.entries:type_name -> storage.private.v1.WorkspaceEntry
+	6,  // 11: storage.private.v1.GetWorkspaceFilePreviewRequest.layout:type_name -> storage.private.v1.WorkspaceLayout
+	22, // 12: storage.private.v1.GetWorkspaceFilePreviewResponse.preview:type_name -> storage.private.v1.FilePreview
+	6,  // 13: storage.private.v1.IssueWorkspaceFileLinkRequest.layout:type_name -> storage.private.v1.WorkspaceLayout
+	20, // 14: storage.private.v1.IssueWorkspaceFileLinkResponse.expires_at:type_name -> google.protobuf.Timestamp
+	22, // 15: storage.private.v1.JudgeFilePreviewResponse.preview:type_name -> storage.private.v1.FilePreview
+	2,  // 16: storage.private.v1.SandboxMountService.AcquireMounts:input_type -> storage.private.v1.AcquireMountsRequest
+	7,  // 17: storage.private.v1.SandboxMountService.GetWorkspaceView:input_type -> storage.private.v1.GetWorkspaceViewRequest
+	10, // 18: storage.private.v1.SandboxMountService.GetWorkspaceFilePreview:input_type -> storage.private.v1.GetWorkspaceFilePreviewRequest
+	12, // 19: storage.private.v1.SandboxMountService.IssueWorkspaceFileLink:input_type -> storage.private.v1.IssueWorkspaceFileLinkRequest
+	14, // 20: storage.private.v1.SandboxMountService.RequestWorkReclamation:input_type -> storage.private.v1.RequestWorkReclamationRequest
+	16, // 21: storage.private.v1.SandboxMountService.JudgeFilePreview:input_type -> storage.private.v1.JudgeFilePreviewRequest
+	4,  // 22: storage.private.v1.SandboxMountService.AcquireMounts:output_type -> storage.private.v1.AcquireMountsResponse
+	9,  // 23: storage.private.v1.SandboxMountService.GetWorkspaceView:output_type -> storage.private.v1.GetWorkspaceViewResponse
+	11, // 24: storage.private.v1.SandboxMountService.GetWorkspaceFilePreview:output_type -> storage.private.v1.GetWorkspaceFilePreviewResponse
+	13, // 25: storage.private.v1.SandboxMountService.IssueWorkspaceFileLink:output_type -> storage.private.v1.IssueWorkspaceFileLinkResponse
+	15, // 26: storage.private.v1.SandboxMountService.RequestWorkReclamation:output_type -> storage.private.v1.RequestWorkReclamationResponse
+	17, // 27: storage.private.v1.SandboxMountService.JudgeFilePreview:output_type -> storage.private.v1.JudgeFilePreviewResponse
+	22, // [22:28] is the sub-list for method output_type
+	16, // [16:22] is the sub-list for method input_type
+	16, // [16:16] is the sub-list for extension type_name
+	16, // [16:16] is the sub-list for extension extendee
+	0,  // [0:16] is the sub-list for field type_name
 }
 
 func init() { file_storage_private_v1_workspace_proto_init() }
@@ -1247,7 +1195,7 @@ func file_storage_private_v1_workspace_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_storage_private_v1_workspace_proto_rawDesc), len(file_storage_private_v1_workspace_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   16,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -6,32 +6,33 @@ import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/talgent-work/contracts/gen/go/storage/private/v1;storageprivatev1";
 
-// FileSpaceService is the File Space Contract. A caller names
-// each File Space by an owner identity Storage keeps opaque, and decides who
-// may read, write or share before calling; Storage checks only the Space
-// Token on writes.
-service FileSpaceService {
-  // OpenFileSpace opens an owner's space on its first need; repeating it
-  // returns the same Space Token and input source.
-  rpc OpenFileSpace(OpenFileSpaceRequest) returns (OpenFileSpaceResponse);
-  // ListFiles lists an owner's Attachments and Artifacts with their active
-  // Share Links; an unopened space lists nothing.
+// DirectoryService is the File Space Command and Query Contracts and the
+// Reference Space Command and Query Contracts over Storage's one kind of
+// space, the Directory. A caller locates each Directory by applying a
+// DirectoryLocator to its own facts and decides who may read, write or share
+// before calling; Storage checks only the Space Token on writes.
+service DirectoryService {
+  // OpenDirectory opens a located Directory on its first need, allocating it
+  // on its backend for its lifetime; repeating it returns the same Space
+  // Token and completes an allocation that failed half-way. The first
+  // opening fixes backend and lifetime. A reclaimed Directory refuses with
+  // DIRECTORY_RECLAIMED.
+  rpc OpenDirectory(OpenDirectoryRequest) returns (OpenDirectoryResponse);
+  // ListFiles lists the files Storage wrote into one Directory with their
+  // active Share Links; an unopened Directory lists nothing.
   rpc ListFiles(ListFilesRequest) returns (ListFilesResponse);
-  // ListOwnerFiles is the Owner File Query: the files in the File Spaces of
-  // the given owners. The caller names only owners whose files it has
-  // authorized its reader to see.
-  rpc ListOwnerFiles(ListOwnerFilesRequest) returns (ListOwnerFilesResponse);
-  // ResolveInputSources names the owner of the File Space each input source
-  // Storage issued opens, so a caller holding only input sources can name
-  // their spaces by owner; a source that names no File Space is unknown.
-  rpc ResolveInputSources(ResolveInputSourcesRequest) returns (ResolveInputSourcesResponse);
-  // IssueAttachmentUpload issues the link through which one Attachment is
-  // created or replaced. Create refuses a taken name; Replace refuses a free one.
-  rpc IssueAttachmentUpload(IssueAttachmentUploadRequest) returns (IssueAttachmentUploadResponse);
-  // RenameAttachment moves an Attachment and its Share Links to a free name.
-  rpc RenameAttachment(RenameAttachmentRequest) returns (RenameAttachmentResponse);
-  // DeleteFile deletes an Attachment or an Artifact and revokes its Share
-  // Links; deleting an absent file succeeds.
+  // ListDirectoryFiles is the Directory file query: the files Storage wrote
+  // into the given Directories. The caller names only Directories whose files
+  // it has authorized its reader to see.
+  rpc ListDirectoryFiles(ListDirectoryFilesRequest) returns (ListDirectoryFilesResponse);
+  // IssueUpload issues the link through which one file is created or
+  // replaced by a person. Create refuses a taken name; Replace refuses a
+  // free one.
+  rpc IssueUpload(IssueUploadRequest) returns (IssueUploadResponse);
+  // RenameFile moves a file and its Share Links to a free name.
+  rpc RenameFile(RenameFileRequest) returns (RenameFileResponse);
+  // DeleteFile deletes a file and revokes its Share Links; deleting an absent
+  // file succeeds.
   rpc DeleteFile(DeleteFileRequest) returns (DeleteFileResponse);
   // IssueAccessLink issues a short-lived link for one read of a file.
   rpc IssueAccessLink(IssueAccessLinkRequest) returns (IssueAccessLinkResponse);
@@ -47,14 +48,22 @@ service FileSpaceService {
   // content when its preview mode is RENDER; a content already rendering,
   // rendered or found unrenderable is not rendered again.
   rpc RequestFilePreview(RequestFilePreviewRequest) returns (RequestFilePreviewResponse);
+  // ReplaceContent makes the given files a Directory's whole content in one
+  // atomic switch, and completes only once the earlier content is removed.
+  // Repeating it writes the same content again. Readers, mounted ones
+  // included, always see one complete current content.
+  rpc ReplaceContent(ReplaceContentRequest) returns (ReplaceContentResponse);
+  // ReadContent reads files of a Directory's current content by clean
+  // relative path; before its first replacement it has no files.
+  rpc ReadContent(ReadContentRequest) returns (ReadContentResponse);
 }
 
 // ArtifactService is the Storage Agent Command Contract: a Work Agent's
-// Artifact commands on the File Space its Work was given, each completed
+// Artifact commands on the File Space its Work publishes into, each completed
 // within its request. The platform Connector calls it under the Work Agent's
-// verified Work credential and its Space Token; the Work and its workspace
-// come from that identity and the File Space from the token, never from the
-// request. A retry meets each
+// verified Work credential and its Space Token; the Work and its Session
+// Workspace layout come from that identity and the File Space from the token,
+// never from the request. A retry meets each
 // command's own semantics: Create refuses a taken name, Replace writes
 // again and Delete finds nothing left to delete.
 service ArtifactService {
@@ -78,9 +87,10 @@ enum ErrorReason {
   ERROR_REASON_FILE_NOT_FOUND = 1;
   // No file at the publication source in the workspace.
   ERROR_REASON_SOURCE_NOT_FOUND = 2;
-  // The source is not one regular workspace file outside inputs/.
+  // The source is not one regular Session Workspace file outside every
+  // Directory mounted in it.
   ERROR_REASON_INVALID_SOURCE = 3;
-  // The name is not one file name, or the kind is not a file kind.
+  // The name is not one file name.
   ERROR_REASON_INVALID_NAME = 4;
   // The request misses a required field.
   ERROR_REASON_INVALID_REQUEST = 5;
@@ -88,22 +98,103 @@ enum ErrorReason {
   ERROR_REASON_INVALID_WORKSPACE_PATH = 6;
   // A file already has the name.
   ERROR_REASON_NAME_TAKEN = 7;
-  // The owner's File Space was never opened, or the Space Token names none.
-  ERROR_REASON_SPACE_NOT_OPEN = 8;
-  // The Work's workspace was never created.
-  ERROR_REASON_WORKSPACE_NOT_CREATED = 9;
-  // The Work's workspace was reclaimed.
-  ERROR_REASON_WORKSPACE_RECLAIMED = 10;
+  // The Directory was never opened, or the Space Token names none.
+  ERROR_REASON_DIRECTORY_NOT_OPEN = 8;
+  // The Directory's space does not exist yet: its allocation has not
+  // completed.
+  ERROR_REASON_DIRECTORY_NOT_ALLOCATED = 9;
+  // The Directory was reclaimed: it is never mounted, written or recreated.
+  ERROR_REASON_DIRECTORY_RECLAIMED = 10;
+  // The Locator is invalid: a lifetime of its Work without the work
+  // condition, an owner fact repeated, or a name that is not one path
+  // element.
+  ERROR_REASON_INVALID_LOCATOR = 11;
+  // A permanent Directory refuses reclamation.
+  ERROR_REASON_PERMANENT_DIRECTORY = 12;
 }
 
-// FileKind is the kind of a File position.
-enum FileKind {
-  // FILE_KIND_UNSPECIFIED value.
-  FILE_KIND_UNSPECIFIED = 0;
-  // An input file of the space's owner.
-  FILE_KIND_ATTACHMENT = 1;
-  // An output a Work Agent published.
-  FILE_KIND_ARTIFACT = 2;
+// Backend is where a Directory's files live, fixed at its first allocation.
+enum Backend {
+  // BACKEND_UNSPECIFIED value.
+  BACKEND_UNSPECIFIED = 0;
+  // The NAS, for Directories a Harness writes through mounts.
+  BACKEND_NAS = 1;
+  // JuiceFS, for Directories Storage writes and keeps as originals.
+  BACKEND_JUICEFS = 2;
+}
+
+// Lifetime is how long a Directory is kept, fixed at its first allocation.
+enum Lifetime {
+  // LIFETIME_UNSPECIFIED value.
+  LIFETIME_UNSPECIFIED = 0;
+  // Reclaimed with the Work its owner names; its owner must name a Work.
+  LIFETIME_WORK = 1;
+  // Kept permanently; never reclaimed.
+  LIFETIME_PERMANENT = 2;
+}
+
+// DirectoryLocator is the Directory Locator Contract: what a caller locates a
+// Directory by. Applied to a caller's facts, with a value for each condition,
+// it gives one DirectoryOwner and name; a caller lacking a value for a
+// condition locates nothing and requests nothing.
+message DirectoryLocator {
+  // Names of the facts the Directory follows, each once, such as "subject"
+  // or "work". Storage recognizes only "work"; every other name is the
+  // callers' shared vocabulary.
+  repeated string conditions = 1;
+  // Name of the Directory within its owner: one path element, never empty,
+  // never starting with "." and never containing "/", "\" or NUL.
+  string name = 2;
+  // Backend it is allocated on.
+  Backend backend = 3;
+  // Lifetime it is allocated for.
+  Lifetime lifetime = 4;
+}
+
+// OwnerFact is one condition of a Locator with the caller's value for it.
+message OwnerFact {
+  // The condition's name.
+  string condition = 1;
+  // The caller's value, opaque to Storage; for "work", the Work's identity.
+  string value = 2;
+}
+
+// DirectoryOwner is a Locator's conditions with the caller's fact values,
+// such as {subject: intent:123}. Storage keeps it as supplied, in condition
+// order, and interprets only whether it names a Work.
+message DirectoryOwner {
+  // Facts ordered by condition name, each condition once.
+  repeated OwnerFact facts = 1;
+}
+
+// Directory is the identity of one Directory: its owner and name.
+message Directory {
+  // Owner.
+  DirectoryOwner owner = 1;
+  // Name within the owner.
+  string name = 2;
+}
+
+// LocatedDirectory is what applying a Locator to a caller's facts gives:
+// the Directory with the backend and lifetime its first allocation takes.
+message LocatedDirectory {
+  // The Directory.
+  Directory directory = 1;
+  // Backend; a later opening with another backend gets the existing
+  // Directory unchanged.
+  Backend backend = 2;
+  // Lifetime; a later opening with another lifetime gets the existing
+  // Directory unchanged.
+  Lifetime lifetime = 3;
+}
+
+// FilePosition is a file's identity: its Directory and its name, one path
+// element directly in the Directory.
+message FilePosition {
+  // The Directory.
+  Directory directory = 1;
+  // File name.
+  string name = 2;
 }
 
 // AccessDisposition says how an Access Link presents the file.
@@ -128,14 +219,13 @@ message ShareLink {
   google.protobuf.Timestamp created_at = 4;
 }
 
-// File is one Attachment or Artifact at its File position.
+// File is one Attachment or Artifact at its File position: an Attachment
+// names its uploader, an Artifact the Work that published it.
 message File {
-  // Owner of the File Space, as its caller named it.
-  string owner = 1;
-  // Attachment or Artifact.
-  FileKind kind = 2;
-  // File name, unique within its File Space and kind.
-  string name = 3;
+  reserved 2, 3;
+  reserved "kind", "name";
+  // Position: Directory and name.
+  FilePosition position = 1;
   // Size in bytes.
   int64 size_bytes = 4;
   // Media type: the uploaded type, or the one of the name's extension.
@@ -150,123 +240,94 @@ message File {
   repeated ShareLink share_links = 9;
 }
 
-// OpenFileSpaceRequest names the owner.
-message OpenFileSpaceRequest {
-  // Owner identity the caller names the space by: one path element, opaque
-  // to Storage.
-  string owner = 1;
+// OpenDirectoryRequest names the located Directory.
+message OpenDirectoryRequest {
+  // The Directory with the backend and lifetime of its first allocation.
+  LocatedDirectory directory = 1;
 }
 
-// OpenFileSpaceResponse carries the space's credential and input source.
-message OpenFileSpaceResponse {
-  // Credential every file write presents.
+// OpenDirectoryResponse carries the Directory's credential.
+message OpenDirectoryResponse {
+  // Credential every file command and content replacement presents.
   string space_token = 1;
-  // Opaque reference to the space for a Work's input source.
-  string input_source = 2;
 }
 
-// ListFilesRequest names an owner.
+// ListFilesRequest names a Directory.
 message ListFilesRequest {
-  // Owner identity.
-  string owner = 1;
+  // The Directory.
+  Directory directory = 1;
 }
 
-// ListFilesResponse lists the files, Attachments first, by name.
+// ListFilesResponse lists the files by name.
 message ListFilesResponse {
-  // Files of the owner's space.
+  // Files Storage wrote into the Directory.
   repeated File files = 1;
 }
 
-// ListOwnerFilesRequest names the owners.
-message ListOwnerFilesRequest {
-  // Owner identities; an owner whose space never opened has no files.
-  repeated string owners = 1;
+// ListDirectoryFilesRequest names the Directories.
+message ListDirectoryFilesRequest {
+  // Directories; one never opened has no files. At most 1000.
+  repeated Directory directories = 1;
 }
 
-// ListOwnerFilesResponse lists the owners' files, each with its owner, by
-// owner as requested, then Attachments first, by name. Share Links are not
-// included.
-message ListOwnerFilesResponse {
-  // Files of the owners' spaces.
+// ListDirectoryFilesResponse lists the Directories' files, by Directory as
+// requested, then by name. Share Links are not included.
+message ListDirectoryFilesResponse {
+  // Files of the Directories.
   repeated File files = 1;
+  // The requested Directories that were reclaimed, as requested; they list
+  // no files, unlike one never opened, which is simply absent.
+  repeated Directory reclaimed = 2;
 }
 
-// ResolveInputSourcesRequest names input sources Storage issued.
-message ResolveInputSourcesRequest {
-  // Input sources, at most 1000.
-  repeated string input_sources = 1;
-}
-
-// ResolvedInputSource is one input source's File Space owner.
-message ResolvedInputSource {
-  // The input source as requested.
-  string input_source = 1;
-  // Owner of the File Space it opens; empty when unknown.
-  string owner = 2;
-}
-
-// ResolveInputSourcesResponse answers each requested input source, in order.
-message ResolveInputSourcesResponse {
-  // Resolutions.
-  repeated ResolvedInputSource input_sources = 1;
-}
-
-// IssueAttachmentUploadRequest describes the intended write.
-message IssueAttachmentUploadRequest {
-  // Owner identity.
-  string owner = 1;
-  // The space's credential.
+// IssueUploadRequest describes the intended write.
+message IssueUploadRequest {
+  // Where the file is written.
+  FilePosition position = 1;
+  // The Directory's credential.
   string space_token = 2;
-  // Attachment name.
-  string name = 3;
-  // True to replace the Attachment at name; false to create a new one.
-  bool replace = 4;
-  // Human the upload is attributed to.
-  string uploader_user_id = 5;
+  // True to replace the file at the position; false to create a new one.
+  bool replace = 3;
+  // Person the upload is attributed to.
+  string uploader_user_id = 4;
   // Declared media type, kept with the file.
-  string content_type = 6;
+  string content_type = 5;
 }
 
-// IssueAttachmentUploadResponse carries the upload link.
-message IssueAttachmentUploadResponse {
+// IssueUploadResponse carries the upload link.
+message IssueUploadResponse {
   // URL to PUT the content to.
   string upload_url = 1;
   // Time the link stops working.
   google.protobuf.Timestamp expires_at = 2;
 }
 
-// RenameAttachmentRequest names the Attachment and its new name.
-message RenameAttachmentRequest {
-  // Owner identity.
-  string owner = 1;
-  // The space's credential.
+// RenameFileRequest names the file and its new name.
+message RenameFileRequest {
+  // The file.
+  FilePosition position = 1;
+  // The Directory's credential.
   string space_token = 2;
-  // Current name.
-  string name = 3;
-  // New name; it must be free.
-  string new_name = 4;
+  // New name in the same Directory; it must be free.
+  string new_name = 3;
   // The person renaming it, admitted by the owner's context.
-  string actor_user_id = 5;
+  string actor_user_id = 4;
 }
 
-// RenameAttachmentResponse returns the renamed Attachment.
-message RenameAttachmentResponse {
-  // The Attachment at its new position.
+// RenameFileResponse returns the renamed file.
+message RenameFileResponse {
+  // The file at its new position.
   File file = 1;
 }
 
 // DeleteFileRequest names the file.
 message DeleteFileRequest {
-  // Owner identity.
-  string owner = 1;
-  // The space's credential.
+  // The file.
+  FilePosition position = 1;
+  // The Directory's credential.
   string space_token = 2;
-  // Attachment or Artifact.
-  FileKind kind = 3;
-  // File name.
-  string name = 4;
   // The person deleting it, admitted by the owner's context.
-  string actor_user_id = 5;
+  string actor_user_id = 3;
 }
 
 // DeleteFileResponse confirms the file is gone.
@@ -274,14 +335,10 @@ message DeleteFileResponse {}
 
 // IssueAccessLinkRequest names the file to read.
 message IssueAccessLinkRequest {
-  // Owner identity.
-  string owner = 1;
-  // Attachment or Artifact.
-  FileKind kind = 2;
-  // File name.
-  string name = 3;
+  // The file.
+  FilePosition position = 1;
   // How the link presents the file.
-  AccessDisposition disposition = 4;
+  AccessDisposition disposition = 2;
 }
 
 // IssueAccessLinkResponse carries the link.
@@ -297,12 +354,8 @@ message IssueAccessLinkResponse {
 
 // GetFilePreviewRequest names the file.
 message GetFilePreviewRequest {
-  // Owner identity.
-  string owner = 1;
-  // Attachment or Artifact.
-  FileKind kind = 2;
-  // File name.
-  string name = 3;
+  // The file.
+  FilePosition position = 1;
 }
 
 // GetFilePreviewResponse is the file's preview.
@@ -313,18 +366,51 @@ message GetFilePreviewResponse {
 
 // RequestFilePreviewRequest names the file.
 message RequestFilePreviewRequest {
-  // Owner identity.
-  string owner = 1;
-  // Attachment or Artifact.
-  FileKind kind = 2;
-  // File name.
-  string name = 3;
+  // The file.
+  FilePosition position = 1;
 }
 
 // RequestFilePreviewResponse is the file's preview after the request.
 message RequestFilePreviewResponse {
   // How the file is shown.
   FilePreview preview = 1;
+}
+
+// ContentFile is one file of a Directory's whole content.
+message ContentFile {
+  // Clean relative path within the content, such as "pages/payments.md";
+  // any other path is refused as invalid. A path whose first element is
+  // hidden is kept for the writer and left out of a mounted listing.
+  string path = 1;
+  // File content.
+  bytes content = 2;
+}
+
+// ReplaceContentRequest is a Directory's whole new content.
+message ReplaceContentRequest {
+  // The Directory.
+  Directory directory = 1;
+  // The Directory's credential.
+  string space_token = 2;
+  // Every file of the new content.
+  repeated ContentFile files = 3;
+}
+
+// ReplaceContentResponse acknowledges the replacement.
+message ReplaceContentResponse {}
+
+// ReadContentRequest names the Directory and the files wanted.
+message ReadContentRequest {
+  // The Directory.
+  Directory directory = 1;
+  // Paths to read; empty reads every file.
+  repeated string paths = 2;
+}
+
+// ReadContentResponse is the files found among those asked for.
+message ReadContentResponse {
+  // The files of the current content.
+  repeated ContentFile files = 1;
 }
 
 // PreviewMode is how a file is shown.
@@ -397,14 +483,10 @@ message FilePreview {
 
 // CreateShareLinkRequest names the file and its sharer.
 message CreateShareLinkRequest {
-  // Owner identity.
-  string owner = 1;
-  // Attachment or Artifact.
-  FileKind kind = 2;
-  // File name.
-  string name = 3;
+  // The file.
+  FilePosition position = 1;
   // The person sharing it.
-  string created_by_user_id = 4;
+  string created_by_user_id = 2;
 }
 
 // CreateShareLinkResponse returns the new link.
@@ -415,14 +497,10 @@ message CreateShareLinkResponse {
 
 // RevokeShareLinksRequest names the file and whose links end.
 message RevokeShareLinksRequest {
-  // Owner identity.
-  string owner = 1;
-  // Attachment or Artifact.
-  FileKind kind = 2;
-  // File name.
-  string name = 3;
+  // The file.
+  FilePosition position = 1;
   // Only the links this person created end; empty ends every link.
-  string created_by_user_id = 4;
+  string created_by_user_id = 2;
 }
 
 // RevokeShareLinksResponse reports what ended and what stays active.
@@ -445,8 +523,8 @@ message ArtifactOutcome {
 message CreateArtifactRequest {
   // Artifact name; it must be free.
   string name = 1;
-  // File path relative to /workspace, outside inputs/ and Reference Space
-  // mounts.
+  // File path relative to the Session Workspace, outside every Directory
+  // mounted in it.
   string path = 2;
   // The file's content, at most 64 MiB, from a Work without a Session
   // Workspace.
@@ -465,8 +543,8 @@ message CreateArtifactResponse {
 message ReplaceArtifactRequest {
   // Name of the existing Artifact.
   string name = 1;
-  // File path relative to /workspace, outside inputs/ and Reference Space
-  // mounts.
+  // File path relative to the Session Workspace, outside every Directory
+  // mounted in it.
   string path = 2;
   // The file's content, at most 64 MiB, from a Work without a Session
   // Workspace.

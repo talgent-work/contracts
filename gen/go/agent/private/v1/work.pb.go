@@ -9,6 +9,7 @@ package agentprivatev1
 import (
 	v11 "github.com/talgent-work/contracts/gen/go/agent/public/v1"
 	v1 "github.com/talgent-work/contracts/gen/go/marketplace/public/v1"
+	v12 "github.com/talgent-work/contracts/gen/go/storage/private/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	structpb "google.golang.org/protobuf/types/known/structpb"
@@ -773,8 +774,6 @@ type CreateAgentDefinitionRequest struct {
 	Capabilities *Capabilities `protobuf:"bytes,4,opt,name=capabilities,proto3" json:"capabilities,omitempty"`
 	// Usage scope authorized by the calling business context.
 	UsageScope *UsageScope `protobuf:"bytes,5,opt,name=usage_scope,json=usageScope,proto3" json:"usage_scope,omitempty"`
-	// One HOME shared by this definition's Sessions.
-	HomeBinding *HomeBinding `protobuf:"bytes,6,opt,name=home_binding,json=homeBinding,proto3" json:"home_binding,omitempty"`
 	// Visibility of the definition's new Works.
 	VisibilityRule *VisibilityRule `protobuf:"bytes,7,opt,name=visibility_rule,json=visibilityRule,proto3" json:"visibility_rule,omitempty"`
 	unknownFields  protoimpl.UnknownFields
@@ -842,13 +841,6 @@ func (x *CreateAgentDefinitionRequest) GetCapabilities() *Capabilities {
 func (x *CreateAgentDefinitionRequest) GetUsageScope() *UsageScope {
 	if x != nil {
 		return x.UsageScope
-	}
-	return nil
-}
-
-func (x *CreateAgentDefinitionRequest) GetHomeBinding() *HomeBinding {
-	if x != nil {
-		return x.HomeBinding
 	}
 	return nil
 }
@@ -952,61 +944,6 @@ func (x *CreateAgentDefinitionResponse) GetAgentId() string {
 	return ""
 }
 
-// HomeBinding selects a caller-authorized persistent home and namespace.
-type HomeBinding struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Owner of the persistent home; not a filesystem path.
-	OwnerId string `protobuf:"bytes,1,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
-	// Caller-selected scope within the home.
-	Namespace     string `protobuf:"bytes,2,opt,name=namespace,proto3" json:"namespace,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *HomeBinding) Reset() {
-	*x = HomeBinding{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[13]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *HomeBinding) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*HomeBinding) ProtoMessage() {}
-
-func (x *HomeBinding) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[13]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use HomeBinding.ProtoReflect.Descriptor instead.
-func (*HomeBinding) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{13}
-}
-
-func (x *HomeBinding) GetOwnerId() string {
-	if x != nil {
-		return x.OwnerId
-	}
-	return ""
-}
-
-func (x *HomeBinding) GetNamespace() string {
-	if x != nil {
-		return x.Namespace
-	}
-	return ""
-}
-
 // CreateWorkRequest carries Agent control data.
 type CreateWorkRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -1021,9 +958,6 @@ type CreateWorkRequest struct {
 	SubjectId string `protobuf:"bytes,3,opt,name=subject_id,json=subjectId,proto3" json:"subject_id,omitempty"`
 	// AgentDefinition whose capabilities are captured.
 	AgentId string `protobuf:"bytes,4,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
-	// Caller-selected Session Workspace; empty for a Work that has none, such
-	// as a project-scoped definition's.
-	WorkspaceReference string `protobuf:"bytes,5,opt,name=workspace_reference,json=workspaceReference,proto3" json:"workspace_reference,omitempty"`
 	// Immutable attribution supplied by the trusted caller; not an authorization credential.
 	TraceAttributes map[string]string `protobuf:"bytes,6,rep,name=trace_attributes,json=traceAttributes,proto3" json:"trace_attributes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	// Used only when establishing the Session capability snapshot.
@@ -1037,37 +971,29 @@ type CreateWorkRequest struct {
 	ProjectId string `protobuf:"bytes,9,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
 	// Optional Model Configuration; absence selects the first provided one.
 	Model *v11.WorkModelSelection `protobuf:"bytes,10,opt,name=model,proto3" json:"model,omitempty"`
-	// Opaque read-only input reference fixed at creation, such as a caller's
-	// File Space; Agent hands it to Storage for every start unchanged. Empty
-	// means none. Reuse of an existing Work neither compares nor replaces it.
-	InputSource string `protobuf:"bytes,11,opt,name=input_source,json=inputSource,proto3" json:"input_source,omitempty"`
-	// Space Token issued with the input source; Agent passes it into the
-	// sandbox for publication. Empty when there is no input source.
-	InputSpaceToken string `protobuf:"bytes,12,opt,name=input_space_token,json=inputSpaceToken,proto3" json:"input_space_token,omitempty"`
-	// Spaces mounted read-only in the sandbox, each under the name the caller
-	// gives, fixed at creation; Agent hands each reference to Storage for
-	// every start unchanged. Reuse of an existing Work neither compares nor
-	// replaces them.
-	ReadOnlyMounts []*ReadOnlyMount `protobuf:"bytes,13,rep,name=read_only_mounts,json=readOnlyMounts,proto3" json:"read_only_mounts,omitempty"`
 	// Optional context a new Work starts from: another Work of the same
 	// definition up to a position this Agent named. Reuse of an existing Work
 	// neither compares nor replaces it.
 	StartingContext *WorkStartingContext `protobuf:"bytes,14,opt,name=starting_context,json=startingContext,proto3" json:"starting_context,omitempty"`
 	// The Computer a new Work runs on for its life: a Cloud or one of the
 	// represented person's own Managed Computers; empty runs it on the first
-	// Cloud. A Work on a Managed Computer has no read-only mounts. Reuse of an
-	// existing Work neither compares nor replaces it.
+	// Cloud. Reuse of an existing Work neither compares nor replaces it.
 	ComputerId string `protobuf:"bytes,15,opt,name=computer_id,json=computerId,proto3" json:"computer_id,omitempty"`
 	// The Harness choices of a new Work, admitted only on a Managed Computer.
 	// Reuse of an existing Work neither compares nor replaces them.
-	Harness       *v11.HarnessChoice `protobuf:"bytes,16,opt,name=harness,proto3" json:"harness,omitempty"`
+	Harness *v11.HarnessChoice `protobuf:"bytes,16,opt,name=harness,proto3" json:"harness,omitempty"`
+	// The Agent Harness a new Work runs, by its identity, such as
+	// "claude-code"; empty chooses the default. The Work keeps it for its
+	// life; an unknown one is refused. Reuse of an existing Work neither
+	// compares nor replaces it.
+	AgentHarness  string `protobuf:"bytes,17,opt,name=agent_harness,json=agentHarness,proto3" json:"agent_harness,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreateWorkRequest) Reset() {
 	*x = CreateWorkRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[14]
+	mi := &file_agent_private_v1_work_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1079,7 +1005,7 @@ func (x *CreateWorkRequest) String() string {
 func (*CreateWorkRequest) ProtoMessage() {}
 
 func (x *CreateWorkRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[14]
+	mi := &file_agent_private_v1_work_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1092,7 +1018,7 @@ func (x *CreateWorkRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateWorkRequest.ProtoReflect.Descriptor instead.
 func (*CreateWorkRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{14}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *CreateWorkRequest) GetStartingUserId() string {
@@ -1119,13 +1045,6 @@ func (x *CreateWorkRequest) GetSubjectId() string {
 func (x *CreateWorkRequest) GetAgentId() string {
 	if x != nil {
 		return x.AgentId
-	}
-	return ""
-}
-
-func (x *CreateWorkRequest) GetWorkspaceReference() string {
-	if x != nil {
-		return x.WorkspaceReference
 	}
 	return ""
 }
@@ -1165,27 +1084,6 @@ func (x *CreateWorkRequest) GetModel() *v11.WorkModelSelection {
 	return nil
 }
 
-func (x *CreateWorkRequest) GetInputSource() string {
-	if x != nil {
-		return x.InputSource
-	}
-	return ""
-}
-
-func (x *CreateWorkRequest) GetInputSpaceToken() string {
-	if x != nil {
-		return x.InputSpaceToken
-	}
-	return ""
-}
-
-func (x *CreateWorkRequest) GetReadOnlyMounts() []*ReadOnlyMount {
-	if x != nil {
-		return x.ReadOnlyMounts
-	}
-	return nil
-}
-
 func (x *CreateWorkRequest) GetStartingContext() *WorkStartingContext {
 	if x != nil {
 		return x.StartingContext
@@ -1207,58 +1105,9 @@ func (x *CreateWorkRequest) GetHarness() *v11.HarnessChoice {
 	return nil
 }
 
-// ReadOnlyMount is an opaque space reference and the name it appears under
-// in the sandbox's workspace.
-type ReadOnlyMount struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// One visible directory name of the workspace, other than inputs.
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	// Opaque reference of the space, as Storage knows it.
-	Reference     string `protobuf:"bytes,2,opt,name=reference,proto3" json:"reference,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ReadOnlyMount) Reset() {
-	*x = ReadOnlyMount{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[15]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ReadOnlyMount) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ReadOnlyMount) ProtoMessage() {}
-
-func (x *ReadOnlyMount) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[15]
+func (x *CreateWorkRequest) GetAgentHarness() string {
 	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ReadOnlyMount.ProtoReflect.Descriptor instead.
-func (*ReadOnlyMount) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{15}
-}
-
-func (x *ReadOnlyMount) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *ReadOnlyMount) GetReference() string {
-	if x != nil {
-		return x.Reference
+		return x.AgentHarness
 	}
 	return ""
 }
@@ -1277,7 +1126,7 @@ type WorkStartingContext struct {
 
 func (x *WorkStartingContext) Reset() {
 	*x = WorkStartingContext{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[16]
+	mi := &file_agent_private_v1_work_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1289,7 +1138,7 @@ func (x *WorkStartingContext) String() string {
 func (*WorkStartingContext) ProtoMessage() {}
 
 func (x *WorkStartingContext) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[16]
+	mi := &file_agent_private_v1_work_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1302,7 +1151,7 @@ func (x *WorkStartingContext) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WorkStartingContext.ProtoReflect.Descriptor instead.
 func (*WorkStartingContext) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{16}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *WorkStartingContext) GetSourceWorkId() string {
@@ -1334,7 +1183,7 @@ type ResolveWorkContextPositionRequest struct {
 
 func (x *ResolveWorkContextPositionRequest) Reset() {
 	*x = ResolveWorkContextPositionRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[17]
+	mi := &file_agent_private_v1_work_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1346,7 +1195,7 @@ func (x *ResolveWorkContextPositionRequest) String() string {
 func (*ResolveWorkContextPositionRequest) ProtoMessage() {}
 
 func (x *ResolveWorkContextPositionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[17]
+	mi := &file_agent_private_v1_work_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1359,7 +1208,7 @@ func (x *ResolveWorkContextPositionRequest) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use ResolveWorkContextPositionRequest.ProtoReflect.Descriptor instead.
 func (*ResolveWorkContextPositionRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{17}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *ResolveWorkContextPositionRequest) GetProjectId() string {
@@ -1396,7 +1245,7 @@ type ResolveWorkContextPositionResponse struct {
 
 func (x *ResolveWorkContextPositionResponse) Reset() {
 	*x = ResolveWorkContextPositionResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[18]
+	mi := &file_agent_private_v1_work_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1408,7 +1257,7 @@ func (x *ResolveWorkContextPositionResponse) String() string {
 func (*ResolveWorkContextPositionResponse) ProtoMessage() {}
 
 func (x *ResolveWorkContextPositionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[18]
+	mi := &file_agent_private_v1_work_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1421,7 +1270,7 @@ func (x *ResolveWorkContextPositionResponse) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use ResolveWorkContextPositionResponse.ProtoReflect.Descriptor instead.
 func (*ResolveWorkContextPositionResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{18}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *ResolveWorkContextPositionResponse) GetReturned() bool {
@@ -1449,7 +1298,7 @@ type CreateWorkResponse struct {
 
 func (x *CreateWorkResponse) Reset() {
 	*x = CreateWorkResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[19]
+	mi := &file_agent_private_v1_work_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1461,7 +1310,7 @@ func (x *CreateWorkResponse) String() string {
 func (*CreateWorkResponse) ProtoMessage() {}
 
 func (x *CreateWorkResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[19]
+	mi := &file_agent_private_v1_work_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1474,7 +1323,7 @@ func (x *CreateWorkResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateWorkResponse.ProtoReflect.Descriptor instead.
 func (*CreateWorkResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{19}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *CreateWorkResponse) GetWorkId() string {
@@ -1501,7 +1350,7 @@ type DeliverInputRequest struct {
 
 func (x *DeliverInputRequest) Reset() {
 	*x = DeliverInputRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[20]
+	mi := &file_agent_private_v1_work_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1513,7 +1362,7 @@ func (x *DeliverInputRequest) String() string {
 func (*DeliverInputRequest) ProtoMessage() {}
 
 func (x *DeliverInputRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[20]
+	mi := &file_agent_private_v1_work_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1526,7 +1375,7 @@ func (x *DeliverInputRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeliverInputRequest.ProtoReflect.Descriptor instead.
 func (*DeliverInputRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{20}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *DeliverInputRequest) GetSubjectId() string {
@@ -1587,15 +1436,13 @@ type GetWorkResponse struct {
 	Version int64 `protobuf:"varint,12,opt,name=version,proto3" json:"version,omitempty"`
 	// Current stop correlation, retained through confirmed stop completion.
 	StopRequestId string `protobuf:"bytes,13,opt,name=stop_request_id,json=stopRequestId,proto3" json:"stop_request_id,omitempty"`
-	// Established workspace retained when the business binding reuses this Session.
-	WorkspaceReference string `protobuf:"bytes,14,opt,name=workspace_reference,json=workspaceReference,proto3" json:"workspace_reference,omitempty"`
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetWorkResponse) Reset() {
 	*x = GetWorkResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[21]
+	mi := &file_agent_private_v1_work_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1607,7 +1454,7 @@ func (x *GetWorkResponse) String() string {
 func (*GetWorkResponse) ProtoMessage() {}
 
 func (x *GetWorkResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[21]
+	mi := &file_agent_private_v1_work_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1620,7 +1467,7 @@ func (x *GetWorkResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWorkResponse.ProtoReflect.Descriptor instead.
 func (*GetWorkResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{21}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *GetWorkResponse) GetWorkProgress() *v11.WorkProgress {
@@ -1714,13 +1561,6 @@ func (x *GetWorkResponse) GetStopRequestId() string {
 	return ""
 }
 
-func (x *GetWorkResponse) GetWorkspaceReference() string {
-	if x != nil {
-		return x.WorkspaceReference
-	}
-	return ""
-}
-
 // ResumeWorkRequest carries Agent control data.
 type ResumeWorkRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -1738,7 +1578,7 @@ type ResumeWorkRequest struct {
 
 func (x *ResumeWorkRequest) Reset() {
 	*x = ResumeWorkRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[22]
+	mi := &file_agent_private_v1_work_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1750,7 +1590,7 @@ func (x *ResumeWorkRequest) String() string {
 func (*ResumeWorkRequest) ProtoMessage() {}
 
 func (x *ResumeWorkRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[22]
+	mi := &file_agent_private_v1_work_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1763,7 +1603,7 @@ func (x *ResumeWorkRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResumeWorkRequest.ProtoReflect.Descriptor instead.
 func (*ResumeWorkRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{22}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *ResumeWorkRequest) GetSubjectId() string {
@@ -1798,7 +1638,7 @@ type ResumeWorkResponse struct {
 
 func (x *ResumeWorkResponse) Reset() {
 	*x = ResumeWorkResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[23]
+	mi := &file_agent_private_v1_work_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1810,7 +1650,7 @@ func (x *ResumeWorkResponse) String() string {
 func (*ResumeWorkResponse) ProtoMessage() {}
 
 func (x *ResumeWorkResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[23]
+	mi := &file_agent_private_v1_work_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1823,7 +1663,7 @@ func (x *ResumeWorkResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResumeWorkResponse.ProtoReflect.Descriptor instead.
 func (*ResumeWorkResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{23}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *ResumeWorkResponse) GetWorkId() string {
@@ -1850,7 +1690,7 @@ type RestartWorkRequest struct {
 
 func (x *RestartWorkRequest) Reset() {
 	*x = RestartWorkRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[24]
+	mi := &file_agent_private_v1_work_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1862,7 +1702,7 @@ func (x *RestartWorkRequest) String() string {
 func (*RestartWorkRequest) ProtoMessage() {}
 
 func (x *RestartWorkRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[24]
+	mi := &file_agent_private_v1_work_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1875,7 +1715,7 @@ func (x *RestartWorkRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RestartWorkRequest.ProtoReflect.Descriptor instead.
 func (*RestartWorkRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{24}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *RestartWorkRequest) GetSubjectId() string {
@@ -1910,7 +1750,7 @@ type RestartWorkResponse struct {
 
 func (x *RestartWorkResponse) Reset() {
 	*x = RestartWorkResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[25]
+	mi := &file_agent_private_v1_work_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1922,7 +1762,7 @@ func (x *RestartWorkResponse) String() string {
 func (*RestartWorkResponse) ProtoMessage() {}
 
 func (x *RestartWorkResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[25]
+	mi := &file_agent_private_v1_work_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1935,7 +1775,7 @@ func (x *RestartWorkResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RestartWorkResponse.ProtoReflect.Descriptor instead.
 func (*RestartWorkResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{25}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *RestartWorkResponse) GetWorkId() string {
@@ -1962,7 +1802,7 @@ type StopWorkRequest struct {
 
 func (x *StopWorkRequest) Reset() {
 	*x = StopWorkRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[26]
+	mi := &file_agent_private_v1_work_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1974,7 +1814,7 @@ func (x *StopWorkRequest) String() string {
 func (*StopWorkRequest) ProtoMessage() {}
 
 func (x *StopWorkRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[26]
+	mi := &file_agent_private_v1_work_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1987,7 +1827,7 @@ func (x *StopWorkRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StopWorkRequest.ProtoReflect.Descriptor instead.
 func (*StopWorkRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{26}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *StopWorkRequest) GetSubjectId() string {
@@ -2027,7 +1867,7 @@ type StopWorkResponse struct {
 
 func (x *StopWorkResponse) Reset() {
 	*x = StopWorkResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[27]
+	mi := &file_agent_private_v1_work_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2039,7 +1879,7 @@ func (x *StopWorkResponse) String() string {
 func (*StopWorkResponse) ProtoMessage() {}
 
 func (x *StopWorkResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[27]
+	mi := &file_agent_private_v1_work_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2052,7 +1892,7 @@ func (x *StopWorkResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StopWorkResponse.ProtoReflect.Descriptor instead.
 func (*StopWorkResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{27}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{25}
 }
 
 // CloseWorkRequest asks to close a Work permanently.
@@ -2072,7 +1912,7 @@ type CloseWorkRequest struct {
 
 func (x *CloseWorkRequest) Reset() {
 	*x = CloseWorkRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[28]
+	mi := &file_agent_private_v1_work_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2084,7 +1924,7 @@ func (x *CloseWorkRequest) String() string {
 func (*CloseWorkRequest) ProtoMessage() {}
 
 func (x *CloseWorkRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[28]
+	mi := &file_agent_private_v1_work_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2097,7 +1937,7 @@ func (x *CloseWorkRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CloseWorkRequest.ProtoReflect.Descriptor instead.
 func (*CloseWorkRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{28}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *CloseWorkRequest) GetSubjectId() string {
@@ -2143,7 +1983,7 @@ type CloseWorkResponse struct {
 
 func (x *CloseWorkResponse) Reset() {
 	*x = CloseWorkResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[29]
+	mi := &file_agent_private_v1_work_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2155,7 +1995,7 @@ func (x *CloseWorkResponse) String() string {
 func (*CloseWorkResponse) ProtoMessage() {}
 
 func (x *CloseWorkResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[29]
+	mi := &file_agent_private_v1_work_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2168,7 +2008,7 @@ func (x *CloseWorkResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CloseWorkResponse.ProtoReflect.Descriptor instead.
 func (*CloseWorkResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{29}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *CloseWorkResponse) GetWorkId() string {
@@ -2197,7 +2037,7 @@ type DeliverInputResponse struct {
 
 func (x *DeliverInputResponse) Reset() {
 	*x = DeliverInputResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[30]
+	mi := &file_agent_private_v1_work_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2209,7 +2049,7 @@ func (x *DeliverInputResponse) String() string {
 func (*DeliverInputResponse) ProtoMessage() {}
 
 func (x *DeliverInputResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[30]
+	mi := &file_agent_private_v1_work_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2222,7 +2062,7 @@ func (x *DeliverInputResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeliverInputResponse.ProtoReflect.Descriptor instead.
 func (*DeliverInputResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{30}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *DeliverInputResponse) GetAlreadySettled() bool {
@@ -2245,7 +2085,7 @@ type GetWorkRequest struct {
 
 func (x *GetWorkRequest) Reset() {
 	*x = GetWorkRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[31]
+	mi := &file_agent_private_v1_work_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2257,7 +2097,7 @@ func (x *GetWorkRequest) String() string {
 func (*GetWorkRequest) ProtoMessage() {}
 
 func (x *GetWorkRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[31]
+	mi := &file_agent_private_v1_work_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2270,7 +2110,7 @@ func (x *GetWorkRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWorkRequest.ProtoReflect.Descriptor instead.
 func (*GetWorkRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{31}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *GetWorkRequest) GetSubjectId() string {
@@ -2300,7 +2140,7 @@ type ChangeAgentDefinitionCapabilitiesRequest struct {
 
 func (x *ChangeAgentDefinitionCapabilitiesRequest) Reset() {
 	*x = ChangeAgentDefinitionCapabilitiesRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[32]
+	mi := &file_agent_private_v1_work_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2312,7 +2152,7 @@ func (x *ChangeAgentDefinitionCapabilitiesRequest) String() string {
 func (*ChangeAgentDefinitionCapabilitiesRequest) ProtoMessage() {}
 
 func (x *ChangeAgentDefinitionCapabilitiesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[32]
+	mi := &file_agent_private_v1_work_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2325,7 +2165,7 @@ func (x *ChangeAgentDefinitionCapabilitiesRequest) ProtoReflect() protoreflect.M
 
 // Deprecated: Use ChangeAgentDefinitionCapabilitiesRequest.ProtoReflect.Descriptor instead.
 func (*ChangeAgentDefinitionCapabilitiesRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{32}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *ChangeAgentDefinitionCapabilitiesRequest) GetAgentId() string {
@@ -2351,7 +2191,7 @@ type ChangeAgentDefinitionCapabilitiesResponse struct {
 
 func (x *ChangeAgentDefinitionCapabilitiesResponse) Reset() {
 	*x = ChangeAgentDefinitionCapabilitiesResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[33]
+	mi := &file_agent_private_v1_work_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2363,7 +2203,7 @@ func (x *ChangeAgentDefinitionCapabilitiesResponse) String() string {
 func (*ChangeAgentDefinitionCapabilitiesResponse) ProtoMessage() {}
 
 func (x *ChangeAgentDefinitionCapabilitiesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[33]
+	mi := &file_agent_private_v1_work_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2376,7 +2216,7 @@ func (x *ChangeAgentDefinitionCapabilitiesResponse) ProtoReflect() protoreflect.
 
 // Deprecated: Use ChangeAgentDefinitionCapabilitiesResponse.ProtoReflect.Descriptor instead.
 func (*ChangeAgentDefinitionCapabilitiesResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{33}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{31}
 }
 
 // GetAgentDefinitionRequest selects a reusable AgentDefinition.
@@ -2390,7 +2230,7 @@ type GetAgentDefinitionRequest struct {
 
 func (x *GetAgentDefinitionRequest) Reset() {
 	*x = GetAgentDefinitionRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[34]
+	mi := &file_agent_private_v1_work_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2402,7 +2242,7 @@ func (x *GetAgentDefinitionRequest) String() string {
 func (*GetAgentDefinitionRequest) ProtoMessage() {}
 
 func (x *GetAgentDefinitionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[34]
+	mi := &file_agent_private_v1_work_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2415,7 +2255,7 @@ func (x *GetAgentDefinitionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAgentDefinitionRequest.ProtoReflect.Descriptor instead.
 func (*GetAgentDefinitionRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{34}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *GetAgentDefinitionRequest) GetAgentId() string {
@@ -2440,8 +2280,6 @@ type GetAgentDefinitionResponse struct {
 	Capabilities *Capabilities `protobuf:"bytes,5,opt,name=capabilities,proto3" json:"capabilities,omitempty"`
 	// Declared business-authorized scope.
 	UsageScope *UsageScope `protobuf:"bytes,6,opt,name=usage_scope,json=usageScope,proto3" json:"usage_scope,omitempty"`
-	// Definition-owned HOME reference.
-	HomeBinding *HomeBinding `protobuf:"bytes,7,opt,name=home_binding,json=homeBinding,proto3" json:"home_binding,omitempty"`
 	// Visibility declared for the definition's new Works.
 	VisibilityRule *VisibilityRule `protobuf:"bytes,8,opt,name=visibility_rule,json=visibilityRule,proto3" json:"visibility_rule,omitempty"`
 	unknownFields  protoimpl.UnknownFields
@@ -2450,7 +2288,7 @@ type GetAgentDefinitionResponse struct {
 
 func (x *GetAgentDefinitionResponse) Reset() {
 	*x = GetAgentDefinitionResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[35]
+	mi := &file_agent_private_v1_work_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2462,7 +2300,7 @@ func (x *GetAgentDefinitionResponse) String() string {
 func (*GetAgentDefinitionResponse) ProtoMessage() {}
 
 func (x *GetAgentDefinitionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[35]
+	mi := &file_agent_private_v1_work_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2475,7 +2313,7 @@ func (x *GetAgentDefinitionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAgentDefinitionResponse.ProtoReflect.Descriptor instead.
 func (*GetAgentDefinitionResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{35}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *GetAgentDefinitionResponse) GetOwners() []string {
@@ -2520,13 +2358,6 @@ func (x *GetAgentDefinitionResponse) GetUsageScope() *UsageScope {
 	return nil
 }
 
-func (x *GetAgentDefinitionResponse) GetHomeBinding() *HomeBinding {
-	if x != nil {
-		return x.HomeBinding
-	}
-	return nil
-}
-
 func (x *GetAgentDefinitionResponse) GetVisibilityRule() *VisibilityRule {
 	if x != nil {
 		return x.VisibilityRule
@@ -2557,7 +2388,7 @@ type RespondToInteractionRequest struct {
 
 func (x *RespondToInteractionRequest) Reset() {
 	*x = RespondToInteractionRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[36]
+	mi := &file_agent_private_v1_work_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2569,7 +2400,7 @@ func (x *RespondToInteractionRequest) String() string {
 func (*RespondToInteractionRequest) ProtoMessage() {}
 
 func (x *RespondToInteractionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[36]
+	mi := &file_agent_private_v1_work_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2582,7 +2413,7 @@ func (x *RespondToInteractionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RespondToInteractionRequest.ProtoReflect.Descriptor instead.
 func (*RespondToInteractionRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{36}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *RespondToInteractionRequest) GetSubjectId() string {
@@ -2643,7 +2474,7 @@ type RespondToInteractionResponse struct {
 
 func (x *RespondToInteractionResponse) Reset() {
 	*x = RespondToInteractionResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[37]
+	mi := &file_agent_private_v1_work_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2655,7 +2486,7 @@ func (x *RespondToInteractionResponse) String() string {
 func (*RespondToInteractionResponse) ProtoMessage() {}
 
 func (x *RespondToInteractionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[37]
+	mi := &file_agent_private_v1_work_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2668,7 +2499,7 @@ func (x *RespondToInteractionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RespondToInteractionResponse.ProtoReflect.Descriptor instead.
 func (*RespondToInteractionResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{37}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{35}
 }
 
 // VerifyWorkCredentialRequest carries the native process credential, not caller-declared product authority.
@@ -2689,7 +2520,7 @@ type VerifyWorkCredentialRequest struct {
 
 func (x *VerifyWorkCredentialRequest) Reset() {
 	*x = VerifyWorkCredentialRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[38]
+	mi := &file_agent_private_v1_work_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2701,7 +2532,7 @@ func (x *VerifyWorkCredentialRequest) String() string {
 func (*VerifyWorkCredentialRequest) ProtoMessage() {}
 
 func (x *VerifyWorkCredentialRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[38]
+	mi := &file_agent_private_v1_work_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2714,7 +2545,7 @@ func (x *VerifyWorkCredentialRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VerifyWorkCredentialRequest.ProtoReflect.Descriptor instead.
 func (*VerifyWorkCredentialRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{38}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *VerifyWorkCredentialRequest) GetWorkId() string {
@@ -2750,21 +2581,24 @@ type VerifyWorkCredentialResponse struct {
 	AgentId string `protobuf:"bytes,3,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
 	// Immutable controlling principal registered by the Work caller.
 	SubjectId string `protobuf:"bytes,4,opt,name=subject_id,json=subjectId,proto3" json:"subject_id,omitempty"`
-	// Caller-authorized opaque workspace binding; not product authority by itself.
-	WorkspaceReference string `protobuf:"bytes,5,opt,name=workspace_reference,json=workspaceReference,proto3" json:"workspace_reference,omitempty"`
 	// The Work's Project; empty for a Work without one.
 	ProjectId string `protobuf:"bytes,6,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
 	// The Work's Subject, absent for a Work without one.
 	Subject *WorkSubject `protobuf:"bytes,7,opt,name=subject,proto3" json:"subject,omitempty"`
 	// The definition's purpose.
-	Purpose       string `protobuf:"bytes,8,opt,name=purpose,proto3" json:"purpose,omitempty"`
+	Purpose string `protobuf:"bytes,8,opt,name=purpose,proto3" json:"purpose,omitempty"`
+	// The Work's Session Workspace as its sandbox sees it, from its located
+	// layout: the Work Directory a publication copies from, outside every
+	// Directory mounted in it. Absent for a Work without one, such as a Work
+	// on a Managed Computer.
+	Workspace     *v12.WorkspaceLayout `protobuf:"bytes,9,opt,name=workspace,proto3" json:"workspace,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *VerifyWorkCredentialResponse) Reset() {
 	*x = VerifyWorkCredentialResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[39]
+	mi := &file_agent_private_v1_work_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2776,7 +2610,7 @@ func (x *VerifyWorkCredentialResponse) String() string {
 func (*VerifyWorkCredentialResponse) ProtoMessage() {}
 
 func (x *VerifyWorkCredentialResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[39]
+	mi := &file_agent_private_v1_work_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2789,7 +2623,7 @@ func (x *VerifyWorkCredentialResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VerifyWorkCredentialResponse.ProtoReflect.Descriptor instead.
 func (*VerifyWorkCredentialResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{39}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *VerifyWorkCredentialResponse) GetAgentName() string {
@@ -2820,13 +2654,6 @@ func (x *VerifyWorkCredentialResponse) GetSubjectId() string {
 	return ""
 }
 
-func (x *VerifyWorkCredentialResponse) GetWorkspaceReference() string {
-	if x != nil {
-		return x.WorkspaceReference
-	}
-	return ""
-}
-
 func (x *VerifyWorkCredentialResponse) GetProjectId() string {
 	if x != nil {
 		return x.ProjectId
@@ -2848,6 +2675,13 @@ func (x *VerifyWorkCredentialResponse) GetPurpose() string {
 	return ""
 }
 
+func (x *VerifyWorkCredentialResponse) GetWorkspace() *v12.WorkspaceLayout {
+	if x != nil {
+		return x.Workspace
+	}
+	return nil
+}
+
 // LocateWorkRequest selects an existing association under its retained rules.
 type LocateWorkRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -2863,7 +2697,7 @@ type LocateWorkRequest struct {
 
 func (x *LocateWorkRequest) Reset() {
 	*x = LocateWorkRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[40]
+	mi := &file_agent_private_v1_work_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2875,7 +2709,7 @@ func (x *LocateWorkRequest) String() string {
 func (*LocateWorkRequest) ProtoMessage() {}
 
 func (x *LocateWorkRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[40]
+	mi := &file_agent_private_v1_work_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2888,7 +2722,7 @@ func (x *LocateWorkRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LocateWorkRequest.ProtoReflect.Descriptor instead.
 func (*LocateWorkRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{40}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *LocateWorkRequest) GetSubjectId() string {
@@ -2925,7 +2759,7 @@ type LocateWorkResponse struct {
 
 func (x *LocateWorkResponse) Reset() {
 	*x = LocateWorkResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[41]
+	mi := &file_agent_private_v1_work_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2937,7 +2771,7 @@ func (x *LocateWorkResponse) String() string {
 func (*LocateWorkResponse) ProtoMessage() {}
 
 func (x *LocateWorkResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[41]
+	mi := &file_agent_private_v1_work_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2950,7 +2784,7 @@ func (x *LocateWorkResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LocateWorkResponse.ProtoReflect.Descriptor instead.
 func (*LocateWorkResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{41}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *LocateWorkResponse) GetFound() bool {
@@ -2986,7 +2820,7 @@ type EndWorkExecutionRequest struct {
 
 func (x *EndWorkExecutionRequest) Reset() {
 	*x = EndWorkExecutionRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[42]
+	mi := &file_agent_private_v1_work_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2998,7 +2832,7 @@ func (x *EndWorkExecutionRequest) String() string {
 func (*EndWorkExecutionRequest) ProtoMessage() {}
 
 func (x *EndWorkExecutionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[42]
+	mi := &file_agent_private_v1_work_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3011,7 +2845,7 @@ func (x *EndWorkExecutionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EndWorkExecutionRequest.ProtoReflect.Descriptor instead.
 func (*EndWorkExecutionRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{42}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *EndWorkExecutionRequest) GetSubjectId() string {
@@ -3051,7 +2885,7 @@ type EndWorkExecutionResponse struct {
 
 func (x *EndWorkExecutionResponse) Reset() {
 	*x = EndWorkExecutionResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[43]
+	mi := &file_agent_private_v1_work_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3063,7 +2897,7 @@ func (x *EndWorkExecutionResponse) String() string {
 func (*EndWorkExecutionResponse) ProtoMessage() {}
 
 func (x *EndWorkExecutionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[43]
+	mi := &file_agent_private_v1_work_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3076,7 +2910,7 @@ func (x *EndWorkExecutionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EndWorkExecutionResponse.ProtoReflect.Descriptor instead.
 func (*EndWorkExecutionResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{43}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{41}
 }
 
 // GetAgentDefinitionForPurposeRequest is available only to authenticated internal callers.
@@ -3092,7 +2926,7 @@ type GetAgentDefinitionForPurposeRequest struct {
 
 func (x *GetAgentDefinitionForPurposeRequest) Reset() {
 	*x = GetAgentDefinitionForPurposeRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[44]
+	mi := &file_agent_private_v1_work_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3104,7 +2938,7 @@ func (x *GetAgentDefinitionForPurposeRequest) String() string {
 func (*GetAgentDefinitionForPurposeRequest) ProtoMessage() {}
 
 func (x *GetAgentDefinitionForPurposeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[44]
+	mi := &file_agent_private_v1_work_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3117,7 +2951,7 @@ func (x *GetAgentDefinitionForPurposeRequest) ProtoReflect() protoreflect.Messag
 
 // Deprecated: Use GetAgentDefinitionForPurposeRequest.ProtoReflect.Descriptor instead.
 func (*GetAgentDefinitionForPurposeRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{44}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *GetAgentDefinitionForPurposeRequest) GetUsageScope() *UsageScope {
@@ -3145,7 +2979,7 @@ type GetAgentDefinitionForPurposeResponse struct {
 
 func (x *GetAgentDefinitionForPurposeResponse) Reset() {
 	*x = GetAgentDefinitionForPurposeResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[45]
+	mi := &file_agent_private_v1_work_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3157,7 +2991,7 @@ func (x *GetAgentDefinitionForPurposeResponse) String() string {
 func (*GetAgentDefinitionForPurposeResponse) ProtoMessage() {}
 
 func (x *GetAgentDefinitionForPurposeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[45]
+	mi := &file_agent_private_v1_work_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3170,7 +3004,7 @@ func (x *GetAgentDefinitionForPurposeResponse) ProtoReflect() protoreflect.Messa
 
 // Deprecated: Use GetAgentDefinitionForPurposeResponse.ProtoReflect.Descriptor instead.
 func (*GetAgentDefinitionForPurposeResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{45}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *GetAgentDefinitionForPurposeResponse) GetAgentId() string {
@@ -3193,7 +3027,7 @@ type ResolveEmployeeAgentsRequest struct {
 
 func (x *ResolveEmployeeAgentsRequest) Reset() {
 	*x = ResolveEmployeeAgentsRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[46]
+	mi := &file_agent_private_v1_work_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3205,7 +3039,7 @@ func (x *ResolveEmployeeAgentsRequest) String() string {
 func (*ResolveEmployeeAgentsRequest) ProtoMessage() {}
 
 func (x *ResolveEmployeeAgentsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[46]
+	mi := &file_agent_private_v1_work_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3218,7 +3052,7 @@ func (x *ResolveEmployeeAgentsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResolveEmployeeAgentsRequest.ProtoReflect.Descriptor instead.
 func (*ResolveEmployeeAgentsRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{46}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *ResolveEmployeeAgentsRequest) GetEmployeeIds() []string {
@@ -3252,7 +3086,7 @@ type ResolvedEmployeeAgent struct {
 
 func (x *ResolvedEmployeeAgent) Reset() {
 	*x = ResolvedEmployeeAgent{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[47]
+	mi := &file_agent_private_v1_work_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3264,7 +3098,7 @@ func (x *ResolvedEmployeeAgent) String() string {
 func (*ResolvedEmployeeAgent) ProtoMessage() {}
 
 func (x *ResolvedEmployeeAgent) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[47]
+	mi := &file_agent_private_v1_work_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3277,7 +3111,7 @@ func (x *ResolvedEmployeeAgent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResolvedEmployeeAgent.ProtoReflect.Descriptor instead.
 func (*ResolvedEmployeeAgent) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{47}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *ResolvedEmployeeAgent) GetEmployeeId() string {
@@ -3319,7 +3153,7 @@ type ResolveEmployeeAgentsResponse struct {
 
 func (x *ResolveEmployeeAgentsResponse) Reset() {
 	*x = ResolveEmployeeAgentsResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[48]
+	mi := &file_agent_private_v1_work_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3331,7 +3165,7 @@ func (x *ResolveEmployeeAgentsResponse) String() string {
 func (*ResolveEmployeeAgentsResponse) ProtoMessage() {}
 
 func (x *ResolveEmployeeAgentsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[48]
+	mi := &file_agent_private_v1_work_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3344,7 +3178,7 @@ func (x *ResolveEmployeeAgentsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResolveEmployeeAgentsResponse.ProtoReflect.Descriptor instead.
 func (*ResolveEmployeeAgentsResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{48}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *ResolveEmployeeAgentsResponse) GetAgents() []*ResolvedEmployeeAgent {
@@ -3369,7 +3203,7 @@ type GetEmployeeAgentRequest struct {
 
 func (x *GetEmployeeAgentRequest) Reset() {
 	*x = GetEmployeeAgentRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[49]
+	mi := &file_agent_private_v1_work_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3381,7 +3215,7 @@ func (x *GetEmployeeAgentRequest) String() string {
 func (*GetEmployeeAgentRequest) ProtoMessage() {}
 
 func (x *GetEmployeeAgentRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[49]
+	mi := &file_agent_private_v1_work_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3394,7 +3228,7 @@ func (x *GetEmployeeAgentRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetEmployeeAgentRequest.ProtoReflect.Descriptor instead.
 func (*GetEmployeeAgentRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{49}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *GetEmployeeAgentRequest) GetEmployeeId() string {
@@ -3431,7 +3265,7 @@ type GetEmployeeAgentResponse struct {
 
 func (x *GetEmployeeAgentResponse) Reset() {
 	*x = GetEmployeeAgentResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[50]
+	mi := &file_agent_private_v1_work_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3443,7 +3277,7 @@ func (x *GetEmployeeAgentResponse) String() string {
 func (*GetEmployeeAgentResponse) ProtoMessage() {}
 
 func (x *GetEmployeeAgentResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[50]
+	mi := &file_agent_private_v1_work_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3456,7 +3290,7 @@ func (x *GetEmployeeAgentResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetEmployeeAgentResponse.ProtoReflect.Descriptor instead.
 func (*GetEmployeeAgentResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{50}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *GetEmployeeAgentResponse) GetAgentId() string {
@@ -3484,7 +3318,7 @@ type ResolveWorkAgentsRequest struct {
 
 func (x *ResolveWorkAgentsRequest) Reset() {
 	*x = ResolveWorkAgentsRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[51]
+	mi := &file_agent_private_v1_work_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3496,7 +3330,7 @@ func (x *ResolveWorkAgentsRequest) String() string {
 func (*ResolveWorkAgentsRequest) ProtoMessage() {}
 
 func (x *ResolveWorkAgentsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[51]
+	mi := &file_agent_private_v1_work_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3509,7 +3343,7 @@ func (x *ResolveWorkAgentsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResolveWorkAgentsRequest.ProtoReflect.Descriptor instead.
 func (*ResolveWorkAgentsRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{51}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *ResolveWorkAgentsRequest) GetWorkIds() []string {
@@ -3534,7 +3368,7 @@ type ResolvedWorkAgent struct {
 
 func (x *ResolvedWorkAgent) Reset() {
 	*x = ResolvedWorkAgent{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[52]
+	mi := &file_agent_private_v1_work_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3546,7 +3380,7 @@ func (x *ResolvedWorkAgent) String() string {
 func (*ResolvedWorkAgent) ProtoMessage() {}
 
 func (x *ResolvedWorkAgent) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[52]
+	mi := &file_agent_private_v1_work_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3559,7 +3393,7 @@ func (x *ResolvedWorkAgent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResolvedWorkAgent.ProtoReflect.Descriptor instead.
 func (*ResolvedWorkAgent) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{52}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *ResolvedWorkAgent) GetWorkId() string {
@@ -3594,7 +3428,7 @@ type ResolveWorkAgentsResponse struct {
 
 func (x *ResolveWorkAgentsResponse) Reset() {
 	*x = ResolveWorkAgentsResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[53]
+	mi := &file_agent_private_v1_work_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3606,7 +3440,7 @@ func (x *ResolveWorkAgentsResponse) String() string {
 func (*ResolveWorkAgentsResponse) ProtoMessage() {}
 
 func (x *ResolveWorkAgentsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[53]
+	mi := &file_agent_private_v1_work_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3619,7 +3453,7 @@ func (x *ResolveWorkAgentsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResolveWorkAgentsResponse.ProtoReflect.Descriptor instead.
 func (*ResolveWorkAgentsResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{53}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *ResolveWorkAgentsResponse) GetAgents() []*ResolvedWorkAgent {
@@ -3642,7 +3476,7 @@ type GetWorkPreparationRequest struct {
 
 func (x *GetWorkPreparationRequest) Reset() {
 	*x = GetWorkPreparationRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[54]
+	mi := &file_agent_private_v1_work_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3654,7 +3488,7 @@ func (x *GetWorkPreparationRequest) String() string {
 func (*GetWorkPreparationRequest) ProtoMessage() {}
 
 func (x *GetWorkPreparationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[54]
+	mi := &file_agent_private_v1_work_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3667,7 +3501,7 @@ func (x *GetWorkPreparationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWorkPreparationRequest.ProtoReflect.Descriptor instead.
 func (*GetWorkPreparationRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{54}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *GetWorkPreparationRequest) GetSubjectId() string {
@@ -3695,7 +3529,7 @@ type GetWorkPreparationResponse struct {
 
 func (x *GetWorkPreparationResponse) Reset() {
 	*x = GetWorkPreparationResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[55]
+	mi := &file_agent_private_v1_work_proto_msgTypes[53]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3707,7 +3541,7 @@ func (x *GetWorkPreparationResponse) String() string {
 func (*GetWorkPreparationResponse) ProtoMessage() {}
 
 func (x *GetWorkPreparationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[55]
+	mi := &file_agent_private_v1_work_proto_msgTypes[53]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3720,7 +3554,7 @@ func (x *GetWorkPreparationResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWorkPreparationResponse.ProtoReflect.Descriptor instead.
 func (*GetWorkPreparationResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{55}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{53}
 }
 
 func (x *GetWorkPreparationResponse) GetPreparation() *WorkPreparation {
@@ -3741,7 +3575,7 @@ type ListSubmittedPreparationsRequest struct {
 
 func (x *ListSubmittedPreparationsRequest) Reset() {
 	*x = ListSubmittedPreparationsRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[56]
+	mi := &file_agent_private_v1_work_proto_msgTypes[54]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3753,7 +3587,7 @@ func (x *ListSubmittedPreparationsRequest) String() string {
 func (*ListSubmittedPreparationsRequest) ProtoMessage() {}
 
 func (x *ListSubmittedPreparationsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[56]
+	mi := &file_agent_private_v1_work_proto_msgTypes[54]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3766,7 +3600,7 @@ func (x *ListSubmittedPreparationsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListSubmittedPreparationsRequest.ProtoReflect.Descriptor instead.
 func (*ListSubmittedPreparationsRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{56}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{54}
 }
 
 func (x *ListSubmittedPreparationsRequest) GetAfterWorkId() string {
@@ -3787,7 +3621,7 @@ type ListSubmittedPreparationsResponse struct {
 
 func (x *ListSubmittedPreparationsResponse) Reset() {
 	*x = ListSubmittedPreparationsResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[57]
+	mi := &file_agent_private_v1_work_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3799,7 +3633,7 @@ func (x *ListSubmittedPreparationsResponse) String() string {
 func (*ListSubmittedPreparationsResponse) ProtoMessage() {}
 
 func (x *ListSubmittedPreparationsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[57]
+	mi := &file_agent_private_v1_work_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3812,7 +3646,7 @@ func (x *ListSubmittedPreparationsResponse) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use ListSubmittedPreparationsResponse.ProtoReflect.Descriptor instead.
 func (*ListSubmittedPreparationsResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{57}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{55}
 }
 
 func (x *ListSubmittedPreparationsResponse) GetPreparations() []*WorkPreparation {
@@ -3853,7 +3687,7 @@ type WorkPreparation struct {
 
 func (x *WorkPreparation) Reset() {
 	*x = WorkPreparation{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[58]
+	mi := &file_agent_private_v1_work_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3865,7 +3699,7 @@ func (x *WorkPreparation) String() string {
 func (*WorkPreparation) ProtoMessage() {}
 
 func (x *WorkPreparation) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[58]
+	mi := &file_agent_private_v1_work_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3878,7 +3712,7 @@ func (x *WorkPreparation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WorkPreparation.ProtoReflect.Descriptor instead.
 func (*WorkPreparation) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{58}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{56}
 }
 
 func (x *WorkPreparation) GetWorkId() string {
@@ -3987,7 +3821,7 @@ type PreparedCheckout struct {
 
 func (x *PreparedCheckout) Reset() {
 	*x = PreparedCheckout{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[59]
+	mi := &file_agent_private_v1_work_proto_msgTypes[57]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3999,7 +3833,7 @@ func (x *PreparedCheckout) String() string {
 func (*PreparedCheckout) ProtoMessage() {}
 
 func (x *PreparedCheckout) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[59]
+	mi := &file_agent_private_v1_work_proto_msgTypes[57]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4012,7 +3846,7 @@ func (x *PreparedCheckout) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PreparedCheckout.ProtoReflect.Descriptor instead.
 func (*PreparedCheckout) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{59}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{57}
 }
 
 func (x *PreparedCheckout) GetProvider() string {
@@ -4098,7 +3932,7 @@ type ResolveWorkStartsRequest struct {
 
 func (x *ResolveWorkStartsRequest) Reset() {
 	*x = ResolveWorkStartsRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[60]
+	mi := &file_agent_private_v1_work_proto_msgTypes[58]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4110,7 +3944,7 @@ func (x *ResolveWorkStartsRequest) String() string {
 func (*ResolveWorkStartsRequest) ProtoMessage() {}
 
 func (x *ResolveWorkStartsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[60]
+	mi := &file_agent_private_v1_work_proto_msgTypes[58]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4123,7 +3957,7 @@ func (x *ResolveWorkStartsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResolveWorkStartsRequest.ProtoReflect.Descriptor instead.
 func (*ResolveWorkStartsRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{60}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{58}
 }
 
 func (x *ResolveWorkStartsRequest) GetProjectId() string {
@@ -4158,7 +3992,7 @@ type ResolvedWorkStart struct {
 
 func (x *ResolvedWorkStart) Reset() {
 	*x = ResolvedWorkStart{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[61]
+	mi := &file_agent_private_v1_work_proto_msgTypes[59]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4170,7 +4004,7 @@ func (x *ResolvedWorkStart) String() string {
 func (*ResolvedWorkStart) ProtoMessage() {}
 
 func (x *ResolvedWorkStart) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[61]
+	mi := &file_agent_private_v1_work_proto_msgTypes[59]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4183,7 +4017,7 @@ func (x *ResolvedWorkStart) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResolvedWorkStart.ProtoReflect.Descriptor instead.
 func (*ResolvedWorkStart) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{61}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{59}
 }
 
 func (x *ResolvedWorkStart) GetWorkId() string {
@@ -4225,7 +4059,7 @@ type ResolveWorkStartsResponse struct {
 
 func (x *ResolveWorkStartsResponse) Reset() {
 	*x = ResolveWorkStartsResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[62]
+	mi := &file_agent_private_v1_work_proto_msgTypes[60]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4237,7 +4071,7 @@ func (x *ResolveWorkStartsResponse) String() string {
 func (*ResolveWorkStartsResponse) ProtoMessage() {}
 
 func (x *ResolveWorkStartsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[62]
+	mi := &file_agent_private_v1_work_proto_msgTypes[60]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4250,7 +4084,7 @@ func (x *ResolveWorkStartsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResolveWorkStartsResponse.ProtoReflect.Descriptor instead.
 func (*ResolveWorkStartsResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{62}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{60}
 }
 
 func (x *ResolveWorkStartsResponse) GetWorks() []*ResolvedWorkStart {
@@ -4271,7 +4105,7 @@ type GetWorkOriginRequest struct {
 
 func (x *GetWorkOriginRequest) Reset() {
 	*x = GetWorkOriginRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[63]
+	mi := &file_agent_private_v1_work_proto_msgTypes[61]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4283,7 +4117,7 @@ func (x *GetWorkOriginRequest) String() string {
 func (*GetWorkOriginRequest) ProtoMessage() {}
 
 func (x *GetWorkOriginRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[63]
+	mi := &file_agent_private_v1_work_proto_msgTypes[61]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4296,7 +4130,7 @@ func (x *GetWorkOriginRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWorkOriginRequest.ProtoReflect.Descriptor instead.
 func (*GetWorkOriginRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{63}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{61}
 }
 
 func (x *GetWorkOriginRequest) GetWorkId() string {
@@ -4325,7 +4159,7 @@ type GetWorkOriginResponse struct {
 
 func (x *GetWorkOriginResponse) Reset() {
 	*x = GetWorkOriginResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[64]
+	mi := &file_agent_private_v1_work_proto_msgTypes[62]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4337,7 +4171,7 @@ func (x *GetWorkOriginResponse) String() string {
 func (*GetWorkOriginResponse) ProtoMessage() {}
 
 func (x *GetWorkOriginResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[64]
+	mi := &file_agent_private_v1_work_proto_msgTypes[62]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4350,7 +4184,7 @@ func (x *GetWorkOriginResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWorkOriginResponse.ProtoReflect.Descriptor instead.
 func (*GetWorkOriginResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{64}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{62}
 }
 
 func (x *GetWorkOriginResponse) GetWorkId() string {
@@ -4401,8 +4235,6 @@ type EnsureAgentDefinitionRequest struct {
 	Purpose string `protobuf:"bytes,3,opt,name=purpose,proto3" json:"purpose,omitempty"`
 	// Authoritative employee display name; required for employee work.
 	EmployeeDisplayName string `protobuf:"bytes,4,opt,name=employee_display_name,json=employeeDisplayName,proto3" json:"employee_display_name,omitempty"`
-	// Initial HOME supplied by the owning business caller.
-	HomeBinding *HomeBinding `protobuf:"bytes,5,opt,name=home_binding,json=homeBinding,proto3" json:"home_binding,omitempty"`
 	// Caller-selected base capabilities; existing definitions retain their values.
 	Capabilities *Capabilities `protobuf:"bytes,6,opt,name=capabilities,proto3" json:"capabilities,omitempty"`
 	// Initial public name for a non-employee definition, if supplied.
@@ -4415,7 +4247,7 @@ type EnsureAgentDefinitionRequest struct {
 
 func (x *EnsureAgentDefinitionRequest) Reset() {
 	*x = EnsureAgentDefinitionRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[65]
+	mi := &file_agent_private_v1_work_proto_msgTypes[63]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4427,7 +4259,7 @@ func (x *EnsureAgentDefinitionRequest) String() string {
 func (*EnsureAgentDefinitionRequest) ProtoMessage() {}
 
 func (x *EnsureAgentDefinitionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[65]
+	mi := &file_agent_private_v1_work_proto_msgTypes[63]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4440,7 +4272,7 @@ func (x *EnsureAgentDefinitionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EnsureAgentDefinitionRequest.ProtoReflect.Descriptor instead.
 func (*EnsureAgentDefinitionRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{65}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{63}
 }
 
 func (x *EnsureAgentDefinitionRequest) GetOwners() []string {
@@ -4469,13 +4301,6 @@ func (x *EnsureAgentDefinitionRequest) GetEmployeeDisplayName() string {
 		return x.EmployeeDisplayName
 	}
 	return ""
-}
-
-func (x *EnsureAgentDefinitionRequest) GetHomeBinding() *HomeBinding {
-	if x != nil {
-		return x.HomeBinding
-	}
-	return nil
 }
 
 func (x *EnsureAgentDefinitionRequest) GetCapabilities() *Capabilities {
@@ -4512,7 +4337,7 @@ type EnsureEmployeeAgentRequest struct {
 
 func (x *EnsureEmployeeAgentRequest) Reset() {
 	*x = EnsureEmployeeAgentRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[66]
+	mi := &file_agent_private_v1_work_proto_msgTypes[64]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4524,7 +4349,7 @@ func (x *EnsureEmployeeAgentRequest) String() string {
 func (*EnsureEmployeeAgentRequest) ProtoMessage() {}
 
 func (x *EnsureEmployeeAgentRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[66]
+	mi := &file_agent_private_v1_work_proto_msgTypes[64]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4537,7 +4362,7 @@ func (x *EnsureEmployeeAgentRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EnsureEmployeeAgentRequest.ProtoReflect.Descriptor instead.
 func (*EnsureEmployeeAgentRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{66}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{64}
 }
 
 func (x *EnsureEmployeeAgentRequest) GetEmployeeId() string {
@@ -4569,7 +4394,7 @@ type EnsureEmployeeAgentResponse struct {
 
 func (x *EnsureEmployeeAgentResponse) Reset() {
 	*x = EnsureEmployeeAgentResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[67]
+	mi := &file_agent_private_v1_work_proto_msgTypes[65]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4581,7 +4406,7 @@ func (x *EnsureEmployeeAgentResponse) String() string {
 func (*EnsureEmployeeAgentResponse) ProtoMessage() {}
 
 func (x *EnsureEmployeeAgentResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[67]
+	mi := &file_agent_private_v1_work_proto_msgTypes[65]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4594,7 +4419,7 @@ func (x *EnsureEmployeeAgentResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EnsureEmployeeAgentResponse.ProtoReflect.Descriptor instead.
 func (*EnsureEmployeeAgentResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{67}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{65}
 }
 
 func (x *EnsureEmployeeAgentResponse) GetAgentId() string {
@@ -4635,7 +4460,7 @@ type EnsureAgentDefinitionResponse struct {
 
 func (x *EnsureAgentDefinitionResponse) Reset() {
 	*x = EnsureAgentDefinitionResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[68]
+	mi := &file_agent_private_v1_work_proto_msgTypes[66]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4647,7 +4472,7 @@ func (x *EnsureAgentDefinitionResponse) String() string {
 func (*EnsureAgentDefinitionResponse) ProtoMessage() {}
 
 func (x *EnsureAgentDefinitionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[68]
+	mi := &file_agent_private_v1_work_proto_msgTypes[66]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4660,7 +4485,7 @@ func (x *EnsureAgentDefinitionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EnsureAgentDefinitionResponse.ProtoReflect.Descriptor instead.
 func (*EnsureAgentDefinitionResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{68}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{66}
 }
 
 func (x *EnsureAgentDefinitionResponse) GetOwners() []string {
@@ -4711,7 +4536,7 @@ type GetWorkStartOptionsRequest struct {
 
 func (x *GetWorkStartOptionsRequest) Reset() {
 	*x = GetWorkStartOptionsRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[69]
+	mi := &file_agent_private_v1_work_proto_msgTypes[67]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4723,7 +4548,7 @@ func (x *GetWorkStartOptionsRequest) String() string {
 func (*GetWorkStartOptionsRequest) ProtoMessage() {}
 
 func (x *GetWorkStartOptionsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[69]
+	mi := &file_agent_private_v1_work_proto_msgTypes[67]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4736,7 +4561,7 @@ func (x *GetWorkStartOptionsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWorkStartOptionsRequest.ProtoReflect.Descriptor instead.
 func (*GetWorkStartOptionsRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{69}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{67}
 }
 
 func (x *GetWorkStartOptionsRequest) GetSubjectId() string {
@@ -4779,7 +4604,7 @@ type ListWorkStartRepositoriesRequest struct {
 
 func (x *ListWorkStartRepositoriesRequest) Reset() {
 	*x = ListWorkStartRepositoriesRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[70]
+	mi := &file_agent_private_v1_work_proto_msgTypes[68]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4791,7 +4616,7 @@ func (x *ListWorkStartRepositoriesRequest) String() string {
 func (*ListWorkStartRepositoriesRequest) ProtoMessage() {}
 
 func (x *ListWorkStartRepositoriesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[70]
+	mi := &file_agent_private_v1_work_proto_msgTypes[68]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4804,7 +4629,7 @@ func (x *ListWorkStartRepositoriesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListWorkStartRepositoriesRequest.ProtoReflect.Descriptor instead.
 func (*ListWorkStartRepositoriesRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{70}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{68}
 }
 
 func (x *ListWorkStartRepositoriesRequest) GetRepositoryOwnerId() string {
@@ -4827,7 +4652,7 @@ type TransferAgentDefinitionOwnersRequest struct {
 
 func (x *TransferAgentDefinitionOwnersRequest) Reset() {
 	*x = TransferAgentDefinitionOwnersRequest{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[71]
+	mi := &file_agent_private_v1_work_proto_msgTypes[69]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4839,7 +4664,7 @@ func (x *TransferAgentDefinitionOwnersRequest) String() string {
 func (*TransferAgentDefinitionOwnersRequest) ProtoMessage() {}
 
 func (x *TransferAgentDefinitionOwnersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[71]
+	mi := &file_agent_private_v1_work_proto_msgTypes[69]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4852,7 +4677,7 @@ func (x *TransferAgentDefinitionOwnersRequest) ProtoReflect() protoreflect.Messa
 
 // Deprecated: Use TransferAgentDefinitionOwnersRequest.ProtoReflect.Descriptor instead.
 func (*TransferAgentDefinitionOwnersRequest) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{71}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{69}
 }
 
 func (x *TransferAgentDefinitionOwnersRequest) GetAgentId() string {
@@ -4880,7 +4705,7 @@ type TransferAgentDefinitionOwnersResponse struct {
 
 func (x *TransferAgentDefinitionOwnersResponse) Reset() {
 	*x = TransferAgentDefinitionOwnersResponse{}
-	mi := &file_agent_private_v1_work_proto_msgTypes[72]
+	mi := &file_agent_private_v1_work_proto_msgTypes[70]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4892,7 +4717,7 @@ func (x *TransferAgentDefinitionOwnersResponse) String() string {
 func (*TransferAgentDefinitionOwnersResponse) ProtoMessage() {}
 
 func (x *TransferAgentDefinitionOwnersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_private_v1_work_proto_msgTypes[72]
+	mi := &file_agent_private_v1_work_proto_msgTypes[70]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4905,7 +4730,7 @@ func (x *TransferAgentDefinitionOwnersResponse) ProtoReflect() protoreflect.Mess
 
 // Deprecated: Use TransferAgentDefinitionOwnersResponse.ProtoReflect.Descriptor instead.
 func (*TransferAgentDefinitionOwnersResponse) Descriptor() ([]byte, []int) {
-	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{72}
+	return file_agent_private_v1_work_proto_rawDescGZIP(), []int{70}
 }
 
 func (x *TransferAgentDefinitionOwnersResponse) GetChanged() bool {
@@ -4919,7 +4744,7 @@ var File_agent_private_v1_work_proto protoreflect.FileDescriptor
 
 const file_agent_private_v1_work_proto_rawDesc = "" +
 	"\n" +
-	"\x1bagent/private/v1/work.proto\x12\x10agent.private.v1\x1a\x1cgoogle/protobuf/struct.proto\x1a#agent/private/v1/work_subject.proto\x1a agent/public/v1/appearance.proto\x1a\x1dagent/public/v1/harness.proto\x1a\x1bagent/public/v1/model.proto\x1a\x1eagent/public/v1/progress.proto\x1a(agent/public/v1/work_start_options.proto\x1a'marketplace/public/v1/marketplace.proto\"[\n" +
+	"\x1bagent/private/v1/work.proto\x12\x10agent.private.v1\x1a\x1cgoogle/protobuf/struct.proto\x1a#agent/private/v1/work_subject.proto\x1a agent/public/v1/appearance.proto\x1a\"storage/private/v1/workspace.proto\x1a\x1dagent/public/v1/harness.proto\x1a\x1bagent/public/v1/model.proto\x1a\x1eagent/public/v1/progress.proto\x1a(agent/public/v1/work_start_options.proto\x1a'marketplace/public/v1/marketplace.proto\"[\n" +
 	"\x13RepositorySelection\x12#\n" +
 	"\rrepository_id\x18\x01 \x01(\tR\frepositoryId\x12\x1f\n" +
 	"\vbase_branch\x18\x02 \x01(\tR\n" +
@@ -4974,7 +4799,7 @@ const file_agent_private_v1_work_proto_rawDesc = "" +
 	"\n" +
 	"UsageScope\x12\x12\n" +
 	"\x04kind\x18\x01 \x01(\tR\x04kind\x12\x1c\n" +
-	"\treference\x18\x02 \x01(\tR\treference\"\xff\x02\n" +
+	"\treference\x18\x02 \x01(\tR\treference\"\xd1\x02\n" +
 	"\x1cCreateAgentDefinitionRequest\x12\x16\n" +
 	"\x06owners\x18\x01 \x03(\tR\x06owners\x12\x1d\n" +
 	"\n" +
@@ -4982,44 +4807,34 @@ const file_agent_private_v1_work_proto_rawDesc = "" +
 	"\apurpose\x18\x03 \x01(\tR\apurpose\x12B\n" +
 	"\fcapabilities\x18\x04 \x01(\v2\x1e.agent.private.v1.CapabilitiesR\fcapabilities\x12=\n" +
 	"\vusage_scope\x18\x05 \x01(\v2\x1c.agent.private.v1.UsageScopeR\n" +
-	"usageScope\x12@\n" +
-	"\fhome_binding\x18\x06 \x01(\v2\x1d.agent.private.v1.HomeBindingR\vhomeBinding\x12I\n" +
-	"\x0fvisibility_rule\x18\a \x01(\v2 .agent.private.v1.VisibilityRuleR\x0evisibilityRule\"(\n" +
+	"usageScope\x12I\n" +
+	"\x0fvisibility_rule\x18\a \x01(\v2 .agent.private.v1.VisibilityRuleR\x0evisibilityRuleJ\x04\b\x06\x10\aR\fhome_binding\"(\n" +
 	"\x0eVisibilityRule\x12\x16\n" +
 	"\x06public\x18\x01 \x01(\bR\x06public\":\n" +
 	"\x1dCreateAgentDefinitionResponse\x12\x19\n" +
-	"\bagent_id\x18\x01 \x01(\tR\aagentId\"F\n" +
-	"\vHomeBinding\x12\x19\n" +
-	"\bowner_id\x18\x01 \x01(\tR\aownerId\x12\x1c\n" +
-	"\tnamespace\x18\x02 \x01(\tR\tnamespace\"\xaa\a\n" +
+	"\bagent_id\x18\x01 \x01(\tR\aagentId\"\xe4\x06\n" +
 	"\x11CreateWorkRequest\x12(\n" +
 	"\x10starting_user_id\x18\x01 \x01(\tR\x0estartingUserId\x12\x1d\n" +
 	"\n" +
 	"request_id\x18\x02 \x01(\tR\trequestId\x12\x1d\n" +
 	"\n" +
 	"subject_id\x18\x03 \x01(\tR\tsubjectId\x12\x19\n" +
-	"\bagent_id\x18\x04 \x01(\tR\aagentId\x12/\n" +
-	"\x13workspace_reference\x18\x05 \x01(\tR\x12workspaceReference\x12c\n" +
+	"\bagent_id\x18\x04 \x01(\tR\aagentId\x12c\n" +
 	"\x10trace_attributes\x18\x06 \x03(\v28.agent.private.v1.CreateWorkRequest.TraceAttributesEntryR\x0ftraceAttributes\x12^\n" +
 	"\x16capability_differences\x18\a \x01(\v2'.agent.private.v1.CapabilityDifferencesR\x15capabilityDifferences\x127\n" +
 	"\asubject\x18\b \x01(\v2\x1d.agent.private.v1.WorkSubjectR\asubject\x12\x1d\n" +
 	"\n" +
 	"project_id\x18\t \x01(\tR\tprojectId\x129\n" +
 	"\x05model\x18\n" +
-	" \x01(\v2#.agent.public.v1.WorkModelSelectionR\x05model\x12!\n" +
-	"\finput_source\x18\v \x01(\tR\vinputSource\x12*\n" +
-	"\x11input_space_token\x18\f \x01(\tR\x0finputSpaceToken\x12I\n" +
-	"\x10read_only_mounts\x18\r \x03(\v2\x1f.agent.private.v1.ReadOnlyMountR\x0ereadOnlyMounts\x12P\n" +
+	" \x01(\v2#.agent.public.v1.WorkModelSelectionR\x05model\x12P\n" +
 	"\x10starting_context\x18\x0e \x01(\v2%.agent.private.v1.WorkStartingContextR\x0fstartingContext\x12\x1f\n" +
 	"\vcomputer_id\x18\x0f \x01(\tR\n" +
 	"computerId\x128\n" +
-	"\aharness\x18\x10 \x01(\v2\x1e.agent.public.v1.HarnessChoiceR\aharness\x1aB\n" +
+	"\aharness\x18\x10 \x01(\v2\x1e.agent.public.v1.HarnessChoiceR\aharness\x12#\n" +
+	"\ragent_harness\x18\x11 \x01(\tR\fagentHarness\x1aB\n" +
 	"\x14TraceAttributesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"A\n" +
-	"\rReadOnlyMount\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1c\n" +
-	"\treference\x18\x02 \x01(\tR\treference\"W\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01J\x04\b\x05\x10\x06J\x04\b\v\x10\fJ\x04\b\f\x10\rJ\x04\b\r\x10\x0eR\x13workspace_referenceR\finput_sourceR\x11input_space_tokenR\x10read_only_mounts\"W\n" +
 	"\x13WorkStartingContext\x12$\n" +
 	"\x0esource_work_id\x18\x01 \x01(\tR\fsourceWorkId\x12\x1a\n" +
 	"\bposition\x18\x02 \x01(\tR\bposition\"t\n" +
@@ -5038,7 +4853,7 @@ const file_agent_private_v1_work_proto_rawDesc = "" +
 	"subject_id\x18\x01 \x01(\tR\tsubjectId\x12\x17\n" +
 	"\awork_id\x18\x02 \x01(\tR\x06workId\x12\x14\n" +
 	"\x05input\x18\x03 \x01(\tR\x05input\x12\x19\n" +
-	"\binput_id\x18\x04 \x01(\tR\ainputId\"\xd2\x04\n" +
+	"\binput_id\x18\x04 \x01(\tR\ainputId\"\xbc\x04\n" +
 	"\x0fGetWorkResponse\x12B\n" +
 	"\rwork_progress\x18\x01 \x01(\v2\x1d.agent.public.v1.WorkProgressR\fworkProgress\x12\x1d\n" +
 	"\n" +
@@ -5055,8 +4870,7 @@ const file_agent_private_v1_work_proto_rawDesc = "" +
 	" \x01(\bR\x10requiredResponse\x12%\n" +
 	"\x0efailure_reason\x18\v \x01(\tR\rfailureReason\x12\x18\n" +
 	"\aversion\x18\f \x01(\x03R\aversion\x12&\n" +
-	"\x0fstop_request_id\x18\r \x01(\tR\rstopRequestId\x12/\n" +
-	"\x13workspace_reference\x18\x0e \x01(\tR\x12workspaceReference\"j\n" +
+	"\x0fstop_request_id\x18\r \x01(\tR\rstopRequestIdJ\x04\b\x0e\x10\x0fR\x13workspace_reference\"j\n" +
 	"\x11ResumeWorkRequest\x12\x1d\n" +
 	"\n" +
 	"subject_id\x18\x01 \x01(\tR\tsubjectId\x12\x17\n" +
@@ -5105,7 +4919,7 @@ const file_agent_private_v1_work_proto_rawDesc = "" +
 	"\fcapabilities\x18\x02 \x01(\v2\x1e.agent.private.v1.CapabilitiesR\fcapabilities\"+\n" +
 	")ChangeAgentDefinitionCapabilitiesResponse\"6\n" +
 	"\x19GetAgentDefinitionRequest\x12\x19\n" +
-	"\bagent_id\x18\x01 \x01(\tR\aagentId\"\x98\x03\n" +
+	"\bagent_id\x18\x01 \x01(\tR\aagentId\"\xea\x02\n" +
 	"\x1aGetAgentDefinitionResponse\x12\x16\n" +
 	"\x06owners\x18\x01 \x03(\tR\x06owners\x12\x1d\n" +
 	"\n" +
@@ -5114,9 +4928,8 @@ const file_agent_private_v1_work_proto_rawDesc = "" +
 	"\bagent_id\x18\x04 \x01(\tR\aagentId\x12B\n" +
 	"\fcapabilities\x18\x05 \x01(\v2\x1e.agent.private.v1.CapabilitiesR\fcapabilities\x12=\n" +
 	"\vusage_scope\x18\x06 \x01(\v2\x1c.agent.private.v1.UsageScopeR\n" +
-	"usageScope\x12@\n" +
-	"\fhome_binding\x18\a \x01(\v2\x1d.agent.private.v1.HomeBindingR\vhomeBinding\x12I\n" +
-	"\x0fvisibility_rule\x18\b \x01(\v2 .agent.private.v1.VisibilityRuleR\x0evisibilityRule\"\xfb\x01\n" +
+	"usageScope\x12I\n" +
+	"\x0fvisibility_rule\x18\b \x01(\v2 .agent.private.v1.VisibilityRuleR\x0evisibilityRuleJ\x04\b\a\x10\bR\fhome_binding\"\xfb\x01\n" +
 	"\x1bRespondToInteractionRequest\x12\x1d\n" +
 	"\n" +
 	"subject_id\x18\x01 \x01(\tR\tsubjectId\x12\x17\n" +
@@ -5132,19 +4945,19 @@ const file_agent_private_v1_work_proto_rawDesc = "" +
 	"\n" +
 	"credential\x18\x02 \x01(\tR\n" +
 	"credential\x12%\n" +
-	"\x0erequire_acting\x18\x03 \x01(\bR\rrequireActing\"\xb3\x02\n" +
+	"\x0erequire_acting\x18\x03 \x01(\bR\rrequireActing\"\xe0\x02\n" +
 	"\x1cVerifyWorkCredentialResponse\x12\x1d\n" +
 	"\n" +
 	"agent_name\x18\x01 \x01(\tR\tagentName\x12\x17\n" +
 	"\awork_id\x18\x02 \x01(\tR\x06workId\x12\x19\n" +
 	"\bagent_id\x18\x03 \x01(\tR\aagentId\x12\x1d\n" +
 	"\n" +
-	"subject_id\x18\x04 \x01(\tR\tsubjectId\x12/\n" +
-	"\x13workspace_reference\x18\x05 \x01(\tR\x12workspaceReference\x12\x1d\n" +
+	"subject_id\x18\x04 \x01(\tR\tsubjectId\x12\x1d\n" +
 	"\n" +
 	"project_id\x18\x06 \x01(\tR\tprojectId\x127\n" +
 	"\asubject\x18\a \x01(\v2\x1d.agent.private.v1.WorkSubjectR\asubject\x12\x18\n" +
-	"\apurpose\x18\b \x01(\tR\apurpose\"\x86\x01\n" +
+	"\apurpose\x18\b \x01(\tR\apurpose\x12A\n" +
+	"\tworkspace\x18\t \x01(\v2#.storage.private.v1.WorkspaceLayoutR\tworkspaceJ\x04\b\x05\x10\x06R\x13workspace_reference\"\x86\x01\n" +
 	"\x11LocateWorkRequest\x12\x1d\n" +
 	"\n" +
 	"subject_id\x18\x01 \x01(\tR\tsubjectId\x12\x19\n" +
@@ -5261,18 +5074,17 @@ const file_agent_private_v1_work_proto_rawDesc = "" +
 	"\apurpose\x18\x03 \x01(\tR\apurpose\x127\n" +
 	"\asubject\x18\x04 \x01(\v2\x1d.agent.private.v1.WorkSubjectR\asubject\x12\x1d\n" +
 	"\n" +
-	"project_id\x18\x05 \x01(\tR\tprojectId\"\xb3\x03\n" +
+	"project_id\x18\x05 \x01(\tR\tprojectId\"\x85\x03\n" +
 	"\x1cEnsureAgentDefinitionRequest\x12\x16\n" +
 	"\x06owners\x18\x01 \x03(\tR\x06owners\x12=\n" +
 	"\vusage_scope\x18\x02 \x01(\v2\x1c.agent.private.v1.UsageScopeR\n" +
 	"usageScope\x12\x18\n" +
 	"\apurpose\x18\x03 \x01(\tR\apurpose\x122\n" +
-	"\x15employee_display_name\x18\x04 \x01(\tR\x13employeeDisplayName\x12@\n" +
-	"\fhome_binding\x18\x05 \x01(\v2\x1d.agent.private.v1.HomeBindingR\vhomeBinding\x12B\n" +
+	"\x15employee_display_name\x18\x04 \x01(\tR\x13employeeDisplayName\x12B\n" +
 	"\fcapabilities\x18\x06 \x01(\v2\x1e.agent.private.v1.CapabilitiesR\fcapabilities\x12\x1d\n" +
 	"\n" +
 	"agent_name\x18\a \x01(\tR\tagentName\x12I\n" +
-	"\x0fvisibility_rule\x18\b \x01(\v2 .agent.private.v1.VisibilityRuleR\x0evisibilityRule\"q\n" +
+	"\x0fvisibility_rule\x18\b \x01(\v2 .agent.private.v1.VisibilityRuleR\x0evisibilityRuleJ\x04\b\x05\x10\x06R\fhome_binding\"q\n" +
 	"\x1aEnsureEmployeeAgentRequest\x12\x1f\n" +
 	"\vemployee_id\x18\x01 \x01(\tR\n" +
 	"employeeId\x122\n" +
@@ -5360,7 +5172,7 @@ func file_agent_private_v1_work_proto_rawDescGZIP() []byte {
 }
 
 var file_agent_private_v1_work_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_agent_private_v1_work_proto_msgTypes = make([]protoimpl.MessageInfo, 74)
+var file_agent_private_v1_work_proto_msgTypes = make([]protoimpl.MessageInfo, 72)
 var file_agent_private_v1_work_proto_goTypes = []any{
 	(WorkState)(0),                                    // 0: agent.private.v1.WorkState
 	(*RepositorySelection)(nil),                       // 1: agent.private.v1.RepositorySelection
@@ -5376,188 +5188,184 @@ var file_agent_private_v1_work_proto_goTypes = []any{
 	(*CreateAgentDefinitionRequest)(nil),              // 11: agent.private.v1.CreateAgentDefinitionRequest
 	(*VisibilityRule)(nil),                            // 12: agent.private.v1.VisibilityRule
 	(*CreateAgentDefinitionResponse)(nil),             // 13: agent.private.v1.CreateAgentDefinitionResponse
-	(*HomeBinding)(nil),                               // 14: agent.private.v1.HomeBinding
-	(*CreateWorkRequest)(nil),                         // 15: agent.private.v1.CreateWorkRequest
-	(*ReadOnlyMount)(nil),                             // 16: agent.private.v1.ReadOnlyMount
-	(*WorkStartingContext)(nil),                       // 17: agent.private.v1.WorkStartingContext
-	(*ResolveWorkContextPositionRequest)(nil),         // 18: agent.private.v1.ResolveWorkContextPositionRequest
-	(*ResolveWorkContextPositionResponse)(nil),        // 19: agent.private.v1.ResolveWorkContextPositionResponse
-	(*CreateWorkResponse)(nil),                        // 20: agent.private.v1.CreateWorkResponse
-	(*DeliverInputRequest)(nil),                       // 21: agent.private.v1.DeliverInputRequest
-	(*GetWorkResponse)(nil),                           // 22: agent.private.v1.GetWorkResponse
-	(*ResumeWorkRequest)(nil),                         // 23: agent.private.v1.ResumeWorkRequest
-	(*ResumeWorkResponse)(nil),                        // 24: agent.private.v1.ResumeWorkResponse
-	(*RestartWorkRequest)(nil),                        // 25: agent.private.v1.RestartWorkRequest
-	(*RestartWorkResponse)(nil),                       // 26: agent.private.v1.RestartWorkResponse
-	(*StopWorkRequest)(nil),                           // 27: agent.private.v1.StopWorkRequest
-	(*StopWorkResponse)(nil),                          // 28: agent.private.v1.StopWorkResponse
-	(*CloseWorkRequest)(nil),                          // 29: agent.private.v1.CloseWorkRequest
-	(*CloseWorkResponse)(nil),                         // 30: agent.private.v1.CloseWorkResponse
-	(*DeliverInputResponse)(nil),                      // 31: agent.private.v1.DeliverInputResponse
-	(*GetWorkRequest)(nil),                            // 32: agent.private.v1.GetWorkRequest
-	(*ChangeAgentDefinitionCapabilitiesRequest)(nil),  // 33: agent.private.v1.ChangeAgentDefinitionCapabilitiesRequest
-	(*ChangeAgentDefinitionCapabilitiesResponse)(nil), // 34: agent.private.v1.ChangeAgentDefinitionCapabilitiesResponse
-	(*GetAgentDefinitionRequest)(nil),                 // 35: agent.private.v1.GetAgentDefinitionRequest
-	(*GetAgentDefinitionResponse)(nil),                // 36: agent.private.v1.GetAgentDefinitionResponse
-	(*RespondToInteractionRequest)(nil),               // 37: agent.private.v1.RespondToInteractionRequest
-	(*RespondToInteractionResponse)(nil),              // 38: agent.private.v1.RespondToInteractionResponse
-	(*VerifyWorkCredentialRequest)(nil),               // 39: agent.private.v1.VerifyWorkCredentialRequest
-	(*VerifyWorkCredentialResponse)(nil),              // 40: agent.private.v1.VerifyWorkCredentialResponse
-	(*LocateWorkRequest)(nil),                         // 41: agent.private.v1.LocateWorkRequest
-	(*LocateWorkResponse)(nil),                        // 42: agent.private.v1.LocateWorkResponse
-	(*EndWorkExecutionRequest)(nil),                   // 43: agent.private.v1.EndWorkExecutionRequest
-	(*EndWorkExecutionResponse)(nil),                  // 44: agent.private.v1.EndWorkExecutionResponse
-	(*GetAgentDefinitionForPurposeRequest)(nil),       // 45: agent.private.v1.GetAgentDefinitionForPurposeRequest
-	(*GetAgentDefinitionForPurposeResponse)(nil),      // 46: agent.private.v1.GetAgentDefinitionForPurposeResponse
-	(*ResolveEmployeeAgentsRequest)(nil),              // 47: agent.private.v1.ResolveEmployeeAgentsRequest
-	(*ResolvedEmployeeAgent)(nil),                     // 48: agent.private.v1.ResolvedEmployeeAgent
-	(*ResolveEmployeeAgentsResponse)(nil),             // 49: agent.private.v1.ResolveEmployeeAgentsResponse
-	(*GetEmployeeAgentRequest)(nil),                   // 50: agent.private.v1.GetEmployeeAgentRequest
-	(*GetEmployeeAgentResponse)(nil),                  // 51: agent.private.v1.GetEmployeeAgentResponse
-	(*ResolveWorkAgentsRequest)(nil),                  // 52: agent.private.v1.ResolveWorkAgentsRequest
-	(*ResolvedWorkAgent)(nil),                         // 53: agent.private.v1.ResolvedWorkAgent
-	(*ResolveWorkAgentsResponse)(nil),                 // 54: agent.private.v1.ResolveWorkAgentsResponse
-	(*GetWorkPreparationRequest)(nil),                 // 55: agent.private.v1.GetWorkPreparationRequest
-	(*GetWorkPreparationResponse)(nil),                // 56: agent.private.v1.GetWorkPreparationResponse
-	(*ListSubmittedPreparationsRequest)(nil),          // 57: agent.private.v1.ListSubmittedPreparationsRequest
-	(*ListSubmittedPreparationsResponse)(nil),         // 58: agent.private.v1.ListSubmittedPreparationsResponse
-	(*WorkPreparation)(nil),                           // 59: agent.private.v1.WorkPreparation
-	(*PreparedCheckout)(nil),                          // 60: agent.private.v1.PreparedCheckout
-	(*ResolveWorkStartsRequest)(nil),                  // 61: agent.private.v1.ResolveWorkStartsRequest
-	(*ResolvedWorkStart)(nil),                         // 62: agent.private.v1.ResolvedWorkStart
-	(*ResolveWorkStartsResponse)(nil),                 // 63: agent.private.v1.ResolveWorkStartsResponse
-	(*GetWorkOriginRequest)(nil),                      // 64: agent.private.v1.GetWorkOriginRequest
-	(*GetWorkOriginResponse)(nil),                     // 65: agent.private.v1.GetWorkOriginResponse
-	(*EnsureAgentDefinitionRequest)(nil),              // 66: agent.private.v1.EnsureAgentDefinitionRequest
-	(*EnsureEmployeeAgentRequest)(nil),                // 67: agent.private.v1.EnsureEmployeeAgentRequest
-	(*EnsureEmployeeAgentResponse)(nil),               // 68: agent.private.v1.EnsureEmployeeAgentResponse
-	(*EnsureAgentDefinitionResponse)(nil),             // 69: agent.private.v1.EnsureAgentDefinitionResponse
-	(*GetWorkStartOptionsRequest)(nil),                // 70: agent.private.v1.GetWorkStartOptionsRequest
-	(*ListWorkStartRepositoriesRequest)(nil),          // 71: agent.private.v1.ListWorkStartRepositoriesRequest
-	(*TransferAgentDefinitionOwnersRequest)(nil),      // 72: agent.private.v1.TransferAgentDefinitionOwnersRequest
-	(*TransferAgentDefinitionOwnersResponse)(nil),     // 73: agent.private.v1.TransferAgentDefinitionOwnersResponse
-	nil,                                     // 74: agent.private.v1.CreateWorkRequest.TraceAttributesEntry
-	(*structpb.Struct)(nil),                 // 75: google.protobuf.Struct
-	(*v1.PluginRelease)(nil),                // 76: marketplace.public.v1.PluginRelease
-	(*WorkSubject)(nil),                     // 77: agent.private.v1.WorkSubject
-	(*v11.WorkModelSelection)(nil),          // 78: agent.public.v1.WorkModelSelection
-	(*v11.HarnessChoice)(nil),               // 79: agent.public.v1.HarnessChoice
-	(*v11.WorkProgress)(nil),                // 80: agent.public.v1.WorkProgress
-	(*v11.AgentAppearance)(nil),             // 81: agent.public.v1.AgentAppearance
-	(*v11.AgentIcon)(nil),                   // 82: agent.public.v1.AgentIcon
-	(*v11.GetWorkStartOptionsResponse)(nil), // 83: agent.public.v1.GetWorkStartOptionsResponse
-	(*v11.WorkStartRepositories)(nil),       // 84: agent.public.v1.WorkStartRepositories
+	(*CreateWorkRequest)(nil),                         // 14: agent.private.v1.CreateWorkRequest
+	(*WorkStartingContext)(nil),                       // 15: agent.private.v1.WorkStartingContext
+	(*ResolveWorkContextPositionRequest)(nil),         // 16: agent.private.v1.ResolveWorkContextPositionRequest
+	(*ResolveWorkContextPositionResponse)(nil),        // 17: agent.private.v1.ResolveWorkContextPositionResponse
+	(*CreateWorkResponse)(nil),                        // 18: agent.private.v1.CreateWorkResponse
+	(*DeliverInputRequest)(nil),                       // 19: agent.private.v1.DeliverInputRequest
+	(*GetWorkResponse)(nil),                           // 20: agent.private.v1.GetWorkResponse
+	(*ResumeWorkRequest)(nil),                         // 21: agent.private.v1.ResumeWorkRequest
+	(*ResumeWorkResponse)(nil),                        // 22: agent.private.v1.ResumeWorkResponse
+	(*RestartWorkRequest)(nil),                        // 23: agent.private.v1.RestartWorkRequest
+	(*RestartWorkResponse)(nil),                       // 24: agent.private.v1.RestartWorkResponse
+	(*StopWorkRequest)(nil),                           // 25: agent.private.v1.StopWorkRequest
+	(*StopWorkResponse)(nil),                          // 26: agent.private.v1.StopWorkResponse
+	(*CloseWorkRequest)(nil),                          // 27: agent.private.v1.CloseWorkRequest
+	(*CloseWorkResponse)(nil),                         // 28: agent.private.v1.CloseWorkResponse
+	(*DeliverInputResponse)(nil),                      // 29: agent.private.v1.DeliverInputResponse
+	(*GetWorkRequest)(nil),                            // 30: agent.private.v1.GetWorkRequest
+	(*ChangeAgentDefinitionCapabilitiesRequest)(nil),  // 31: agent.private.v1.ChangeAgentDefinitionCapabilitiesRequest
+	(*ChangeAgentDefinitionCapabilitiesResponse)(nil), // 32: agent.private.v1.ChangeAgentDefinitionCapabilitiesResponse
+	(*GetAgentDefinitionRequest)(nil),                 // 33: agent.private.v1.GetAgentDefinitionRequest
+	(*GetAgentDefinitionResponse)(nil),                // 34: agent.private.v1.GetAgentDefinitionResponse
+	(*RespondToInteractionRequest)(nil),               // 35: agent.private.v1.RespondToInteractionRequest
+	(*RespondToInteractionResponse)(nil),              // 36: agent.private.v1.RespondToInteractionResponse
+	(*VerifyWorkCredentialRequest)(nil),               // 37: agent.private.v1.VerifyWorkCredentialRequest
+	(*VerifyWorkCredentialResponse)(nil),              // 38: agent.private.v1.VerifyWorkCredentialResponse
+	(*LocateWorkRequest)(nil),                         // 39: agent.private.v1.LocateWorkRequest
+	(*LocateWorkResponse)(nil),                        // 40: agent.private.v1.LocateWorkResponse
+	(*EndWorkExecutionRequest)(nil),                   // 41: agent.private.v1.EndWorkExecutionRequest
+	(*EndWorkExecutionResponse)(nil),                  // 42: agent.private.v1.EndWorkExecutionResponse
+	(*GetAgentDefinitionForPurposeRequest)(nil),       // 43: agent.private.v1.GetAgentDefinitionForPurposeRequest
+	(*GetAgentDefinitionForPurposeResponse)(nil),      // 44: agent.private.v1.GetAgentDefinitionForPurposeResponse
+	(*ResolveEmployeeAgentsRequest)(nil),              // 45: agent.private.v1.ResolveEmployeeAgentsRequest
+	(*ResolvedEmployeeAgent)(nil),                     // 46: agent.private.v1.ResolvedEmployeeAgent
+	(*ResolveEmployeeAgentsResponse)(nil),             // 47: agent.private.v1.ResolveEmployeeAgentsResponse
+	(*GetEmployeeAgentRequest)(nil),                   // 48: agent.private.v1.GetEmployeeAgentRequest
+	(*GetEmployeeAgentResponse)(nil),                  // 49: agent.private.v1.GetEmployeeAgentResponse
+	(*ResolveWorkAgentsRequest)(nil),                  // 50: agent.private.v1.ResolveWorkAgentsRequest
+	(*ResolvedWorkAgent)(nil),                         // 51: agent.private.v1.ResolvedWorkAgent
+	(*ResolveWorkAgentsResponse)(nil),                 // 52: agent.private.v1.ResolveWorkAgentsResponse
+	(*GetWorkPreparationRequest)(nil),                 // 53: agent.private.v1.GetWorkPreparationRequest
+	(*GetWorkPreparationResponse)(nil),                // 54: agent.private.v1.GetWorkPreparationResponse
+	(*ListSubmittedPreparationsRequest)(nil),          // 55: agent.private.v1.ListSubmittedPreparationsRequest
+	(*ListSubmittedPreparationsResponse)(nil),         // 56: agent.private.v1.ListSubmittedPreparationsResponse
+	(*WorkPreparation)(nil),                           // 57: agent.private.v1.WorkPreparation
+	(*PreparedCheckout)(nil),                          // 58: agent.private.v1.PreparedCheckout
+	(*ResolveWorkStartsRequest)(nil),                  // 59: agent.private.v1.ResolveWorkStartsRequest
+	(*ResolvedWorkStart)(nil),                         // 60: agent.private.v1.ResolvedWorkStart
+	(*ResolveWorkStartsResponse)(nil),                 // 61: agent.private.v1.ResolveWorkStartsResponse
+	(*GetWorkOriginRequest)(nil),                      // 62: agent.private.v1.GetWorkOriginRequest
+	(*GetWorkOriginResponse)(nil),                     // 63: agent.private.v1.GetWorkOriginResponse
+	(*EnsureAgentDefinitionRequest)(nil),              // 64: agent.private.v1.EnsureAgentDefinitionRequest
+	(*EnsureEmployeeAgentRequest)(nil),                // 65: agent.private.v1.EnsureEmployeeAgentRequest
+	(*EnsureEmployeeAgentResponse)(nil),               // 66: agent.private.v1.EnsureEmployeeAgentResponse
+	(*EnsureAgentDefinitionResponse)(nil),             // 67: agent.private.v1.EnsureAgentDefinitionResponse
+	(*GetWorkStartOptionsRequest)(nil),                // 68: agent.private.v1.GetWorkStartOptionsRequest
+	(*ListWorkStartRepositoriesRequest)(nil),          // 69: agent.private.v1.ListWorkStartRepositoriesRequest
+	(*TransferAgentDefinitionOwnersRequest)(nil),      // 70: agent.private.v1.TransferAgentDefinitionOwnersRequest
+	(*TransferAgentDefinitionOwnersResponse)(nil),     // 71: agent.private.v1.TransferAgentDefinitionOwnersResponse
+	nil,                                     // 72: agent.private.v1.CreateWorkRequest.TraceAttributesEntry
+	(*structpb.Struct)(nil),                 // 73: google.protobuf.Struct
+	(*v1.PluginRelease)(nil),                // 74: marketplace.public.v1.PluginRelease
+	(*WorkSubject)(nil),                     // 75: agent.private.v1.WorkSubject
+	(*v11.WorkModelSelection)(nil),          // 76: agent.public.v1.WorkModelSelection
+	(*v11.HarnessChoice)(nil),               // 77: agent.public.v1.HarnessChoice
+	(*v11.WorkProgress)(nil),                // 78: agent.public.v1.WorkProgress
+	(*v12.WorkspaceLayout)(nil),             // 79: storage.private.v1.WorkspaceLayout
+	(*v11.AgentAppearance)(nil),             // 80: agent.public.v1.AgentAppearance
+	(*v11.AgentIcon)(nil),                   // 81: agent.public.v1.AgentIcon
+	(*v11.GetWorkStartOptionsResponse)(nil), // 82: agent.public.v1.GetWorkStartOptionsResponse
+	(*v11.WorkStartRepositories)(nil),       // 83: agent.public.v1.WorkStartRepositories
 }
 var file_agent_private_v1_work_proto_depIdxs = []int32{
 	1,  // 0: agent.private.v1.PrepareWorkExecutionRequest.selections:type_name -> agent.private.v1.RepositorySelection
-	15, // 1: agent.private.v1.PrepareWorkExecutionRequest.creation:type_name -> agent.private.v1.CreateWorkRequest
-	75, // 2: agent.private.v1.PluginConfiguration.configuration:type_name -> google.protobuf.Struct
+	14, // 1: agent.private.v1.PrepareWorkExecutionRequest.creation:type_name -> agent.private.v1.CreateWorkRequest
+	73, // 2: agent.private.v1.PluginConfiguration.configuration:type_name -> google.protobuf.Struct
 	7,  // 3: agent.private.v1.WorkCapabilities.plugins:type_name -> agent.private.v1.SelectedPlugin
-	76, // 4: agent.private.v1.SelectedPlugin.release:type_name -> marketplace.public.v1.PluginRelease
-	75, // 5: agent.private.v1.SelectedPlugin.configuration:type_name -> google.protobuf.Struct
+	74, // 4: agent.private.v1.SelectedPlugin.release:type_name -> marketplace.public.v1.PluginRelease
+	73, // 5: agent.private.v1.SelectedPlugin.configuration:type_name -> google.protobuf.Struct
 	4,  // 6: agent.private.v1.CapabilityDifferences.plugins:type_name -> agent.private.v1.PluginConfiguration
 	9,  // 7: agent.private.v1.CapabilityDifferences.connectors:type_name -> agent.private.v1.ConnectorChoice
 	5,  // 8: agent.private.v1.CreateAgentDefinitionRequest.capabilities:type_name -> agent.private.v1.Capabilities
 	10, // 9: agent.private.v1.CreateAgentDefinitionRequest.usage_scope:type_name -> agent.private.v1.UsageScope
-	14, // 10: agent.private.v1.CreateAgentDefinitionRequest.home_binding:type_name -> agent.private.v1.HomeBinding
-	12, // 11: agent.private.v1.CreateAgentDefinitionRequest.visibility_rule:type_name -> agent.private.v1.VisibilityRule
-	74, // 12: agent.private.v1.CreateWorkRequest.trace_attributes:type_name -> agent.private.v1.CreateWorkRequest.TraceAttributesEntry
-	8,  // 13: agent.private.v1.CreateWorkRequest.capability_differences:type_name -> agent.private.v1.CapabilityDifferences
-	77, // 14: agent.private.v1.CreateWorkRequest.subject:type_name -> agent.private.v1.WorkSubject
-	78, // 15: agent.private.v1.CreateWorkRequest.model:type_name -> agent.public.v1.WorkModelSelection
-	16, // 16: agent.private.v1.CreateWorkRequest.read_only_mounts:type_name -> agent.private.v1.ReadOnlyMount
-	17, // 17: agent.private.v1.CreateWorkRequest.starting_context:type_name -> agent.private.v1.WorkStartingContext
-	79, // 18: agent.private.v1.CreateWorkRequest.harness:type_name -> agent.public.v1.HarnessChoice
-	80, // 19: agent.private.v1.GetWorkResponse.work_progress:type_name -> agent.public.v1.WorkProgress
-	0,  // 20: agent.private.v1.GetWorkResponse.state:type_name -> agent.private.v1.WorkState
-	6,  // 21: agent.private.v1.GetWorkResponse.capabilities:type_name -> agent.private.v1.WorkCapabilities
-	5,  // 22: agent.private.v1.ChangeAgentDefinitionCapabilitiesRequest.capabilities:type_name -> agent.private.v1.Capabilities
-	5,  // 23: agent.private.v1.GetAgentDefinitionResponse.capabilities:type_name -> agent.private.v1.Capabilities
-	10, // 24: agent.private.v1.GetAgentDefinitionResponse.usage_scope:type_name -> agent.private.v1.UsageScope
-	14, // 25: agent.private.v1.GetAgentDefinitionResponse.home_binding:type_name -> agent.private.v1.HomeBinding
-	12, // 26: agent.private.v1.GetAgentDefinitionResponse.visibility_rule:type_name -> agent.private.v1.VisibilityRule
-	77, // 27: agent.private.v1.VerifyWorkCredentialResponse.subject:type_name -> agent.private.v1.WorkSubject
-	77, // 28: agent.private.v1.LocateWorkRequest.subject:type_name -> agent.private.v1.WorkSubject
-	10, // 29: agent.private.v1.GetAgentDefinitionForPurposeRequest.usage_scope:type_name -> agent.private.v1.UsageScope
-	81, // 30: agent.private.v1.ResolvedEmployeeAgent.appearance:type_name -> agent.public.v1.AgentAppearance
-	48, // 31: agent.private.v1.ResolveEmployeeAgentsResponse.agents:type_name -> agent.private.v1.ResolvedEmployeeAgent
-	81, // 32: agent.private.v1.GetEmployeeAgentResponse.appearance:type_name -> agent.public.v1.AgentAppearance
-	81, // 33: agent.private.v1.ResolvedWorkAgent.appearance:type_name -> agent.public.v1.AgentAppearance
-	53, // 34: agent.private.v1.ResolveWorkAgentsResponse.agents:type_name -> agent.private.v1.ResolvedWorkAgent
-	59, // 35: agent.private.v1.GetWorkPreparationResponse.preparation:type_name -> agent.private.v1.WorkPreparation
-	59, // 36: agent.private.v1.ListSubmittedPreparationsResponse.preparations:type_name -> agent.private.v1.WorkPreparation
-	60, // 37: agent.private.v1.WorkPreparation.checkouts:type_name -> agent.private.v1.PreparedCheckout
-	62, // 38: agent.private.v1.ResolveWorkStartsResponse.works:type_name -> agent.private.v1.ResolvedWorkStart
-	77, // 39: agent.private.v1.GetWorkOriginResponse.subject:type_name -> agent.private.v1.WorkSubject
-	10, // 40: agent.private.v1.EnsureAgentDefinitionRequest.usage_scope:type_name -> agent.private.v1.UsageScope
-	14, // 41: agent.private.v1.EnsureAgentDefinitionRequest.home_binding:type_name -> agent.private.v1.HomeBinding
-	5,  // 42: agent.private.v1.EnsureAgentDefinitionRequest.capabilities:type_name -> agent.private.v1.Capabilities
-	12, // 43: agent.private.v1.EnsureAgentDefinitionRequest.visibility_rule:type_name -> agent.private.v1.VisibilityRule
-	82, // 44: agent.private.v1.EnsureEmployeeAgentResponse.agent_icon:type_name -> agent.public.v1.AgentIcon
-	82, // 45: agent.private.v1.EnsureAgentDefinitionResponse.agent_icon:type_name -> agent.public.v1.AgentIcon
-	70, // 46: agent.private.v1.AgentService.GetWorkStartOptions:input_type -> agent.private.v1.GetWorkStartOptionsRequest
-	71, // 47: agent.private.v1.AgentService.ListWorkStartRepositories:input_type -> agent.private.v1.ListWorkStartRepositoriesRequest
-	64, // 48: agent.private.v1.AgentService.GetWorkOrigin:input_type -> agent.private.v1.GetWorkOriginRequest
-	18, // 49: agent.private.v1.AgentService.ResolveWorkContextPosition:input_type -> agent.private.v1.ResolveWorkContextPositionRequest
-	61, // 50: agent.private.v1.AgentService.ResolveWorkStarts:input_type -> agent.private.v1.ResolveWorkStartsRequest
-	55, // 51: agent.private.v1.AgentService.GetWorkPreparation:input_type -> agent.private.v1.GetWorkPreparationRequest
-	57, // 52: agent.private.v1.AgentService.ListSubmittedPreparations:input_type -> agent.private.v1.ListSubmittedPreparationsRequest
-	2,  // 53: agent.private.v1.AgentService.PrepareWorkExecution:input_type -> agent.private.v1.PrepareWorkExecutionRequest
-	39, // 54: agent.private.v1.AgentService.VerifyWorkCredential:input_type -> agent.private.v1.VerifyWorkCredentialRequest
-	33, // 55: agent.private.v1.AgentService.ChangeAgentDefinitionCapabilities:input_type -> agent.private.v1.ChangeAgentDefinitionCapabilitiesRequest
-	35, // 56: agent.private.v1.AgentService.GetAgentDefinition:input_type -> agent.private.v1.GetAgentDefinitionRequest
-	45, // 57: agent.private.v1.AgentService.GetAgentDefinitionForPurpose:input_type -> agent.private.v1.GetAgentDefinitionForPurposeRequest
-	47, // 58: agent.private.v1.AgentService.ResolveEmployeeAgents:input_type -> agent.private.v1.ResolveEmployeeAgentsRequest
-	50, // 59: agent.private.v1.AgentService.GetEmployeeAgent:input_type -> agent.private.v1.GetEmployeeAgentRequest
-	52, // 60: agent.private.v1.AgentService.ResolveWorkAgents:input_type -> agent.private.v1.ResolveWorkAgentsRequest
-	11, // 61: agent.private.v1.AgentService.CreateAgentDefinition:input_type -> agent.private.v1.CreateAgentDefinitionRequest
-	66, // 62: agent.private.v1.AgentService.EnsureAgentDefinition:input_type -> agent.private.v1.EnsureAgentDefinitionRequest
-	67, // 63: agent.private.v1.AgentService.EnsureEmployeeAgent:input_type -> agent.private.v1.EnsureEmployeeAgentRequest
-	72, // 64: agent.private.v1.AgentService.TransferAgentDefinitionOwners:input_type -> agent.private.v1.TransferAgentDefinitionOwnersRequest
-	15, // 65: agent.private.v1.AgentService.CreateWork:input_type -> agent.private.v1.CreateWorkRequest
-	41, // 66: agent.private.v1.AgentService.LocateWork:input_type -> agent.private.v1.LocateWorkRequest
-	23, // 67: agent.private.v1.AgentService.ResumeWork:input_type -> agent.private.v1.ResumeWorkRequest
-	25, // 68: agent.private.v1.AgentService.RestartWork:input_type -> agent.private.v1.RestartWorkRequest
-	43, // 69: agent.private.v1.AgentService.EndWorkExecution:input_type -> agent.private.v1.EndWorkExecutionRequest
-	27, // 70: agent.private.v1.AgentService.StopWork:input_type -> agent.private.v1.StopWorkRequest
-	29, // 71: agent.private.v1.AgentService.CloseWork:input_type -> agent.private.v1.CloseWorkRequest
-	21, // 72: agent.private.v1.AgentService.DeliverInput:input_type -> agent.private.v1.DeliverInputRequest
-	37, // 73: agent.private.v1.AgentService.RespondToInteraction:input_type -> agent.private.v1.RespondToInteractionRequest
-	32, // 74: agent.private.v1.AgentService.GetWork:input_type -> agent.private.v1.GetWorkRequest
-	83, // 75: agent.private.v1.AgentService.GetWorkStartOptions:output_type -> agent.public.v1.GetWorkStartOptionsResponse
-	84, // 76: agent.private.v1.AgentService.ListWorkStartRepositories:output_type -> agent.public.v1.WorkStartRepositories
-	65, // 77: agent.private.v1.AgentService.GetWorkOrigin:output_type -> agent.private.v1.GetWorkOriginResponse
-	19, // 78: agent.private.v1.AgentService.ResolveWorkContextPosition:output_type -> agent.private.v1.ResolveWorkContextPositionResponse
-	63, // 79: agent.private.v1.AgentService.ResolveWorkStarts:output_type -> agent.private.v1.ResolveWorkStartsResponse
-	56, // 80: agent.private.v1.AgentService.GetWorkPreparation:output_type -> agent.private.v1.GetWorkPreparationResponse
-	58, // 81: agent.private.v1.AgentService.ListSubmittedPreparations:output_type -> agent.private.v1.ListSubmittedPreparationsResponse
-	3,  // 82: agent.private.v1.AgentService.PrepareWorkExecution:output_type -> agent.private.v1.PrepareWorkExecutionResponse
-	40, // 83: agent.private.v1.AgentService.VerifyWorkCredential:output_type -> agent.private.v1.VerifyWorkCredentialResponse
-	34, // 84: agent.private.v1.AgentService.ChangeAgentDefinitionCapabilities:output_type -> agent.private.v1.ChangeAgentDefinitionCapabilitiesResponse
-	36, // 85: agent.private.v1.AgentService.GetAgentDefinition:output_type -> agent.private.v1.GetAgentDefinitionResponse
-	46, // 86: agent.private.v1.AgentService.GetAgentDefinitionForPurpose:output_type -> agent.private.v1.GetAgentDefinitionForPurposeResponse
-	49, // 87: agent.private.v1.AgentService.ResolveEmployeeAgents:output_type -> agent.private.v1.ResolveEmployeeAgentsResponse
-	51, // 88: agent.private.v1.AgentService.GetEmployeeAgent:output_type -> agent.private.v1.GetEmployeeAgentResponse
-	54, // 89: agent.private.v1.AgentService.ResolveWorkAgents:output_type -> agent.private.v1.ResolveWorkAgentsResponse
-	13, // 90: agent.private.v1.AgentService.CreateAgentDefinition:output_type -> agent.private.v1.CreateAgentDefinitionResponse
-	69, // 91: agent.private.v1.AgentService.EnsureAgentDefinition:output_type -> agent.private.v1.EnsureAgentDefinitionResponse
-	68, // 92: agent.private.v1.AgentService.EnsureEmployeeAgent:output_type -> agent.private.v1.EnsureEmployeeAgentResponse
-	73, // 93: agent.private.v1.AgentService.TransferAgentDefinitionOwners:output_type -> agent.private.v1.TransferAgentDefinitionOwnersResponse
-	20, // 94: agent.private.v1.AgentService.CreateWork:output_type -> agent.private.v1.CreateWorkResponse
-	42, // 95: agent.private.v1.AgentService.LocateWork:output_type -> agent.private.v1.LocateWorkResponse
-	24, // 96: agent.private.v1.AgentService.ResumeWork:output_type -> agent.private.v1.ResumeWorkResponse
-	26, // 97: agent.private.v1.AgentService.RestartWork:output_type -> agent.private.v1.RestartWorkResponse
-	44, // 98: agent.private.v1.AgentService.EndWorkExecution:output_type -> agent.private.v1.EndWorkExecutionResponse
-	28, // 99: agent.private.v1.AgentService.StopWork:output_type -> agent.private.v1.StopWorkResponse
-	30, // 100: agent.private.v1.AgentService.CloseWork:output_type -> agent.private.v1.CloseWorkResponse
-	31, // 101: agent.private.v1.AgentService.DeliverInput:output_type -> agent.private.v1.DeliverInputResponse
-	38, // 102: agent.private.v1.AgentService.RespondToInteraction:output_type -> agent.private.v1.RespondToInteractionResponse
-	22, // 103: agent.private.v1.AgentService.GetWork:output_type -> agent.private.v1.GetWorkResponse
-	75, // [75:104] is the sub-list for method output_type
-	46, // [46:75] is the sub-list for method input_type
-	46, // [46:46] is the sub-list for extension type_name
-	46, // [46:46] is the sub-list for extension extendee
-	0,  // [0:46] is the sub-list for field type_name
+	12, // 10: agent.private.v1.CreateAgentDefinitionRequest.visibility_rule:type_name -> agent.private.v1.VisibilityRule
+	72, // 11: agent.private.v1.CreateWorkRequest.trace_attributes:type_name -> agent.private.v1.CreateWorkRequest.TraceAttributesEntry
+	8,  // 12: agent.private.v1.CreateWorkRequest.capability_differences:type_name -> agent.private.v1.CapabilityDifferences
+	75, // 13: agent.private.v1.CreateWorkRequest.subject:type_name -> agent.private.v1.WorkSubject
+	76, // 14: agent.private.v1.CreateWorkRequest.model:type_name -> agent.public.v1.WorkModelSelection
+	15, // 15: agent.private.v1.CreateWorkRequest.starting_context:type_name -> agent.private.v1.WorkStartingContext
+	77, // 16: agent.private.v1.CreateWorkRequest.harness:type_name -> agent.public.v1.HarnessChoice
+	78, // 17: agent.private.v1.GetWorkResponse.work_progress:type_name -> agent.public.v1.WorkProgress
+	0,  // 18: agent.private.v1.GetWorkResponse.state:type_name -> agent.private.v1.WorkState
+	6,  // 19: agent.private.v1.GetWorkResponse.capabilities:type_name -> agent.private.v1.WorkCapabilities
+	5,  // 20: agent.private.v1.ChangeAgentDefinitionCapabilitiesRequest.capabilities:type_name -> agent.private.v1.Capabilities
+	5,  // 21: agent.private.v1.GetAgentDefinitionResponse.capabilities:type_name -> agent.private.v1.Capabilities
+	10, // 22: agent.private.v1.GetAgentDefinitionResponse.usage_scope:type_name -> agent.private.v1.UsageScope
+	12, // 23: agent.private.v1.GetAgentDefinitionResponse.visibility_rule:type_name -> agent.private.v1.VisibilityRule
+	75, // 24: agent.private.v1.VerifyWorkCredentialResponse.subject:type_name -> agent.private.v1.WorkSubject
+	79, // 25: agent.private.v1.VerifyWorkCredentialResponse.workspace:type_name -> storage.private.v1.WorkspaceLayout
+	75, // 26: agent.private.v1.LocateWorkRequest.subject:type_name -> agent.private.v1.WorkSubject
+	10, // 27: agent.private.v1.GetAgentDefinitionForPurposeRequest.usage_scope:type_name -> agent.private.v1.UsageScope
+	80, // 28: agent.private.v1.ResolvedEmployeeAgent.appearance:type_name -> agent.public.v1.AgentAppearance
+	46, // 29: agent.private.v1.ResolveEmployeeAgentsResponse.agents:type_name -> agent.private.v1.ResolvedEmployeeAgent
+	80, // 30: agent.private.v1.GetEmployeeAgentResponse.appearance:type_name -> agent.public.v1.AgentAppearance
+	80, // 31: agent.private.v1.ResolvedWorkAgent.appearance:type_name -> agent.public.v1.AgentAppearance
+	51, // 32: agent.private.v1.ResolveWorkAgentsResponse.agents:type_name -> agent.private.v1.ResolvedWorkAgent
+	57, // 33: agent.private.v1.GetWorkPreparationResponse.preparation:type_name -> agent.private.v1.WorkPreparation
+	57, // 34: agent.private.v1.ListSubmittedPreparationsResponse.preparations:type_name -> agent.private.v1.WorkPreparation
+	58, // 35: agent.private.v1.WorkPreparation.checkouts:type_name -> agent.private.v1.PreparedCheckout
+	60, // 36: agent.private.v1.ResolveWorkStartsResponse.works:type_name -> agent.private.v1.ResolvedWorkStart
+	75, // 37: agent.private.v1.GetWorkOriginResponse.subject:type_name -> agent.private.v1.WorkSubject
+	10, // 38: agent.private.v1.EnsureAgentDefinitionRequest.usage_scope:type_name -> agent.private.v1.UsageScope
+	5,  // 39: agent.private.v1.EnsureAgentDefinitionRequest.capabilities:type_name -> agent.private.v1.Capabilities
+	12, // 40: agent.private.v1.EnsureAgentDefinitionRequest.visibility_rule:type_name -> agent.private.v1.VisibilityRule
+	81, // 41: agent.private.v1.EnsureEmployeeAgentResponse.agent_icon:type_name -> agent.public.v1.AgentIcon
+	81, // 42: agent.private.v1.EnsureAgentDefinitionResponse.agent_icon:type_name -> agent.public.v1.AgentIcon
+	68, // 43: agent.private.v1.AgentService.GetWorkStartOptions:input_type -> agent.private.v1.GetWorkStartOptionsRequest
+	69, // 44: agent.private.v1.AgentService.ListWorkStartRepositories:input_type -> agent.private.v1.ListWorkStartRepositoriesRequest
+	62, // 45: agent.private.v1.AgentService.GetWorkOrigin:input_type -> agent.private.v1.GetWorkOriginRequest
+	16, // 46: agent.private.v1.AgentService.ResolveWorkContextPosition:input_type -> agent.private.v1.ResolveWorkContextPositionRequest
+	59, // 47: agent.private.v1.AgentService.ResolveWorkStarts:input_type -> agent.private.v1.ResolveWorkStartsRequest
+	53, // 48: agent.private.v1.AgentService.GetWorkPreparation:input_type -> agent.private.v1.GetWorkPreparationRequest
+	55, // 49: agent.private.v1.AgentService.ListSubmittedPreparations:input_type -> agent.private.v1.ListSubmittedPreparationsRequest
+	2,  // 50: agent.private.v1.AgentService.PrepareWorkExecution:input_type -> agent.private.v1.PrepareWorkExecutionRequest
+	37, // 51: agent.private.v1.AgentService.VerifyWorkCredential:input_type -> agent.private.v1.VerifyWorkCredentialRequest
+	31, // 52: agent.private.v1.AgentService.ChangeAgentDefinitionCapabilities:input_type -> agent.private.v1.ChangeAgentDefinitionCapabilitiesRequest
+	33, // 53: agent.private.v1.AgentService.GetAgentDefinition:input_type -> agent.private.v1.GetAgentDefinitionRequest
+	43, // 54: agent.private.v1.AgentService.GetAgentDefinitionForPurpose:input_type -> agent.private.v1.GetAgentDefinitionForPurposeRequest
+	45, // 55: agent.private.v1.AgentService.ResolveEmployeeAgents:input_type -> agent.private.v1.ResolveEmployeeAgentsRequest
+	48, // 56: agent.private.v1.AgentService.GetEmployeeAgent:input_type -> agent.private.v1.GetEmployeeAgentRequest
+	50, // 57: agent.private.v1.AgentService.ResolveWorkAgents:input_type -> agent.private.v1.ResolveWorkAgentsRequest
+	11, // 58: agent.private.v1.AgentService.CreateAgentDefinition:input_type -> agent.private.v1.CreateAgentDefinitionRequest
+	64, // 59: agent.private.v1.AgentService.EnsureAgentDefinition:input_type -> agent.private.v1.EnsureAgentDefinitionRequest
+	65, // 60: agent.private.v1.AgentService.EnsureEmployeeAgent:input_type -> agent.private.v1.EnsureEmployeeAgentRequest
+	70, // 61: agent.private.v1.AgentService.TransferAgentDefinitionOwners:input_type -> agent.private.v1.TransferAgentDefinitionOwnersRequest
+	14, // 62: agent.private.v1.AgentService.CreateWork:input_type -> agent.private.v1.CreateWorkRequest
+	39, // 63: agent.private.v1.AgentService.LocateWork:input_type -> agent.private.v1.LocateWorkRequest
+	21, // 64: agent.private.v1.AgentService.ResumeWork:input_type -> agent.private.v1.ResumeWorkRequest
+	23, // 65: agent.private.v1.AgentService.RestartWork:input_type -> agent.private.v1.RestartWorkRequest
+	41, // 66: agent.private.v1.AgentService.EndWorkExecution:input_type -> agent.private.v1.EndWorkExecutionRequest
+	25, // 67: agent.private.v1.AgentService.StopWork:input_type -> agent.private.v1.StopWorkRequest
+	27, // 68: agent.private.v1.AgentService.CloseWork:input_type -> agent.private.v1.CloseWorkRequest
+	19, // 69: agent.private.v1.AgentService.DeliverInput:input_type -> agent.private.v1.DeliverInputRequest
+	35, // 70: agent.private.v1.AgentService.RespondToInteraction:input_type -> agent.private.v1.RespondToInteractionRequest
+	30, // 71: agent.private.v1.AgentService.GetWork:input_type -> agent.private.v1.GetWorkRequest
+	82, // 72: agent.private.v1.AgentService.GetWorkStartOptions:output_type -> agent.public.v1.GetWorkStartOptionsResponse
+	83, // 73: agent.private.v1.AgentService.ListWorkStartRepositories:output_type -> agent.public.v1.WorkStartRepositories
+	63, // 74: agent.private.v1.AgentService.GetWorkOrigin:output_type -> agent.private.v1.GetWorkOriginResponse
+	17, // 75: agent.private.v1.AgentService.ResolveWorkContextPosition:output_type -> agent.private.v1.ResolveWorkContextPositionResponse
+	61, // 76: agent.private.v1.AgentService.ResolveWorkStarts:output_type -> agent.private.v1.ResolveWorkStartsResponse
+	54, // 77: agent.private.v1.AgentService.GetWorkPreparation:output_type -> agent.private.v1.GetWorkPreparationResponse
+	56, // 78: agent.private.v1.AgentService.ListSubmittedPreparations:output_type -> agent.private.v1.ListSubmittedPreparationsResponse
+	3,  // 79: agent.private.v1.AgentService.PrepareWorkExecution:output_type -> agent.private.v1.PrepareWorkExecutionResponse
+	38, // 80: agent.private.v1.AgentService.VerifyWorkCredential:output_type -> agent.private.v1.VerifyWorkCredentialResponse
+	32, // 81: agent.private.v1.AgentService.ChangeAgentDefinitionCapabilities:output_type -> agent.private.v1.ChangeAgentDefinitionCapabilitiesResponse
+	34, // 82: agent.private.v1.AgentService.GetAgentDefinition:output_type -> agent.private.v1.GetAgentDefinitionResponse
+	44, // 83: agent.private.v1.AgentService.GetAgentDefinitionForPurpose:output_type -> agent.private.v1.GetAgentDefinitionForPurposeResponse
+	47, // 84: agent.private.v1.AgentService.ResolveEmployeeAgents:output_type -> agent.private.v1.ResolveEmployeeAgentsResponse
+	49, // 85: agent.private.v1.AgentService.GetEmployeeAgent:output_type -> agent.private.v1.GetEmployeeAgentResponse
+	52, // 86: agent.private.v1.AgentService.ResolveWorkAgents:output_type -> agent.private.v1.ResolveWorkAgentsResponse
+	13, // 87: agent.private.v1.AgentService.CreateAgentDefinition:output_type -> agent.private.v1.CreateAgentDefinitionResponse
+	67, // 88: agent.private.v1.AgentService.EnsureAgentDefinition:output_type -> agent.private.v1.EnsureAgentDefinitionResponse
+	66, // 89: agent.private.v1.AgentService.EnsureEmployeeAgent:output_type -> agent.private.v1.EnsureEmployeeAgentResponse
+	71, // 90: agent.private.v1.AgentService.TransferAgentDefinitionOwners:output_type -> agent.private.v1.TransferAgentDefinitionOwnersResponse
+	18, // 91: agent.private.v1.AgentService.CreateWork:output_type -> agent.private.v1.CreateWorkResponse
+	40, // 92: agent.private.v1.AgentService.LocateWork:output_type -> agent.private.v1.LocateWorkResponse
+	22, // 93: agent.private.v1.AgentService.ResumeWork:output_type -> agent.private.v1.ResumeWorkResponse
+	24, // 94: agent.private.v1.AgentService.RestartWork:output_type -> agent.private.v1.RestartWorkResponse
+	42, // 95: agent.private.v1.AgentService.EndWorkExecution:output_type -> agent.private.v1.EndWorkExecutionResponse
+	26, // 96: agent.private.v1.AgentService.StopWork:output_type -> agent.private.v1.StopWorkResponse
+	28, // 97: agent.private.v1.AgentService.CloseWork:output_type -> agent.private.v1.CloseWorkResponse
+	29, // 98: agent.private.v1.AgentService.DeliverInput:output_type -> agent.private.v1.DeliverInputResponse
+	36, // 99: agent.private.v1.AgentService.RespondToInteraction:output_type -> agent.private.v1.RespondToInteractionResponse
+	20, // 100: agent.private.v1.AgentService.GetWork:output_type -> agent.private.v1.GetWorkResponse
+	72, // [72:101] is the sub-list for method output_type
+	43, // [43:72] is the sub-list for method input_type
+	43, // [43:43] is the sub-list for extension type_name
+	43, // [43:43] is the sub-list for extension extendee
+	0,  // [0:43] is the sub-list for field type_name
 }
 
 func init() { file_agent_private_v1_work_proto_init() }
@@ -5568,15 +5376,15 @@ func file_agent_private_v1_work_proto_init() {
 	file_agent_private_v1_work_subject_proto_init()
 	file_agent_private_v1_work_proto_msgTypes[3].OneofWrappers = []any{}
 	file_agent_private_v1_work_proto_msgTypes[7].OneofWrappers = []any{}
+	file_agent_private_v1_work_proto_msgTypes[24].OneofWrappers = []any{}
 	file_agent_private_v1_work_proto_msgTypes[26].OneofWrappers = []any{}
-	file_agent_private_v1_work_proto_msgTypes[28].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_agent_private_v1_work_proto_rawDesc), len(file_agent_private_v1_work_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   74,
+			NumMessages:   72,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

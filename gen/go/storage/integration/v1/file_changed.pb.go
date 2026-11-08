@@ -22,60 +22,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// FileKind tells an Attachment from an Artifact.
-type FileKind int32
-
-const (
-	// Unspecified kind; never published.
-	FileKind_FILE_KIND_UNSPECIFIED FileKind = 0
-	// An input file of the space's owner.
-	FileKind_FILE_KIND_ATTACHMENT FileKind = 1
-	// A file a Work Agent published.
-	FileKind_FILE_KIND_ARTIFACT FileKind = 2
-)
-
-// Enum value maps for FileKind.
-var (
-	FileKind_name = map[int32]string{
-		0: "FILE_KIND_UNSPECIFIED",
-		1: "FILE_KIND_ATTACHMENT",
-		2: "FILE_KIND_ARTIFACT",
-	}
-	FileKind_value = map[string]int32{
-		"FILE_KIND_UNSPECIFIED": 0,
-		"FILE_KIND_ATTACHMENT":  1,
-		"FILE_KIND_ARTIFACT":    2,
-	}
-)
-
-func (x FileKind) Enum() *FileKind {
-	p := new(FileKind)
-	*p = x
-	return p
-}
-
-func (x FileKind) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (FileKind) Descriptor() protoreflect.EnumDescriptor {
-	return file_storage_integration_v1_file_changed_proto_enumTypes[0].Descriptor()
-}
-
-func (FileKind) Type() protoreflect.EnumType {
-	return &file_storage_integration_v1_file_changed_proto_enumTypes[0]
-}
-
-func (x FileKind) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use FileKind.Descriptor instead.
-func (FileKind) EnumDescriptor() ([]byte, []int) {
-	return file_storage_integration_v1_file_changed_proto_rawDescGZIP(), []int{0}
-}
-
-// FileOperation is how a file in a File Space changed.
+// FileOperation is how a file Storage wrote changed.
 type FileOperation int32
 
 const (
@@ -86,7 +33,7 @@ const (
 	FileOperation_FILE_OPERATION_CREATED FileOperation = 1
 	// A file's content was replaced at its name.
 	FileOperation_FILE_OPERATION_REPLACED FileOperation = 2
-	// An Attachment moved to a new name.
+	// A file moved to a new name.
 	FileOperation_FILE_OPERATION_RENAMED FileOperation = 3
 	// A file was deleted.
 	FileOperation_FILE_OPERATION_DELETED FileOperation = 4
@@ -121,11 +68,11 @@ func (x FileOperation) String() string {
 }
 
 func (FileOperation) Descriptor() protoreflect.EnumDescriptor {
-	return file_storage_integration_v1_file_changed_proto_enumTypes[1].Descriptor()
+	return file_storage_integration_v1_file_changed_proto_enumTypes[0].Descriptor()
 }
 
 func (FileOperation) Type() protoreflect.EnumType {
-	return &file_storage_integration_v1_file_changed_proto_enumTypes[1]
+	return &file_storage_integration_v1_file_changed_proto_enumTypes[0]
 }
 
 func (x FileOperation) Number() protoreflect.EnumNumber {
@@ -134,27 +81,136 @@ func (x FileOperation) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use FileOperation.Descriptor instead.
 func (FileOperation) EnumDescriptor() ([]byte, []int) {
+	return file_storage_integration_v1_file_changed_proto_rawDescGZIP(), []int{0}
+}
+
+// OwnerFact is one condition of the Directory's owner with its value.
+type OwnerFact struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The condition's name, such as "subject".
+	Condition string `protobuf:"bytes,1,opt,name=condition,proto3" json:"condition,omitempty"`
+	// The value the locating caller supplied.
+	Value         string `protobuf:"bytes,2,opt,name=value,proto3" json:"value,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OwnerFact) Reset() {
+	*x = OwnerFact{}
+	mi := &file_storage_integration_v1_file_changed_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OwnerFact) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OwnerFact) ProtoMessage() {}
+
+func (x *OwnerFact) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_integration_v1_file_changed_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OwnerFact.ProtoReflect.Descriptor instead.
+func (*OwnerFact) Descriptor() ([]byte, []int) {
+	return file_storage_integration_v1_file_changed_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *OwnerFact) GetCondition() string {
+	if x != nil {
+		return x.Condition
+	}
+	return ""
+}
+
+func (x *OwnerFact) GetValue() string {
+	if x != nil {
+		return x.Value
+	}
+	return ""
+}
+
+// Directory identifies the Directory a file changed in: its owner, as the
+// locating caller's facts in condition order, and its name.
+type Directory struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Owner facts ordered by condition name.
+	Owner []*OwnerFact `protobuf:"bytes,1,rep,name=owner,proto3" json:"owner,omitempty"`
+	// Name within the owner.
+	Name          string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Directory) Reset() {
+	*x = Directory{}
+	mi := &file_storage_integration_v1_file_changed_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Directory) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Directory) ProtoMessage() {}
+
+func (x *Directory) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_integration_v1_file_changed_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Directory.ProtoReflect.Descriptor instead.
+func (*Directory) Descriptor() ([]byte, []int) {
 	return file_storage_integration_v1_file_changed_proto_rawDescGZIP(), []int{1}
 }
 
+func (x *Directory) GetOwner() []*OwnerFact {
+	if x != nil {
+		return x.Owner
+	}
+	return nil
+}
+
+func (x *Directory) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
 // FileChangedV1 is the File Change Published Fact: one committed change of a
-// file in a File Space, published best-effort. It names the space
-// only by its opaque owner identity, which each subscriber claims or ignores,
-// and names the file but carries no content. Exactly one of actor_user_id and
-// actor_work_id is set.
+// file Storage carried out, published best-effort. It names the Directory by
+// its owner and name, which each subscriber claims or ignores, and names the
+// file but carries no content. Changes a Harness makes through a mount are
+// never published. Exactly one of actor_user_id and actor_work_id is set.
 type FileChangedV1 struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Unique identity of this publication and of the change.
 	EventId string `protobuf:"bytes,1,opt,name=event_id,json=eventId,proto3" json:"event_id,omitempty"`
 	// Time the change was committed.
 	OccurredAt *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=occurred_at,json=occurredAt,proto3" json:"occurred_at,omitempty"`
-	// Owner of the File Space, as its caller named it.
-	Owner string `protobuf:"bytes,3,opt,name=owner,proto3" json:"owner,omitempty"`
-	// Attachment or Artifact.
-	Kind FileKind `protobuf:"varint,4,opt,name=kind,proto3,enum=storage.integration.v1.FileKind" json:"kind,omitempty"`
+	// The Directory the file is in.
+	Directory *Directory `protobuf:"bytes,10,opt,name=directory,proto3" json:"directory,omitempty"`
 	// The file's name after the change; for a deletion, the name it had.
 	Name string `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`
-	// The former name of a renamed Attachment; empty otherwise.
+	// The former name of a renamed file; empty otherwise.
 	PreviousName string `protobuf:"bytes,6,opt,name=previous_name,json=previousName,proto3" json:"previous_name,omitempty"`
 	// How the file changed.
 	Operation FileOperation `protobuf:"varint,7,opt,name=operation,proto3,enum=storage.integration.v1.FileOperation" json:"operation,omitempty"`
@@ -168,7 +224,7 @@ type FileChangedV1 struct {
 
 func (x *FileChangedV1) Reset() {
 	*x = FileChangedV1{}
-	mi := &file_storage_integration_v1_file_changed_proto_msgTypes[0]
+	mi := &file_storage_integration_v1_file_changed_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -180,7 +236,7 @@ func (x *FileChangedV1) String() string {
 func (*FileChangedV1) ProtoMessage() {}
 
 func (x *FileChangedV1) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_integration_v1_file_changed_proto_msgTypes[0]
+	mi := &file_storage_integration_v1_file_changed_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -193,7 +249,7 @@ func (x *FileChangedV1) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FileChangedV1.ProtoReflect.Descriptor instead.
 func (*FileChangedV1) Descriptor() ([]byte, []int) {
-	return file_storage_integration_v1_file_changed_proto_rawDescGZIP(), []int{0}
+	return file_storage_integration_v1_file_changed_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *FileChangedV1) GetEventId() string {
@@ -210,18 +266,11 @@ func (x *FileChangedV1) GetOccurredAt() *timestamppb.Timestamp {
 	return nil
 }
 
-func (x *FileChangedV1) GetOwner() string {
+func (x *FileChangedV1) GetDirectory() *Directory {
 	if x != nil {
-		return x.Owner
+		return x.Directory
 	}
-	return ""
-}
-
-func (x *FileChangedV1) GetKind() FileKind {
-	if x != nil {
-		return x.Kind
-	}
-	return FileKind_FILE_KIND_UNSPECIFIED
+	return nil
 }
 
 func (x *FileChangedV1) GetName() string {
@@ -263,22 +312,24 @@ var File_storage_integration_v1_file_changed_proto protoreflect.FileDescriptor
 
 const file_storage_integration_v1_file_changed_proto_rawDesc = "" +
 	"\n" +
-	")storage/integration/v1/file_changed.proto\x12\x16storage.integration.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xf9\x02\n" +
+	")storage/integration/v1/file_changed.proto\x12\x16storage.integration.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"?\n" +
+	"\tOwnerFact\x12\x1c\n" +
+	"\tcondition\x18\x01 \x01(\tR\tcondition\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value\"X\n" +
+	"\tDirectory\x127\n" +
+	"\x05owner\x18\x01 \x03(\v2!.storage.integration.v1.OwnerFactR\x05owner\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\"\x87\x03\n" +
 	"\rFileChangedV1\x12\x19\n" +
 	"\bevent_id\x18\x01 \x01(\tR\aeventId\x12;\n" +
 	"\voccurred_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
-	"occurredAt\x12\x14\n" +
-	"\x05owner\x18\x03 \x01(\tR\x05owner\x124\n" +
-	"\x04kind\x18\x04 \x01(\x0e2 .storage.integration.v1.FileKindR\x04kind\x12\x12\n" +
+	"occurredAt\x12?\n" +
+	"\tdirectory\x18\n" +
+	" \x01(\v2!.storage.integration.v1.DirectoryR\tdirectory\x12\x12\n" +
 	"\x04name\x18\x05 \x01(\tR\x04name\x12#\n" +
 	"\rprevious_name\x18\x06 \x01(\tR\fpreviousName\x12C\n" +
 	"\toperation\x18\a \x01(\x0e2%.storage.integration.v1.FileOperationR\toperation\x12\"\n" +
 	"\ractor_user_id\x18\b \x01(\tR\vactorUserId\x12\"\n" +
-	"\ractor_work_id\x18\t \x01(\tR\vactorWorkId*W\n" +
-	"\bFileKind\x12\x19\n" +
-	"\x15FILE_KIND_UNSPECIFIED\x10\x00\x12\x18\n" +
-	"\x14FILE_KIND_ATTACHMENT\x10\x01\x12\x16\n" +
-	"\x12FILE_KIND_ARTIFACT\x10\x02*\xa0\x01\n" +
+	"\ractor_work_id\x18\t \x01(\tR\vactorWorkIdJ\x04\b\x03\x10\x04J\x04\b\x04\x10\x05R\x05ownerR\x04kind*\xa0\x01\n" +
 	"\rFileOperation\x12\x1e\n" +
 	"\x1aFILE_OPERATION_UNSPECIFIED\x10\x00\x12\x1a\n" +
 	"\x16FILE_OPERATION_CREATED\x10\x01\x12\x1b\n" +
@@ -298,23 +349,25 @@ func file_storage_integration_v1_file_changed_proto_rawDescGZIP() []byte {
 	return file_storage_integration_v1_file_changed_proto_rawDescData
 }
 
-var file_storage_integration_v1_file_changed_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_storage_integration_v1_file_changed_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_storage_integration_v1_file_changed_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_storage_integration_v1_file_changed_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_storage_integration_v1_file_changed_proto_goTypes = []any{
-	(FileKind)(0),                 // 0: storage.integration.v1.FileKind
-	(FileOperation)(0),            // 1: storage.integration.v1.FileOperation
-	(*FileChangedV1)(nil),         // 2: storage.integration.v1.FileChangedV1
-	(*timestamppb.Timestamp)(nil), // 3: google.protobuf.Timestamp
+	(FileOperation)(0),            // 0: storage.integration.v1.FileOperation
+	(*OwnerFact)(nil),             // 1: storage.integration.v1.OwnerFact
+	(*Directory)(nil),             // 2: storage.integration.v1.Directory
+	(*FileChangedV1)(nil),         // 3: storage.integration.v1.FileChangedV1
+	(*timestamppb.Timestamp)(nil), // 4: google.protobuf.Timestamp
 }
 var file_storage_integration_v1_file_changed_proto_depIdxs = []int32{
-	3, // 0: storage.integration.v1.FileChangedV1.occurred_at:type_name -> google.protobuf.Timestamp
-	0, // 1: storage.integration.v1.FileChangedV1.kind:type_name -> storage.integration.v1.FileKind
-	1, // 2: storage.integration.v1.FileChangedV1.operation:type_name -> storage.integration.v1.FileOperation
-	3, // [3:3] is the sub-list for method output_type
-	3, // [3:3] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	1, // 0: storage.integration.v1.Directory.owner:type_name -> storage.integration.v1.OwnerFact
+	4, // 1: storage.integration.v1.FileChangedV1.occurred_at:type_name -> google.protobuf.Timestamp
+	2, // 2: storage.integration.v1.FileChangedV1.directory:type_name -> storage.integration.v1.Directory
+	0, // 3: storage.integration.v1.FileChangedV1.operation:type_name -> storage.integration.v1.FileOperation
+	4, // [4:4] is the sub-list for method output_type
+	4, // [4:4] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_storage_integration_v1_file_changed_proto_init() }
@@ -327,8 +380,8 @@ func file_storage_integration_v1_file_changed_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_storage_integration_v1_file_changed_proto_rawDesc), len(file_storage_integration_v1_file_changed_proto_rawDesc)),
-			NumEnums:      2,
-			NumMessages:   1,
+			NumEnums:      1,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

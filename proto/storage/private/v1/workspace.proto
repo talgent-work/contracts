@@ -7,25 +7,32 @@ import "storage/private/v1/storage.proto";
 
 option go_package = "github.com/talgent-work/contracts/gen/go/storage/private/v1;storageprivatev1";
 
-// SandboxMountService is the Sandbox Mount Contract; only Agent calls it.
+// SandboxMountService is the Sandbox Mount, Workspace View Query and Work
+// Reclamation Intent Contracts; only Agent calls it.
 service SandboxMountService {
-  // AcquireMounts returns the Mount Grants of a Work's HOME, Session Workspace
-  // and input source, creating each on its first request.
+  // AcquireMounts opens each requested located Directory, completing its
+  // allocation, prepares the mount points named inside it with every parent
+  // owned by the sandbox user, and returns one Mount Grant per Directory in
+  // request order. A Mount Grant is issued, never held: there is no unmount.
+  // A reclaimed Directory refuses with DIRECTORY_RECLAIMED.
   rpc AcquireMounts(AcquireMountsRequest) returns (AcquireMountsResponse);
-  // GetWorkspaceView lists one directory of a Work's workspace as its sandbox
-  // sees it, Attachments included under inputs/ and each Reference Space's
-  // current content under the name its caller mounted it at.
+  // GetWorkspaceView lists one directory of a Work Directory as its sandbox
+  // sees it, with each Directory mounted inside it shown where Agent placed
+  // it.
   rpc GetWorkspaceView(GetWorkspaceViewRequest) returns (GetWorkspaceViewResponse);
-  // GetWorkspaceFilePreview tells how one workspace file outside inputs/ is
-  // shown, with a link for one inline read when bytes are shown. Workspace
-  // files have no Preview Copies.
+  // GetWorkspaceFilePreview tells how one workspace file is shown, with a
+  // link for one inline read when bytes are shown. Workspace files have no
+  // Preview Copies; a file Storage wrote into a mounted Directory is read as
+  // that file.
   rpc GetWorkspaceFilePreview(GetWorkspaceFilePreviewRequest) returns (GetWorkspaceFilePreviewResponse);
   // IssueWorkspaceFileLink issues a short-lived link to download one
-  // workspace file outside inputs/ under its own name.
+  // workspace file under its own name.
   rpc IssueWorkspaceFileLink(IssueWorkspaceFileLinkRequest) returns (IssueWorkspaceFileLinkResponse);
-  // RequestWorkspaceReclamation accepts the reclamation of a closed Work's
-  // workspace; Storage completes it on its own schedule.
-  rpc RequestWorkspaceReclamation(RequestWorkspaceReclamationRequest) returns (RequestWorkspaceReclamationResponse);
+  // RequestWorkReclamation accepts the reclamation of every Directory whose
+  // owner names a closed Work and whose lifetime is that Work's; Storage
+  // removes their content once publications copying from them finish.
+  // Repeating it changes nothing.
+  rpc RequestWorkReclamation(RequestWorkReclamationRequest) returns (RequestWorkReclamationResponse);
   // JudgeFilePreview tells how a workspace file Storage does not hold is
   // shown, judged from its name, size and leading bytes as a Session
   // Workspace file is, under Storage's preview limits. Storage keeps nothing
@@ -33,75 +40,66 @@ service SandboxMountService {
   rpc JudgeFilePreview(JudgeFilePreviewRequest) returns (JudgeFilePreviewResponse);
 }
 
-// AcquireMountsRequest names the spaces by business identity.
+// MountRequest is one located Directory a Work's sandbox mounts.
+message MountRequest {
+  // The Directory with the backend and lifetime of its first allocation.
+  LocatedDirectory directory = 1;
+  // True to mount it read-only; false read-write.
+  bool read_only = 2;
+  // Clean relative paths inside the Directory where Agent mounts other
+  // Directories; each is prepared, with every parent, owned by the sandbox
+  // user.
+  repeated string mount_points = 3;
+}
+
+// AcquireMountsRequest names the Directories of one Work's located layout.
 message AcquireMountsRequest {
-  // Owner of the HOME the Work uses, as its caller named it; opaque to
-  // Storage, which decides where each HOME lives. The same owner always
-  // reaches the same HOME.
-  string home_owner = 1;
-  // The Work.
-  string work_id = 2;
-  // Reference naming the Work's Session Workspace; empty for a Work that has
-  // none, such as a project-scoped definition's Agent.
-  string workspace_reference = 3;
-  // Opaque input source of the Work; empty when it has none.
-  string input_source = 4;
-  // Space Token supplied with the input source.
-  string space_token = 5;
-  // Reference Spaces the Work's sandbox mounts read-only, each opened on
-  // its first request.
-  repeated ReferenceMount reference_mounts = 6;
+  // The Work whose sandbox mounts them.
+  string work_id = 1;
+  // The Directories, each once.
+  repeated MountRequest mounts = 2;
 }
 
-// ReferenceMount is a Reference Space mounted read-only in a workspace at a
-// name its caller gives.
-message ReferenceMount {
-  // Directory under /workspace: one visible path element other than inputs.
-  string name = 1;
-  // Owner of the Reference Space.
-  string owner = 2;
-}
-
-// MountedReference is the grant of one Reference Space mount.
-message MountedReference {
-  // The mount's name under /workspace.
-  string name = 1;
-  // The Reference Space, read-only, following its current content.
-  MountGrant grant = 2;
-}
-
-// MountGrant is one space's location and access mode, opaque to the caller.
+// MountGrant is one Directory's location and access mode, opaque to the
+// caller.
 message MountGrant {
-  // Persistent volume claim holding the space.
+  // Persistent volume claim holding the Directory.
   string claim_name = 1;
-  // Path of the space within the claim.
+  // Path of the Directory within the claim.
   string sub_path = 2;
-  // True when the space is mounted read-only.
+  // True when the Directory is mounted read-only.
   bool read_only = 3;
 }
 
 // AcquireMountsResponse returns the grants.
 message AcquireMountsResponse {
-  // The HOME, read-write.
-  MountGrant home = 1;
-  // The Session Workspace, read-write; absent for a Work without one.
-  MountGrant workspace = 2;
-  // The input source's Attachments, read-only; absent without one.
-  MountGrant inputs = 3;
-  // The requested Reference Spaces, in request order.
-  repeated MountedReference references = 4;
+  // One grant per requested Directory, in request order.
+  repeated MountGrant grants = 1;
+}
+
+// MountedDirectory is a Directory mounted inside a Work Directory.
+message MountedDirectory {
+  // Clean relative path inside the Work Directory where it is mounted.
+  string path = 1;
+  // The mounted Directory.
+  Directory directory = 2;
+}
+
+// WorkspaceLayout is a Work Directory as its sandbox sees it: the Directory
+// and the Directories mounted inside it.
+message WorkspaceLayout {
+  // The Work Directory.
+  Directory workspace = 1;
+  // Directories mounted inside it, each at its own path.
+  repeated MountedDirectory mounts = 2;
 }
 
 // GetWorkspaceViewRequest names the workspace and the directory.
 message GetWorkspaceViewRequest {
-  // Reference naming the Work's Session Workspace.
-  string workspace_reference = 1;
-  // Opaque input source of the Work; empty when it has none.
-  string input_source = 2;
-  // Directory relative to /workspace; empty for its root.
-  string path = 3;
-  // Reference Spaces the Work's sandbox mounts.
-  repeated ReferenceMount reference_mounts = 4;
+  // The Work Directory and what is mounted in it.
+  WorkspaceLayout layout = 1;
+  // Directory relative to the Work Directory; empty for its root.
+  string path = 2;
 }
 
 // WorkspaceEntryKind is what a workspace entry is.
@@ -118,6 +116,8 @@ enum WorkspaceEntryKind {
 
 // WorkspaceEntry is one entry of a workspace directory.
 message WorkspaceEntry {
+  reserved 5;
+  reserved "attachment_name";
   // Name within the directory.
   string name = 1;
   // Size in bytes of a file.
@@ -126,9 +126,9 @@ message WorkspaceEntry {
   google.protobuf.Timestamp modified_at = 3;
   // What the entry is.
   WorkspaceEntryKind kind = 4;
-  // Under inputs/: the Attachment's name in the input source's File Space,
-  // read as that Attachment.
-  string attachment_name = 5;
+  // A file Storage wrote into a mounted Directory: its position, read and
+  // previewed as that file.
+  FilePosition position = 6;
 }
 
 // GetWorkspaceViewResponse lists the directory's first entries by name.
@@ -141,12 +141,10 @@ message GetWorkspaceViewResponse {
 
 // GetWorkspaceFilePreviewRequest names the workspace file.
 message GetWorkspaceFilePreviewRequest {
-  // Reference naming the Work's Session Workspace.
-  string workspace_reference = 1;
-  // File relative to /workspace, outside inputs/.
+  // The Work Directory and what is mounted in it.
+  WorkspaceLayout layout = 1;
+  // File relative to the Work Directory.
   string path = 2;
-  // Reference Spaces the Work's sandbox mounts.
-  repeated ReferenceMount reference_mounts = 3;
 }
 
 // GetWorkspaceFilePreviewResponse is the file's preview.
@@ -157,12 +155,10 @@ message GetWorkspaceFilePreviewResponse {
 
 // IssueWorkspaceFileLinkRequest names the workspace file.
 message IssueWorkspaceFileLinkRequest {
-  // Reference naming the Work's Session Workspace.
-  string workspace_reference = 1;
-  // File relative to /workspace, outside inputs/.
+  // The Work Directory and what is mounted in it.
+  WorkspaceLayout layout = 1;
+  // File relative to the Work Directory.
   string path = 2;
-  // Reference Spaces the Work's sandbox mounts.
-  repeated ReferenceMount reference_mounts = 3;
 }
 
 // IssueWorkspaceFileLinkResponse carries the download link.
@@ -173,16 +169,14 @@ message IssueWorkspaceFileLinkResponse {
   google.protobuf.Timestamp expires_at = 2;
 }
 
-// RequestWorkspaceReclamationRequest names the closed Work's workspace.
-message RequestWorkspaceReclamationRequest {
+// RequestWorkReclamationRequest names the closed Work.
+message RequestWorkReclamationRequest {
   // The closed Work.
   string work_id = 1;
-  // Reference naming its Session Workspace.
-  string workspace_reference = 2;
 }
 
-// RequestWorkspaceReclamationResponse confirms durable acceptance.
-message RequestWorkspaceReclamationResponse {}
+// RequestWorkReclamationResponse confirms durable acceptance.
+message RequestWorkReclamationResponse {}
 
 // JudgeFilePreviewRequest is what a workspace file Storage does not hold
 // shows of itself.

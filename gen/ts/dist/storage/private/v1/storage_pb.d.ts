@@ -12,6 +12,194 @@ import type { Timestamp } from "@bufbuild/protobuf/wkt";
 export declare const file_storage_private_v1_storage: GenFile;
 
 /**
+ * DirectoryLocator is the Directory Locator Contract: what a caller locates a
+ * Directory by. Applied to a caller's facts, with a value for each condition,
+ * it gives one DirectoryOwner and name; a caller lacking a value for a
+ * condition locates nothing and requests nothing.
+ *
+ * @generated from message storage.private.v1.DirectoryLocator
+ */
+export declare type DirectoryLocator = Message<"storage.private.v1.DirectoryLocator"> & {
+  /**
+   * Names of the facts the Directory follows, each once, such as "subject"
+   * or "work". Storage recognizes only "work"; every other name is the
+   * callers' shared vocabulary.
+   *
+   * @generated from field: repeated string conditions = 1;
+   */
+  conditions: string[];
+
+  /**
+   * Name of the Directory within its owner: one path element, never empty,
+   * never starting with "." and never containing "/", "\" or NUL.
+   *
+   * @generated from field: string name = 2;
+   */
+  name: string;
+
+  /**
+   * Backend it is allocated on.
+   *
+   * @generated from field: storage.private.v1.Backend backend = 3;
+   */
+  backend: Backend;
+
+  /**
+   * Lifetime it is allocated for.
+   *
+   * @generated from field: storage.private.v1.Lifetime lifetime = 4;
+   */
+  lifetime: Lifetime;
+};
+
+/**
+ * Describes the message storage.private.v1.DirectoryLocator.
+ * Use `create(DirectoryLocatorSchema)` to create a new message.
+ */
+export declare const DirectoryLocatorSchema: GenMessage<DirectoryLocator>;
+
+/**
+ * OwnerFact is one condition of a Locator with the caller's value for it.
+ *
+ * @generated from message storage.private.v1.OwnerFact
+ */
+export declare type OwnerFact = Message<"storage.private.v1.OwnerFact"> & {
+  /**
+   * The condition's name.
+   *
+   * @generated from field: string condition = 1;
+   */
+  condition: string;
+
+  /**
+   * The caller's value, opaque to Storage; for "work", the Work's identity.
+   *
+   * @generated from field: string value = 2;
+   */
+  value: string;
+};
+
+/**
+ * Describes the message storage.private.v1.OwnerFact.
+ * Use `create(OwnerFactSchema)` to create a new message.
+ */
+export declare const OwnerFactSchema: GenMessage<OwnerFact>;
+
+/**
+ * DirectoryOwner is a Locator's conditions with the caller's fact values,
+ * such as {subject: intent:123}. Storage keeps it as supplied, in condition
+ * order, and interprets only whether it names a Work.
+ *
+ * @generated from message storage.private.v1.DirectoryOwner
+ */
+export declare type DirectoryOwner = Message<"storage.private.v1.DirectoryOwner"> & {
+  /**
+   * Facts ordered by condition name, each condition once.
+   *
+   * @generated from field: repeated storage.private.v1.OwnerFact facts = 1;
+   */
+  facts: OwnerFact[];
+};
+
+/**
+ * Describes the message storage.private.v1.DirectoryOwner.
+ * Use `create(DirectoryOwnerSchema)` to create a new message.
+ */
+export declare const DirectoryOwnerSchema: GenMessage<DirectoryOwner>;
+
+/**
+ * Directory is the identity of one Directory: its owner and name.
+ *
+ * @generated from message storage.private.v1.Directory
+ */
+export declare type Directory = Message<"storage.private.v1.Directory"> & {
+  /**
+   * Owner.
+   *
+   * @generated from field: storage.private.v1.DirectoryOwner owner = 1;
+   */
+  owner?: DirectoryOwner;
+
+  /**
+   * Name within the owner.
+   *
+   * @generated from field: string name = 2;
+   */
+  name: string;
+};
+
+/**
+ * Describes the message storage.private.v1.Directory.
+ * Use `create(DirectorySchema)` to create a new message.
+ */
+export declare const DirectorySchema: GenMessage<Directory>;
+
+/**
+ * LocatedDirectory is what applying a Locator to a caller's facts gives:
+ * the Directory with the backend and lifetime its first allocation takes.
+ *
+ * @generated from message storage.private.v1.LocatedDirectory
+ */
+export declare type LocatedDirectory = Message<"storage.private.v1.LocatedDirectory"> & {
+  /**
+   * The Directory.
+   *
+   * @generated from field: storage.private.v1.Directory directory = 1;
+   */
+  directory?: Directory;
+
+  /**
+   * Backend; a later opening with another backend gets the existing
+   * Directory unchanged.
+   *
+   * @generated from field: storage.private.v1.Backend backend = 2;
+   */
+  backend: Backend;
+
+  /**
+   * Lifetime; a later opening with another lifetime gets the existing
+   * Directory unchanged.
+   *
+   * @generated from field: storage.private.v1.Lifetime lifetime = 3;
+   */
+  lifetime: Lifetime;
+};
+
+/**
+ * Describes the message storage.private.v1.LocatedDirectory.
+ * Use `create(LocatedDirectorySchema)` to create a new message.
+ */
+export declare const LocatedDirectorySchema: GenMessage<LocatedDirectory>;
+
+/**
+ * FilePosition is a file's identity: its Directory and its name, one path
+ * element directly in the Directory.
+ *
+ * @generated from message storage.private.v1.FilePosition
+ */
+export declare type FilePosition = Message<"storage.private.v1.FilePosition"> & {
+  /**
+   * The Directory.
+   *
+   * @generated from field: storage.private.v1.Directory directory = 1;
+   */
+  directory?: Directory;
+
+  /**
+   * File name.
+   *
+   * @generated from field: string name = 2;
+   */
+  name: string;
+};
+
+/**
+ * Describes the message storage.private.v1.FilePosition.
+ * Use `create(FilePositionSchema)` to create a new message.
+ */
+export declare const FilePositionSchema: GenMessage<FilePosition>;
+
+/**
  * ShareLink is one active Share Link to a file.
  *
  * @generated from message storage.private.v1.ShareLink
@@ -53,31 +241,18 @@ export declare type ShareLink = Message<"storage.private.v1.ShareLink"> & {
 export declare const ShareLinkSchema: GenMessage<ShareLink>;
 
 /**
- * File is one Attachment or Artifact at its File position.
+ * File is one Attachment or Artifact at its File position: an Attachment
+ * names its uploader, an Artifact the Work that published it.
  *
  * @generated from message storage.private.v1.File
  */
 export declare type File = Message<"storage.private.v1.File"> & {
   /**
-   * Owner of the File Space, as its caller named it.
+   * Position: Directory and name.
    *
-   * @generated from field: string owner = 1;
+   * @generated from field: storage.private.v1.FilePosition position = 1;
    */
-  owner: string;
-
-  /**
-   * Attachment or Artifact.
-   *
-   * @generated from field: storage.private.v1.FileKind kind = 2;
-   */
-  kind: FileKind;
-
-  /**
-   * File name, unique within its File Space and kind.
-   *
-   * @generated from field: string name = 3;
-   */
-  name: string;
+  position?: FilePosition;
 
   /**
    * Size in bytes.
@@ -129,65 +304,57 @@ export declare type File = Message<"storage.private.v1.File"> & {
 export declare const FileSchema: GenMessage<File>;
 
 /**
- * OpenFileSpaceRequest names the owner.
+ * OpenDirectoryRequest names the located Directory.
  *
- * @generated from message storage.private.v1.OpenFileSpaceRequest
+ * @generated from message storage.private.v1.OpenDirectoryRequest
  */
-export declare type OpenFileSpaceRequest = Message<"storage.private.v1.OpenFileSpaceRequest"> & {
+export declare type OpenDirectoryRequest = Message<"storage.private.v1.OpenDirectoryRequest"> & {
   /**
-   * Owner identity the caller names the space by: one path element, opaque
-   * to Storage.
+   * The Directory with the backend and lifetime of its first allocation.
    *
-   * @generated from field: string owner = 1;
+   * @generated from field: storage.private.v1.LocatedDirectory directory = 1;
    */
-  owner: string;
+  directory?: LocatedDirectory;
 };
 
 /**
- * Describes the message storage.private.v1.OpenFileSpaceRequest.
- * Use `create(OpenFileSpaceRequestSchema)` to create a new message.
+ * Describes the message storage.private.v1.OpenDirectoryRequest.
+ * Use `create(OpenDirectoryRequestSchema)` to create a new message.
  */
-export declare const OpenFileSpaceRequestSchema: GenMessage<OpenFileSpaceRequest>;
+export declare const OpenDirectoryRequestSchema: GenMessage<OpenDirectoryRequest>;
 
 /**
- * OpenFileSpaceResponse carries the space's credential and input source.
+ * OpenDirectoryResponse carries the Directory's credential.
  *
- * @generated from message storage.private.v1.OpenFileSpaceResponse
+ * @generated from message storage.private.v1.OpenDirectoryResponse
  */
-export declare type OpenFileSpaceResponse = Message<"storage.private.v1.OpenFileSpaceResponse"> & {
+export declare type OpenDirectoryResponse = Message<"storage.private.v1.OpenDirectoryResponse"> & {
   /**
-   * Credential every file write presents.
+   * Credential every file command and content replacement presents.
    *
    * @generated from field: string space_token = 1;
    */
   spaceToken: string;
-
-  /**
-   * Opaque reference to the space for a Work's input source.
-   *
-   * @generated from field: string input_source = 2;
-   */
-  inputSource: string;
 };
 
 /**
- * Describes the message storage.private.v1.OpenFileSpaceResponse.
- * Use `create(OpenFileSpaceResponseSchema)` to create a new message.
+ * Describes the message storage.private.v1.OpenDirectoryResponse.
+ * Use `create(OpenDirectoryResponseSchema)` to create a new message.
  */
-export declare const OpenFileSpaceResponseSchema: GenMessage<OpenFileSpaceResponse>;
+export declare const OpenDirectoryResponseSchema: GenMessage<OpenDirectoryResponse>;
 
 /**
- * ListFilesRequest names an owner.
+ * ListFilesRequest names a Directory.
  *
  * @generated from message storage.private.v1.ListFilesRequest
  */
 export declare type ListFilesRequest = Message<"storage.private.v1.ListFilesRequest"> & {
   /**
-   * Owner identity.
+   * The Directory.
    *
-   * @generated from field: string owner = 1;
+   * @generated from field: storage.private.v1.Directory directory = 1;
    */
-  owner: string;
+  directory?: Directory;
 };
 
 /**
@@ -197,13 +364,13 @@ export declare type ListFilesRequest = Message<"storage.private.v1.ListFilesRequ
 export declare const ListFilesRequestSchema: GenMessage<ListFilesRequest>;
 
 /**
- * ListFilesResponse lists the files, Attachments first, by name.
+ * ListFilesResponse lists the files by name.
  *
  * @generated from message storage.private.v1.ListFilesResponse
  */
 export declare type ListFilesResponse = Message<"storage.private.v1.ListFilesResponse"> & {
   /**
-   * Files of the owner's space.
+   * Files Storage wrote into the Directory.
    *
    * @generated from field: repeated storage.private.v1.File files = 1;
    */
@@ -217,175 +384,108 @@ export declare type ListFilesResponse = Message<"storage.private.v1.ListFilesRes
 export declare const ListFilesResponseSchema: GenMessage<ListFilesResponse>;
 
 /**
- * ListOwnerFilesRequest names the owners.
+ * ListDirectoryFilesRequest names the Directories.
  *
- * @generated from message storage.private.v1.ListOwnerFilesRequest
+ * @generated from message storage.private.v1.ListDirectoryFilesRequest
  */
-export declare type ListOwnerFilesRequest = Message<"storage.private.v1.ListOwnerFilesRequest"> & {
+export declare type ListDirectoryFilesRequest = Message<"storage.private.v1.ListDirectoryFilesRequest"> & {
   /**
-   * Owner identities; an owner whose space never opened has no files.
+   * Directories; one never opened has no files. At most 1000.
    *
-   * @generated from field: repeated string owners = 1;
+   * @generated from field: repeated storage.private.v1.Directory directories = 1;
    */
-  owners: string[];
+  directories: Directory[];
 };
 
 /**
- * Describes the message storage.private.v1.ListOwnerFilesRequest.
- * Use `create(ListOwnerFilesRequestSchema)` to create a new message.
+ * Describes the message storage.private.v1.ListDirectoryFilesRequest.
+ * Use `create(ListDirectoryFilesRequestSchema)` to create a new message.
  */
-export declare const ListOwnerFilesRequestSchema: GenMessage<ListOwnerFilesRequest>;
+export declare const ListDirectoryFilesRequestSchema: GenMessage<ListDirectoryFilesRequest>;
 
 /**
- * ListOwnerFilesResponse lists the owners' files, each with its owner, by
- * owner as requested, then Attachments first, by name. Share Links are not
- * included.
+ * ListDirectoryFilesResponse lists the Directories' files, by Directory as
+ * requested, then by name. Share Links are not included.
  *
- * @generated from message storage.private.v1.ListOwnerFilesResponse
+ * @generated from message storage.private.v1.ListDirectoryFilesResponse
  */
-export declare type ListOwnerFilesResponse = Message<"storage.private.v1.ListOwnerFilesResponse"> & {
+export declare type ListDirectoryFilesResponse = Message<"storage.private.v1.ListDirectoryFilesResponse"> & {
   /**
-   * Files of the owners' spaces.
+   * Files of the Directories.
    *
    * @generated from field: repeated storage.private.v1.File files = 1;
    */
   files: File[];
+
+  /**
+   * The requested Directories that were reclaimed, as requested; they list
+   * no files, unlike one never opened, which is simply absent.
+   *
+   * @generated from field: repeated storage.private.v1.Directory reclaimed = 2;
+   */
+  reclaimed: Directory[];
 };
 
 /**
- * Describes the message storage.private.v1.ListOwnerFilesResponse.
- * Use `create(ListOwnerFilesResponseSchema)` to create a new message.
+ * Describes the message storage.private.v1.ListDirectoryFilesResponse.
+ * Use `create(ListDirectoryFilesResponseSchema)` to create a new message.
  */
-export declare const ListOwnerFilesResponseSchema: GenMessage<ListOwnerFilesResponse>;
+export declare const ListDirectoryFilesResponseSchema: GenMessage<ListDirectoryFilesResponse>;
 
 /**
- * ResolveInputSourcesRequest names input sources Storage issued.
+ * IssueUploadRequest describes the intended write.
  *
- * @generated from message storage.private.v1.ResolveInputSourcesRequest
+ * @generated from message storage.private.v1.IssueUploadRequest
  */
-export declare type ResolveInputSourcesRequest = Message<"storage.private.v1.ResolveInputSourcesRequest"> & {
+export declare type IssueUploadRequest = Message<"storage.private.v1.IssueUploadRequest"> & {
   /**
-   * Input sources, at most 1000.
+   * Where the file is written.
    *
-   * @generated from field: repeated string input_sources = 1;
+   * @generated from field: storage.private.v1.FilePosition position = 1;
    */
-  inputSources: string[];
-};
-
-/**
- * Describes the message storage.private.v1.ResolveInputSourcesRequest.
- * Use `create(ResolveInputSourcesRequestSchema)` to create a new message.
- */
-export declare const ResolveInputSourcesRequestSchema: GenMessage<ResolveInputSourcesRequest>;
-
-/**
- * ResolvedInputSource is one input source's File Space owner.
- *
- * @generated from message storage.private.v1.ResolvedInputSource
- */
-export declare type ResolvedInputSource = Message<"storage.private.v1.ResolvedInputSource"> & {
-  /**
-   * The input source as requested.
-   *
-   * @generated from field: string input_source = 1;
-   */
-  inputSource: string;
+  position?: FilePosition;
 
   /**
-   * Owner of the File Space it opens; empty when unknown.
-   *
-   * @generated from field: string owner = 2;
-   */
-  owner: string;
-};
-
-/**
- * Describes the message storage.private.v1.ResolvedInputSource.
- * Use `create(ResolvedInputSourceSchema)` to create a new message.
- */
-export declare const ResolvedInputSourceSchema: GenMessage<ResolvedInputSource>;
-
-/**
- * ResolveInputSourcesResponse answers each requested input source, in order.
- *
- * @generated from message storage.private.v1.ResolveInputSourcesResponse
- */
-export declare type ResolveInputSourcesResponse = Message<"storage.private.v1.ResolveInputSourcesResponse"> & {
-  /**
-   * Resolutions.
-   *
-   * @generated from field: repeated storage.private.v1.ResolvedInputSource input_sources = 1;
-   */
-  inputSources: ResolvedInputSource[];
-};
-
-/**
- * Describes the message storage.private.v1.ResolveInputSourcesResponse.
- * Use `create(ResolveInputSourcesResponseSchema)` to create a new message.
- */
-export declare const ResolveInputSourcesResponseSchema: GenMessage<ResolveInputSourcesResponse>;
-
-/**
- * IssueAttachmentUploadRequest describes the intended write.
- *
- * @generated from message storage.private.v1.IssueAttachmentUploadRequest
- */
-export declare type IssueAttachmentUploadRequest = Message<"storage.private.v1.IssueAttachmentUploadRequest"> & {
-  /**
-   * Owner identity.
-   *
-   * @generated from field: string owner = 1;
-   */
-  owner: string;
-
-  /**
-   * The space's credential.
+   * The Directory's credential.
    *
    * @generated from field: string space_token = 2;
    */
   spaceToken: string;
 
   /**
-   * Attachment name.
+   * True to replace the file at the position; false to create a new one.
    *
-   * @generated from field: string name = 3;
-   */
-  name: string;
-
-  /**
-   * True to replace the Attachment at name; false to create a new one.
-   *
-   * @generated from field: bool replace = 4;
+   * @generated from field: bool replace = 3;
    */
   replace: boolean;
 
   /**
-   * Human the upload is attributed to.
+   * Person the upload is attributed to.
    *
-   * @generated from field: string uploader_user_id = 5;
+   * @generated from field: string uploader_user_id = 4;
    */
   uploaderUserId: string;
 
   /**
    * Declared media type, kept with the file.
    *
-   * @generated from field: string content_type = 6;
+   * @generated from field: string content_type = 5;
    */
   contentType: string;
 };
 
 /**
- * Describes the message storage.private.v1.IssueAttachmentUploadRequest.
- * Use `create(IssueAttachmentUploadRequestSchema)` to create a new message.
+ * Describes the message storage.private.v1.IssueUploadRequest.
+ * Use `create(IssueUploadRequestSchema)` to create a new message.
  */
-export declare const IssueAttachmentUploadRequestSchema: GenMessage<IssueAttachmentUploadRequest>;
+export declare const IssueUploadRequestSchema: GenMessage<IssueUploadRequest>;
 
 /**
- * IssueAttachmentUploadResponse carries the upload link.
+ * IssueUploadResponse carries the upload link.
  *
- * @generated from message storage.private.v1.IssueAttachmentUploadResponse
+ * @generated from message storage.private.v1.IssueUploadResponse
  */
-export declare type IssueAttachmentUploadResponse = Message<"storage.private.v1.IssueAttachmentUploadResponse"> & {
+export declare type IssueUploadResponse = Message<"storage.private.v1.IssueUploadResponse"> & {
   /**
    * URL to PUT the content to.
    *
@@ -402,67 +502,60 @@ export declare type IssueAttachmentUploadResponse = Message<"storage.private.v1.
 };
 
 /**
- * Describes the message storage.private.v1.IssueAttachmentUploadResponse.
- * Use `create(IssueAttachmentUploadResponseSchema)` to create a new message.
+ * Describes the message storage.private.v1.IssueUploadResponse.
+ * Use `create(IssueUploadResponseSchema)` to create a new message.
  */
-export declare const IssueAttachmentUploadResponseSchema: GenMessage<IssueAttachmentUploadResponse>;
+export declare const IssueUploadResponseSchema: GenMessage<IssueUploadResponse>;
 
 /**
- * RenameAttachmentRequest names the Attachment and its new name.
+ * RenameFileRequest names the file and its new name.
  *
- * @generated from message storage.private.v1.RenameAttachmentRequest
+ * @generated from message storage.private.v1.RenameFileRequest
  */
-export declare type RenameAttachmentRequest = Message<"storage.private.v1.RenameAttachmentRequest"> & {
+export declare type RenameFileRequest = Message<"storage.private.v1.RenameFileRequest"> & {
   /**
-   * Owner identity.
+   * The file.
    *
-   * @generated from field: string owner = 1;
+   * @generated from field: storage.private.v1.FilePosition position = 1;
    */
-  owner: string;
+  position?: FilePosition;
 
   /**
-   * The space's credential.
+   * The Directory's credential.
    *
    * @generated from field: string space_token = 2;
    */
   spaceToken: string;
 
   /**
-   * Current name.
+   * New name in the same Directory; it must be free.
    *
-   * @generated from field: string name = 3;
-   */
-  name: string;
-
-  /**
-   * New name; it must be free.
-   *
-   * @generated from field: string new_name = 4;
+   * @generated from field: string new_name = 3;
    */
   newName: string;
 
   /**
    * The person renaming it, admitted by the owner's context.
    *
-   * @generated from field: string actor_user_id = 5;
+   * @generated from field: string actor_user_id = 4;
    */
   actorUserId: string;
 };
 
 /**
- * Describes the message storage.private.v1.RenameAttachmentRequest.
- * Use `create(RenameAttachmentRequestSchema)` to create a new message.
+ * Describes the message storage.private.v1.RenameFileRequest.
+ * Use `create(RenameFileRequestSchema)` to create a new message.
  */
-export declare const RenameAttachmentRequestSchema: GenMessage<RenameAttachmentRequest>;
+export declare const RenameFileRequestSchema: GenMessage<RenameFileRequest>;
 
 /**
- * RenameAttachmentResponse returns the renamed Attachment.
+ * RenameFileResponse returns the renamed file.
  *
- * @generated from message storage.private.v1.RenameAttachmentResponse
+ * @generated from message storage.private.v1.RenameFileResponse
  */
-export declare type RenameAttachmentResponse = Message<"storage.private.v1.RenameAttachmentResponse"> & {
+export declare type RenameFileResponse = Message<"storage.private.v1.RenameFileResponse"> & {
   /**
-   * The Attachment at its new position.
+   * The file at its new position.
    *
    * @generated from field: storage.private.v1.File file = 1;
    */
@@ -470,10 +563,10 @@ export declare type RenameAttachmentResponse = Message<"storage.private.v1.Renam
 };
 
 /**
- * Describes the message storage.private.v1.RenameAttachmentResponse.
- * Use `create(RenameAttachmentResponseSchema)` to create a new message.
+ * Describes the message storage.private.v1.RenameFileResponse.
+ * Use `create(RenameFileResponseSchema)` to create a new message.
  */
-export declare const RenameAttachmentResponseSchema: GenMessage<RenameAttachmentResponse>;
+export declare const RenameFileResponseSchema: GenMessage<RenameFileResponse>;
 
 /**
  * DeleteFileRequest names the file.
@@ -482,37 +575,23 @@ export declare const RenameAttachmentResponseSchema: GenMessage<RenameAttachment
  */
 export declare type DeleteFileRequest = Message<"storage.private.v1.DeleteFileRequest"> & {
   /**
-   * Owner identity.
+   * The file.
    *
-   * @generated from field: string owner = 1;
+   * @generated from field: storage.private.v1.FilePosition position = 1;
    */
-  owner: string;
+  position?: FilePosition;
 
   /**
-   * The space's credential.
+   * The Directory's credential.
    *
    * @generated from field: string space_token = 2;
    */
   spaceToken: string;
 
   /**
-   * Attachment or Artifact.
-   *
-   * @generated from field: storage.private.v1.FileKind kind = 3;
-   */
-  kind: FileKind;
-
-  /**
-   * File name.
-   *
-   * @generated from field: string name = 4;
-   */
-  name: string;
-
-  /**
    * The person deleting it, admitted by the owner's context.
    *
-   * @generated from field: string actor_user_id = 5;
+   * @generated from field: string actor_user_id = 3;
    */
   actorUserId: string;
 };
@@ -544,30 +623,16 @@ export declare const DeleteFileResponseSchema: GenMessage<DeleteFileResponse>;
  */
 export declare type IssueAccessLinkRequest = Message<"storage.private.v1.IssueAccessLinkRequest"> & {
   /**
-   * Owner identity.
+   * The file.
    *
-   * @generated from field: string owner = 1;
+   * @generated from field: storage.private.v1.FilePosition position = 1;
    */
-  owner: string;
-
-  /**
-   * Attachment or Artifact.
-   *
-   * @generated from field: storage.private.v1.FileKind kind = 2;
-   */
-  kind: FileKind;
-
-  /**
-   * File name.
-   *
-   * @generated from field: string name = 3;
-   */
-  name: string;
+  position?: FilePosition;
 
   /**
    * How the link presents the file.
    *
-   * @generated from field: storage.private.v1.AccessDisposition disposition = 4;
+   * @generated from field: storage.private.v1.AccessDisposition disposition = 2;
    */
   disposition: AccessDisposition;
 };
@@ -620,25 +685,11 @@ export declare const IssueAccessLinkResponseSchema: GenMessage<IssueAccessLinkRe
  */
 export declare type GetFilePreviewRequest = Message<"storage.private.v1.GetFilePreviewRequest"> & {
   /**
-   * Owner identity.
+   * The file.
    *
-   * @generated from field: string owner = 1;
+   * @generated from field: storage.private.v1.FilePosition position = 1;
    */
-  owner: string;
-
-  /**
-   * Attachment or Artifact.
-   *
-   * @generated from field: storage.private.v1.FileKind kind = 2;
-   */
-  kind: FileKind;
-
-  /**
-   * File name.
-   *
-   * @generated from field: string name = 3;
-   */
-  name: string;
+  position?: FilePosition;
 };
 
 /**
@@ -674,25 +725,11 @@ export declare const GetFilePreviewResponseSchema: GenMessage<GetFilePreviewResp
  */
 export declare type RequestFilePreviewRequest = Message<"storage.private.v1.RequestFilePreviewRequest"> & {
   /**
-   * Owner identity.
+   * The file.
    *
-   * @generated from field: string owner = 1;
+   * @generated from field: storage.private.v1.FilePosition position = 1;
    */
-  owner: string;
-
-  /**
-   * Attachment or Artifact.
-   *
-   * @generated from field: storage.private.v1.FileKind kind = 2;
-   */
-  kind: FileKind;
-
-  /**
-   * File name.
-   *
-   * @generated from field: string name = 3;
-   */
-  name: string;
+  position?: FilePosition;
 };
 
 /**
@@ -720,6 +757,130 @@ export declare type RequestFilePreviewResponse = Message<"storage.private.v1.Req
  * Use `create(RequestFilePreviewResponseSchema)` to create a new message.
  */
 export declare const RequestFilePreviewResponseSchema: GenMessage<RequestFilePreviewResponse>;
+
+/**
+ * ContentFile is one file of a Directory's whole content.
+ *
+ * @generated from message storage.private.v1.ContentFile
+ */
+export declare type ContentFile = Message<"storage.private.v1.ContentFile"> & {
+  /**
+   * Clean relative path within the content, such as "pages/payments.md";
+   * any other path is refused as invalid. A path whose first element is
+   * hidden is kept for the writer and left out of a mounted listing.
+   *
+   * @generated from field: string path = 1;
+   */
+  path: string;
+
+  /**
+   * File content.
+   *
+   * @generated from field: bytes content = 2;
+   */
+  content: Uint8Array;
+};
+
+/**
+ * Describes the message storage.private.v1.ContentFile.
+ * Use `create(ContentFileSchema)` to create a new message.
+ */
+export declare const ContentFileSchema: GenMessage<ContentFile>;
+
+/**
+ * ReplaceContentRequest is a Directory's whole new content.
+ *
+ * @generated from message storage.private.v1.ReplaceContentRequest
+ */
+export declare type ReplaceContentRequest = Message<"storage.private.v1.ReplaceContentRequest"> & {
+  /**
+   * The Directory.
+   *
+   * @generated from field: storage.private.v1.Directory directory = 1;
+   */
+  directory?: Directory;
+
+  /**
+   * The Directory's credential.
+   *
+   * @generated from field: string space_token = 2;
+   */
+  spaceToken: string;
+
+  /**
+   * Every file of the new content.
+   *
+   * @generated from field: repeated storage.private.v1.ContentFile files = 3;
+   */
+  files: ContentFile[];
+};
+
+/**
+ * Describes the message storage.private.v1.ReplaceContentRequest.
+ * Use `create(ReplaceContentRequestSchema)` to create a new message.
+ */
+export declare const ReplaceContentRequestSchema: GenMessage<ReplaceContentRequest>;
+
+/**
+ * ReplaceContentResponse acknowledges the replacement.
+ *
+ * @generated from message storage.private.v1.ReplaceContentResponse
+ */
+export declare type ReplaceContentResponse = Message<"storage.private.v1.ReplaceContentResponse"> & {
+};
+
+/**
+ * Describes the message storage.private.v1.ReplaceContentResponse.
+ * Use `create(ReplaceContentResponseSchema)` to create a new message.
+ */
+export declare const ReplaceContentResponseSchema: GenMessage<ReplaceContentResponse>;
+
+/**
+ * ReadContentRequest names the Directory and the files wanted.
+ *
+ * @generated from message storage.private.v1.ReadContentRequest
+ */
+export declare type ReadContentRequest = Message<"storage.private.v1.ReadContentRequest"> & {
+  /**
+   * The Directory.
+   *
+   * @generated from field: storage.private.v1.Directory directory = 1;
+   */
+  directory?: Directory;
+
+  /**
+   * Paths to read; empty reads every file.
+   *
+   * @generated from field: repeated string paths = 2;
+   */
+  paths: string[];
+};
+
+/**
+ * Describes the message storage.private.v1.ReadContentRequest.
+ * Use `create(ReadContentRequestSchema)` to create a new message.
+ */
+export declare const ReadContentRequestSchema: GenMessage<ReadContentRequest>;
+
+/**
+ * ReadContentResponse is the files found among those asked for.
+ *
+ * @generated from message storage.private.v1.ReadContentResponse
+ */
+export declare type ReadContentResponse = Message<"storage.private.v1.ReadContentResponse"> & {
+  /**
+   * The files of the current content.
+   *
+   * @generated from field: repeated storage.private.v1.ContentFile files = 1;
+   */
+  files: ContentFile[];
+};
+
+/**
+ * Describes the message storage.private.v1.ReadContentResponse.
+ * Use `create(ReadContentResponseSchema)` to create a new message.
+ */
+export declare const ReadContentResponseSchema: GenMessage<ReadContentResponse>;
 
 /**
  * FilePreview is how one file is shown.
@@ -797,30 +958,16 @@ export declare const FilePreviewSchema: GenMessage<FilePreview>;
  */
 export declare type CreateShareLinkRequest = Message<"storage.private.v1.CreateShareLinkRequest"> & {
   /**
-   * Owner identity.
+   * The file.
    *
-   * @generated from field: string owner = 1;
+   * @generated from field: storage.private.v1.FilePosition position = 1;
    */
-  owner: string;
-
-  /**
-   * Attachment or Artifact.
-   *
-   * @generated from field: storage.private.v1.FileKind kind = 2;
-   */
-  kind: FileKind;
-
-  /**
-   * File name.
-   *
-   * @generated from field: string name = 3;
-   */
-  name: string;
+  position?: FilePosition;
 
   /**
    * The person sharing it.
    *
-   * @generated from field: string created_by_user_id = 4;
+   * @generated from field: string created_by_user_id = 2;
    */
   createdByUserId: string;
 };
@@ -858,30 +1005,16 @@ export declare const CreateShareLinkResponseSchema: GenMessage<CreateShareLinkRe
  */
 export declare type RevokeShareLinksRequest = Message<"storage.private.v1.RevokeShareLinksRequest"> & {
   /**
-   * Owner identity.
+   * The file.
    *
-   * @generated from field: string owner = 1;
+   * @generated from field: storage.private.v1.FilePosition position = 1;
    */
-  owner: string;
-
-  /**
-   * Attachment or Artifact.
-   *
-   * @generated from field: storage.private.v1.FileKind kind = 2;
-   */
-  kind: FileKind;
-
-  /**
-   * File name.
-   *
-   * @generated from field: string name = 3;
-   */
-  name: string;
+  position?: FilePosition;
 
   /**
    * Only the links this person created end; empty ends every link.
    *
-   * @generated from field: string created_by_user_id = 4;
+   * @generated from field: string created_by_user_id = 2;
    */
   createdByUserId: string;
 };
@@ -955,8 +1088,8 @@ export declare type CreateArtifactRequest = Message<"storage.private.v1.CreateAr
   name: string;
 
   /**
-   * File path relative to /workspace, outside inputs/ and Reference Space
-   * mounts.
+   * File path relative to the Session Workspace, outside every Directory
+   * mounted in it.
    *
    * @generated from field: string path = 2;
    */
@@ -1013,8 +1146,8 @@ export declare type ReplaceArtifactRequest = Message<"storage.private.v1.Replace
   name: string;
 
   /**
-   * File path relative to /workspace, outside inputs/ and Reference Space
-   * mounts.
+   * File path relative to the Session Workspace, outside every Directory
+   * mounted in it.
    *
    * @generated from field: string path = 2;
    */
@@ -1119,14 +1252,15 @@ export enum ErrorReason {
   SOURCE_NOT_FOUND = 2,
 
   /**
-   * The source is not one regular workspace file outside inputs/.
+   * The source is not one regular Session Workspace file outside every
+   * Directory mounted in it.
    *
    * @generated from enum value: ERROR_REASON_INVALID_SOURCE = 3;
    */
   INVALID_SOURCE = 3,
 
   /**
-   * The name is not one file name, or the kind is not a file kind.
+   * The name is not one file name.
    *
    * @generated from enum value: ERROR_REASON_INVALID_NAME = 4;
    */
@@ -1154,25 +1288,42 @@ export enum ErrorReason {
   NAME_TAKEN = 7,
 
   /**
-   * The owner's File Space was never opened, or the Space Token names none.
+   * The Directory was never opened, or the Space Token names none.
    *
-   * @generated from enum value: ERROR_REASON_SPACE_NOT_OPEN = 8;
+   * @generated from enum value: ERROR_REASON_DIRECTORY_NOT_OPEN = 8;
    */
-  SPACE_NOT_OPEN = 8,
+  DIRECTORY_NOT_OPEN = 8,
 
   /**
-   * The Work's workspace was never created.
+   * The Directory's space does not exist yet: its allocation has not
+   * completed.
    *
-   * @generated from enum value: ERROR_REASON_WORKSPACE_NOT_CREATED = 9;
+   * @generated from enum value: ERROR_REASON_DIRECTORY_NOT_ALLOCATED = 9;
    */
-  WORKSPACE_NOT_CREATED = 9,
+  DIRECTORY_NOT_ALLOCATED = 9,
 
   /**
-   * The Work's workspace was reclaimed.
+   * The Directory was reclaimed: it is never mounted, written or recreated.
    *
-   * @generated from enum value: ERROR_REASON_WORKSPACE_RECLAIMED = 10;
+   * @generated from enum value: ERROR_REASON_DIRECTORY_RECLAIMED = 10;
    */
-  WORKSPACE_RECLAIMED = 10,
+  DIRECTORY_RECLAIMED = 10,
+
+  /**
+   * The Locator is invalid: a lifetime of its Work without the work
+   * condition, an owner fact repeated, or a name that is not one path
+   * element.
+   *
+   * @generated from enum value: ERROR_REASON_INVALID_LOCATOR = 11;
+   */
+  INVALID_LOCATOR = 11,
+
+  /**
+   * A permanent Directory refuses reclamation.
+   *
+   * @generated from enum value: ERROR_REASON_PERMANENT_DIRECTORY = 12;
+   */
+  PERMANENT_DIRECTORY = 12,
 }
 
 /**
@@ -1181,37 +1332,70 @@ export enum ErrorReason {
 export declare const ErrorReasonSchema: GenEnum<ErrorReason>;
 
 /**
- * FileKind is the kind of a File position.
+ * Backend is where a Directory's files live, fixed at its first allocation.
  *
- * @generated from enum storage.private.v1.FileKind
+ * @generated from enum storage.private.v1.Backend
  */
-export enum FileKind {
+export enum Backend {
   /**
-   * FILE_KIND_UNSPECIFIED value.
+   * BACKEND_UNSPECIFIED value.
    *
-   * @generated from enum value: FILE_KIND_UNSPECIFIED = 0;
+   * @generated from enum value: BACKEND_UNSPECIFIED = 0;
    */
   UNSPECIFIED = 0,
 
   /**
-   * An input file of the space's owner.
+   * The NAS, for Directories a Harness writes through mounts.
    *
-   * @generated from enum value: FILE_KIND_ATTACHMENT = 1;
+   * @generated from enum value: BACKEND_NAS = 1;
    */
-  ATTACHMENT = 1,
+  NAS = 1,
 
   /**
-   * An output a Work Agent published.
+   * JuiceFS, for Directories Storage writes and keeps as originals.
    *
-   * @generated from enum value: FILE_KIND_ARTIFACT = 2;
+   * @generated from enum value: BACKEND_JUICEFS = 2;
    */
-  ARTIFACT = 2,
+  JUICEFS = 2,
 }
 
 /**
- * Describes the enum storage.private.v1.FileKind.
+ * Describes the enum storage.private.v1.Backend.
  */
-export declare const FileKindSchema: GenEnum<FileKind>;
+export declare const BackendSchema: GenEnum<Backend>;
+
+/**
+ * Lifetime is how long a Directory is kept, fixed at its first allocation.
+ *
+ * @generated from enum storage.private.v1.Lifetime
+ */
+export enum Lifetime {
+  /**
+   * LIFETIME_UNSPECIFIED value.
+   *
+   * @generated from enum value: LIFETIME_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Reclaimed with the Work its owner names; its owner must name a Work.
+   *
+   * @generated from enum value: LIFETIME_WORK = 1;
+   */
+  WORK = 1,
+
+  /**
+   * Kept permanently; never reclaimed.
+   *
+   * @generated from enum value: LIFETIME_PERMANENT = 2;
+   */
+  PERMANENT = 2,
+}
+
+/**
+ * Describes the enum storage.private.v1.Lifetime.
+ */
+export declare const LifetimeSchema: GenEnum<Lifetime>;
 
 /**
  * AccessDisposition says how an Access Link presents the file.
@@ -1409,30 +1593,34 @@ export enum PreviewRefusal {
 export declare const PreviewRefusalSchema: GenEnum<PreviewRefusal>;
 
 /**
- * FileSpaceService is the File Space Contract. A caller names
- * each File Space by an owner identity Storage keeps opaque, and decides who
- * may read, write or share before calling; Storage checks only the Space
- * Token on writes.
+ * DirectoryService is the File Space Command and Query Contracts and the
+ * Reference Space Command and Query Contracts over Storage's one kind of
+ * space, the Directory. A caller locates each Directory by applying a
+ * DirectoryLocator to its own facts and decides who may read, write or share
+ * before calling; Storage checks only the Space Token on writes.
  *
- * @generated from service storage.private.v1.FileSpaceService
+ * @generated from service storage.private.v1.DirectoryService
  */
-export declare const FileSpaceService: GenService<{
+export declare const DirectoryService: GenService<{
   /**
-   * OpenFileSpace opens an owner's space on its first need; repeating it
-   * returns the same Space Token and input source.
+   * OpenDirectory opens a located Directory on its first need, allocating it
+   * on its backend for its lifetime; repeating it returns the same Space
+   * Token and completes an allocation that failed half-way. The first
+   * opening fixes backend and lifetime. A reclaimed Directory refuses with
+   * DIRECTORY_RECLAIMED.
    *
-   * @generated from rpc storage.private.v1.FileSpaceService.OpenFileSpace
+   * @generated from rpc storage.private.v1.DirectoryService.OpenDirectory
    */
-  openFileSpace: {
+  openDirectory: {
     methodKind: "unary";
-    input: typeof OpenFileSpaceRequestSchema;
-    output: typeof OpenFileSpaceResponseSchema;
+    input: typeof OpenDirectoryRequestSchema;
+    output: typeof OpenDirectoryResponseSchema;
   },
   /**
-   * ListFiles lists an owner's Attachments and Artifacts with their active
-   * Share Links; an unopened space lists nothing.
+   * ListFiles lists the files Storage wrote into one Directory with their
+   * active Share Links; an unopened Directory lists nothing.
    *
-   * @generated from rpc storage.private.v1.FileSpaceService.ListFiles
+   * @generated from rpc storage.private.v1.DirectoryService.ListFiles
    */
   listFiles: {
     methodKind: "unary";
@@ -1440,55 +1628,44 @@ export declare const FileSpaceService: GenService<{
     output: typeof ListFilesResponseSchema;
   },
   /**
-   * ListOwnerFiles is the Owner File Query: the files in the File Spaces of
-   * the given owners. The caller names only owners whose files it has
-   * authorized its reader to see.
+   * ListDirectoryFiles is the Directory file query: the files Storage wrote
+   * into the given Directories. The caller names only Directories whose files
+   * it has authorized its reader to see.
    *
-   * @generated from rpc storage.private.v1.FileSpaceService.ListOwnerFiles
+   * @generated from rpc storage.private.v1.DirectoryService.ListDirectoryFiles
    */
-  listOwnerFiles: {
+  listDirectoryFiles: {
     methodKind: "unary";
-    input: typeof ListOwnerFilesRequestSchema;
-    output: typeof ListOwnerFilesResponseSchema;
+    input: typeof ListDirectoryFilesRequestSchema;
+    output: typeof ListDirectoryFilesResponseSchema;
   },
   /**
-   * ResolveInputSources names the owner of the File Space each input source
-   * Storage issued opens, so a caller holding only input sources can name
-   * their spaces by owner; a source that names no File Space is unknown.
+   * IssueUpload issues the link through which one file is created or
+   * replaced by a person. Create refuses a taken name; Replace refuses a
+   * free one.
    *
-   * @generated from rpc storage.private.v1.FileSpaceService.ResolveInputSources
+   * @generated from rpc storage.private.v1.DirectoryService.IssueUpload
    */
-  resolveInputSources: {
+  issueUpload: {
     methodKind: "unary";
-    input: typeof ResolveInputSourcesRequestSchema;
-    output: typeof ResolveInputSourcesResponseSchema;
+    input: typeof IssueUploadRequestSchema;
+    output: typeof IssueUploadResponseSchema;
   },
   /**
-   * IssueAttachmentUpload issues the link through which one Attachment is
-   * created or replaced. Create refuses a taken name; Replace refuses a free one.
+   * RenameFile moves a file and its Share Links to a free name.
    *
-   * @generated from rpc storage.private.v1.FileSpaceService.IssueAttachmentUpload
+   * @generated from rpc storage.private.v1.DirectoryService.RenameFile
    */
-  issueAttachmentUpload: {
+  renameFile: {
     methodKind: "unary";
-    input: typeof IssueAttachmentUploadRequestSchema;
-    output: typeof IssueAttachmentUploadResponseSchema;
+    input: typeof RenameFileRequestSchema;
+    output: typeof RenameFileResponseSchema;
   },
   /**
-   * RenameAttachment moves an Attachment and its Share Links to a free name.
+   * DeleteFile deletes a file and revokes its Share Links; deleting an absent
+   * file succeeds.
    *
-   * @generated from rpc storage.private.v1.FileSpaceService.RenameAttachment
-   */
-  renameAttachment: {
-    methodKind: "unary";
-    input: typeof RenameAttachmentRequestSchema;
-    output: typeof RenameAttachmentResponseSchema;
-  },
-  /**
-   * DeleteFile deletes an Attachment or an Artifact and revokes its Share
-   * Links; deleting an absent file succeeds.
-   *
-   * @generated from rpc storage.private.v1.FileSpaceService.DeleteFile
+   * @generated from rpc storage.private.v1.DirectoryService.DeleteFile
    */
   deleteFile: {
     methodKind: "unary";
@@ -1498,7 +1675,7 @@ export declare const FileSpaceService: GenService<{
   /**
    * IssueAccessLink issues a short-lived link for one read of a file.
    *
-   * @generated from rpc storage.private.v1.FileSpaceService.IssueAccessLink
+   * @generated from rpc storage.private.v1.DirectoryService.IssueAccessLink
    */
   issueAccessLink: {
     methodKind: "unary";
@@ -1508,7 +1685,7 @@ export declare const FileSpaceService: GenService<{
   /**
    * CreateShareLink adds an unguessable Share Link to an existing file.
    *
-   * @generated from rpc storage.private.v1.FileSpaceService.CreateShareLink
+   * @generated from rpc storage.private.v1.DirectoryService.CreateShareLink
    */
   createShareLink: {
     methodKind: "unary";
@@ -1519,7 +1696,7 @@ export declare const FileSpaceService: GenService<{
    * RevokeShareLinks revokes a file's active Share Links, all of them or
    * those one person created.
    *
-   * @generated from rpc storage.private.v1.FileSpaceService.RevokeShareLinks
+   * @generated from rpc storage.private.v1.DirectoryService.RevokeShareLinks
    */
   revokeShareLinks: {
     methodKind: "unary";
@@ -1530,7 +1707,7 @@ export declare const FileSpaceService: GenService<{
    * GetFilePreview tells how a file is shown, judged afresh from its current
    * content, with a link for one inline read when bytes are shown.
    *
-   * @generated from rpc storage.private.v1.FileSpaceService.GetFilePreview
+   * @generated from rpc storage.private.v1.DirectoryService.GetFilePreview
    */
   getFilePreview: {
     methodKind: "unary";
@@ -1542,22 +1719,46 @@ export declare const FileSpaceService: GenService<{
    * content when its preview mode is RENDER; a content already rendering,
    * rendered or found unrenderable is not rendered again.
    *
-   * @generated from rpc storage.private.v1.FileSpaceService.RequestFilePreview
+   * @generated from rpc storage.private.v1.DirectoryService.RequestFilePreview
    */
   requestFilePreview: {
     methodKind: "unary";
     input: typeof RequestFilePreviewRequestSchema;
     output: typeof RequestFilePreviewResponseSchema;
   },
+  /**
+   * ReplaceContent makes the given files a Directory's whole content in one
+   * atomic switch, and completes only once the earlier content is removed.
+   * Repeating it writes the same content again. Readers, mounted ones
+   * included, always see one complete current content.
+   *
+   * @generated from rpc storage.private.v1.DirectoryService.ReplaceContent
+   */
+  replaceContent: {
+    methodKind: "unary";
+    input: typeof ReplaceContentRequestSchema;
+    output: typeof ReplaceContentResponseSchema;
+  },
+  /**
+   * ReadContent reads files of a Directory's current content by clean
+   * relative path; before its first replacement it has no files.
+   *
+   * @generated from rpc storage.private.v1.DirectoryService.ReadContent
+   */
+  readContent: {
+    methodKind: "unary";
+    input: typeof ReadContentRequestSchema;
+    output: typeof ReadContentResponseSchema;
+  },
 }>;
 
 /**
  * ArtifactService is the Storage Agent Command Contract: a Work Agent's
- * Artifact commands on the File Space its Work was given, each completed
+ * Artifact commands on the File Space its Work publishes into, each completed
  * within its request. The platform Connector calls it under the Work Agent's
- * verified Work credential and its Space Token; the Work and its workspace
- * come from that identity and the File Space from the token, never from the
- * request. A retry meets each
+ * verified Work credential and its Space Token; the Work and its Session
+ * Workspace layout come from that identity and the File Space from the token,
+ * never from the request. A retry meets each
  * command's own semantics: Create refuses a taken name, Replace writes
  * again and Delete finds nothing left to delete.
  *

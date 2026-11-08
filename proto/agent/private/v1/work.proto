@@ -5,6 +5,7 @@ package agent.private.v1;
 import "google/protobuf/struct.proto";
 import "agent/private/v1/work_subject.proto";
 import "agent/public/v1/appearance.proto";
+import "storage/private/v1/workspace.proto";
 import "agent/public/v1/harness.proto";
 import "agent/public/v1/model.proto";
 import "agent/public/v1/progress.proto";
@@ -202,10 +203,10 @@ message CreateAgentDefinitionRequest {
   string purpose = 3;
   // Reusable capability definition.
   Capabilities capabilities = 4;
+  reserved 6;
+  reserved "home_binding";
   // Usage scope authorized by the calling business context.
   UsageScope usage_scope = 5;
-  // One HOME shared by this definition's Sessions.
-  HomeBinding home_binding = 6;
   // Visibility of the definition's new Works.
   VisibilityRule visibility_rule = 7;
 }
@@ -222,16 +223,10 @@ message CreateAgentDefinitionResponse {
   string agent_id = 1;
 }
 
-// HomeBinding selects a caller-authorized persistent home and namespace.
-message HomeBinding {
-  // Owner of the persistent home; not a filesystem path.
-  string owner_id = 1;
-  // Caller-selected scope within the home.
-  string namespace = 2;
-}
-
 // CreateWorkRequest carries Agent control data.
 message CreateWorkRequest {
+  reserved 5, 11, 12, 13;
+  reserved "workspace_reference", "input_source", "input_space_token", "read_only_mounts";
   // Trusted human initiating creation, distinct from the represented owner.
   // Empty for automated starts, which do not load personal Plugin defaults.
   string starting_user_id = 1;
@@ -243,9 +238,6 @@ message CreateWorkRequest {
   string subject_id = 3;
   // AgentDefinition whose capabilities are captured.
   string agent_id = 4;
-  // Caller-selected Session Workspace; empty for a Work that has none, such
-  // as a project-scoped definition's.
-  string workspace_reference = 5;
   // Immutable attribution supplied by the trusted caller; not an authorization credential.
   map<string, string> trace_attributes = 6;
   // Used only when establishing the Session capability snapshot.
@@ -259,39 +251,22 @@ message CreateWorkRequest {
   string project_id = 9;
   // Optional Model Configuration; absence selects the first provided one.
   agent.public.v1.WorkModelSelection model = 10;
-  // Opaque read-only input reference fixed at creation, such as a caller's
-  // File Space; Agent hands it to Storage for every start unchanged. Empty
-  // means none. Reuse of an existing Work neither compares nor replaces it.
-  string input_source = 11;
-  // Space Token issued with the input source; Agent passes it into the
-  // sandbox for publication. Empty when there is no input source.
-  string input_space_token = 12;
-  // Spaces mounted read-only in the sandbox, each under the name the caller
-  // gives, fixed at creation; Agent hands each reference to Storage for
-  // every start unchanged. Reuse of an existing Work neither compares nor
-  // replaces them.
-  repeated ReadOnlyMount read_only_mounts = 13;
   // Optional context a new Work starts from: another Work of the same
   // definition up to a position this Agent named. Reuse of an existing Work
   // neither compares nor replaces it.
   WorkStartingContext starting_context = 14;
   // The Computer a new Work runs on for its life: a Cloud or one of the
   // represented person's own Managed Computers; empty runs it on the first
-  // Cloud. A Work on a Managed Computer has no read-only mounts. Reuse of an
-  // existing Work neither compares nor replaces it.
+  // Cloud. Reuse of an existing Work neither compares nor replaces it.
   string computer_id = 15;
   // The Harness choices of a new Work, admitted only on a Managed Computer.
   // Reuse of an existing Work neither compares nor replaces them.
   agent.public.v1.HarnessChoice harness = 16;
-}
-
-// ReadOnlyMount is an opaque space reference and the name it appears under
-// in the sandbox's workspace.
-message ReadOnlyMount {
-  // One visible directory name of the workspace, other than inputs.
-  string name = 1;
-  // Opaque reference of the space, as Storage knows it.
-  string reference = 2;
+  // The Agent Harness a new Work runs, by its identity, such as
+  // "claude-code"; empty chooses the default. The Work keeps it for its
+  // life; an unknown one is refused. Reuse of an existing Work neither
+  // compares nor replaces it.
+  string agent_harness = 17;
 }
 
 // WorkStartingContext names another Work of the same definition and a
@@ -366,10 +341,10 @@ message GetWorkResponse {
   string failure_reason = 11;
   // Monotonic persisted Session revision; consumers reject older observations.
   int64 version = 12;
+  reserved 14;
+  reserved "workspace_reference";
   // Current stop correlation, retained through confirmed stop completion.
   string stop_request_id = 13;
-  // Established workspace retained when the business binding reuses this Session.
-  string workspace_reference = 14;
 }
 
 // WorkState describes the selected Agent value.
@@ -510,10 +485,10 @@ message GetAgentDefinitionResponse {
   string agent_id = 4;
   // Current reusable configuration.
   Capabilities capabilities = 5;
+  reserved 7;
+  reserved "home_binding";
   // Declared business-authorized scope.
   UsageScope usage_scope = 6;
-  // Definition-owned HOME reference.
-  HomeBinding home_binding = 7;
   // Visibility declared for the definition's new Works.
   VisibilityRule visibility_rule = 8;
 }
@@ -566,14 +541,19 @@ message VerifyWorkCredentialResponse {
   string agent_id = 3;
   // Immutable controlling principal registered by the Work caller.
   string subject_id = 4;
-  // Caller-authorized opaque workspace binding; not product authority by itself.
-  string workspace_reference = 5;
+  reserved 5;
+  reserved "workspace_reference";
   // The Work's Project; empty for a Work without one.
   string project_id = 6;
   // The Work's Subject, absent for a Work without one.
   WorkSubject subject = 7;
   // The definition's purpose.
   string purpose = 8;
+  // The Work's Session Workspace as its sandbox sees it, from its located
+  // layout: the Work Directory a publication copies from, outside every
+  // Directory mounted in it. Absent for a Work without one, such as a Work
+  // on a Managed Computer.
+  storage.private.v1.WorkspaceLayout workspace = 9;
 }
 
 // LocateWorkRequest selects an existing association under its retained rules.
@@ -828,8 +808,8 @@ message EnsureAgentDefinitionRequest {
   string purpose = 3;
   // Authoritative employee display name; required for employee work.
   string employee_display_name = 4;
-  // Initial HOME supplied by the owning business caller.
-  HomeBinding home_binding = 5;
+  reserved 5;
+  reserved "home_binding";
   // Caller-selected base capabilities; existing definitions retain their values.
   Capabilities capabilities = 6;
   // Initial public name for a non-employee definition, if supplied.

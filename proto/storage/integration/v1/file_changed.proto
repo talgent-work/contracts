@@ -6,17 +6,24 @@ import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/talgent-work/contracts/gen/go/storage/integration/v1;storageintegrationv1";
 
-// FileKind tells an Attachment from an Artifact.
-enum FileKind {
-  // Unspecified kind; never published.
-  FILE_KIND_UNSPECIFIED = 0;
-  // An input file of the space's owner.
-  FILE_KIND_ATTACHMENT = 1;
-  // A file a Work Agent published.
-  FILE_KIND_ARTIFACT = 2;
+// OwnerFact is one condition of the Directory's owner with its value.
+message OwnerFact {
+  // The condition's name, such as "subject".
+  string condition = 1;
+  // The value the locating caller supplied.
+  string value = 2;
 }
 
-// FileOperation is how a file in a File Space changed.
+// Directory identifies the Directory a file changed in: its owner, as the
+// locating caller's facts in condition order, and its name.
+message Directory {
+  // Owner facts ordered by condition name.
+  repeated OwnerFact owner = 1;
+  // Name within the owner.
+  string name = 2;
+}
+
+// FileOperation is how a file Storage wrote changed.
 enum FileOperation {
   // Unspecified operation; never published.
   FILE_OPERATION_UNSPECIFIED = 0;
@@ -25,29 +32,29 @@ enum FileOperation {
   FILE_OPERATION_CREATED = 1;
   // A file's content was replaced at its name.
   FILE_OPERATION_REPLACED = 2;
-  // An Attachment moved to a new name.
+  // A file moved to a new name.
   FILE_OPERATION_RENAMED = 3;
   // A file was deleted.
   FILE_OPERATION_DELETED = 4;
 }
 
 // FileChangedV1 is the File Change Published Fact: one committed change of a
-// file in a File Space, published best-effort. It names the space
-// only by its opaque owner identity, which each subscriber claims or ignores,
-// and names the file but carries no content. Exactly one of actor_user_id and
-// actor_work_id is set.
+// file Storage carried out, published best-effort. It names the Directory by
+// its owner and name, which each subscriber claims or ignores, and names the
+// file but carries no content. Changes a Harness makes through a mount are
+// never published. Exactly one of actor_user_id and actor_work_id is set.
 message FileChangedV1 {
+  reserved 3, 4;
+  reserved "owner", "kind";
   // Unique identity of this publication and of the change.
   string event_id = 1;
   // Time the change was committed.
   google.protobuf.Timestamp occurred_at = 2;
-  // Owner of the File Space, as its caller named it.
-  string owner = 3;
-  // Attachment or Artifact.
-  FileKind kind = 4;
+  // The Directory the file is in.
+  Directory directory = 10;
   // The file's name after the change; for a deletion, the name it had.
   string name = 5;
-  // The former name of a renamed Attachment; empty otherwise.
+  // The former name of a renamed file; empty otherwise.
   string previous_name = 6;
   // How the file changed.
   FileOperation operation = 7;

@@ -36,9 +36,9 @@ const (
 	// SandboxMountServiceIssueWorkspaceFileLinkProcedure is the procedure name of the
 	// SandboxMountService's IssueWorkspaceFileLink RPC.
 	SandboxMountServiceIssueWorkspaceFileLinkProcedure = "/storage.private.v1.SandboxMountService/IssueWorkspaceFileLink"
-	// SandboxMountServiceRequestWorkspaceReclamationProcedure is the procedure name of the
-	// SandboxMountService's RequestWorkspaceReclamation RPC.
-	SandboxMountServiceRequestWorkspaceReclamationProcedure = "/storage.private.v1.SandboxMountService/RequestWorkspaceReclamation"
+	// SandboxMountServiceRequestWorkReclamationProcedure is the procedure name of the
+	// SandboxMountService's RequestWorkReclamation RPC.
+	SandboxMountServiceRequestWorkReclamationProcedure = "/storage.private.v1.SandboxMountService/RequestWorkReclamation"
 	// SandboxMountServiceJudgeFilePreviewProcedure is the procedure name of the SandboxMountService's
 	// JudgeFilePreview RPC.
 	SandboxMountServiceJudgeFilePreviewProcedure = "/storage.private.v1.SandboxMountService/JudgeFilePreview"
@@ -73,11 +73,11 @@ var (
 			Procedure:  SandboxMountServiceIssueWorkspaceFileLinkProcedure,
 		}
 	})
-	sandboxMountServiceRequestWorkspaceReclamationSpec = sync.OnceValue(func() connect.Spec {
+	sandboxMountServiceRequestWorkReclamationSpec = sync.OnceValue(func() connect.Spec {
 		return connect.Spec{
 			StreamType: connect.StreamTypeUnary,
-			Schema:     v1.File_storage_private_v1_workspace_proto.Services().ByName("SandboxMountService").Methods().ByName("RequestWorkspaceReclamation"),
-			Procedure:  SandboxMountServiceRequestWorkspaceReclamationProcedure,
+			Schema:     v1.File_storage_private_v1_workspace_proto.Services().ByName("SandboxMountService").Methods().ByName("RequestWorkReclamation"),
+			Procedure:  SandboxMountServiceRequestWorkReclamationProcedure,
 		}
 	})
 	sandboxMountServiceJudgeFilePreviewSpec = sync.OnceValue(func() connect.Spec {
@@ -91,23 +91,29 @@ var (
 
 // SandboxMountServiceClient is a client for the storage.private.v1.SandboxMountService service.
 type SandboxMountServiceClient interface {
-	// AcquireMounts returns the Mount Grants of a Work's HOME, Session Workspace
-	// and input source, creating each on its first request.
+	// AcquireMounts opens each requested located Directory, completing its
+	// allocation, prepares the mount points named inside it with every parent
+	// owned by the sandbox user, and returns one Mount Grant per Directory in
+	// request order. A Mount Grant is issued, never held: there is no unmount.
+	// A reclaimed Directory refuses with DIRECTORY_RECLAIMED.
 	AcquireMounts(context.Context, *v1.AcquireMountsRequest) (*v1.AcquireMountsResponse, error)
-	// GetWorkspaceView lists one directory of a Work's workspace as its sandbox
-	// sees it, Attachments included under inputs/ and each Reference Space's
-	// current content under the name its caller mounted it at.
+	// GetWorkspaceView lists one directory of a Work Directory as its sandbox
+	// sees it, with each Directory mounted inside it shown where Agent placed
+	// it.
 	GetWorkspaceView(context.Context, *v1.GetWorkspaceViewRequest) (*v1.GetWorkspaceViewResponse, error)
-	// GetWorkspaceFilePreview tells how one workspace file outside inputs/ is
-	// shown, with a link for one inline read when bytes are shown. Workspace
-	// files have no Preview Copies.
+	// GetWorkspaceFilePreview tells how one workspace file is shown, with a
+	// link for one inline read when bytes are shown. Workspace files have no
+	// Preview Copies; a file Storage wrote into a mounted Directory is read as
+	// that file.
 	GetWorkspaceFilePreview(context.Context, *v1.GetWorkspaceFilePreviewRequest) (*v1.GetWorkspaceFilePreviewResponse, error)
 	// IssueWorkspaceFileLink issues a short-lived link to download one
-	// workspace file outside inputs/ under its own name.
+	// workspace file under its own name.
 	IssueWorkspaceFileLink(context.Context, *v1.IssueWorkspaceFileLinkRequest) (*v1.IssueWorkspaceFileLinkResponse, error)
-	// RequestWorkspaceReclamation accepts the reclamation of a closed Work's
-	// workspace; Storage completes it on its own schedule.
-	RequestWorkspaceReclamation(context.Context, *v1.RequestWorkspaceReclamationRequest) (*v1.RequestWorkspaceReclamationResponse, error)
+	// RequestWorkReclamation accepts the reclamation of every Directory whose
+	// owner names a closed Work and whose lifetime is that Work's; Storage
+	// removes their content once publications copying from them finish.
+	// Repeating it changes nothing.
+	RequestWorkReclamation(context.Context, *v1.RequestWorkReclamationRequest) (*v1.RequestWorkReclamationResponse, error)
 	// JudgeFilePreview tells how a workspace file Storage does not hold is
 	// shown, judged from its name, size and leading bytes as a Session
 	// Workspace file is, under Storage's preview limits. Storage keeps nothing
@@ -124,23 +130,29 @@ func NewSandboxMountServiceClient(client *connect.Client) SandboxMountServiceCli
 // SandboxMountServiceHandler is an implementation of the storage.private.v1.SandboxMountService
 // service.
 type SandboxMountServiceHandler interface {
-	// AcquireMounts returns the Mount Grants of a Work's HOME, Session Workspace
-	// and input source, creating each on its first request.
+	// AcquireMounts opens each requested located Directory, completing its
+	// allocation, prepares the mount points named inside it with every parent
+	// owned by the sandbox user, and returns one Mount Grant per Directory in
+	// request order. A Mount Grant is issued, never held: there is no unmount.
+	// A reclaimed Directory refuses with DIRECTORY_RECLAIMED.
 	AcquireMounts(context.Context, *v1.AcquireMountsRequest) (*v1.AcquireMountsResponse, error)
-	// GetWorkspaceView lists one directory of a Work's workspace as its sandbox
-	// sees it, Attachments included under inputs/ and each Reference Space's
-	// current content under the name its caller mounted it at.
+	// GetWorkspaceView lists one directory of a Work Directory as its sandbox
+	// sees it, with each Directory mounted inside it shown where Agent placed
+	// it.
 	GetWorkspaceView(context.Context, *v1.GetWorkspaceViewRequest) (*v1.GetWorkspaceViewResponse, error)
-	// GetWorkspaceFilePreview tells how one workspace file outside inputs/ is
-	// shown, with a link for one inline read when bytes are shown. Workspace
-	// files have no Preview Copies.
+	// GetWorkspaceFilePreview tells how one workspace file is shown, with a
+	// link for one inline read when bytes are shown. Workspace files have no
+	// Preview Copies; a file Storage wrote into a mounted Directory is read as
+	// that file.
 	GetWorkspaceFilePreview(context.Context, *v1.GetWorkspaceFilePreviewRequest) (*v1.GetWorkspaceFilePreviewResponse, error)
 	// IssueWorkspaceFileLink issues a short-lived link to download one
-	// workspace file outside inputs/ under its own name.
+	// workspace file under its own name.
 	IssueWorkspaceFileLink(context.Context, *v1.IssueWorkspaceFileLinkRequest) (*v1.IssueWorkspaceFileLinkResponse, error)
-	// RequestWorkspaceReclamation accepts the reclamation of a closed Work's
-	// workspace; Storage completes it on its own schedule.
-	RequestWorkspaceReclamation(context.Context, *v1.RequestWorkspaceReclamationRequest) (*v1.RequestWorkspaceReclamationResponse, error)
+	// RequestWorkReclamation accepts the reclamation of every Directory whose
+	// owner names a closed Work and whose lifetime is that Work's; Storage
+	// removes their content once publications copying from them finish.
+	// Repeating it changes nothing.
+	RequestWorkReclamation(context.Context, *v1.RequestWorkReclamationRequest) (*v1.RequestWorkReclamationResponse, error)
 	// JudgeFilePreview tells how a workspace file Storage does not hold is
 	// shown, judged from its name, size and leading bytes as a Session
 	// Workspace file is, under Storage's preview limits. Storage keeps nothing
@@ -157,7 +169,7 @@ func RegisterSandboxMountServiceHandler(server *connect.Server, svc SandboxMount
 		connect.Method{Spec: sandboxMountServiceGetWorkspaceViewSpec(), Handler: adapter.getWorkspaceView},
 		connect.Method{Spec: sandboxMountServiceGetWorkspaceFilePreviewSpec(), Handler: adapter.getWorkspaceFilePreview},
 		connect.Method{Spec: sandboxMountServiceIssueWorkspaceFileLinkSpec(), Handler: adapter.issueWorkspaceFileLink},
-		connect.Method{Spec: sandboxMountServiceRequestWorkspaceReclamationSpec(), Handler: adapter.requestWorkspaceReclamation},
+		connect.Method{Spec: sandboxMountServiceRequestWorkReclamationSpec(), Handler: adapter.requestWorkReclamation},
 		connect.Method{Spec: sandboxMountServiceJudgeFilePreviewSpec(), Handler: adapter.judgeFilePreview},
 	)
 }
@@ -181,8 +193,8 @@ func (UnimplementedSandboxMountServiceHandler) IssueWorkspaceFileLink(context.Co
 	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.SandboxMountService.IssueWorkspaceFileLink is not implemented")
 }
 
-func (UnimplementedSandboxMountServiceHandler) RequestWorkspaceReclamation(context.Context, *v1.RequestWorkspaceReclamationRequest) (*v1.RequestWorkspaceReclamationResponse, error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.SandboxMountService.RequestWorkspaceReclamation is not implemented")
+func (UnimplementedSandboxMountServiceHandler) RequestWorkReclamation(context.Context, *v1.RequestWorkReclamationRequest) (*v1.RequestWorkReclamationResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.SandboxMountService.RequestWorkReclamation is not implemented")
 }
 
 func (UnimplementedSandboxMountServiceHandler) JudgeFilePreview(context.Context, *v1.JudgeFilePreviewRequest) (*v1.JudgeFilePreviewResponse, error) {
@@ -225,9 +237,9 @@ func (c *sandboxMountServiceClient) IssueWorkspaceFileLink(ctx context.Context, 
 	return &res, nil
 }
 
-func (c *sandboxMountServiceClient) RequestWorkspaceReclamation(ctx context.Context, req *v1.RequestWorkspaceReclamationRequest) (*v1.RequestWorkspaceReclamationResponse, error) {
-	var res v1.RequestWorkspaceReclamationResponse
-	if err := c.client.CallUnary(ctx, sandboxMountServiceRequestWorkspaceReclamationSpec(), req, &res); err != nil {
+func (c *sandboxMountServiceClient) RequestWorkReclamation(ctx context.Context, req *v1.RequestWorkReclamationRequest) (*v1.RequestWorkReclamationResponse, error) {
+	var res v1.RequestWorkReclamationResponse
+	if err := c.client.CallUnary(ctx, sandboxMountServiceRequestWorkReclamationSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
@@ -291,12 +303,12 @@ func (h sandboxMountServiceHandler) issueWorkspaceFileLink(ctx context.Context, 
 	return stream.Send(res)
 }
 
-func (h sandboxMountServiceHandler) requestWorkspaceReclamation(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
-	var req v1.RequestWorkspaceReclamationRequest
+func (h sandboxMountServiceHandler) requestWorkReclamation(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.RequestWorkReclamationRequest
 	if err := stream.Receive(&req); err != nil {
 		return err
 	}
-	res, err := h.svc.RequestWorkspaceReclamation(ctx, &req)
+	res, err := h.svc.RequestWorkReclamation(ctx, &req)
 	if err != nil {
 		return err
 	}

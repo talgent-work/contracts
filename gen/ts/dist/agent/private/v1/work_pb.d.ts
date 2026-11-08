@@ -9,6 +9,7 @@ import type { WorkSubject } from "./work_subject_pb.js";
 import type { WorkModelSelection } from "../../public/v1/model_pb.js";
 import type { HarnessChoice } from "../../public/v1/harness_pb.js";
 import type { WorkProgress } from "../../public/v1/progress_pb.js";
+import type { WorkspaceLayout } from "../../../storage/private/v1/workspace_pb.js";
 import type { AgentAppearance, AgentIcon } from "../../public/v1/appearance_pb.js";
 import type { GetWorkStartOptionsResponseSchema, WorkStartRepositoriesSchema } from "../../public/v1/work_start_options_pb.js";
 
@@ -417,13 +418,6 @@ export declare type CreateAgentDefinitionRequest = Message<"agent.private.v1.Cre
   usageScope?: UsageScope;
 
   /**
-   * One HOME shared by this definition's Sessions.
-   *
-   * @generated from field: agent.private.v1.HomeBinding home_binding = 6;
-   */
-  homeBinding?: HomeBinding;
-
-  /**
    * Visibility of the definition's new Works.
    *
    * @generated from field: agent.private.v1.VisibilityRule visibility_rule = 7;
@@ -478,33 +472,6 @@ export declare type CreateAgentDefinitionResponse = Message<"agent.private.v1.Cr
 export declare const CreateAgentDefinitionResponseSchema: GenMessage<CreateAgentDefinitionResponse>;
 
 /**
- * HomeBinding selects a caller-authorized persistent home and namespace.
- *
- * @generated from message agent.private.v1.HomeBinding
- */
-export declare type HomeBinding = Message<"agent.private.v1.HomeBinding"> & {
-  /**
-   * Owner of the persistent home; not a filesystem path.
-   *
-   * @generated from field: string owner_id = 1;
-   */
-  ownerId: string;
-
-  /**
-   * Caller-selected scope within the home.
-   *
-   * @generated from field: string namespace = 2;
-   */
-  namespace: string;
-};
-
-/**
- * Describes the message agent.private.v1.HomeBinding.
- * Use `create(HomeBindingSchema)` to create a new message.
- */
-export declare const HomeBindingSchema: GenMessage<HomeBinding>;
-
-/**
  * CreateWorkRequest carries Agent control data.
  *
  * @generated from message agent.private.v1.CreateWorkRequest
@@ -540,14 +507,6 @@ export declare type CreateWorkRequest = Message<"agent.private.v1.CreateWorkRequ
    * @generated from field: string agent_id = 4;
    */
   agentId: string;
-
-  /**
-   * Caller-selected Session Workspace; empty for a Work that has none, such
-   * as a project-scoped definition's.
-   *
-   * @generated from field: string workspace_reference = 5;
-   */
-  workspaceReference: string;
 
   /**
    * Immutable attribution supplied by the trusted caller; not an authorization credential.
@@ -588,33 +547,6 @@ export declare type CreateWorkRequest = Message<"agent.private.v1.CreateWorkRequ
   model?: WorkModelSelection;
 
   /**
-   * Opaque read-only input reference fixed at creation, such as a caller's
-   * File Space; Agent hands it to Storage for every start unchanged. Empty
-   * means none. Reuse of an existing Work neither compares nor replaces it.
-   *
-   * @generated from field: string input_source = 11;
-   */
-  inputSource: string;
-
-  /**
-   * Space Token issued with the input source; Agent passes it into the
-   * sandbox for publication. Empty when there is no input source.
-   *
-   * @generated from field: string input_space_token = 12;
-   */
-  inputSpaceToken: string;
-
-  /**
-   * Spaces mounted read-only in the sandbox, each under the name the caller
-   * gives, fixed at creation; Agent hands each reference to Storage for
-   * every start unchanged. Reuse of an existing Work neither compares nor
-   * replaces them.
-   *
-   * @generated from field: repeated agent.private.v1.ReadOnlyMount read_only_mounts = 13;
-   */
-  readOnlyMounts: ReadOnlyMount[];
-
-  /**
    * Optional context a new Work starts from: another Work of the same
    * definition up to a position this Agent named. Reuse of an existing Work
    * neither compares nor replaces it.
@@ -626,8 +558,7 @@ export declare type CreateWorkRequest = Message<"agent.private.v1.CreateWorkRequ
   /**
    * The Computer a new Work runs on for its life: a Cloud or one of the
    * represented person's own Managed Computers; empty runs it on the first
-   * Cloud. A Work on a Managed Computer has no read-only mounts. Reuse of an
-   * existing Work neither compares nor replaces it.
+   * Cloud. Reuse of an existing Work neither compares nor replaces it.
    *
    * @generated from field: string computer_id = 15;
    */
@@ -640,6 +571,16 @@ export declare type CreateWorkRequest = Message<"agent.private.v1.CreateWorkRequ
    * @generated from field: agent.public.v1.HarnessChoice harness = 16;
    */
   harness?: HarnessChoice;
+
+  /**
+   * The Agent Harness a new Work runs, by its identity, such as
+   * "claude-code"; empty chooses the default. The Work keeps it for its
+   * life; an unknown one is refused. Reuse of an existing Work neither
+   * compares nor replaces it.
+   *
+   * @generated from field: string agent_harness = 17;
+   */
+  agentHarness: string;
 };
 
 /**
@@ -647,34 +588,6 @@ export declare type CreateWorkRequest = Message<"agent.private.v1.CreateWorkRequ
  * Use `create(CreateWorkRequestSchema)` to create a new message.
  */
 export declare const CreateWorkRequestSchema: GenMessage<CreateWorkRequest>;
-
-/**
- * ReadOnlyMount is an opaque space reference and the name it appears under
- * in the sandbox's workspace.
- *
- * @generated from message agent.private.v1.ReadOnlyMount
- */
-export declare type ReadOnlyMount = Message<"agent.private.v1.ReadOnlyMount"> & {
-  /**
-   * One visible directory name of the workspace, other than inputs.
-   *
-   * @generated from field: string name = 1;
-   */
-  name: string;
-
-  /**
-   * Opaque reference of the space, as Storage knows it.
-   *
-   * @generated from field: string reference = 2;
-   */
-  reference: string;
-};
-
-/**
- * Describes the message agent.private.v1.ReadOnlyMount.
- * Use `create(ReadOnlyMountSchema)` to create a new message.
- */
-export declare const ReadOnlyMountSchema: GenMessage<ReadOnlyMount>;
 
 /**
  * WorkStartingContext names another Work of the same definition and a
@@ -923,13 +836,6 @@ export declare type GetWorkResponse = Message<"agent.private.v1.GetWorkResponse"
    * @generated from field: string stop_request_id = 13;
    */
   stopRequestId: string;
-
-  /**
-   * Established workspace retained when the business binding reuses this Session.
-   *
-   * @generated from field: string workspace_reference = 14;
-   */
-  workspaceReference: string;
 };
 
 /**
@@ -1333,13 +1239,6 @@ export declare type GetAgentDefinitionResponse = Message<"agent.private.v1.GetAg
   usageScope?: UsageScope;
 
   /**
-   * Definition-owned HOME reference.
-   *
-   * @generated from field: agent.private.v1.HomeBinding home_binding = 7;
-   */
-  homeBinding?: HomeBinding;
-
-  /**
    * Visibility declared for the definition's new Works.
    *
    * @generated from field: agent.private.v1.VisibilityRule visibility_rule = 8;
@@ -1502,13 +1401,6 @@ export declare type VerifyWorkCredentialResponse = Message<"agent.private.v1.Ver
   subjectId: string;
 
   /**
-   * Caller-authorized opaque workspace binding; not product authority by itself.
-   *
-   * @generated from field: string workspace_reference = 5;
-   */
-  workspaceReference: string;
-
-  /**
    * The Work's Project; empty for a Work without one.
    *
    * @generated from field: string project_id = 6;
@@ -1528,6 +1420,16 @@ export declare type VerifyWorkCredentialResponse = Message<"agent.private.v1.Ver
    * @generated from field: string purpose = 8;
    */
   purpose: string;
+
+  /**
+   * The Work's Session Workspace as its sandbox sees it, from its located
+   * layout: the Work Directory a publication copies from, outside every
+   * Directory mounted in it. Absent for a Work without one, such as a Work
+   * on a Managed Computer.
+   *
+   * @generated from field: storage.private.v1.WorkspaceLayout workspace = 9;
+   */
+  workspace?: WorkspaceLayout;
 };
 
 /**
@@ -2376,13 +2278,6 @@ export declare type EnsureAgentDefinitionRequest = Message<"agent.private.v1.Ens
    * @generated from field: string employee_display_name = 4;
    */
   employeeDisplayName: string;
-
-  /**
-   * Initial HOME supplied by the owning business caller.
-   *
-   * @generated from field: agent.private.v1.HomeBinding home_binding = 5;
-   */
-  homeBinding?: HomeBinding;
 
   /**
    * Caller-selected base capabilities; existing definitions retain their values.

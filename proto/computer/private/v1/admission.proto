@@ -121,9 +121,9 @@ message AdmitRunResponse {
   AdmissionAnswer answer = 1;
   // Set when the answer is rejected.
   RejectionReason reason = 2;
-  // What the Computer is, set when the answer is rejected, so the caller
-  // words a full Cloud as before Clouds were Computers and a full Managed
-  // Computer by its Capacity.
+  // What the Computer is, set on every answer: an admitted caller records it,
+  // and a rejected caller words a full Cloud as before Clouds were Computers
+  // and a full Managed Computer by its Capacity.
   ComputerKind computer_kind = 3;
 }
 

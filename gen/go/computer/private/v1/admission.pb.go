@@ -514,9 +514,9 @@ type AdmitRunResponse struct {
 	Answer AdmissionAnswer `protobuf:"varint,1,opt,name=answer,proto3,enum=computer.private.v1.AdmissionAnswer" json:"answer,omitempty"`
 	// Set when the answer is rejected.
 	Reason RejectionReason `protobuf:"varint,2,opt,name=reason,proto3,enum=computer.private.v1.RejectionReason" json:"reason,omitempty"`
-	// What the Computer is, set when the answer is rejected, so the caller
-	// words a full Cloud as before Clouds were Computers and a full Managed
-	// Computer by its Capacity.
+	// What the Computer is, set on every answer: an admitted caller records it,
+	// and a rejected caller words a full Cloud as before Clouds were Computers
+	// and a full Managed Computer by its Capacity.
 	ComputerKind  ComputerKind `protobuf:"varint,3,opt,name=computer_kind,json=computerKind,proto3,enum=computer.private.v1.ComputerKind" json:"computer_kind,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache

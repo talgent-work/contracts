@@ -162,9 +162,9 @@ export declare type AdmitRunResponse = Message<"computer.private.v1.AdmitRunResp
   reason: RejectionReason;
 
   /**
-   * What the Computer is, set when the answer is rejected, so the caller
-   * words a full Cloud as before Clouds were Computers and a full Managed
-   * Computer by its Capacity.
+   * What the Computer is, set on every answer: an admitted caller records it,
+   * and a rejected caller words a full Cloud as before Clouds were Computers
+   * and a full Managed Computer by its Capacity.
    *
    * @generated from field: computer.private.v1.ComputerKind computer_kind = 3;
    */

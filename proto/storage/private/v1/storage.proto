@@ -328,8 +328,8 @@ message IssueAccessLinkResponse {
   string access_url = 1;
   // Time the link stops working.
   google.protobuf.Timestamp expires_at = 2;
-  // The same link as a path, which a Work's sandbox resolves against the
-  // native API.
+  // The same link as a path, which a Work resolves against the public
+  // gateway's origin.
   string access_path = 3;
 }
 

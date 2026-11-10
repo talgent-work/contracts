@@ -10,7 +10,6 @@ import "agent/public/v1/progress.proto";
 import "agent/public/v1/work_start_options.proto";
 import "google/protobuf/struct.proto";
 import "marketplace/public/v1/marketplace.proto";
-import "storage/private/v1/workspace.proto";
 
 option go_package = "github.com/talgent-work/contracts/gen/go/agent/private/v1;agentprivatev1";
 
@@ -36,8 +35,6 @@ service AgentService {
   // With creation, request_id is the caller's creation request identity: it
   // yields at most one Work and a repeat returns the same Work.
   rpc PrepareWorkExecution(PrepareWorkExecutionRequest) returns (PrepareWorkExecutionResponse);
-  // VerifyWorkCredential authenticates a native process by the credential of its Work's current live sandbox.
-  rpc VerifyWorkCredential(VerifyWorkCredentialRequest) returns (VerifyWorkCredentialResponse);
   // ChangeAgentDefinitionCapabilities updates future Session capabilities without changing existing snapshots.
   rpc ChangeAgentDefinitionCapabilities(ChangeAgentDefinitionCapabilitiesRequest) returns (ChangeAgentDefinitionCapabilitiesResponse);
   // GetAgentDefinition reads the current reusable capability configuration.
@@ -513,45 +510,6 @@ message RespondToInteractionRequest {
 
 // RespondToInteractionResponse confirms response delivery, not interaction resolution.
 message RespondToInteractionResponse {}
-
-// VerifyWorkCredentialRequest carries the native process credential, not caller-declared product authority.
-message VerifyWorkCredentialRequest {
-  // Work whose current live sandbox holds the credential.
-  string work_id = 1;
-  // Credential issued to the Work's current sandbox and revoked with it.
-  string credential = 2;
-  // Admits the credential only while its Work acts: Working, and not awaiting
-  // its person's required response. Agent waits briefly for a delivered reply
-  // to resolve, then refuses with FAILED_PRECONDITION. A caller admitting the
-  // Work's actions sets it; one admitting reads does not.
-  bool require_acting = 3;
-}
-
-// VerifyWorkCredentialResponse reports verified Work facts to an authenticated integration.
-// The consumer must separately authorize its own product operations and scope.
-message VerifyWorkCredentialResponse {
-  // Current definition-owned public display name, never an identity.
-  string agent_name = 1;
-  // Verified stable conversation.
-  string work_id = 2;
-  // AgentDefinition whose capability snapshot this Work uses.
-  string agent_id = 3;
-  // Immutable controlling principal registered by the Work caller.
-  string subject_id = 4;
-  reserved 5;
-  reserved "workspace_reference";
-  // The Work's Project; empty for a Work without one.
-  string project_id = 6;
-  // The Work's Subject, absent for a Work without one.
-  WorkSubject subject = 7;
-  // The definition's purpose.
-  string purpose = 8;
-  // The Work's Session Workspace as its sandbox sees it, from its located
-  // layout: the Work Directory a publication copies from, outside every
-  // Directory mounted in it. Absent for a Work without one, such as a Work
-  // on a Managed Computer.
-  storage.private.v1.WorkspaceLayout workspace = 9;
-}
 
 // LocateWorkRequest selects an existing association under its retained rules.
 message LocateWorkRequest {

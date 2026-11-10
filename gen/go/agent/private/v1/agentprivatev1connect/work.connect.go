@@ -48,9 +48,6 @@ const (
 	// AgentServicePrepareWorkExecutionProcedure is the procedure name of the AgentService's
 	// PrepareWorkExecution RPC.
 	AgentServicePrepareWorkExecutionProcedure = "/agent.private.v1.AgentService/PrepareWorkExecution"
-	// AgentServiceVerifyWorkCredentialProcedure is the procedure name of the AgentService's
-	// VerifyWorkCredential RPC.
-	AgentServiceVerifyWorkCredentialProcedure = "/agent.private.v1.AgentService/VerifyWorkCredential"
 	// AgentServiceChangeAgentDefinitionCapabilitiesProcedure is the procedure name of the
 	// AgentService's ChangeAgentDefinitionCapabilities RPC.
 	AgentServiceChangeAgentDefinitionCapabilitiesProcedure = "/agent.private.v1.AgentService/ChangeAgentDefinitionCapabilities"
@@ -160,13 +157,6 @@ var (
 			StreamType: connect.StreamTypeUnary,
 			Schema:     v1.File_agent_private_v1_work_proto.Services().ByName("AgentService").Methods().ByName("PrepareWorkExecution"),
 			Procedure:  AgentServicePrepareWorkExecutionProcedure,
-		}
-	})
-	agentServiceVerifyWorkCredentialSpec = sync.OnceValue(func() connect.Spec {
-		return connect.Spec{
-			StreamType: connect.StreamTypeUnary,
-			Schema:     v1.File_agent_private_v1_work_proto.Services().ByName("AgentService").Methods().ByName("VerifyWorkCredential"),
-			Procedure:  AgentServiceVerifyWorkCredentialProcedure,
 		}
 	})
 	agentServiceChangeAgentDefinitionCapabilitiesSpec = sync.OnceValue(func() connect.Spec {
@@ -333,8 +323,6 @@ type AgentServiceClient interface {
 	// With creation, request_id is the caller's creation request identity: it
 	// yields at most one Work and a repeat returns the same Work.
 	PrepareWorkExecution(context.Context, *v1.PrepareWorkExecutionRequest) (*v1.PrepareWorkExecutionResponse, error)
-	// VerifyWorkCredential authenticates a native process by the credential of its Work's current live sandbox.
-	VerifyWorkCredential(context.Context, *v1.VerifyWorkCredentialRequest) (*v1.VerifyWorkCredentialResponse, error)
 	// ChangeAgentDefinitionCapabilities updates future Session capabilities without changing existing snapshots.
 	ChangeAgentDefinitionCapabilities(context.Context, *v1.ChangeAgentDefinitionCapabilitiesRequest) (*v1.ChangeAgentDefinitionCapabilitiesResponse, error)
 	// GetAgentDefinition reads the current reusable capability configuration.
@@ -410,8 +398,6 @@ type AgentServiceHandler interface {
 	// With creation, request_id is the caller's creation request identity: it
 	// yields at most one Work and a repeat returns the same Work.
 	PrepareWorkExecution(context.Context, *v1.PrepareWorkExecutionRequest) (*v1.PrepareWorkExecutionResponse, error)
-	// VerifyWorkCredential authenticates a native process by the credential of its Work's current live sandbox.
-	VerifyWorkCredential(context.Context, *v1.VerifyWorkCredentialRequest) (*v1.VerifyWorkCredentialResponse, error)
 	// ChangeAgentDefinitionCapabilities updates future Session capabilities without changing existing snapshots.
 	ChangeAgentDefinitionCapabilities(context.Context, *v1.ChangeAgentDefinitionCapabilitiesRequest) (*v1.ChangeAgentDefinitionCapabilitiesResponse, error)
 	// GetAgentDefinition reads the current reusable capability configuration.
@@ -472,7 +458,6 @@ func RegisterAgentServiceHandler(server *connect.Server, svc AgentServiceHandler
 		connect.Method{Spec: agentServiceGetWorkPreparationSpec(), Handler: adapter.getWorkPreparation},
 		connect.Method{Spec: agentServiceListSubmittedPreparationsSpec(), Handler: adapter.listSubmittedPreparations},
 		connect.Method{Spec: agentServicePrepareWorkExecutionSpec(), Handler: adapter.prepareWorkExecution},
-		connect.Method{Spec: agentServiceVerifyWorkCredentialSpec(), Handler: adapter.verifyWorkCredential},
 		connect.Method{Spec: agentServiceChangeAgentDefinitionCapabilitiesSpec(), Handler: adapter.changeAgentDefinitionCapabilities},
 		connect.Method{Spec: agentServiceGetAgentDefinitionSpec(), Handler: adapter.getAgentDefinition},
 		connect.Method{Spec: agentServiceGetAgentDefinitionForPurposeSpec(), Handler: adapter.getAgentDefinitionForPurpose},
@@ -529,10 +514,6 @@ func (UnimplementedAgentServiceHandler) ListSubmittedPreparations(context.Contex
 
 func (UnimplementedAgentServiceHandler) PrepareWorkExecution(context.Context, *v1.PrepareWorkExecutionRequest) (*v1.PrepareWorkExecutionResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, "agent.private.v1.AgentService.PrepareWorkExecution is not implemented")
-}
-
-func (UnimplementedAgentServiceHandler) VerifyWorkCredential(context.Context, *v1.VerifyWorkCredentialRequest) (*v1.VerifyWorkCredentialResponse, error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, "agent.private.v1.AgentService.VerifyWorkCredential is not implemented")
 }
 
 func (UnimplementedAgentServiceHandler) ChangeAgentDefinitionCapabilities(context.Context, *v1.ChangeAgentDefinitionCapabilitiesRequest) (*v1.ChangeAgentDefinitionCapabilitiesResponse, error) {
@@ -678,14 +659,6 @@ func (c *agentServiceClient) ListSubmittedPreparations(ctx context.Context, req 
 func (c *agentServiceClient) PrepareWorkExecution(ctx context.Context, req *v1.PrepareWorkExecutionRequest) (*v1.PrepareWorkExecutionResponse, error) {
 	var res v1.PrepareWorkExecutionResponse
 	if err := c.client.CallUnary(ctx, agentServicePrepareWorkExecutionSpec(), req, &res); err != nil {
-		return nil, err
-	}
-	return &res, nil
-}
-
-func (c *agentServiceClient) VerifyWorkCredential(ctx context.Context, req *v1.VerifyWorkCredentialRequest) (*v1.VerifyWorkCredentialResponse, error) {
-	var res v1.VerifyWorkCredentialResponse
-	if err := c.client.CallUnary(ctx, agentServiceVerifyWorkCredentialSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
@@ -943,18 +916,6 @@ func (h agentServiceHandler) prepareWorkExecution(ctx context.Context, _ connect
 		return err
 	}
 	res, err := h.svc.PrepareWorkExecution(ctx, &req)
-	if err != nil {
-		return err
-	}
-	return stream.Send(res)
-}
-
-func (h agentServiceHandler) verifyWorkCredential(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
-	var req v1.VerifyWorkCredentialRequest
-	if err := stream.Receive(&req); err != nil {
-		return err
-	}
-	res, err := h.svc.VerifyWorkCredential(ctx, &req)
 	if err != nil {
 		return err
 	}

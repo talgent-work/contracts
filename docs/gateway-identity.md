@@ -2,7 +2,7 @@
 
 The Workbench's services take a caller's identity from request headers, never from the request
 body. Which headers they trust depends on how the request arrived: through the public gateway,
-from a trusted service inside the cluster, or through the native API under a Work credential.
+or from a trusted service inside the cluster.
 Header names are case-insensitive.
 
 ## Admission
@@ -85,53 +85,3 @@ A delegated call may add one statement the callee cannot know itself:
 | `x-talgent-reader-admission` | `<reference>=<value>`, such as `project=<project id>`: the delegated user is a member of what the reference names |
 
 It is honored only together with both delegation headers; on any other request it is ignored.
-
-## Native API: Agents under a Work credential
-
-Processes that serve an Agent's calls run a native API on a separate port. It serves an exact
-list of procedures, each as a Connect unary `POST`, plus `GET /v1/storage/content`
-([Content path](storage-content.md)). An Agent reaches it directly over HTTP, or the platform
-Connector (the Talgent MCP Gateway) calls it on the Agent's behalf.
-
-| Header | Value |
-|---|---|
-| `X-Talgent-Work-Id` | The Work the caller acts for |
-| `X-Talgent-Work-Credential` | The Work credential issued to the Work's current live sandbox; it is revoked with that sandbox |
-| `X-Talgent-Space-Token` | The Work Agent's Space Token, sent beside the credential on the Artifact commands that take it |
-| `X-Talgent-Gateway-Token` | The deployment's secret that proves the request comes from the platform Connector |
-
-Rules every native API applies, in this order:
-
-1. An unknown path, a percent-escaped path, or a query string on anything but the content path
-   is `404 Not Found`. A method other than `POST` (or `GET` on the content path) is
-   `PermissionDenied`.
-2. When the deployment configures a gateway token, every request presents
-   `X-Talgent-Gateway-Token` exactly once with that value, or it is `PermissionDenied`: only the
-   Connector reaches the API and sandboxes never hold the token. Without a configured token, any
-   caller with a current Work credential reaches the API, and a presented gateway token is
-   dropped unread. The token never reaches the procedure.
-3. Without a gateway token, `X-Talgent-Space-Token` is dropped from every procedure that does not
-   take it.
-4. `x-envoy-*` headers are dropped. Any other `x-talgent-*` header, `Authorization` or `Cookie`
-   is `Unauthenticated`: the Work credential is the only identity accepted.
-5. `X-Talgent-Work-Id` and `X-Talgent-Work-Credential` each appear exactly once and non-empty,
-   and the credential is current for that Work; otherwise `Unauthenticated`.
-
-A request through the native API speaks for its Work's `agent`, and reaches only procedures
-that admit one.
-
-Errors are Connect errors. A service that hosts procedures on its own native API verifies the
-Work credential with Agent's `VerifyWorkCredential` and applies the same rules.
-
-### Identity
-
-`POST /talgent.native.v1.NativeService/Identity` answers which live Work a credential belongs
-to, as soon as its sandbox is live and before the Work's first turn. It takes no body and
-returns JSON:
-
-```json
-{"work_id": "…", "project_id": "…", "subject_kind": "…", "subject_id": "…", "purpose": "…"}
-```
-
-`project_id`, `subject_kind` and `subject_id` are empty for a Work without a Project or
-Subject. The path is a fixed name, not a proto package of this repository.

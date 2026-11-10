@@ -9,7 +9,6 @@ import type { WorkSubject } from "./work_subject_pb.js";
 import type { WorkModelSelection } from "../../public/v1/model_pb.js";
 import type { HarnessChoice } from "../../public/v1/harness_pb.js";
 import type { WorkProgress } from "../../public/v1/progress_pb.js";
-import type { WorkspaceLayout } from "../../../storage/private/v1/workspace_pb.js";
 import type { AgentAppearance, AgentIcon } from "../../public/v1/appearance_pb.js";
 import type { GetWorkStartOptionsResponseSchema, WorkStartRepositoriesSchema } from "../../public/v1/work_start_options_pb.js";
 
@@ -1329,116 +1328,6 @@ export declare type RespondToInteractionResponse = Message<"agent.private.v1.Res
 export declare const RespondToInteractionResponseSchema: GenMessage<RespondToInteractionResponse>;
 
 /**
- * VerifyWorkCredentialRequest carries the native process credential, not caller-declared product authority.
- *
- * @generated from message agent.private.v1.VerifyWorkCredentialRequest
- */
-export declare type VerifyWorkCredentialRequest = Message<"agent.private.v1.VerifyWorkCredentialRequest"> & {
-  /**
-   * Work whose current live sandbox holds the credential.
-   *
-   * @generated from field: string work_id = 1;
-   */
-  workId: string;
-
-  /**
-   * Credential issued to the Work's current sandbox and revoked with it.
-   *
-   * @generated from field: string credential = 2;
-   */
-  credential: string;
-
-  /**
-   * Admits the credential only while its Work acts: Working, and not awaiting
-   * its person's required response. Agent waits briefly for a delivered reply
-   * to resolve, then refuses with FAILED_PRECONDITION. A caller admitting the
-   * Work's actions sets it; one admitting reads does not.
-   *
-   * @generated from field: bool require_acting = 3;
-   */
-  requireActing: boolean;
-};
-
-/**
- * Describes the message agent.private.v1.VerifyWorkCredentialRequest.
- * Use `create(VerifyWorkCredentialRequestSchema)` to create a new message.
- */
-export declare const VerifyWorkCredentialRequestSchema: GenMessage<VerifyWorkCredentialRequest>;
-
-/**
- * VerifyWorkCredentialResponse reports verified Work facts to an authenticated integration.
- * The consumer must separately authorize its own product operations and scope.
- *
- * @generated from message agent.private.v1.VerifyWorkCredentialResponse
- */
-export declare type VerifyWorkCredentialResponse = Message<"agent.private.v1.VerifyWorkCredentialResponse"> & {
-  /**
-   * Current definition-owned public display name, never an identity.
-   *
-   * @generated from field: string agent_name = 1;
-   */
-  agentName: string;
-
-  /**
-   * Verified stable conversation.
-   *
-   * @generated from field: string work_id = 2;
-   */
-  workId: string;
-
-  /**
-   * AgentDefinition whose capability snapshot this Work uses.
-   *
-   * @generated from field: string agent_id = 3;
-   */
-  agentId: string;
-
-  /**
-   * Immutable controlling principal registered by the Work caller.
-   *
-   * @generated from field: string subject_id = 4;
-   */
-  subjectId: string;
-
-  /**
-   * The Work's Project; empty for a Work without one.
-   *
-   * @generated from field: string project_id = 6;
-   */
-  projectId: string;
-
-  /**
-   * The Work's Subject, absent for a Work without one.
-   *
-   * @generated from field: agent.private.v1.WorkSubject subject = 7;
-   */
-  subject?: WorkSubject;
-
-  /**
-   * The definition's purpose.
-   *
-   * @generated from field: string purpose = 8;
-   */
-  purpose: string;
-
-  /**
-   * The Work's Session Workspace as its sandbox sees it, from its located
-   * layout: the Work Directory a publication copies from, outside every
-   * Directory mounted in it. Absent for a Work without one, such as a Work
-   * on a Managed Computer.
-   *
-   * @generated from field: storage.private.v1.WorkspaceLayout workspace = 9;
-   */
-  workspace?: WorkspaceLayout;
-};
-
-/**
- * Describes the message agent.private.v1.VerifyWorkCredentialResponse.
- * Use `create(VerifyWorkCredentialResponseSchema)` to create a new message.
- */
-export declare const VerifyWorkCredentialResponseSchema: GenMessage<VerifyWorkCredentialResponse>;
-
-/**
  * LocateWorkRequest selects an existing association under its retained rules.
  *
  * @generated from message agent.private.v1.LocateWorkRequest
@@ -2679,16 +2568,6 @@ export declare const AgentService: GenService<{
     methodKind: "unary";
     input: typeof PrepareWorkExecutionRequestSchema;
     output: typeof PrepareWorkExecutionResponseSchema;
-  },
-  /**
-   * VerifyWorkCredential authenticates a native process by the credential of its Work's current live sandbox.
-   *
-   * @generated from rpc agent.private.v1.AgentService.VerifyWorkCredential
-   */
-  verifyWorkCredential: {
-    methodKind: "unary";
-    input: typeof VerifyWorkCredentialRequestSchema;
-    output: typeof VerifyWorkCredentialResponseSchema;
   },
   /**
    * ChangeAgentDefinitionCapabilities updates future Session capabilities without changing existing snapshots.

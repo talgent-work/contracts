@@ -1715,8 +1715,8 @@ type IssueAccessLinkResponse struct {
 	AccessUrl string `protobuf:"bytes,1,opt,name=access_url,json=accessUrl,proto3" json:"access_url,omitempty"`
 	// Time the link stops working.
 	ExpiresAt *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`
-	// The same link as a path, which a Work's sandbox resolves against the
-	// native API.
+	// The same link as a path, which a Work resolves against the public
+	// gateway's origin.
 	AccessPath    string `protobuf:"bytes,3,opt,name=access_path,json=accessPath,proto3" json:"access_path,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache

@@ -664,8 +664,8 @@ export declare type IssueAccessLinkResponse = Message<"storage.private.v1.IssueA
   expiresAt?: Timestamp;
 
   /**
-   * The same link as a path, which a Work's sandbox resolves against the
-   * native API.
+   * The same link as a path, which a Work resolves against the public
+   * gateway's origin.
    *
    * @generated from field: string access_path = 3;
    */

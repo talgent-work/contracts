@@ -11,11 +11,9 @@ signed-in session.
 |---|---|---|
 | Public gateway | `<public base>/v1/storage/content` | Anyone holding the link, such as a browser |
 | Controlplane | `/v1/storage/content` | The gateway, and trusted services inside the cluster |
-| Native API | `/v1/storage/content` | A current Work only, under its Work credential ([Native API](gateway-identity.md#native-api-agents-under-a-work-credential)) |
 
-A platform Connector that serves its Works' downloads serves `GET /v1/storage/content` on its
-own origin and forwards the request to the native API's same path with the Work's credential,
-keeping the query string byte for byte. The query is opaque: callers never parse or rebuild it.
+A Work reaches the link through the public gateway, as any other holder does. The query is
+opaque: callers never parse or rebuild it.
 
 ## Request and response
 

@@ -27,7 +27,7 @@ fresh current
 expect_pass "gen/ generated from the committed protos"
 
 fresh stale
-sed -i 's|^// FileKind tells an Attachment from an Artifact.|// FileKind tells an Attachment from an Artifact, changed.|' \
+sed -i 's|^// FileOperation is how a file Storage wrote changed.|// FileOperation is how a file Storage wrote changed, differently.|' \
   "$repo/proto/storage/integration/v1/file_changed.proto"
 git_ commit -q -am "proto changed without regenerating"
 expect_fail "a proto changed without regenerating"

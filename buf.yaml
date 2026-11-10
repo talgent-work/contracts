@@ -13,3 +13,10 @@ breaking:
     - FILE
   # Only stable packages (vN) promise to only grow; vNalphaM and vNbetaM may change.
   ignore_unstable_packages: true
+  # Agents call the platform through the entry as an agent Principal, so the
+  # Agent-facing Artifact commands move to storage.public.v1
+  # (talgent-work/orchestra#96), released together with the Workbench and
+  # Orchestra as a minor tagged by hand. The commit after that release removes
+  # this, once the check compares against it.
+  ignore:
+    - proto/storage/private

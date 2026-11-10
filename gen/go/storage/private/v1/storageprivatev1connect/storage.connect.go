@@ -14,8 +14,6 @@ import (
 const (
 	// DirectoryServiceName is the fully-qualified name of the DirectoryService service.
 	DirectoryServiceName = "storage.private.v1.DirectoryService"
-	// ArtifactServiceName is the fully-qualified name of the ArtifactService service.
-	ArtifactServiceName = "storage.private.v1.ArtifactService"
 )
 
 // These constants are the procedure names of the RPCs defined in this package. They're exposed at
@@ -64,15 +62,6 @@ const (
 	// DirectoryServiceReadContentProcedure is the procedure name of the DirectoryService's ReadContent
 	// RPC.
 	DirectoryServiceReadContentProcedure = "/storage.private.v1.DirectoryService/ReadContent"
-	// ArtifactServiceCreateArtifactProcedure is the procedure name of the ArtifactService's
-	// CreateArtifact RPC.
-	ArtifactServiceCreateArtifactProcedure = "/storage.private.v1.ArtifactService/CreateArtifact"
-	// ArtifactServiceReplaceArtifactProcedure is the procedure name of the ArtifactService's
-	// ReplaceArtifact RPC.
-	ArtifactServiceReplaceArtifactProcedure = "/storage.private.v1.ArtifactService/ReplaceArtifact"
-	// ArtifactServiceDeleteArtifactProcedure is the procedure name of the ArtifactService's
-	// DeleteArtifact RPC.
-	ArtifactServiceDeleteArtifactProcedure = "/storage.private.v1.ArtifactService/DeleteArtifact"
 )
 
 var (
@@ -607,152 +596,6 @@ func (h directoryServiceHandler) readContent(ctx context.Context, _ connect.Spec
 		return err
 	}
 	res, err := h.svc.ReadContent(ctx, &req)
-	if err != nil {
-		return err
-	}
-	return stream.Send(res)
-}
-
-var (
-	artifactServiceCreateArtifactSpec = sync.OnceValue(func() connect.Spec {
-		return connect.Spec{
-			StreamType: connect.StreamTypeUnary,
-			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("ArtifactService").Methods().ByName("CreateArtifact"),
-			Procedure:  ArtifactServiceCreateArtifactProcedure,
-		}
-	})
-	artifactServiceReplaceArtifactSpec = sync.OnceValue(func() connect.Spec {
-		return connect.Spec{
-			StreamType: connect.StreamTypeUnary,
-			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("ArtifactService").Methods().ByName("ReplaceArtifact"),
-			Procedure:  ArtifactServiceReplaceArtifactProcedure,
-		}
-	})
-	artifactServiceDeleteArtifactSpec = sync.OnceValue(func() connect.Spec {
-		return connect.Spec{
-			StreamType: connect.StreamTypeUnary,
-			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("ArtifactService").Methods().ByName("DeleteArtifact"),
-			Procedure:  ArtifactServiceDeleteArtifactProcedure,
-		}
-	})
-)
-
-// ArtifactServiceClient is a client for the storage.private.v1.ArtifactService service.
-type ArtifactServiceClient interface {
-	// CreateArtifact publishes one workspace file, or sent content, as a new
-	// Artifact.
-	CreateArtifact(context.Context, *v1.CreateArtifactRequest) (*v1.CreateArtifactResponse, error)
-	// ReplaceArtifact publishes one workspace file, or sent content, over an
-	// existing Artifact, keeping its position and Share Links.
-	ReplaceArtifact(context.Context, *v1.ReplaceArtifactRequest) (*v1.ReplaceArtifactResponse, error)
-	// DeleteArtifact deletes an Artifact and revokes its Share Links.
-	DeleteArtifact(context.Context, *v1.DeleteArtifactRequest) (*v1.DeleteArtifactResponse, error)
-}
-
-// NewArtifactServiceClient constructs a client for the storage.private.v1.ArtifactService service.
-// Multiple service clients may share a single connect.Client.
-func NewArtifactServiceClient(client *connect.Client) ArtifactServiceClient {
-	return &artifactServiceClient{client: client}
-}
-
-// ArtifactServiceHandler is an implementation of the storage.private.v1.ArtifactService service.
-type ArtifactServiceHandler interface {
-	// CreateArtifact publishes one workspace file, or sent content, as a new
-	// Artifact.
-	CreateArtifact(context.Context, *v1.CreateArtifactRequest) (*v1.CreateArtifactResponse, error)
-	// ReplaceArtifact publishes one workspace file, or sent content, over an
-	// existing Artifact, keeping its position and Share Links.
-	ReplaceArtifact(context.Context, *v1.ReplaceArtifactRequest) (*v1.ReplaceArtifactResponse, error)
-	// DeleteArtifact deletes an Artifact and revokes its Share Links.
-	DeleteArtifact(context.Context, *v1.DeleteArtifactRequest) (*v1.DeleteArtifactResponse, error)
-}
-
-// RegisterArtifactServiceHandler registers svc as the storage.private.v1.ArtifactService
-// implementation on server.
-func RegisterArtifactServiceHandler(server *connect.Server, svc ArtifactServiceHandler) {
-	adapter := artifactServiceHandler{svc: svc}
-	server.Register(
-		connect.Method{Spec: artifactServiceCreateArtifactSpec(), Handler: adapter.createArtifact},
-		connect.Method{Spec: artifactServiceReplaceArtifactSpec(), Handler: adapter.replaceArtifact},
-		connect.Method{Spec: artifactServiceDeleteArtifactSpec(), Handler: adapter.deleteArtifact},
-	)
-}
-
-// UnimplementedArtifactServiceHandler returns CodeUnimplemented from all methods.
-type UnimplementedArtifactServiceHandler struct{}
-
-func (UnimplementedArtifactServiceHandler) CreateArtifact(context.Context, *v1.CreateArtifactRequest) (*v1.CreateArtifactResponse, error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.ArtifactService.CreateArtifact is not implemented")
-}
-
-func (UnimplementedArtifactServiceHandler) ReplaceArtifact(context.Context, *v1.ReplaceArtifactRequest) (*v1.ReplaceArtifactResponse, error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.ArtifactService.ReplaceArtifact is not implemented")
-}
-
-func (UnimplementedArtifactServiceHandler) DeleteArtifact(context.Context, *v1.DeleteArtifactRequest) (*v1.DeleteArtifactResponse, error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.ArtifactService.DeleteArtifact is not implemented")
-}
-
-type artifactServiceClient struct {
-	client *connect.Client
-}
-
-func (c *artifactServiceClient) CreateArtifact(ctx context.Context, req *v1.CreateArtifactRequest) (*v1.CreateArtifactResponse, error) {
-	var res v1.CreateArtifactResponse
-	if err := c.client.CallUnary(ctx, artifactServiceCreateArtifactSpec(), req, &res); err != nil {
-		return nil, err
-	}
-	return &res, nil
-}
-
-func (c *artifactServiceClient) ReplaceArtifact(ctx context.Context, req *v1.ReplaceArtifactRequest) (*v1.ReplaceArtifactResponse, error) {
-	var res v1.ReplaceArtifactResponse
-	if err := c.client.CallUnary(ctx, artifactServiceReplaceArtifactSpec(), req, &res); err != nil {
-		return nil, err
-	}
-	return &res, nil
-}
-
-func (c *artifactServiceClient) DeleteArtifact(ctx context.Context, req *v1.DeleteArtifactRequest) (*v1.DeleteArtifactResponse, error) {
-	var res v1.DeleteArtifactResponse
-	if err := c.client.CallUnary(ctx, artifactServiceDeleteArtifactSpec(), req, &res); err != nil {
-		return nil, err
-	}
-	return &res, nil
-}
-
-type artifactServiceHandler struct{ svc ArtifactServiceHandler }
-
-func (h artifactServiceHandler) createArtifact(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
-	var req v1.CreateArtifactRequest
-	if err := stream.Receive(&req); err != nil {
-		return err
-	}
-	res, err := h.svc.CreateArtifact(ctx, &req)
-	if err != nil {
-		return err
-	}
-	return stream.Send(res)
-}
-
-func (h artifactServiceHandler) replaceArtifact(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
-	var req v1.ReplaceArtifactRequest
-	if err := stream.Receive(&req); err != nil {
-		return err
-	}
-	res, err := h.svc.ReplaceArtifact(ctx, &req)
-	if err != nil {
-		return err
-	}
-	return stream.Send(res)
-}
-
-func (h artifactServiceHandler) deleteArtifact(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
-	var req v1.DeleteArtifactRequest
-	if err := stream.Receive(&req); err != nil {
-		return err
-	}
-	res, err := h.svc.DeleteArtifact(ctx, &req)
 	if err != nil {
 		return err
 	}

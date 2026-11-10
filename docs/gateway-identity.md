@@ -54,10 +54,15 @@ and an `agent` carries its required claims; otherwise it answers `Unauthenticate
 trimmed of surrounding whitespace, and empty roles are dropped. An `agent` request never speaks
 for a person: not even the one its Agent represents.
 
-On every public route the gateway removes the trust headers a client sent before it sets its
-own: `x-talgent-authenticated-by`, the claim headers it replaces, `x-talgent-service-id`,
-`x-talgent-delegated-user-id`, `x-talgent-delegated-actor-id`, `x-talgent-gateway-token` and
-`x-talgent-reader-admission`. A client can therefore never present the headers below.
+Before it routes a request, the gateway removes every identity header a client sent, once for the
+whole gateway: `x-talgent-authenticated-by`, every claim header above, `x-talgent-service-id`,
+`x-talgent-delegated-user-id`, `x-talgent-delegated-actor-id`, `x-talgent-gateway-token`,
+`x-talgent-reader-admission` and the `x-talgent-runtime-*` headers. A client can therefore never
+present the headers below. A capability passes through untouched: `x-talgent-space-token`, the
+Space Token of the Directory an Agent writes, which only the procedures that take it read.
+
+An Agent reaches the platform through the same entry, under its agent Identity Token, which its
+sandbox's Credential Proxy or Talgent Computer adds; the Harness never holds it.
 
 ## Trusted services: delegated calls
 

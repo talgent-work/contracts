@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package agent.public.v1;
+
+import "admission/v1/admission.proto";
+
+option go_package = "github.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1";
+
+// IdentityService tells a Work's Agent who it is, from its Identity Token
+// alone.
+service IdentityService {
+  // WhoAmI returns the calling Agent's Work and that Work's fixed facts.
+  rpc WhoAmI(WhoAmIRequest) returns (WhoAmIResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_AGENT]
+    };
+  }
+}
+
+// WhoAmIRequest takes nothing: the caller is the request's Principal.
+message WhoAmIRequest {}
+
+// WhoAmIResponse is the caller's Work and its fixed facts.
+message WhoAmIResponse {
+  // The Work.
+  string work_id = 1;
+  // The Work's Project; empty for a Work without one.
+  string project_id = 2;
+  // The kind of the Work's Subject; empty for a Work without one.
+  string subject_kind = 3;
+  // The identity of the Work's Subject.
+  string subject_id = 4;
+  // The purpose of the Work's AgentDefinition.
+  string purpose = 5;
+  // The Work's AgentDefinition.
+  string agent_id = 6;
+}

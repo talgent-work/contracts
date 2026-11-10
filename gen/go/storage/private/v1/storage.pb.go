@@ -1715,8 +1715,8 @@ type IssueAccessLinkResponse struct {
 	AccessUrl string `protobuf:"bytes,1,opt,name=access_url,json=accessUrl,proto3" json:"access_url,omitempty"`
 	// Time the link stops working.
 	ExpiresAt *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`
-	// The same link as a path, which a Work's sandbox resolves against the
-	// native API.
+	// The same link as a path, which a Work resolves against the public
+	// gateway's origin.
 	AccessPath    string `protobuf:"bytes,3,opt,name=access_path,json=accessPath,proto3" json:"access_path,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -2536,363 +2536,6 @@ func (x *RevokeShareLinksResponse) GetRemaining() int32 {
 	return 0
 }
 
-// ArtifactOutcome is the explicit result of an Artifact command.
-type ArtifactOutcome struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// The Artifact at its position.
-	Artifact      *File `protobuf:"bytes,1,opt,name=artifact,proto3" json:"artifact,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ArtifactOutcome) Reset() {
-	*x = ArtifactOutcome{}
-	mi := &file_storage_private_v1_storage_proto_msgTypes[36]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ArtifactOutcome) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ArtifactOutcome) ProtoMessage() {}
-
-func (x *ArtifactOutcome) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_storage_proto_msgTypes[36]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ArtifactOutcome.ProtoReflect.Descriptor instead.
-func (*ArtifactOutcome) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_storage_proto_rawDescGZIP(), []int{36}
-}
-
-func (x *ArtifactOutcome) GetArtifact() *File {
-	if x != nil {
-		return x.Artifact
-	}
-	return nil
-}
-
-// CreateArtifactRequest publishes one file of the Work's workspace, or the
-// content a Work without one sent, as a new Artifact of its File Space.
-// Exactly one of path and content is set.
-type CreateArtifactRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Artifact name; it must be free.
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	// File path relative to the Session Workspace, outside every Directory
-	// mounted in it.
-	Path string `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`
-	// The file's content, at most 64 MiB, from a Work without a Session
-	// Workspace.
-	Content       []byte `protobuf:"bytes,3,opt,name=content,proto3,oneof" json:"content,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CreateArtifactRequest) Reset() {
-	*x = CreateArtifactRequest{}
-	mi := &file_storage_private_v1_storage_proto_msgTypes[37]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CreateArtifactRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreateArtifactRequest) ProtoMessage() {}
-
-func (x *CreateArtifactRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_storage_proto_msgTypes[37]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreateArtifactRequest.ProtoReflect.Descriptor instead.
-func (*CreateArtifactRequest) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_storage_proto_rawDescGZIP(), []int{37}
-}
-
-func (x *CreateArtifactRequest) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *CreateArtifactRequest) GetPath() string {
-	if x != nil {
-		return x.Path
-	}
-	return ""
-}
-
-func (x *CreateArtifactRequest) GetContent() []byte {
-	if x != nil {
-		return x.Content
-	}
-	return nil
-}
-
-// CreateArtifactResponse returns the outcome.
-type CreateArtifactResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// The outcome.
-	Outcome       *ArtifactOutcome `protobuf:"bytes,1,opt,name=outcome,proto3" json:"outcome,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CreateArtifactResponse) Reset() {
-	*x = CreateArtifactResponse{}
-	mi := &file_storage_private_v1_storage_proto_msgTypes[38]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CreateArtifactResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreateArtifactResponse) ProtoMessage() {}
-
-func (x *CreateArtifactResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_storage_proto_msgTypes[38]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreateArtifactResponse.ProtoReflect.Descriptor instead.
-func (*CreateArtifactResponse) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_storage_proto_rawDescGZIP(), []int{38}
-}
-
-func (x *CreateArtifactResponse) GetOutcome() *ArtifactOutcome {
-	if x != nil {
-		return x.Outcome
-	}
-	return nil
-}
-
-// ReplaceArtifactRequest replaces an existing Artifact from one file of the
-// Work's workspace, or the content a Work without one sent. Exactly one of
-// path and content is set.
-type ReplaceArtifactRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Name of the existing Artifact.
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	// File path relative to the Session Workspace, outside every Directory
-	// mounted in it.
-	Path string `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`
-	// The file's content, at most 64 MiB, from a Work without a Session
-	// Workspace.
-	Content       []byte `protobuf:"bytes,3,opt,name=content,proto3,oneof" json:"content,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ReplaceArtifactRequest) Reset() {
-	*x = ReplaceArtifactRequest{}
-	mi := &file_storage_private_v1_storage_proto_msgTypes[39]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ReplaceArtifactRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ReplaceArtifactRequest) ProtoMessage() {}
-
-func (x *ReplaceArtifactRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_storage_proto_msgTypes[39]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ReplaceArtifactRequest.ProtoReflect.Descriptor instead.
-func (*ReplaceArtifactRequest) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_storage_proto_rawDescGZIP(), []int{39}
-}
-
-func (x *ReplaceArtifactRequest) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *ReplaceArtifactRequest) GetPath() string {
-	if x != nil {
-		return x.Path
-	}
-	return ""
-}
-
-func (x *ReplaceArtifactRequest) GetContent() []byte {
-	if x != nil {
-		return x.Content
-	}
-	return nil
-}
-
-// ReplaceArtifactResponse returns the outcome.
-type ReplaceArtifactResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// The outcome.
-	Outcome       *ArtifactOutcome `protobuf:"bytes,1,opt,name=outcome,proto3" json:"outcome,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ReplaceArtifactResponse) Reset() {
-	*x = ReplaceArtifactResponse{}
-	mi := &file_storage_private_v1_storage_proto_msgTypes[40]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ReplaceArtifactResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ReplaceArtifactResponse) ProtoMessage() {}
-
-func (x *ReplaceArtifactResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_storage_proto_msgTypes[40]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ReplaceArtifactResponse.ProtoReflect.Descriptor instead.
-func (*ReplaceArtifactResponse) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_storage_proto_rawDescGZIP(), []int{40}
-}
-
-func (x *ReplaceArtifactResponse) GetOutcome() *ArtifactOutcome {
-	if x != nil {
-		return x.Outcome
-	}
-	return nil
-}
-
-// DeleteArtifactRequest deletes an Artifact of the Work's File Space.
-type DeleteArtifactRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Artifact name.
-	Name          string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DeleteArtifactRequest) Reset() {
-	*x = DeleteArtifactRequest{}
-	mi := &file_storage_private_v1_storage_proto_msgTypes[41]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteArtifactRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteArtifactRequest) ProtoMessage() {}
-
-func (x *DeleteArtifactRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_storage_proto_msgTypes[41]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteArtifactRequest.ProtoReflect.Descriptor instead.
-func (*DeleteArtifactRequest) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_storage_proto_rawDescGZIP(), []int{41}
-}
-
-func (x *DeleteArtifactRequest) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-// DeleteArtifactResponse confirms the deletion.
-type DeleteArtifactResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DeleteArtifactResponse) Reset() {
-	*x = DeleteArtifactResponse{}
-	mi := &file_storage_private_v1_storage_proto_msgTypes[42]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteArtifactResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteArtifactResponse) ProtoMessage() {}
-
-func (x *DeleteArtifactResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_storage_proto_msgTypes[42]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteArtifactResponse.ProtoReflect.Descriptor instead.
-func (*DeleteArtifactResponse) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_storage_proto_rawDescGZIP(), []int{42}
-}
-
 var File_storage_private_v1_storage_proto protoreflect.FileDescriptor
 
 const file_storage_private_v1_storage_proto_rawDesc = "" +
@@ -3033,28 +2676,7 @@ const file_storage_private_v1_storage_proto_rawDesc = "" +
 	"\x12created_by_user_id\x18\x02 \x01(\tR\x0fcreatedByUserId\"R\n" +
 	"\x18RevokeShareLinksResponse\x12\x18\n" +
 	"\arevoked\x18\x01 \x01(\x05R\arevoked\x12\x1c\n" +
-	"\tremaining\x18\x02 \x01(\x05R\tremaining\"G\n" +
-	"\x0fArtifactOutcome\x124\n" +
-	"\bartifact\x18\x01 \x01(\v2\x18.storage.private.v1.FileR\bartifact\"j\n" +
-	"\x15CreateArtifactRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
-	"\x04path\x18\x02 \x01(\tR\x04path\x12\x1d\n" +
-	"\acontent\x18\x03 \x01(\fH\x00R\acontent\x88\x01\x01B\n" +
-	"\n" +
-	"\b_content\"W\n" +
-	"\x16CreateArtifactResponse\x12=\n" +
-	"\aoutcome\x18\x01 \x01(\v2#.storage.private.v1.ArtifactOutcomeR\aoutcome\"k\n" +
-	"\x16ReplaceArtifactRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
-	"\x04path\x18\x02 \x01(\tR\x04path\x12\x1d\n" +
-	"\acontent\x18\x03 \x01(\fH\x00R\acontent\x88\x01\x01B\n" +
-	"\n" +
-	"\b_content\"X\n" +
-	"\x17ReplaceArtifactResponse\x12=\n" +
-	"\aoutcome\x18\x01 \x01(\v2#.storage.private.v1.ArtifactOutcomeR\aoutcome\"+\n" +
-	"\x15DeleteArtifactRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\"\x18\n" +
-	"\x16DeleteArtifactResponse*\xd4\x03\n" +
+	"\tremaining\x18\x02 \x01(\x05R\tremaining*\xd4\x03\n" +
 	"\vErrorReason\x12\x1c\n" +
 	"\x18ERROR_REASON_UNSPECIFIED\x10\x00\x12\x1f\n" +
 	"\x1bERROR_REASON_FILE_NOT_FOUND\x10\x01\x12!\n" +
@@ -3119,11 +2741,7 @@ const file_storage_private_v1_storage_proto_rawDesc = "" +
 	"\x0eGetFilePreview\x12).storage.private.v1.GetFilePreviewRequest\x1a*.storage.private.v1.GetFilePreviewResponse\x12s\n" +
 	"\x12RequestFilePreview\x12-.storage.private.v1.RequestFilePreviewRequest\x1a..storage.private.v1.RequestFilePreviewResponse\x12g\n" +
 	"\x0eReplaceContent\x12).storage.private.v1.ReplaceContentRequest\x1a*.storage.private.v1.ReplaceContentResponse\x12^\n" +
-	"\vReadContent\x12&.storage.private.v1.ReadContentRequest\x1a'.storage.private.v1.ReadContentResponse2\xcf\x02\n" +
-	"\x0fArtifactService\x12g\n" +
-	"\x0eCreateArtifact\x12).storage.private.v1.CreateArtifactRequest\x1a*.storage.private.v1.CreateArtifactResponse\x12j\n" +
-	"\x0fReplaceArtifact\x12*.storage.private.v1.ReplaceArtifactRequest\x1a+.storage.private.v1.ReplaceArtifactResponse\x12g\n" +
-	"\x0eDeleteArtifact\x12).storage.private.v1.DeleteArtifactRequest\x1a*.storage.private.v1.DeleteArtifactResponseBNZLgithub.com/talgent-work/contracts/gen/go/storage/private/v1;storageprivatev1b\x06proto3"
+	"\vReadContent\x12&.storage.private.v1.ReadContentRequest\x1a'.storage.private.v1.ReadContentResponseBNZLgithub.com/talgent-work/contracts/gen/go/storage/private/v1;storageprivatev1b\x06proto3"
 
 var (
 	file_storage_private_v1_storage_proto_rawDescOnce sync.Once
@@ -3138,7 +2756,7 @@ func file_storage_private_v1_storage_proto_rawDescGZIP() []byte {
 }
 
 var file_storage_private_v1_storage_proto_enumTypes = make([]protoimpl.EnumInfo, 7)
-var file_storage_private_v1_storage_proto_msgTypes = make([]protoimpl.MessageInfo, 43)
+var file_storage_private_v1_storage_proto_msgTypes = make([]protoimpl.MessageInfo, 36)
 var file_storage_private_v1_storage_proto_goTypes = []any{
 	(ErrorReason)(0),                   // 0: storage.private.v1.ErrorReason
 	(Backend)(0),                       // 1: storage.private.v1.Backend
@@ -3183,14 +2801,7 @@ var file_storage_private_v1_storage_proto_goTypes = []any{
 	(*CreateShareLinkResponse)(nil),    // 40: storage.private.v1.CreateShareLinkResponse
 	(*RevokeShareLinksRequest)(nil),    // 41: storage.private.v1.RevokeShareLinksRequest
 	(*RevokeShareLinksResponse)(nil),   // 42: storage.private.v1.RevokeShareLinksResponse
-	(*ArtifactOutcome)(nil),            // 43: storage.private.v1.ArtifactOutcome
-	(*CreateArtifactRequest)(nil),      // 44: storage.private.v1.CreateArtifactRequest
-	(*CreateArtifactResponse)(nil),     // 45: storage.private.v1.CreateArtifactResponse
-	(*ReplaceArtifactRequest)(nil),     // 46: storage.private.v1.ReplaceArtifactRequest
-	(*ReplaceArtifactResponse)(nil),    // 47: storage.private.v1.ReplaceArtifactResponse
-	(*DeleteArtifactRequest)(nil),      // 48: storage.private.v1.DeleteArtifactRequest
-	(*DeleteArtifactResponse)(nil),     // 49: storage.private.v1.DeleteArtifactResponse
-	(*timestamppb.Timestamp)(nil),      // 50: google.protobuf.Timestamp
+	(*timestamppb.Timestamp)(nil),      // 43: google.protobuf.Timestamp
 }
 var file_storage_private_v1_storage_proto_depIdxs = []int32{
 	1,  // 0: storage.private.v1.DirectoryLocator.backend:type_name -> storage.private.v1.Backend
@@ -3201,9 +2812,9 @@ var file_storage_private_v1_storage_proto_depIdxs = []int32{
 	1,  // 5: storage.private.v1.LocatedDirectory.backend:type_name -> storage.private.v1.Backend
 	2,  // 6: storage.private.v1.LocatedDirectory.lifetime:type_name -> storage.private.v1.Lifetime
 	10, // 7: storage.private.v1.FilePosition.directory:type_name -> storage.private.v1.Directory
-	50, // 8: storage.private.v1.ShareLink.created_at:type_name -> google.protobuf.Timestamp
+	43, // 8: storage.private.v1.ShareLink.created_at:type_name -> google.protobuf.Timestamp
 	12, // 9: storage.private.v1.File.position:type_name -> storage.private.v1.FilePosition
-	50, // 10: storage.private.v1.File.updated_at:type_name -> google.protobuf.Timestamp
+	43, // 10: storage.private.v1.File.updated_at:type_name -> google.protobuf.Timestamp
 	13, // 11: storage.private.v1.File.share_links:type_name -> storage.private.v1.ShareLink
 	11, // 12: storage.private.v1.OpenDirectoryRequest.directory:type_name -> storage.private.v1.LocatedDirectory
 	10, // 13: storage.private.v1.ListFilesRequest.directory:type_name -> storage.private.v1.Directory
@@ -3212,13 +2823,13 @@ var file_storage_private_v1_storage_proto_depIdxs = []int32{
 	14, // 16: storage.private.v1.ListDirectoryFilesResponse.files:type_name -> storage.private.v1.File
 	10, // 17: storage.private.v1.ListDirectoryFilesResponse.reclaimed:type_name -> storage.private.v1.Directory
 	12, // 18: storage.private.v1.IssueUploadRequest.position:type_name -> storage.private.v1.FilePosition
-	50, // 19: storage.private.v1.IssueUploadResponse.expires_at:type_name -> google.protobuf.Timestamp
+	43, // 19: storage.private.v1.IssueUploadResponse.expires_at:type_name -> google.protobuf.Timestamp
 	12, // 20: storage.private.v1.RenameFileRequest.position:type_name -> storage.private.v1.FilePosition
 	14, // 21: storage.private.v1.RenameFileResponse.file:type_name -> storage.private.v1.File
 	12, // 22: storage.private.v1.DeleteFileRequest.position:type_name -> storage.private.v1.FilePosition
 	12, // 23: storage.private.v1.IssueAccessLinkRequest.position:type_name -> storage.private.v1.FilePosition
 	3,  // 24: storage.private.v1.IssueAccessLinkRequest.disposition:type_name -> storage.private.v1.AccessDisposition
-	50, // 25: storage.private.v1.IssueAccessLinkResponse.expires_at:type_name -> google.protobuf.Timestamp
+	43, // 25: storage.private.v1.IssueAccessLinkResponse.expires_at:type_name -> google.protobuf.Timestamp
 	12, // 26: storage.private.v1.GetFilePreviewRequest.position:type_name -> storage.private.v1.FilePosition
 	38, // 27: storage.private.v1.GetFilePreviewResponse.preview:type_name -> storage.private.v1.FilePreview
 	12, // 28: storage.private.v1.RequestFilePreviewRequest.position:type_name -> storage.private.v1.FilePosition
@@ -3230,50 +2841,41 @@ var file_storage_private_v1_storage_proto_depIdxs = []int32{
 	4,  // 34: storage.private.v1.FilePreview.mode:type_name -> storage.private.v1.PreviewMode
 	5,  // 35: storage.private.v1.FilePreview.display:type_name -> storage.private.v1.PreviewDisplay
 	6,  // 36: storage.private.v1.FilePreview.refusal:type_name -> storage.private.v1.PreviewRefusal
-	50, // 37: storage.private.v1.FilePreview.expires_at:type_name -> google.protobuf.Timestamp
+	43, // 37: storage.private.v1.FilePreview.expires_at:type_name -> google.protobuf.Timestamp
 	12, // 38: storage.private.v1.CreateShareLinkRequest.position:type_name -> storage.private.v1.FilePosition
 	13, // 39: storage.private.v1.CreateShareLinkResponse.share_link:type_name -> storage.private.v1.ShareLink
 	12, // 40: storage.private.v1.RevokeShareLinksRequest.position:type_name -> storage.private.v1.FilePosition
-	14, // 41: storage.private.v1.ArtifactOutcome.artifact:type_name -> storage.private.v1.File
-	43, // 42: storage.private.v1.CreateArtifactResponse.outcome:type_name -> storage.private.v1.ArtifactOutcome
-	43, // 43: storage.private.v1.ReplaceArtifactResponse.outcome:type_name -> storage.private.v1.ArtifactOutcome
-	15, // 44: storage.private.v1.DirectoryService.OpenDirectory:input_type -> storage.private.v1.OpenDirectoryRequest
-	17, // 45: storage.private.v1.DirectoryService.ListFiles:input_type -> storage.private.v1.ListFilesRequest
-	19, // 46: storage.private.v1.DirectoryService.ListDirectoryFiles:input_type -> storage.private.v1.ListDirectoryFilesRequest
-	21, // 47: storage.private.v1.DirectoryService.IssueUpload:input_type -> storage.private.v1.IssueUploadRequest
-	23, // 48: storage.private.v1.DirectoryService.RenameFile:input_type -> storage.private.v1.RenameFileRequest
-	25, // 49: storage.private.v1.DirectoryService.DeleteFile:input_type -> storage.private.v1.DeleteFileRequest
-	27, // 50: storage.private.v1.DirectoryService.IssueAccessLink:input_type -> storage.private.v1.IssueAccessLinkRequest
-	39, // 51: storage.private.v1.DirectoryService.CreateShareLink:input_type -> storage.private.v1.CreateShareLinkRequest
-	41, // 52: storage.private.v1.DirectoryService.RevokeShareLinks:input_type -> storage.private.v1.RevokeShareLinksRequest
-	29, // 53: storage.private.v1.DirectoryService.GetFilePreview:input_type -> storage.private.v1.GetFilePreviewRequest
-	31, // 54: storage.private.v1.DirectoryService.RequestFilePreview:input_type -> storage.private.v1.RequestFilePreviewRequest
-	34, // 55: storage.private.v1.DirectoryService.ReplaceContent:input_type -> storage.private.v1.ReplaceContentRequest
-	36, // 56: storage.private.v1.DirectoryService.ReadContent:input_type -> storage.private.v1.ReadContentRequest
-	44, // 57: storage.private.v1.ArtifactService.CreateArtifact:input_type -> storage.private.v1.CreateArtifactRequest
-	46, // 58: storage.private.v1.ArtifactService.ReplaceArtifact:input_type -> storage.private.v1.ReplaceArtifactRequest
-	48, // 59: storage.private.v1.ArtifactService.DeleteArtifact:input_type -> storage.private.v1.DeleteArtifactRequest
-	16, // 60: storage.private.v1.DirectoryService.OpenDirectory:output_type -> storage.private.v1.OpenDirectoryResponse
-	18, // 61: storage.private.v1.DirectoryService.ListFiles:output_type -> storage.private.v1.ListFilesResponse
-	20, // 62: storage.private.v1.DirectoryService.ListDirectoryFiles:output_type -> storage.private.v1.ListDirectoryFilesResponse
-	22, // 63: storage.private.v1.DirectoryService.IssueUpload:output_type -> storage.private.v1.IssueUploadResponse
-	24, // 64: storage.private.v1.DirectoryService.RenameFile:output_type -> storage.private.v1.RenameFileResponse
-	26, // 65: storage.private.v1.DirectoryService.DeleteFile:output_type -> storage.private.v1.DeleteFileResponse
-	28, // 66: storage.private.v1.DirectoryService.IssueAccessLink:output_type -> storage.private.v1.IssueAccessLinkResponse
-	40, // 67: storage.private.v1.DirectoryService.CreateShareLink:output_type -> storage.private.v1.CreateShareLinkResponse
-	42, // 68: storage.private.v1.DirectoryService.RevokeShareLinks:output_type -> storage.private.v1.RevokeShareLinksResponse
-	30, // 69: storage.private.v1.DirectoryService.GetFilePreview:output_type -> storage.private.v1.GetFilePreviewResponse
-	32, // 70: storage.private.v1.DirectoryService.RequestFilePreview:output_type -> storage.private.v1.RequestFilePreviewResponse
-	35, // 71: storage.private.v1.DirectoryService.ReplaceContent:output_type -> storage.private.v1.ReplaceContentResponse
-	37, // 72: storage.private.v1.DirectoryService.ReadContent:output_type -> storage.private.v1.ReadContentResponse
-	45, // 73: storage.private.v1.ArtifactService.CreateArtifact:output_type -> storage.private.v1.CreateArtifactResponse
-	47, // 74: storage.private.v1.ArtifactService.ReplaceArtifact:output_type -> storage.private.v1.ReplaceArtifactResponse
-	49, // 75: storage.private.v1.ArtifactService.DeleteArtifact:output_type -> storage.private.v1.DeleteArtifactResponse
-	60, // [60:76] is the sub-list for method output_type
-	44, // [44:60] is the sub-list for method input_type
-	44, // [44:44] is the sub-list for extension type_name
-	44, // [44:44] is the sub-list for extension extendee
-	0,  // [0:44] is the sub-list for field type_name
+	15, // 41: storage.private.v1.DirectoryService.OpenDirectory:input_type -> storage.private.v1.OpenDirectoryRequest
+	17, // 42: storage.private.v1.DirectoryService.ListFiles:input_type -> storage.private.v1.ListFilesRequest
+	19, // 43: storage.private.v1.DirectoryService.ListDirectoryFiles:input_type -> storage.private.v1.ListDirectoryFilesRequest
+	21, // 44: storage.private.v1.DirectoryService.IssueUpload:input_type -> storage.private.v1.IssueUploadRequest
+	23, // 45: storage.private.v1.DirectoryService.RenameFile:input_type -> storage.private.v1.RenameFileRequest
+	25, // 46: storage.private.v1.DirectoryService.DeleteFile:input_type -> storage.private.v1.DeleteFileRequest
+	27, // 47: storage.private.v1.DirectoryService.IssueAccessLink:input_type -> storage.private.v1.IssueAccessLinkRequest
+	39, // 48: storage.private.v1.DirectoryService.CreateShareLink:input_type -> storage.private.v1.CreateShareLinkRequest
+	41, // 49: storage.private.v1.DirectoryService.RevokeShareLinks:input_type -> storage.private.v1.RevokeShareLinksRequest
+	29, // 50: storage.private.v1.DirectoryService.GetFilePreview:input_type -> storage.private.v1.GetFilePreviewRequest
+	31, // 51: storage.private.v1.DirectoryService.RequestFilePreview:input_type -> storage.private.v1.RequestFilePreviewRequest
+	34, // 52: storage.private.v1.DirectoryService.ReplaceContent:input_type -> storage.private.v1.ReplaceContentRequest
+	36, // 53: storage.private.v1.DirectoryService.ReadContent:input_type -> storage.private.v1.ReadContentRequest
+	16, // 54: storage.private.v1.DirectoryService.OpenDirectory:output_type -> storage.private.v1.OpenDirectoryResponse
+	18, // 55: storage.private.v1.DirectoryService.ListFiles:output_type -> storage.private.v1.ListFilesResponse
+	20, // 56: storage.private.v1.DirectoryService.ListDirectoryFiles:output_type -> storage.private.v1.ListDirectoryFilesResponse
+	22, // 57: storage.private.v1.DirectoryService.IssueUpload:output_type -> storage.private.v1.IssueUploadResponse
+	24, // 58: storage.private.v1.DirectoryService.RenameFile:output_type -> storage.private.v1.RenameFileResponse
+	26, // 59: storage.private.v1.DirectoryService.DeleteFile:output_type -> storage.private.v1.DeleteFileResponse
+	28, // 60: storage.private.v1.DirectoryService.IssueAccessLink:output_type -> storage.private.v1.IssueAccessLinkResponse
+	40, // 61: storage.private.v1.DirectoryService.CreateShareLink:output_type -> storage.private.v1.CreateShareLinkResponse
+	42, // 62: storage.private.v1.DirectoryService.RevokeShareLinks:output_type -> storage.private.v1.RevokeShareLinksResponse
+	30, // 63: storage.private.v1.DirectoryService.GetFilePreview:output_type -> storage.private.v1.GetFilePreviewResponse
+	32, // 64: storage.private.v1.DirectoryService.RequestFilePreview:output_type -> storage.private.v1.RequestFilePreviewResponse
+	35, // 65: storage.private.v1.DirectoryService.ReplaceContent:output_type -> storage.private.v1.ReplaceContentResponse
+	37, // 66: storage.private.v1.DirectoryService.ReadContent:output_type -> storage.private.v1.ReadContentResponse
+	54, // [54:67] is the sub-list for method output_type
+	41, // [41:54] is the sub-list for method input_type
+	41, // [41:41] is the sub-list for extension type_name
+	41, // [41:41] is the sub-list for extension extendee
+	0,  // [0:41] is the sub-list for field type_name
 }
 
 func init() { file_storage_private_v1_storage_proto_init() }
@@ -3281,17 +2883,15 @@ func file_storage_private_v1_storage_proto_init() {
 	if File_storage_private_v1_storage_proto != nil {
 		return
 	}
-	file_storage_private_v1_storage_proto_msgTypes[37].OneofWrappers = []any{}
-	file_storage_private_v1_storage_proto_msgTypes[39].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_storage_private_v1_storage_proto_rawDesc), len(file_storage_private_v1_storage_proto_rawDesc)),
 			NumEnums:      7,
-			NumMessages:   43,
+			NumMessages:   36,
 			NumExtensions: 0,
-			NumServices:   2,
+			NumServices:   1,
 		},
 		GoTypes:           file_storage_private_v1_storage_proto_goTypes,
 		DependencyIndexes: file_storage_private_v1_storage_proto_depIdxs,

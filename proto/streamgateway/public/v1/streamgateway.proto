@@ -2,23 +2,40 @@ syntax = "proto3";
 
 package streamgateway.public.v1;
 
-import "google/protobuf/timestamp.proto";
+import "admission/v1/admission.proto";
 import "agent/public/v1/startup.proto";
 import "agent/public/v1/subagents.proto";
 import "dispatcher/public/v1/unified_message.proto";
+import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/talgent-work/contracts/gen/go/streamgateway/public/v1;streamgatewaypublicv1";
 
 // StreamGatewayService service.
 service StreamGatewayService {
   // WatchStream RPC.
-  rpc WatchStream(WatchStreamRequest) returns (stream WatchStreamResponse);
+  rpc WatchStream(WatchStreamRequest) returns (stream WatchStreamResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // ListMessagesBySession RPC.
-  rpc ListMessagesBySession(ListMessagesBySessionRequest) returns (ListMessagesBySessionResponse);
+  rpc ListMessagesBySession(ListMessagesBySessionRequest) returns (ListMessagesBySessionResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // Read a bounded page of original tool input/output or error detail.
-  rpc GetMessageDetail(GetMessageDetailRequest) returns (GetMessageDetailResponse);
+  rpc GetMessageDetail(GetMessageDetailRequest) returns (GetMessageDetailResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // Read original input and output together, each bounded independently.
-  rpc GetToolDetail(GetToolDetailRequest) returns (GetToolDetailResponse);
+  rpc GetToolDetail(GetToolDetailRequest) returns (GetToolDetailResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
 }
 
 // GetToolDetailRequest addresses one tool call's recorded input and output.

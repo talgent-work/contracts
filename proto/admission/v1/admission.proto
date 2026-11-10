@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package admission.v1;
+
+import "google/protobuf/descriptor.proto";
+
+option go_package = "github.com/talgent-work/contracts/gen/go/admission/v1;admissionv1";
+
+// Principal is the subject a request speaks for, as the entry verified it
+// from the caller's Identity Token.
+enum Principal {
+  // No Principal; never declared.
+  PRINCIPAL_UNSPECIFIED = 0;
+  // A person, by their Account.
+  PRINCIPAL_USER = 1;
+  // A Work's Agent, by its Work's Agent Account; it carries no person.
+  PRINCIPAL_AGENT = 2;
+}
+
+// Admission declares which callers a public procedure accepts. A service
+// refuses every other caller before its handler runs, and refuses every
+// caller of a procedure that declares nothing.
+message Admission {
+  // The Principals the procedure accepts.
+  repeated Principal principals = 1;
+  // The procedure accepts a caller that holds no credential yet, such as a
+  // machine starting its registration; it then accepts no Principal.
+  bool anonymous = 2;
+}
+
+extend google.protobuf.MethodOptions {
+  // Every public procedure declares its Admission; contracts CI fails on one
+  // without it.
+  Admission admits = 51000;
+}

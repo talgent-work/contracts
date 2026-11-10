@@ -12,6 +12,7 @@ repository.
 | `proto/<context>/public/v1` | Externally supported RPC contracts |
 | `proto/<context>/private/v1` | Deployment-private RPC contracts between trusted services |
 | `proto/<context>/integration/v1` | Integration Messages a context publishes |
+| `proto/admission/v1` | The method option every public procedure declares its callers with |
 | `gen/go/<context>/<surface>/v1` | Generated Go and Connect code |
 | `gen/ts` | The TypeScript package `@talgent/contracts`; its generated code is in `gen/ts/dist` |
 | `docs/` | Contracts no proto expresses |
@@ -29,6 +30,26 @@ code is never edited by hand; only a package's own files, such as `gen/ts/packag
   for protobuf-es v2; its services serve Connect-ES 2 clients directly.
 - An Integration Message is named `<Fact>V1`. Its message kind, and the topic it is published
   on, is its full name, such as `storage.integration.v1.FileChangedV1`.
+
+## Admission
+
+Every public procedure declares the callers it accepts with the `admission.v1.admits` method
+option: the Principals (`PRINCIPAL_USER`, `PRINCIPAL_AGENT` or both), or `anonymous` for a
+caller that holds no credential yet:
+
+```proto
+rpc ListLibraryFiles(ListLibraryFilesRequest) returns (ListLibraryFilesResponse) {
+  option (admission.v1.admits) = {principals: [PRINCIPAL_USER, PRINCIPAL_AGENT]};
+}
+```
+
+A service refuses every other caller before its handler runs, and every caller of a procedure
+that declares nothing. Release CI fails on a public procedure without a valid declaration; a
+product checks its own public contracts the same way:
+
+```sh
+buf build -o - | go run github.com/talgent-work/contracts/cmd/check-admission
+```
 
 ## Compatibility
 
@@ -91,8 +112,8 @@ protobuf runtime; a library built on the contracts, such as `workbench-ui`, decl
 
 ## Contracts beyond the protos
 
-- [Trusted identity headers](docs/gateway-identity.md), including the native API's Work
-  credential headers and gateway token
+- [Trusted identity headers](docs/gateway-identity.md): what the public gateway and trusted
+  in-cluster services tell a service about its caller
 - [Content path](docs/storage-content.md): `/v1/storage/content`
 - [Originals mount](docs/originals-mount.md): layout, extended attributes and guarantees of the
   read-only mount of every JuiceFS Directory, and the claim a reader references

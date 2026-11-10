@@ -2,37 +2,67 @@ syntax = "proto3";
 
 package computer.public.v1;
 
+import "admission/v1/admission.proto";
+
 option go_package = "github.com/talgent-work/contracts/gen/go/computer/public/v1;computerpublicv1";
 
 // ComputerService serves the signed-in person's own Managed Computers. A
 // Cloud never appears here.
 service ComputerService {
   // ListComputers lists the person's Managed Computers, newest first.
-  rpc ListComputers(ListComputersRequest) returns (ListComputersResponse);
+  rpc ListComputers(ListComputersRequest) returns (ListComputersResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // ListUsableComputers lists the Computers the person may start a Work on:
   // every Cloud, then their own Managed Computers, newest first.
-  rpc ListUsableComputers(ListUsableComputersRequest) returns (ListUsableComputersResponse);
+  rpc ListUsableComputers(ListUsableComputersRequest) returns (ListUsableComputersResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // RenameComputer renames one of the person's Managed Computers.
-  rpc RenameComputer(RenameComputerRequest) returns (RenameComputerResponse);
+  rpc RenameComputer(RenameComputerRequest) returns (RenameComputerResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // SetRoomRules sets how many Works one of the person's Managed Computers
   // runs at once and what it answers a run while full. A Capacity outside 1
   // to 32 is InvalidArgument; one below the Works it runs now is
   // FailedPrecondition.
-  rpc SetRoomRules(SetRoomRulesRequest) returns (SetRoomRulesResponse);
+  rpc SetRoomRules(SetRoomRulesRequest) returns (SetRoomRulesResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // RemoveComputer removes one of the person's Managed Computers for good:
   // its credential is revoked, its machine is disconnected and can no
   // longer connect or run anything, and its Works lose their execution
   // environment. Removing it again does nothing; another person's is
   // NotFound.
-  rpc RemoveComputer(RemoveComputerRequest) returns (RemoveComputerResponse);
+  rpc RemoveComputer(RemoveComputerRequest) returns (RemoveComputerResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // GetRegistration reads a pending registration by its user code, so the
   // person sees which machine they approve.
-  rpc GetRegistration(GetRegistrationRequest) returns (GetRegistrationResponse);
+  rpc GetRegistration(GetRegistrationRequest) returns (GetRegistrationResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // ApproveRegistration approves a pending registration as the signed-in
   // person, who becomes the new Computer's owner. Approving it again does
   // nothing; an unknown or expired code is NotFound, and a code another
   // person approved is FailedPrecondition.
-  rpc ApproveRegistration(ApproveRegistrationRequest) returns (ApproveRegistrationResponse);
+  rpc ApproveRegistration(ApproveRegistrationRequest) returns (ApproveRegistrationResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
 }
 
 // Presence is whether the platform can reach a Computer now.

@@ -7,6 +7,7 @@
 package agentpublicv1
 
 import (
+	_ "github.com/talgent-work/contracts/gen/go/admission/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -1314,7 +1315,7 @@ var File_agent_public_v1_personal_work_proto protoreflect.FileDescriptor
 
 const file_agent_public_v1_personal_work_proto_rawDesc = "" +
 	"\n" +
-	"#agent/public/v1/personal_work.proto\x12\x0fagent.public.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1dagent/public/v1/harness.proto\x1a\x1bagent/public/v1/model.proto\x1a\x1aagent/public/v1/work.proto\x1a(agent/public/v1/work_start_options.proto\"$\n" +
+	"#agent/public/v1/personal_work.proto\x12\x0fagent.public.v1\x1a\x1cadmission/v1/admission.proto\x1a\x1dagent/public/v1/harness.proto\x1a\x1bagent/public/v1/model.proto\x1a\x1aagent/public/v1/work.proto\x1a(agent/public/v1/work_start_options.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"$\n" +
 	"\"GetPersonalWorkStartOptionsRequest\"m\n" +
 	"#GetPersonalWorkStartOptionsResponse\x12F\n" +
 	"\aoptions\x18\x01 \x01(\v2,.agent.public.v1.GetWorkStartOptionsResponseR\aoptions\"*\n" +
@@ -1397,17 +1398,26 @@ const file_agent_public_v1_personal_work_proto_rawDesc = "" +
 	"\bpersonal\x18\x04 \x01(\bR\bpersonal\"\x82\x01\n" +
 	"\x18ListLibraryFilesResponse\x122\n" +
 	"\x05files\x18\x01 \x03(\v2\x1c.agent.public.v1.LibraryFileR\x05files\x122\n" +
-	"\x05works\x18\x02 \x03(\v2\x1c.agent.public.v1.LibraryWorkR\x05works2\xcc\b\n" +
-	"\x13PersonalWorkService\x12\x88\x01\n" +
-	"\x1bGetPersonalWorkStartOptions\x123.agent.public.v1.GetPersonalWorkStartOptionsRequest\x1a4.agent.public.v1.GetPersonalWorkStartOptionsResponse\x12\x9a\x01\n" +
-	"!ListPersonalWorkStartRepositories\x129.agent.public.v1.ListPersonalWorkStartRepositoriesRequest\x1a:.agent.public.v1.ListPersonalWorkStartRepositoriesResponse\x12j\n" +
-	"\x11StartPersonalWork\x12).agent.public.v1.StartPersonalWorkRequest\x1a*.agent.public.v1.StartPersonalWorkResponse\x12j\n" +
-	"\x11ListPersonalWorks\x12).agent.public.v1.ListPersonalWorksRequest\x1a*.agent.public.v1.ListPersonalWorksResponse\x12|\n" +
-	"\x17ChangePersonalWorkTitle\x12/.agent.public.v1.ChangePersonalWorkTitleRequest\x1a0.agent.public.v1.ChangePersonalWorkTitleResponse\x12m\n" +
-	"\x12SearchShareReaders\x12*.agent.public.v1.SearchShareReadersRequest\x1a+.agent.public.v1.SearchShareReadersResponse\x12d\n" +
-	"\x0fGetShareReaders\x12'.agent.public.v1.GetShareReadersRequest\x1a(.agent.public.v1.GetShareReadersResponse\x12y\n" +
-	"\x16GrantPersonalWorkShare\x12..agent.public.v1.GrantPersonalWorkShareRequest\x1a/.agent.public.v1.GrantPersonalWorkShareResponse\x12g\n" +
-	"\x10ListLibraryFiles\x12(.agent.public.v1.ListLibraryFilesRequest\x1a).agent.public.v1.ListLibraryFilesResponseBHZFgithub.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1b\x06proto3"
+	"\x05works\x18\x02 \x03(\v2\x1c.agent.public.v1.LibraryWorkR\x05works2\xa0\t\n" +
+	"\x13PersonalWorkService\x12\x91\x01\n" +
+	"\x1bGetPersonalWorkStartOptions\x123.agent.public.v1.GetPersonalWorkStartOptionsRequest\x1a4.agent.public.v1.GetPersonalWorkStartOptionsResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\xa3\x01\n" +
+	"!ListPersonalWorkStartRepositories\x129.agent.public.v1.ListPersonalWorkStartRepositoriesRequest\x1a:.agent.public.v1.ListPersonalWorkStartRepositoriesResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12s\n" +
+	"\x11StartPersonalWork\x12).agent.public.v1.StartPersonalWorkRequest\x1a*.agent.public.v1.StartPersonalWorkResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12s\n" +
+	"\x11ListPersonalWorks\x12).agent.public.v1.ListPersonalWorksRequest\x1a*.agent.public.v1.ListPersonalWorksResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\x85\x01\n" +
+	"\x17ChangePersonalWorkTitle\x12/.agent.public.v1.ChangePersonalWorkTitleRequest\x1a0.agent.public.v1.ChangePersonalWorkTitleResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12v\n" +
+	"\x12SearchShareReaders\x12*.agent.public.v1.SearchShareReadersRequest\x1a+.agent.public.v1.SearchShareReadersResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12m\n" +
+	"\x0fGetShareReaders\x12'.agent.public.v1.GetShareReadersRequest\x1a(.agent.public.v1.GetShareReadersResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\x82\x01\n" +
+	"\x16GrantPersonalWorkShare\x12..agent.public.v1.GrantPersonalWorkShareRequest\x1a/.agent.public.v1.GrantPersonalWorkShareResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12q\n" +
+	"\x10ListLibraryFiles\x12(.agent.public.v1.ListLibraryFilesRequest\x1a).agent.public.v1.ListLibraryFilesResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x02BHZFgithub.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1b\x06proto3"
 
 var (
 	file_agent_public_v1_personal_work_proto_rawDescOnce sync.Once

@@ -58,25 +58,6 @@ service DirectoryService {
   rpc ReadContent(ReadContentRequest) returns (ReadContentResponse);
 }
 
-// ArtifactService is the Storage Agent Command Contract: a Work Agent's
-// Artifact commands on the File Space its Work publishes into, each completed
-// within its request. The platform Connector calls it under the Work Agent's
-// verified Work credential and its Space Token; the Work and its Session
-// Workspace layout come from that identity and the File Space from the token,
-// never from the request. A retry meets each
-// command's own semantics: Create refuses a taken name, Replace writes
-// again and Delete finds nothing left to delete.
-service ArtifactService {
-  // CreateArtifact publishes one workspace file, or sent content, as a new
-  // Artifact.
-  rpc CreateArtifact(CreateArtifactRequest) returns (CreateArtifactResponse);
-  // ReplaceArtifact publishes one workspace file, or sent content, over an
-  // existing Artifact, keeping its position and Share Links.
-  rpc ReplaceArtifact(ReplaceArtifactRequest) returns (ReplaceArtifactResponse);
-  // DeleteArtifact deletes an Artifact and revokes its Share Links.
-  rpc DeleteArtifact(DeleteArtifactRequest) returns (DeleteArtifactResponse);
-}
-
 // ErrorReason names why Storage refused a call. A refusal carries it as the
 // reason of a google.rpc.ErrorInfo detail in domain "storage", beside the
 // status code, so callers tell refusals with the same code apart.
@@ -347,8 +328,8 @@ message IssueAccessLinkResponse {
   string access_url = 1;
   // Time the link stops working.
   google.protobuf.Timestamp expires_at = 2;
-  // The same link as a path, which a Work's sandbox resolves against the
-  // native API.
+  // The same link as a path, which a Work resolves against the public
+  // gateway's origin.
   string access_path = 3;
 }
 
@@ -510,58 +491,3 @@ message RevokeShareLinksResponse {
   // Active links left at the file.
   int32 remaining = 2;
 }
-
-// ArtifactOutcome is the explicit result of an Artifact command.
-message ArtifactOutcome {
-  // The Artifact at its position.
-  File artifact = 1;
-}
-
-// CreateArtifactRequest publishes one file of the Work's workspace, or the
-// content a Work without one sent, as a new Artifact of its File Space.
-// Exactly one of path and content is set.
-message CreateArtifactRequest {
-  // Artifact name; it must be free.
-  string name = 1;
-  // File path relative to the Session Workspace, outside every Directory
-  // mounted in it.
-  string path = 2;
-  // The file's content, at most 64 MiB, from a Work without a Session
-  // Workspace.
-  optional bytes content = 3;
-}
-
-// CreateArtifactResponse returns the outcome.
-message CreateArtifactResponse {
-  // The outcome.
-  ArtifactOutcome outcome = 1;
-}
-
-// ReplaceArtifactRequest replaces an existing Artifact from one file of the
-// Work's workspace, or the content a Work without one sent. Exactly one of
-// path and content is set.
-message ReplaceArtifactRequest {
-  // Name of the existing Artifact.
-  string name = 1;
-  // File path relative to the Session Workspace, outside every Directory
-  // mounted in it.
-  string path = 2;
-  // The file's content, at most 64 MiB, from a Work without a Session
-  // Workspace.
-  optional bytes content = 3;
-}
-
-// ReplaceArtifactResponse returns the outcome.
-message ReplaceArtifactResponse {
-  // The outcome.
-  ArtifactOutcome outcome = 1;
-}
-
-// DeleteArtifactRequest deletes an Artifact of the Work's File Space.
-message DeleteArtifactRequest {
-  // Artifact name.
-  string name = 1;
-}
-
-// DeleteArtifactResponse confirms the deletion.
-message DeleteArtifactResponse {}

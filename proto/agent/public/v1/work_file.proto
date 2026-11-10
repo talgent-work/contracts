@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package agent.public.v1;
 
+import "admission/v1/admission.proto";
 import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1";
@@ -14,24 +15,63 @@ option go_package = "github.com/talgent-work/contracts/gen/go/agent/public/v1;ag
 // by its owner and Work Share holders, as the Personal Library shows them.
 service WorkFileService {
   // ListWorkFiles lists a Personal Work's Attachments and Artifacts.
-  rpc ListWorkFiles(ListWorkFilesRequest) returns (ListWorkFilesResponse);
+  rpc ListWorkFiles(ListWorkFilesRequest) returns (ListWorkFilesResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // CreateWorkAttachmentUpload issues the link through which one Attachment
   // is created or replaced.
-  rpc CreateWorkAttachmentUpload(CreateWorkAttachmentUploadRequest) returns (CreateWorkAttachmentUploadResponse);
+  rpc CreateWorkAttachmentUpload(CreateWorkAttachmentUploadRequest) returns (CreateWorkAttachmentUploadResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // RenameWorkAttachment moves an Attachment to a free name.
-  rpc RenameWorkAttachment(RenameWorkAttachmentRequest) returns (RenameWorkAttachmentResponse);
+  rpc RenameWorkAttachment(RenameWorkAttachmentRequest) returns (RenameWorkAttachmentResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // DeleteWorkFile deletes an Attachment or an Artifact.
-  rpc DeleteWorkFile(DeleteWorkFileRequest) returns (DeleteWorkFileResponse);
+  rpc DeleteWorkFile(DeleteWorkFileRequest) returns (DeleteWorkFileResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // CreateWorkFileAccessLink issues a short-lived link to read one file.
-  rpc CreateWorkFileAccessLink(CreateWorkFileAccessLinkRequest) returns (CreateWorkFileAccessLinkResponse);
+  rpc CreateWorkFileAccessLink(CreateWorkFileAccessLinkRequest) returns (CreateWorkFileAccessLinkResponse) {
+    option (admission.v1.admits) = {
+      principals: [
+        PRINCIPAL_USER,
+        PRINCIPAL_AGENT
+      ]
+    };
+  }
   // CreateWorkFileShareLink creates a Share Link to one file.
-  rpc CreateWorkFileShareLink(CreateWorkFileShareLinkRequest) returns (CreateWorkFileShareLinkResponse);
+  rpc CreateWorkFileShareLink(CreateWorkFileShareLinkRequest) returns (CreateWorkFileShareLinkResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // StopWorkFileSharing revokes every Share Link to one file.
-  rpc StopWorkFileSharing(StopWorkFileSharingRequest) returns (StopWorkFileSharingResponse);
+  rpc StopWorkFileSharing(StopWorkFileSharingRequest) returns (StopWorkFileSharingResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // GetWorkFilePreview tells how one file is shown.
-  rpc GetWorkFilePreview(GetWorkFilePreviewRequest) returns (GetWorkFilePreviewResponse);
+  rpc GetWorkFilePreview(GetWorkFilePreviewRequest) returns (GetWorkFilePreviewResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // RequestWorkFilePreview asks for a file's Preview Copy to be rendered.
-  rpc RequestWorkFilePreview(RequestWorkFilePreviewRequest) returns (RequestWorkFilePreviewResponse);
+  rpc RequestWorkFilePreview(RequestWorkFilePreviewRequest) returns (RequestWorkFilePreviewResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
 }
 
 // WorkFileKind is where a file sits in its File Space.

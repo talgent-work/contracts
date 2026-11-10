@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package account.private.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/talgent-work/contracts/gen/go/account/private/v1;accountprivatev1";
+
+// AgentAccountService keeps one Agent Account per Work and issues the Work's
+// agent Identity Token. Only Agent calls it, inside the cluster; it is never
+// mounted through the public gateway. Account copies the supplied facts into
+// the token and decides nothing from them.
+service AgentAccountService {
+  // IssueWorkIdentityToken issues a Work's agent Identity Token. The first
+  // request for a Work creates its Agent Account with the supplied facts; a
+  // later request whose facts differ is FailedPrecondition. The token is
+  // never refreshed: each request issues a new one.
+  rpc IssueWorkIdentityToken(IssueWorkIdentityTokenRequest) returns (IssueWorkIdentityTokenResponse);
+}
+
+// IssueWorkIdentityTokenRequest names a Work and its fixed facts, all fixed
+// when the Work was created.
+message IssueWorkIdentityTokenRequest {
+  // The Work, a canonical lowercase UUID; the token's subject.
+  string work_id = 1;
+  // The Work's Project; empty for a Work without one.
+  string project_id = 2;
+  // The Work's AgentDefinition.
+  string agent_id = 3;
+  // The purpose of the Work's AgentDefinition.
+  string purpose = 4;
+  // The kind of the Work's Subject; empty, with work_subject_id, for a Work
+  // without one.
+  string work_subject_kind = 5;
+  // The identity of the Work's Subject.
+  string work_subject_id = 6;
+  // The Account id of the person the Agent represents; empty for an Agent
+  // that represents no one, such as the PM Coordinator.
+  string represented_user_id = 7;
+}
+
+// IssueWorkIdentityTokenResponse is the signed token and its expiry.
+message IssueWorkIdentityTokenResponse {
+  // The signed agent Identity Token. It is a credential: never log it.
+  string token = 1;
+  // When the token expires.
+  google.protobuf.Timestamp expires_at = 2;
+}

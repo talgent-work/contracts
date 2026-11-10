@@ -47,6 +47,9 @@ jobs:
           echo "Comparing with $previous."
           buf breaking --against ".git#tag=$previous"
 
+      - name: Check every public procedure declares its callers
+        run: buf build -o - | go run ./cmd/check-admission
+
       - name: Check generated code is current
         run: bash scripts/ci/check-generated.sh
 
@@ -54,6 +57,7 @@ jobs:
         run: |
           go mod tidy -diff
           go vet ./...
+          go test ./...
 
       - name: Test release scripts
         run: |

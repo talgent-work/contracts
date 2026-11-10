@@ -7,6 +7,7 @@
 package tracepublicv1
 
 import (
+	_ "github.com/talgent-work/contracts/gen/go/admission/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -1596,7 +1597,7 @@ var File_trace_public_v1_trace_proto protoreflect.FileDescriptor
 
 const file_trace_public_v1_trace_proto_rawDesc = "" +
 	"\n" +
-	"\x1btrace/public/v1/trace.proto\x12\x0ftrace.public.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xd4\a\n" +
+	"\x1btrace/public/v1/trace.proto\x12\x0ftrace.public.v1\x1a\x1cadmission/v1/admission.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xd4\a\n" +
 	"\x04Span\x12\x17\n" +
 	"\aspan_id\x18\x01 \x01(\tR\x06spanId\x12\x19\n" +
 	"\btrace_id\x18\x02 \x01(\tR\atraceId\x12$\n" +
@@ -1753,16 +1754,23 @@ const file_trace_public_v1_trace_proto_rawDesc = "" +
 	"\x12ListEventsResponse\x124\n" +
 	"\x06events\x18\x01 \x03(\v2\x1c.trace.public.v1.NativeEventR\x06events\x12\x1f\n" +
 	"\vnext_cursor\x18\x02 \x01(\tR\n" +
-	"nextCursor2\x84\x06\n" +
-	"\x11TraceQueryService\x12U\n" +
+	"nextCursor2\xc6\x06\n" +
+	"\x11TraceQueryService\x12^\n" +
 	"\n" +
-	"ListEvents\x12\".trace.public.v1.ListEventsRequest\x1a#.trace.public.v1.ListEventsResponse\x12m\n" +
-	"\x12ListSpansBySession\x12*.trace.public.v1.ListSpansBySessionRequest\x1a+.trace.public.v1.ListSpansBySessionResponse\x12g\n" +
-	"\x10ListSpansByOwner\x12(.trace.public.v1.ListSpansByOwnerRequest\x1a).trace.public.v1.ListSpansByOwnerResponse\x12L\n" +
-	"\aGetSpan\x12\x1f.trace.public.v1.GetSpanRequest\x1a .trace.public.v1.GetSpanResponse\x12y\n" +
-	"\x16GetSessionTraceMetrics\x12..trace.public.v1.GetSessionTraceMetricsRequest\x1a/.trace.public.v1.GetSessionTraceMetricsResponse\x12y\n" +
-	"\x16GetProjectTraceMetrics\x12..trace.public.v1.GetProjectTraceMetricsRequest\x1a/.trace.public.v1.GetProjectTraceMetricsResponse\x12|\n" +
-	"\x17GetPersonalTraceMetrics\x12/.trace.public.v1.GetPersonalTraceMetricsRequest\x1a0.trace.public.v1.GetPersonalTraceMetricsResponseBHZFgithub.com/talgent-work/contracts/gen/go/trace/public/v1;tracepublicv1b\x06proto3"
+	"ListEvents\x12\".trace.public.v1.ListEventsRequest\x1a#.trace.public.v1.ListEventsResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12v\n" +
+	"\x12ListSpansBySession\x12*.trace.public.v1.ListSpansBySessionRequest\x1a+.trace.public.v1.ListSpansBySessionResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12p\n" +
+	"\x10ListSpansByOwner\x12(.trace.public.v1.ListSpansByOwnerRequest\x1a).trace.public.v1.ListSpansByOwnerResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12U\n" +
+	"\aGetSpan\x12\x1f.trace.public.v1.GetSpanRequest\x1a .trace.public.v1.GetSpanResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\x82\x01\n" +
+	"\x16GetSessionTraceMetrics\x12..trace.public.v1.GetSessionTraceMetricsRequest\x1a/.trace.public.v1.GetSessionTraceMetricsResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\x82\x01\n" +
+	"\x16GetProjectTraceMetrics\x12..trace.public.v1.GetProjectTraceMetricsRequest\x1a/.trace.public.v1.GetProjectTraceMetricsResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\x85\x01\n" +
+	"\x17GetPersonalTraceMetrics\x12/.trace.public.v1.GetPersonalTraceMetricsRequest\x1a0.trace.public.v1.GetPersonalTraceMetricsResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01BHZFgithub.com/talgent-work/contracts/gen/go/trace/public/v1;tracepublicv1b\x06proto3"
 
 var (
 	file_trace_public_v1_trace_proto_rawDescOnce sync.Once

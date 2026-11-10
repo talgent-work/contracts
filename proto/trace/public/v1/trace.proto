@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package trace.public.v1;
 
+import "admission/v1/admission.proto";
 import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/talgent-work/contracts/gen/go/trace/public/v1;tracepublicv1";
@@ -12,22 +13,50 @@ option go_package = "github.com/talgent-work/contracts/gen/go/trace/public/v1;tr
 // without one, and its owner and Work Share holders read it.
 service TraceQueryService {
   // List retained structured native events of an authorized Project or Work.
-  rpc ListEvents(ListEventsRequest) returns (ListEventsResponse);
+  rpc ListEvents(ListEventsRequest) returns (ListEventsResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // ListSpansBySession lists one Work's spans.
-  rpc ListSpansBySession(ListSpansBySessionRequest) returns (ListSpansBySessionResponse);
+  rpc ListSpansBySession(ListSpansBySessionRequest) returns (ListSpansBySessionResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // ListSpansByOwner lists a Project's spans carrying the caller attributes
   // owner_context and owner_id.
-  rpc ListSpansByOwner(ListSpansByOwnerRequest) returns (ListSpansByOwnerResponse);
+  rpc ListSpansByOwner(ListSpansByOwnerRequest) returns (ListSpansByOwnerResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // GetSpan RPC.
-  rpc GetSpan(GetSpanRequest) returns (GetSpanResponse);
+  rpc GetSpan(GetSpanRequest) returns (GetSpanResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // GetSessionTraceMetrics reads one Work's measurements.
-  rpc GetSessionTraceMetrics(GetSessionTraceMetricsRequest) returns (GetSessionTraceMetricsResponse);
+  rpc GetSessionTraceMetrics(GetSessionTraceMetricsRequest) returns (GetSessionTraceMetricsResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // GetProjectTraceMetrics reads a Project's measurements.
-  rpc GetProjectTraceMetrics(GetProjectTraceMetricsRequest) returns (GetProjectTraceMetricsResponse);
+  rpc GetProjectTraceMetrics(GetProjectTraceMetricsRequest) returns (GetProjectTraceMetricsResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // GetPersonalTraceMetrics reads the authenticated person's own measurements
   // across every Work of their Agent, with or without a Project; only that
   // person reads them.
-  rpc GetPersonalTraceMetrics(GetPersonalTraceMetricsRequest) returns (GetPersonalTraceMetricsResponse);
+  rpc GetPersonalTraceMetrics(GetPersonalTraceMetricsRequest) returns (GetPersonalTraceMetricsResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
 }
 
 // Span message.

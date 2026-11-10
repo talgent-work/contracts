@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package computer.public.v1;
 
+import "admission/v1/admission.proto";
+
 option go_package = "github.com/talgent-work/contracts/gen/go/computer/public/v1;computerpublicv1";
 
 // RegistrationService registers a machine as a Managed Computer by device
@@ -11,11 +13,15 @@ option go_package = "github.com/talgent-work/contracts/gen/go/computer/public/v1
 // before the machine holds any credential, so it authenticates no caller.
 service RegistrationService {
   // StartRegistration opens a registration that expires unless approved.
-  rpc StartRegistration(StartRegistrationRequest) returns (StartRegistrationResponse);
+  rpc StartRegistration(StartRegistrationRequest) returns (StartRegistrationResponse) {
+    option (admission.v1.admits) = {anonymous: true};
+  }
   // RedeemRegistration answers pending until the registration is approved,
   // then registers the Computer and returns its credential once. An unknown,
   // expired or already redeemed registration is NotFound.
-  rpc RedeemRegistration(RedeemRegistrationRequest) returns (RedeemRegistrationResponse);
+  rpc RedeemRegistration(RedeemRegistrationRequest) returns (RedeemRegistrationResponse) {
+    option (admission.v1.admits) = {anonymous: true};
+  }
 }
 
 // StartRegistrationRequest describes the machine.

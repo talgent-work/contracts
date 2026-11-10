@@ -855,7 +855,7 @@ var File_agent_private_v1_workspace_reading_proto protoreflect.FileDescriptor
 
 const file_agent_private_v1_workspace_reading_proto_rawDesc = "" +
 	"\n" +
-	"(agent/private/v1/workspace_reading.proto\x12\x10agent.private.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\"agent/private/v1/work_access.proto\"\xe3\x01\n" +
+	"(agent/private/v1/workspace_reading.proto\x12\x10agent.private.v1\x1a\"agent/private/v1/work_access.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xe3\x01\n" +
 	"\x0eWorkspaceEntry\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x128\n" +
 	"\x04kind\x18\x02 \x01(\x0e2$.agent.private.v1.WorkspaceEntryKindR\x04kind\x12\x1d\n" +

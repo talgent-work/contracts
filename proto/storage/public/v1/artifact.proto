@@ -1,0 +1,132 @@
+syntax = "proto3";
+
+package storage.public.v1;
+
+import "admission/v1/admission.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/talgent-work/contracts/gen/go/storage/public/v1;storagepublicv1";
+
+// ArtifactService is the Storage Agent Command Contract: a Work Agent's
+// Artifact commands on the File Space its Work publishes into, each completed
+// within its request. The Work is the agent Principal's, the File Space is the
+// one the Space Token (header `x-talgent-space-token`) was issued for, and
+// neither comes from the request. A retry meets each command's own
+// semantics: Create refuses a taken name, Replace writes again and Delete
+// finds nothing left to delete. A refusal carries an ErrorReason as the
+// reason of a google.rpc.ErrorInfo detail in domain "storage".
+service ArtifactService {
+  // CreateArtifact publishes one file of the Work's Work Directory, or sent
+  // content, as a new Artifact.
+  rpc CreateArtifact(CreateArtifactRequest) returns (CreateArtifactResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_AGENT]
+    };
+  }
+  // ReplaceArtifact publishes one file of the Work's Work Directory, or sent
+  // content, over an existing Artifact, keeping its position and Share Links.
+  rpc ReplaceArtifact(ReplaceArtifactRequest) returns (ReplaceArtifactResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_AGENT]
+    };
+  }
+  // DeleteArtifact deletes an Artifact and revokes its Share Links.
+  rpc DeleteArtifact(DeleteArtifactRequest) returns (DeleteArtifactResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_AGENT]
+    };
+  }
+}
+
+// ErrorReason names why Storage refused an Artifact command.
+enum ErrorReason {
+  // No reason given.
+  ERROR_REASON_UNSPECIFIED = 0;
+  // No Artifact with the name.
+  ERROR_REASON_FILE_NOT_FOUND = 1;
+  // No file at the publication source.
+  ERROR_REASON_SOURCE_NOT_FOUND = 2;
+  // The source is not one regular file of the Work Directory outside every
+  // Directory mounted in it.
+  ERROR_REASON_INVALID_SOURCE = 3;
+  // The name is not one file name.
+  ERROR_REASON_INVALID_NAME = 4;
+  // The request misses a required field, or sets both a source path and
+  // content.
+  ERROR_REASON_INVALID_REQUEST = 5;
+  // The source path leaves the Work Directory.
+  ERROR_REASON_INVALID_WORKSPACE_PATH = 6;
+  // An Artifact already has the name.
+  ERROR_REASON_NAME_TAKEN = 7;
+  // The Space Token names no opened File Space, or the named Work Directory
+  // was never opened.
+  ERROR_REASON_DIRECTORY_NOT_OPEN = 8;
+  // The Directory's space does not exist yet.
+  ERROR_REASON_DIRECTORY_NOT_ALLOCATED = 9;
+  // The Directory was reclaimed.
+  ERROR_REASON_DIRECTORY_RECLAIMED = 10;
+}
+
+// Artifact is an Artifact at its position in the File Space.
+message Artifact {
+  // The Artifact's name in its File Space.
+  string name = 1;
+  // Size in bytes.
+  int64 size_bytes = 2;
+  // Media type of the name's extension.
+  string content_type = 3;
+  // Last time the content changed.
+  google.protobuf.Timestamp updated_at = 4;
+}
+
+// CreateArtifactRequest publishes one file of the Work's Work Directory, or
+// the content the Work sent, as a new Artifact. Either work_directory and
+// path, or content, is set.
+message CreateArtifactRequest {
+  // Artifact name; it must be free.
+  string name = 1;
+  // The name of the Work's own Work Directory the file is in, such as
+  // `workspace` for its Session Workspace.
+  string work_directory = 2;
+  // File path relative to that Work Directory, outside every Directory
+  // mounted in it.
+  string path = 3;
+  // The file's content, at most 64 MiB, when no Work Directory is named.
+  optional bytes content = 4;
+}
+
+// CreateArtifactResponse returns the Artifact.
+message CreateArtifactResponse {
+  // The new Artifact.
+  Artifact artifact = 1;
+}
+
+// ReplaceArtifactRequest replaces an existing Artifact from one file of the
+// Work's Work Directory, or the content the Work sent. Either work_directory
+// and path, or content, is set.
+message ReplaceArtifactRequest {
+  // Name of the existing Artifact.
+  string name = 1;
+  // The name of the Work's own Work Directory the file is in.
+  string work_directory = 2;
+  // File path relative to that Work Directory, outside every Directory
+  // mounted in it.
+  string path = 3;
+  // The file's content, at most 64 MiB, when no Work Directory is named.
+  optional bytes content = 4;
+}
+
+// ReplaceArtifactResponse returns the Artifact.
+message ReplaceArtifactResponse {
+  // The replaced Artifact.
+  Artifact artifact = 1;
+}
+
+// DeleteArtifactRequest deletes an Artifact of the File Space.
+message DeleteArtifactRequest {
+  // Artifact name.
+  string name = 1;
+}
+
+// DeleteArtifactResponse confirms the deletion.
+message DeleteArtifactResponse {}

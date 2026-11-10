@@ -7,6 +7,7 @@
 package computerpublicv1
 
 import (
+	_ "github.com/talgent-work/contracts/gen/go/admission/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -343,7 +344,7 @@ var File_computer_public_v1_registration_proto protoreflect.FileDescriptor
 
 const file_computer_public_v1_registration_proto_rawDesc = "" +
 	"\n" +
-	"%computer/public/v1/registration.proto\x12\x12computer.public.v1\"=\n" +
+	"%computer/public/v1/registration.proto\x12\x12computer.public.v1\x1a\x1cadmission/v1/admission.proto\"=\n" +
 	"\x18StartRegistrationRequest\x12!\n" +
 	"\fmachine_name\x18\x01 \x01(\tR\vmachineName\"\x99\x02\n" +
 	"\x19StartRegistrationResponse\x12\x1f\n" +
@@ -369,10 +370,10 @@ const file_computer_public_v1_registration_proto_rawDesc = "" +
 	"\x10RedemptionStatus\x12!\n" +
 	"\x1dREDEMPTION_STATUS_UNSPECIFIED\x10\x00\x12\x1d\n" +
 	"\x19REDEMPTION_STATUS_PENDING\x10\x01\x12 \n" +
-	"\x1cREDEMPTION_STATUS_REGISTERED\x10\x022\xfc\x01\n" +
-	"\x13RegistrationService\x12p\n" +
-	"\x11StartRegistration\x12,.computer.public.v1.StartRegistrationRequest\x1a-.computer.public.v1.StartRegistrationResponse\x12s\n" +
-	"\x12RedeemRegistration\x12-.computer.public.v1.RedeemRegistrationRequest\x1a..computer.public.v1.RedeemRegistrationResponseBNZLgithub.com/talgent-work/contracts/gen/go/computer/public/v1;computerpublicv1b\x06proto3"
+	"\x1cREDEMPTION_STATUS_REGISTERED\x10\x022\x8c\x02\n" +
+	"\x13RegistrationService\x12x\n" +
+	"\x11StartRegistration\x12,.computer.public.v1.StartRegistrationRequest\x1a-.computer.public.v1.StartRegistrationResponse\"\x06\xc2\xf3\x18\x02\x10\x01\x12{\n" +
+	"\x12RedeemRegistration\x12-.computer.public.v1.RedeemRegistrationRequest\x1a..computer.public.v1.RedeemRegistrationResponse\"\x06\xc2\xf3\x18\x02\x10\x01BNZLgithub.com/talgent-work/contracts/gen/go/computer/public/v1;computerpublicv1b\x06proto3"
 
 var (
 	file_computer_public_v1_registration_proto_rawDescOnce sync.Once

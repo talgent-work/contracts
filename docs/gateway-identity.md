@@ -56,8 +56,8 @@ for a person: not even the one its Agent represents.
 
 Before it routes a request, the gateway removes every identity header a client sent, once for the
 whole gateway: `x-talgent-authenticated-by`, every claim header above, `x-talgent-service-id`,
-`x-talgent-delegated-user-id`, `x-talgent-delegated-actor-id`, `x-talgent-gateway-token`,
-`x-talgent-reader-admission` and the `x-talgent-runtime-*` headers. A client can therefore never
+`x-talgent-delegated-user-id`, `x-talgent-delegated-actor-id`, `x-talgent-reader-admission`
+and the `x-talgent-runtime-*` headers. A client can therefore never
 present the headers below. A capability passes through untouched: `x-talgent-space-token`, the
 Space Token of the Directory an Agent writes, which only the procedures that take it read.
 

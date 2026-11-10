@@ -7,6 +7,7 @@
 package marketplacepublicv1
 
 import (
+	_ "github.com/talgent-work/contracts/gen/go/admission/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	structpb "google.golang.org/protobuf/types/known/structpb"
@@ -2877,7 +2878,7 @@ var File_marketplace_public_v1_marketplace_proto protoreflect.FileDescriptor
 
 const file_marketplace_public_v1_marketplace_proto_rawDesc = "" +
 	"\n" +
-	"'marketplace/public/v1/marketplace.proto\x12\x15marketplace.public.v1\x1a\x1cgoogle/protobuf/struct.proto\x1a'marketplace/public/v1/connections.proto\"#\n" +
+	"'marketplace/public/v1/marketplace.proto\x12\x15marketplace.public.v1\x1a\x1cadmission/v1/admission.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a'marketplace/public/v1/connections.proto\"#\n" +
 	"!ListPersonalAuthorizationsRequest\"O\n" +
 	"\"CancelPersonalAuthorizationRequest\x12)\n" +
 	"\x10authorization_id\x18\x01 \x01(\tR\x0fauthorizationId\"y\n" +
@@ -3067,33 +3068,58 @@ const file_marketplace_public_v1_marketplace_proto_rawDesc = "" +
 	"\x19UninstallConnectorRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\rR\aversion\"\x1c\n" +
-	"\x1aUninstallConnectorResponse2\xdd\x18\n" +
-	"\x12MarketplaceService\x12\x91\x01\n" +
-	"\x1aBeginProviderAuthorization\x128.marketplace.public.v1.BeginProviderAuthorizationRequest\x1a9.marketplace.public.v1.BeginProviderAuthorizationResponse\x12\x9a\x01\n" +
-	"\x1dCompleteProviderAuthorization\x12;.marketplace.public.v1.CompleteProviderAuthorizationRequest\x1a<.marketplace.public.v1.CompleteProviderAuthorizationResponse\x12\x91\x01\n" +
-	"\x1aGetProviderConnectionState\x128.marketplace.public.v1.GetProviderConnectionStateRequest\x1a9.marketplace.public.v1.GetProviderConnectionStateResponse\x12\x91\x01\n" +
-	"\x1aListAccessibleRepositories\x128.marketplace.public.v1.ListAccessibleRepositoriesRequest\x1a9.marketplace.public.v1.ListAccessibleRepositoriesResponse\x12v\n" +
-	"\x11GetProviderAccess\x12/.marketplace.public.v1.GetProviderAccessRequest\x1a0.marketplace.public.v1.GetProviderAccessResponse\x12\x82\x01\n" +
-	"\x15RefreshProviderAccess\x123.marketplace.public.v1.RefreshProviderAccessRequest\x1a4.marketplace.public.v1.RefreshProviderAccessResponse\x12\x91\x01\n" +
-	"\x1aListPersonalAuthorizations\x128.marketplace.public.v1.ListPersonalAuthorizationsRequest\x1a9.marketplace.public.v1.ListPersonalAuthorizationsResponse\x12\x94\x01\n" +
-	"\x1bCancelPersonalAuthorization\x129.marketplace.public.v1.CancelPersonalAuthorizationRequest\x1a:.marketplace.public.v1.CancelPersonalAuthorizationResponse\x12d\n" +
-	"\vListPlugins\x12).marketplace.public.v1.ListPluginsRequest\x1a*.marketplace.public.v1.ListPluginsResponse\x12^\n" +
-	"\tGetPlugin\x12'.marketplace.public.v1.GetPluginRequest\x1a(.marketplace.public.v1.GetPluginResponse\x12\x7f\n" +
-	"\x14ListInstalledPlugins\x122.marketplace.public.v1.ListInstalledPluginsRequest\x1a3.marketplace.public.v1.ListInstalledPluginsResponse\x12y\n" +
-	"\x12GetInstalledPlugin\x120.marketplace.public.v1.GetInstalledPluginRequest\x1a1.marketplace.public.v1.GetInstalledPluginResponse\x12j\n" +
-	"\rInstallPlugin\x12+.marketplace.public.v1.InstallPluginRequest\x1a,.marketplace.public.v1.InstallPluginResponse\x12g\n" +
-	"\fEnablePlugin\x12*.marketplace.public.v1.EnablePluginRequest\x1a+.marketplace.public.v1.EnablePluginResponse\x12j\n" +
-	"\rDisablePlugin\x12+.marketplace.public.v1.DisablePluginRequest\x1a,.marketplace.public.v1.DisablePluginResponse\x12\x85\x01\n" +
-	"\x16SetPluginConfiguration\x124.marketplace.public.v1.SetPluginConfigurationRequest\x1a5.marketplace.public.v1.SetPluginConfigurationResponse\x12\x8e\x01\n" +
-	"\x19DeletePluginConfiguration\x127.marketplace.public.v1.DeletePluginConfigurationRequest\x1a8.marketplace.public.v1.DeletePluginConfigurationResponse\x12p\n" +
-	"\x0fUninstallPlugin\x12-.marketplace.public.v1.UninstallPluginRequest\x1a..marketplace.public.v1.UninstallPluginResponse\x12m\n" +
-	"\x0eListConnectors\x12,.marketplace.public.v1.ListConnectorsRequest\x1a-.marketplace.public.v1.ListConnectorsResponse\x12g\n" +
-	"\fGetConnector\x12*.marketplace.public.v1.GetConnectorRequest\x1a+.marketplace.public.v1.GetConnectorResponse\x12\x88\x01\n" +
-	"\x17ListInstalledConnectors\x125.marketplace.public.v1.ListInstalledConnectorsRequest\x1a6.marketplace.public.v1.ListInstalledConnectorsResponse\x12s\n" +
-	"\x10InstallConnector\x12..marketplace.public.v1.InstallConnectorRequest\x1a/.marketplace.public.v1.InstallConnectorResponse\x12p\n" +
-	"\x0fEnableConnector\x12-.marketplace.public.v1.EnableConnectorRequest\x1a..marketplace.public.v1.EnableConnectorResponse\x12s\n" +
-	"\x10DisableConnector\x12..marketplace.public.v1.DisableConnectorRequest\x1a/.marketplace.public.v1.DisableConnectorResponse\x12y\n" +
-	"\x12UninstallConnector\x120.marketplace.public.v1.UninstallConnectorRequest\x1a1.marketplace.public.v1.UninstallConnectorResponseBTZRgithub.com/talgent-work/contracts/gen/go/marketplace/public/v1;marketplacepublicv1b\x06proto3"
+	"\x1aUninstallConnectorResponse2\xc1\x1a\n" +
+	"\x12MarketplaceService\x12\x9a\x01\n" +
+	"\x1aBeginProviderAuthorization\x128.marketplace.public.v1.BeginProviderAuthorizationRequest\x1a9.marketplace.public.v1.BeginProviderAuthorizationResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\xa3\x01\n" +
+	"\x1dCompleteProviderAuthorization\x12;.marketplace.public.v1.CompleteProviderAuthorizationRequest\x1a<.marketplace.public.v1.CompleteProviderAuthorizationResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\x9a\x01\n" +
+	"\x1aGetProviderConnectionState\x128.marketplace.public.v1.GetProviderConnectionStateRequest\x1a9.marketplace.public.v1.GetProviderConnectionStateResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\x9a\x01\n" +
+	"\x1aListAccessibleRepositories\x128.marketplace.public.v1.ListAccessibleRepositoriesRequest\x1a9.marketplace.public.v1.ListAccessibleRepositoriesResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\x7f\n" +
+	"\x11GetProviderAccess\x12/.marketplace.public.v1.GetProviderAccessRequest\x1a0.marketplace.public.v1.GetProviderAccessResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\x8b\x01\n" +
+	"\x15RefreshProviderAccess\x123.marketplace.public.v1.RefreshProviderAccessRequest\x1a4.marketplace.public.v1.RefreshProviderAccessResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\x9a\x01\n" +
+	"\x1aListPersonalAuthorizations\x128.marketplace.public.v1.ListPersonalAuthorizationsRequest\x1a9.marketplace.public.v1.ListPersonalAuthorizationsResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\x9d\x01\n" +
+	"\x1bCancelPersonalAuthorization\x129.marketplace.public.v1.CancelPersonalAuthorizationRequest\x1a:.marketplace.public.v1.CancelPersonalAuthorizationResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12m\n" +
+	"\vListPlugins\x12).marketplace.public.v1.ListPluginsRequest\x1a*.marketplace.public.v1.ListPluginsResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12g\n" +
+	"\tGetPlugin\x12'.marketplace.public.v1.GetPluginRequest\x1a(.marketplace.public.v1.GetPluginResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\x88\x01\n" +
+	"\x14ListInstalledPlugins\x122.marketplace.public.v1.ListInstalledPluginsRequest\x1a3.marketplace.public.v1.ListInstalledPluginsResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\x82\x01\n" +
+	"\x12GetInstalledPlugin\x120.marketplace.public.v1.GetInstalledPluginRequest\x1a1.marketplace.public.v1.GetInstalledPluginResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12s\n" +
+	"\rInstallPlugin\x12+.marketplace.public.v1.InstallPluginRequest\x1a,.marketplace.public.v1.InstallPluginResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12p\n" +
+	"\fEnablePlugin\x12*.marketplace.public.v1.EnablePluginRequest\x1a+.marketplace.public.v1.EnablePluginResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12s\n" +
+	"\rDisablePlugin\x12+.marketplace.public.v1.DisablePluginRequest\x1a,.marketplace.public.v1.DisablePluginResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\x8e\x01\n" +
+	"\x16SetPluginConfiguration\x124.marketplace.public.v1.SetPluginConfigurationRequest\x1a5.marketplace.public.v1.SetPluginConfigurationResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\x97\x01\n" +
+	"\x19DeletePluginConfiguration\x127.marketplace.public.v1.DeletePluginConfigurationRequest\x1a8.marketplace.public.v1.DeletePluginConfigurationResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12y\n" +
+	"\x0fUninstallPlugin\x12-.marketplace.public.v1.UninstallPluginRequest\x1a..marketplace.public.v1.UninstallPluginResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12v\n" +
+	"\x0eListConnectors\x12,.marketplace.public.v1.ListConnectorsRequest\x1a-.marketplace.public.v1.ListConnectorsResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12p\n" +
+	"\fGetConnector\x12*.marketplace.public.v1.GetConnectorRequest\x1a+.marketplace.public.v1.GetConnectorResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\x91\x01\n" +
+	"\x17ListInstalledConnectors\x125.marketplace.public.v1.ListInstalledConnectorsRequest\x1a6.marketplace.public.v1.ListInstalledConnectorsResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12|\n" +
+	"\x10InstallConnector\x12..marketplace.public.v1.InstallConnectorRequest\x1a/.marketplace.public.v1.InstallConnectorResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12y\n" +
+	"\x0fEnableConnector\x12-.marketplace.public.v1.EnableConnectorRequest\x1a..marketplace.public.v1.EnableConnectorResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12|\n" +
+	"\x10DisableConnector\x12..marketplace.public.v1.DisableConnectorRequest\x1a/.marketplace.public.v1.DisableConnectorResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\x82\x01\n" +
+	"\x12UninstallConnector\x120.marketplace.public.v1.UninstallConnectorRequest\x1a1.marketplace.public.v1.UninstallConnectorResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01BTZRgithub.com/talgent-work/contracts/gen/go/marketplace/public/v1;marketplacepublicv1b\x06proto3"
 
 var (
 	file_marketplace_public_v1_marketplace_proto_rawDescOnce sync.Once

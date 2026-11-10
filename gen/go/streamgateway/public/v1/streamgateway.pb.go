@@ -7,6 +7,7 @@
 package streamgatewaypublicv1
 
 import (
+	_ "github.com/talgent-work/contracts/gen/go/admission/v1"
 	v11 "github.com/talgent-work/contracts/gen/go/agent/public/v1"
 	v1 "github.com/talgent-work/contracts/gen/go/dispatcher/public/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -1304,7 +1305,7 @@ var File_streamgateway_public_v1_streamgateway_proto protoreflect.FileDescriptor
 
 const file_streamgateway_public_v1_streamgateway_proto_rawDesc = "" +
 	"\n" +
-	"+streamgateway/public/v1/streamgateway.proto\x12\x17streamgateway.public.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1dagent/public/v1/startup.proto\x1a\x1fagent/public/v1/subagents.proto\x1a*dispatcher/public/v1/unified_message.proto\"\xba\x01\n" +
+	"+streamgateway/public/v1/streamgateway.proto\x12\x17streamgateway.public.v1\x1a\x1cadmission/v1/admission.proto\x1a\x1dagent/public/v1/startup.proto\x1a\x1fagent/public/v1/subagents.proto\x1a*dispatcher/public/v1/unified_message.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xba\x01\n" +
 	"\x14GetToolDetailRequest\x12\"\n" +
 	"\ragent_work_id\x18\x01 \x01(\tR\vagentWorkId\x12 \n" +
 	"\ftool_call_id\x18\x02 \x01(\tR\n" +
@@ -1403,12 +1404,16 @@ const file_streamgateway_public_v1_streamgateway_proto_rawDesc = "" +
 	"\x06reason\x18\x03 \x01(\tR\x06reason\x12\x18\n" +
 	"\amessage\x18\x04 \x01(\tR\amessage\x12;\n" +
 	"\voccurred_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
-	"occurredAt2\xf4\x03\n" +
-	"\x14StreamGatewayService\x12j\n" +
-	"\vWatchStream\x12+.streamgateway.public.v1.WatchStreamRequest\x1a,.streamgateway.public.v1.WatchStreamResponse0\x01\x12\x86\x01\n" +
-	"\x15ListMessagesBySession\x125.streamgateway.public.v1.ListMessagesBySessionRequest\x1a6.streamgateway.public.v1.ListMessagesBySessionResponse\x12w\n" +
-	"\x10GetMessageDetail\x120.streamgateway.public.v1.GetMessageDetailRequest\x1a1.streamgateway.public.v1.GetMessageDetailResponse\x12n\n" +
-	"\rGetToolDetail\x12-.streamgateway.public.v1.GetToolDetailRequest\x1a..streamgateway.public.v1.GetToolDetailResponseBXZVgithub.com/talgent-work/contracts/gen/go/streamgateway/public/v1;streamgatewaypublicv1b\x06proto3"
+	"occurredAt2\x99\x04\n" +
+	"\x14StreamGatewayService\x12s\n" +
+	"\vWatchStream\x12+.streamgateway.public.v1.WatchStreamRequest\x1a,.streamgateway.public.v1.WatchStreamResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x010\x01\x12\x8f\x01\n" +
+	"\x15ListMessagesBySession\x125.streamgateway.public.v1.ListMessagesBySessionRequest\x1a6.streamgateway.public.v1.ListMessagesBySessionResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\x80\x01\n" +
+	"\x10GetMessageDetail\x120.streamgateway.public.v1.GetMessageDetailRequest\x1a1.streamgateway.public.v1.GetMessageDetailResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12w\n" +
+	"\rGetToolDetail\x12-.streamgateway.public.v1.GetToolDetailRequest\x1a..streamgateway.public.v1.GetToolDetailResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01BXZVgithub.com/talgent-work/contracts/gen/go/streamgateway/public/v1;streamgatewaypublicv1b\x06proto3"
 
 var (
 	file_streamgateway_public_v1_streamgateway_proto_rawDescOnce sync.Once

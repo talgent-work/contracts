@@ -7,6 +7,7 @@
 package computerpublicv1
 
 import (
+	_ "github.com/talgent-work/contracts/gen/go/admission/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -1061,7 +1062,7 @@ var File_computer_public_v1_computer_proto protoreflect.FileDescriptor
 
 const file_computer_public_v1_computer_proto_rawDesc = "" +
 	"\n" +
-	"!computer/public/v1/computer.proto\x12\x12computer.public.v1\"\x8c\x01\n" +
+	"!computer/public/v1/computer.proto\x12\x12computer.public.v1\x1a\x1cadmission/v1/admission.proto\"\x8c\x01\n" +
 	"\bPresence\x12\x1c\n" +
 	"\treachable\x18\x01 \x01(\bR\treachable\x129\n" +
 	"\x19unreachable_since_unix_ms\x18\x02 \x01(\x03R\x16unreachableSinceUnixMs\x12'\n" +
@@ -1123,15 +1124,22 @@ const file_computer_public_v1_computer_proto_rawDesc = "" +
 	"\x12UsableComputerKind\x12$\n" +
 	" USABLE_COMPUTER_KIND_UNSPECIFIED\x10\x00\x12\x1e\n" +
 	"\x1aUSABLE_COMPUTER_KIND_CLOUD\x10\x01\x12 \n" +
-	"\x1cUSABLE_COMPUTER_KIND_MANAGED\x10\x022\x88\x06\n" +
-	"\x0fComputerService\x12d\n" +
-	"\rListComputers\x12(.computer.public.v1.ListComputersRequest\x1a).computer.public.v1.ListComputersResponse\x12v\n" +
-	"\x13ListUsableComputers\x12..computer.public.v1.ListUsableComputersRequest\x1a/.computer.public.v1.ListUsableComputersResponse\x12g\n" +
-	"\x0eRenameComputer\x12).computer.public.v1.RenameComputerRequest\x1a*.computer.public.v1.RenameComputerResponse\x12a\n" +
-	"\fSetRoomRules\x12'.computer.public.v1.SetRoomRulesRequest\x1a(.computer.public.v1.SetRoomRulesResponse\x12g\n" +
-	"\x0eRemoveComputer\x12).computer.public.v1.RemoveComputerRequest\x1a*.computer.public.v1.RemoveComputerResponse\x12j\n" +
-	"\x0fGetRegistration\x12*.computer.public.v1.GetRegistrationRequest\x1a+.computer.public.v1.GetRegistrationResponse\x12v\n" +
-	"\x13ApproveRegistration\x12..computer.public.v1.ApproveRegistrationRequest\x1a/.computer.public.v1.ApproveRegistrationResponseBNZLgithub.com/talgent-work/contracts/gen/go/computer/public/v1;computerpublicv1b\x06proto3"
+	"\x1cUSABLE_COMPUTER_KIND_MANAGED\x10\x022\xc7\x06\n" +
+	"\x0fComputerService\x12m\n" +
+	"\rListComputers\x12(.computer.public.v1.ListComputersRequest\x1a).computer.public.v1.ListComputersResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\x7f\n" +
+	"\x13ListUsableComputers\x12..computer.public.v1.ListUsableComputersRequest\x1a/.computer.public.v1.ListUsableComputersResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12p\n" +
+	"\x0eRenameComputer\x12).computer.public.v1.RenameComputerRequest\x1a*.computer.public.v1.RenameComputerResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12j\n" +
+	"\fSetRoomRules\x12'.computer.public.v1.SetRoomRulesRequest\x1a(.computer.public.v1.SetRoomRulesResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12p\n" +
+	"\x0eRemoveComputer\x12).computer.public.v1.RemoveComputerRequest\x1a*.computer.public.v1.RemoveComputerResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12s\n" +
+	"\x0fGetRegistration\x12*.computer.public.v1.GetRegistrationRequest\x1a+.computer.public.v1.GetRegistrationResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\x7f\n" +
+	"\x13ApproveRegistration\x12..computer.public.v1.ApproveRegistrationRequest\x1a/.computer.public.v1.ApproveRegistrationResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01BNZLgithub.com/talgent-work/contracts/gen/go/computer/public/v1;computerpublicv1b\x06proto3"
 
 var (
 	file_computer_public_v1_computer_proto_rawDescOnce sync.Once

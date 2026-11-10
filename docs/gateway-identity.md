@@ -5,26 +5,54 @@ body. Which headers they trust depends on how the request arrived: through the p
 from a trusted service inside the cluster, or through the native API under a Work credential.
 Header names are case-insensitive.
 
-## Public gateway: signed-in people
+## Admission
+
+Every request speaks for exactly one Principal: a `user` (a signed-in person, by their Account)
+or an `agent` (a Work's Agent, by the Work's Agent Account). Each public procedure declares the
+Principals it admits with the method option `admission.v1.admits`
+([README](../README.md#admission)); a procedure declared `anonymous` admits a caller without
+one. A service refuses a Principal its procedure does not declare, and every caller of a
+procedure that declares nothing, with `PermissionDenied` before the handler runs.
+
+## Public gateway: Identity Tokens
 
 The public gateway validates the Identity Token Account issues (cookie `talgent-access`, or
 `Authorization: Bearer <token>`; issuer `<public origin>/auth`, audience `talgent`) and forwards
-its claims:
+its claims. A claim the token lacks writes no header.
 
 | Header | Value |
 |---|---|
 | `x-talgent-authenticated-by` | Always `envoy`; set by the gateway on every route it authenticates |
 | `x-talgent-issuer` | Claim `iss` |
-| `x-talgent-subject` | Claim `sub`: the Account id, a canonical lowercase UUID |
+| `x-talgent-principal` | Claim `principal`: `user` or `agent` |
+| `x-talgent-subject` | Claim `sub`: the Account id of a `user`, or the Work id of an `agent`; a canonical lowercase UUID |
+
+A `user` token's claims:
+
+| Header | Value |
+|---|---|
 | `x-talgent-username` | Claim `preferred_username` |
 | `x-talgent-email` | Claim `email` |
 | `x-talgent-display-name` | Claim `name` |
 | `x-talgent-avatar-url` | Claim `picture` |
 | `x-talgent-roles` | Claim `roles`, comma-separated |
 
-A service admits such a request only when `x-talgent-authenticated-by` is `envoy` and
-`x-talgent-subject` is a canonical lowercase UUID; otherwise it answers `Unauthenticated`. Values
-are trimmed of surrounding whitespace, and empty roles are dropped.
+An `agent` token's claims, its Work's facts fixed when the Work was created:
+
+| Header | Value |
+|---|---|
+| `x-talgent-project-id` | Claim `project_id`: the Work's Project |
+| `x-talgent-agent-id` | Claim `agent_id`: the Work's AgentDefinition; required |
+| `x-talgent-purpose` | Claim `purpose`: the AgentDefinition's purpose; required |
+| `x-talgent-work-subject-kind` | Claim `work_subject_kind` |
+| `x-talgent-work-subject-id` | Claim `work_subject_id` |
+| `x-talgent-represented-user-id` | Claim `for`: the Account id of the person the Agent represents, a canonical lowercase UUID |
+
+A service admits such a request only when `x-talgent-authenticated-by` is `envoy`,
+`x-talgent-principal` names a known Principal, `x-talgent-subject` is a canonical lowercase UUID,
+and an `agent` carries its required claims; otherwise it answers `Unauthenticated`. Values are
+trimmed of surrounding whitespace, and empty roles are dropped. An `agent` request never speaks
+for a person: not even the one its Agent represents.
 
 On every public route the gateway removes the trust headers a client sent before it sets its
 own: `x-talgent-authenticated-by`, the claim headers it replaces, `x-talgent-service-id`,
@@ -40,7 +68,7 @@ A service inside the cluster calls another on a person's behalf with both header
 | `x-talgent-service-id` | The calling service's name |
 | `x-talgent-delegated-user-id` | The Account id the call acts for |
 
-Both or neither: one without the other is `Unauthenticated`, as is a delegated user id that is
+Such a call speaks for that `user`. Both or neither: one without the other is `Unauthenticated`, as is a delegated user id that is
 empty, starts with `oidc:` or contains `#`. A delegated call carries no claims besides the user
 id. The cluster network is the trust boundary: these headers reach a service only from inside
 it, because the gateway strips them.
@@ -83,6 +111,9 @@ Rules every native API applies, in this order:
    is `Unauthenticated`: the Work credential is the only identity accepted.
 5. `X-Talgent-Work-Id` and `X-Talgent-Work-Credential` each appear exactly once and non-empty,
    and the credential is current for that Work; otherwise `Unauthenticated`.
+
+A request through the native API speaks for its Work's `agent`, and reaches only procedures
+that admit one.
 
 Errors are Connect errors. A service that hosts procedures on its own native API verifies the
 Work credential with Agent's `VerifyWorkCredential` and applies the same rules.

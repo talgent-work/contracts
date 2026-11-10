@@ -7,6 +7,7 @@
 package agentpublicv1
 
 import (
+	_ "github.com/talgent-work/contracts/gen/go/admission/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -1599,7 +1600,7 @@ var File_agent_public_v1_work_file_proto protoreflect.FileDescriptor
 
 const file_agent_public_v1_work_file_proto_rawDesc = "" +
 	"\n" +
-	"\x1fagent/public/v1/work_file.proto\x12\x0fagent.public.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa3\x01\n" +
+	"\x1fagent/public/v1/work_file.proto\x12\x0fagent.public.v1\x1a\x1cadmission/v1/admission.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa3\x01\n" +
 	"\x11WorkFileShareLink\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\x12\x10\n" +
 	"\x03url\x18\x02 \x01(\tR\x03url\x12+\n" +
@@ -1717,17 +1718,26 @@ const file_agent_public_v1_work_file_proto_rawDesc = "" +
 	"#WORK_FILE_PREVIEW_REFUSAL_TOO_LARGE\x10\x04\x12%\n" +
 	"!WORK_FILE_PREVIEW_REFUSAL_CORRUPT\x10\x05\x12/\n" +
 	"+WORK_FILE_PREVIEW_REFUSAL_CONVERTER_REFUSED\x10\x06\x121\n" +
-	"-WORK_FILE_PREVIEW_REFUSAL_RENDERING_TOO_LARGE\x10\a2\xac\b\n" +
-	"\x0fWorkFileService\x12^\n" +
-	"\rListWorkFiles\x12%.agent.public.v1.ListWorkFilesRequest\x1a&.agent.public.v1.ListWorkFilesResponse\x12\x85\x01\n" +
-	"\x1aCreateWorkAttachmentUpload\x122.agent.public.v1.CreateWorkAttachmentUploadRequest\x1a3.agent.public.v1.CreateWorkAttachmentUploadResponse\x12s\n" +
-	"\x14RenameWorkAttachment\x12,.agent.public.v1.RenameWorkAttachmentRequest\x1a-.agent.public.v1.RenameWorkAttachmentResponse\x12a\n" +
-	"\x0eDeleteWorkFile\x12&.agent.public.v1.DeleteWorkFileRequest\x1a'.agent.public.v1.DeleteWorkFileResponse\x12\x7f\n" +
-	"\x18CreateWorkFileAccessLink\x120.agent.public.v1.CreateWorkFileAccessLinkRequest\x1a1.agent.public.v1.CreateWorkFileAccessLinkResponse\x12|\n" +
-	"\x17CreateWorkFileShareLink\x12/.agent.public.v1.CreateWorkFileShareLinkRequest\x1a0.agent.public.v1.CreateWorkFileShareLinkResponse\x12p\n" +
-	"\x13StopWorkFileSharing\x12+.agent.public.v1.StopWorkFileSharingRequest\x1a,.agent.public.v1.StopWorkFileSharingResponse\x12m\n" +
-	"\x12GetWorkFilePreview\x12*.agent.public.v1.GetWorkFilePreviewRequest\x1a+.agent.public.v1.GetWorkFilePreviewResponse\x12y\n" +
-	"\x16RequestWorkFilePreview\x12..agent.public.v1.RequestWorkFilePreviewRequest\x1a/.agent.public.v1.RequestWorkFilePreviewResponseBHZFgithub.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1b\x06proto3"
+	"-WORK_FILE_PREVIEW_REFUSAL_RENDERING_TOO_LARGE\x10\a2\x81\t\n" +
+	"\x0fWorkFileService\x12g\n" +
+	"\rListWorkFiles\x12%.agent.public.v1.ListWorkFilesRequest\x1a&.agent.public.v1.ListWorkFilesResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\x8e\x01\n" +
+	"\x1aCreateWorkAttachmentUpload\x122.agent.public.v1.CreateWorkAttachmentUploadRequest\x1a3.agent.public.v1.CreateWorkAttachmentUploadResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12|\n" +
+	"\x14RenameWorkAttachment\x12,.agent.public.v1.RenameWorkAttachmentRequest\x1a-.agent.public.v1.RenameWorkAttachmentResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12j\n" +
+	"\x0eDeleteWorkFile\x12&.agent.public.v1.DeleteWorkFileRequest\x1a'.agent.public.v1.DeleteWorkFileResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\x89\x01\n" +
+	"\x18CreateWorkFileAccessLink\x120.agent.public.v1.CreateWorkFileAccessLinkRequest\x1a1.agent.public.v1.CreateWorkFileAccessLinkResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x02\x12\x85\x01\n" +
+	"\x17CreateWorkFileShareLink\x12/.agent.public.v1.CreateWorkFileShareLinkRequest\x1a0.agent.public.v1.CreateWorkFileShareLinkResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12y\n" +
+	"\x13StopWorkFileSharing\x12+.agent.public.v1.StopWorkFileSharingRequest\x1a,.agent.public.v1.StopWorkFileSharingResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12v\n" +
+	"\x12GetWorkFilePreview\x12*.agent.public.v1.GetWorkFilePreviewRequest\x1a+.agent.public.v1.GetWorkFilePreviewResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12\x82\x01\n" +
+	"\x16RequestWorkFilePreview\x12..agent.public.v1.RequestWorkFilePreviewRequest\x1a/.agent.public.v1.RequestWorkFilePreviewResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01BHZFgithub.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1b\x06proto3"
 
 var (
 	file_agent_public_v1_work_file_proto_rawDescOnce sync.Once

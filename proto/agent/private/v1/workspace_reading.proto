@@ -2,8 +2,8 @@ syntax = "proto3";
 
 package agent.private.v1;
 
-import "google/protobuf/timestamp.proto";
 import "agent/private/v1/work_access.proto";
+import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/talgent-work/contracts/gen/go/agent/private/v1;agentprivatev1";
 

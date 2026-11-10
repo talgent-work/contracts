@@ -2,8 +2,7 @@ syntax = "proto3";
 
 package agent.public.v1;
 
-import "google/protobuf/struct.proto";
-import "google/protobuf/timestamp.proto";
+import "admission/v1/admission.proto";
 import "agent/public/v1/appearance.proto";
 import "agent/public/v1/capability.proto";
 import "agent/public/v1/harness.proto";
@@ -14,6 +13,8 @@ import "agent/public/v1/service_access.proto";
 import "agent/public/v1/soul.proto";
 import "agent/public/v1/startup.proto";
 import "dispatcher/public/v1/unified_message.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1";
 
@@ -24,68 +25,164 @@ option go_package = "github.com/talgent-work/contracts/gen/go/agent/public/v1;ag
 service AgentWorkService {
   // ChangeWorkAgentAppearance changes the name and icon of the Work Agent that
   // represents the caller; only that human may change it.
-  rpc ChangeWorkAgentAppearance(ChangeWorkAgentAppearanceRequest) returns (ChangeWorkAgentAppearanceResponse);
+  rpc ChangeWorkAgentAppearance(ChangeWorkAgentAppearanceRequest) returns (ChangeWorkAgentAppearanceResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // GetMyWorkAgent reads the caller's Work Agent, or the appearance it would
   // start with when the caller has none yet; it never creates one.
-  rpc GetMyWorkAgent(GetMyWorkAgentRequest) returns (GetMyWorkAgentResponse);
+  rpc GetMyWorkAgent(GetMyWorkAgentRequest) returns (GetMyWorkAgentResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // EnsureMyWorkAgent returns the caller's Work Agent, establishing it when
   // the caller has none yet.
-  rpc EnsureMyWorkAgent(EnsureMyWorkAgentRequest) returns (EnsureMyWorkAgentResponse);
+  rpc EnsureMyWorkAgent(EnsureMyWorkAgentRequest) returns (EnsureMyWorkAgentResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // GetAgentSoul reads an Agent's Soul; only one of its Owners may read it.
-  rpc GetAgentSoul(GetAgentSoulRequest) returns (GetAgentSoulResponse);
+  rpc GetAgentSoul(GetAgentSoulRequest) returns (GetAgentSoulResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // ChangeAgentSoul replaces an Agent's Soul; only one of its Owners may. Each
   // of its Works takes it up at its next start; running Turns are unaffected.
-  rpc ChangeAgentSoul(ChangeAgentSoulRequest) returns (ChangeAgentSoulResponse);
+  rpc ChangeAgentSoul(ChangeAgentSoulRequest) returns (ChangeAgentSoulResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // GetWorkCapabilities reads actual Harness candidates and their latest updates.
-  rpc GetWorkCapabilities(GetWorkCapabilitiesRequest) returns (GetWorkCapabilitiesResponse);
+  rpc GetWorkCapabilities(GetWorkCapabilitiesRequest) returns (GetWorkCapabilitiesResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // GetWorkPluginResults reads installation and loading projections for selected plugins.
-  rpc GetWorkPluginResults(GetWorkPluginResultsRequest) returns (GetWorkPluginResultsResponse);
+  rpc GetWorkPluginResults(GetWorkPluginResultsRequest) returns (GetWorkPluginResultsResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // GetWorkServiceAccess reads fixed selection and latest safe supply feedback.
-  rpc GetWorkServiceAccess(GetWorkServiceAccessRequest) returns (GetWorkServiceAccessResponse);
+  rpc GetWorkServiceAccess(GetWorkServiceAccessRequest) returns (GetWorkServiceAccessResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // CancelTurn interrupts only the addressed turn, leaving the Work running.
   // It answers Unavailable while the Work's execution environment is not
   // observed, such as during a Disconnection.
-  rpc CancelTurn(CancelTurnRequest) returns (CancelTurnResponse);
+  rpc CancelTurn(CancelTurnRequest) returns (CancelTurnResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // GetCurrentTurn reads native activity independently of paginated history.
   // It answers Unavailable while the Work's execution environment is not
   // observed, such as during a Disconnection.
-  rpc GetCurrentTurn(GetCurrentTurnRequest) returns (GetCurrentTurnResponse);
+  rpc GetCurrentTurn(GetCurrentTurnRequest) returns (GetCurrentTurnResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // ListPendingInteractions reads the Harness requests awaiting the user's reply,
   // independently of paginated message history. It answers Unavailable while
   // the Work's execution environment is not observed.
-  rpc ListPendingInteractions(ListPendingInteractionsRequest) returns (ListPendingInteractionsResponse);
+  rpc ListPendingInteractions(ListPendingInteractionsRequest) returns (ListPendingInteractionsResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // GetWork reads the caller's own Work without changing the record.
-  rpc GetWork(GetWorkRequest) returns (GetWorkResponse);
+  rpc GetWork(GetWorkRequest) returns (GetWorkResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // ChangeWorkVisibility switches the caller's own Work between private and
   // public within its Project. A project-scoped definition's Work keeps its
   // visibility.
-  rpc ChangeWorkVisibility(ChangeWorkVisibilityRequest) returns (ChangeWorkVisibilityResponse);
+  rpc ChangeWorkVisibility(ChangeWorkVisibilityRequest) returns (ChangeWorkVisibilityResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // RevokeWorkShare stops one reader from reading the caller's own Work; that
   // reader's open message streams end at once. Granting goes through the
   // caller that knows the Work's Project members.
-  rpc RevokeWorkShare(RevokeWorkShareRequest) returns (RevokeWorkShareResponse);
+  rpc RevokeWorkShare(RevokeWorkShareRequest) returns (RevokeWorkShareResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // ListWorkLifecycleEvents reads the Work's lifecycle transitions for its continuous timeline.
-  rpc ListWorkLifecycleEvents(ListWorkLifecycleEventsRequest) returns (ListWorkLifecycleEventsResponse);
+  rpc ListWorkLifecycleEvents(ListWorkLifecycleEventsRequest) returns (ListWorkLifecycleEventsResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // StopWork requests normal stop of the observed execution.
-  rpc StopWork(StopWorkRequest) returns (StopWorkResponse);
+  rpc StopWork(StopWorkRequest) returns (StopWorkResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // ResumeWork explicitly resumes the fixed assignee's stopped conversation.
-  rpc ResumeWork(ResumeWorkRequest) returns (ResumeWorkResponse);
+  rpc ResumeWork(ResumeWorkRequest) returns (ResumeWorkResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // RestartWork retries a Failed Work using its existing native Session when present.
-  rpc RestartWork(RestartWorkRequest) returns (RestartWorkResponse);
+  rpc RestartWork(RestartWorkRequest) returns (RestartWorkResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // ArchiveWork permanently closes an eligible stopped or failed conversation.
-  rpc ArchiveWork(ArchiveWorkRequest) returns (ArchiveWorkResponse);
+  rpc ArchiveWork(ArchiveWorkRequest) returns (ArchiveWorkResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // SendMessage delivers ordinary input to an existing AgentWork.
-  rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
+  rpc SendMessage(SendMessageRequest) returns (SendMessageResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // RespondToInteraction replies to the current required interaction.
-  rpc RespondToInteraction(RespondToInteractionRequest) returns (RespondToInteractionResponse);
+  rpc RespondToInteraction(RespondToInteractionRequest) returns (RespondToInteractionResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // SetThinkingLevel adjusts the current Work Harness and retains its accepted setting.
-  rpc SetThinkingLevel(SetThinkingLevelRequest) returns (SetThinkingLevelResponse);
+  rpc SetThinkingLevel(SetThinkingLevelRequest) returns (SetThinkingLevelResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // GetThinkingLevel reads the retained setting for an accessible Work in any state.
-  rpc GetThinkingLevel(GetThinkingLevelRequest) returns (GetThinkingLevelResponse);
+  rpc GetThinkingLevel(GetThinkingLevelRequest) returns (GetThinkingLevelResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // SetPermissionMode changes the permission mode of a running Work on a
   // Managed Computer at once and retains the mode its Harness accepted for
   // the Work's later starts.
-  rpc SetPermissionMode(SetPermissionModeRequest) returns (SetPermissionModeResponse);
+  rpc SetPermissionMode(SetPermissionModeRequest) returns (SetPermissionModeResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
 }
 
 // SetPermissionModeRequest names the running Managed Work and its new mode.

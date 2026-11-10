@@ -4744,7 +4744,7 @@ var File_agent_private_v1_work_proto protoreflect.FileDescriptor
 
 const file_agent_private_v1_work_proto_rawDesc = "" +
 	"\n" +
-	"\x1bagent/private/v1/work.proto\x12\x10agent.private.v1\x1a\x1cgoogle/protobuf/struct.proto\x1a#agent/private/v1/work_subject.proto\x1a agent/public/v1/appearance.proto\x1a\"storage/private/v1/workspace.proto\x1a\x1dagent/public/v1/harness.proto\x1a\x1bagent/public/v1/model.proto\x1a\x1eagent/public/v1/progress.proto\x1a(agent/public/v1/work_start_options.proto\x1a'marketplace/public/v1/marketplace.proto\"[\n" +
+	"\x1bagent/private/v1/work.proto\x12\x10agent.private.v1\x1a#agent/private/v1/work_subject.proto\x1a agent/public/v1/appearance.proto\x1a\x1dagent/public/v1/harness.proto\x1a\x1bagent/public/v1/model.proto\x1a\x1eagent/public/v1/progress.proto\x1a(agent/public/v1/work_start_options.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a'marketplace/public/v1/marketplace.proto\x1a\"storage/private/v1/workspace.proto\"[\n" +
 	"\x13RepositorySelection\x12#\n" +
 	"\rrepository_id\x18\x01 \x01(\tR\frepositoryId\x12\x1f\n" +
 	"\vbase_branch\x18\x02 \x01(\tR\n" +

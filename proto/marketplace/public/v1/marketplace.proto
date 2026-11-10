@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package marketplace.public.v1;
 
+import "admission/v1/admission.proto";
 import "google/protobuf/struct.proto";
 import "marketplace/public/v1/connections.proto";
 
@@ -11,56 +12,156 @@ option go_package = "github.com/talgent-work/contracts/gen/go/marketplace/public
 // personal installation commands. No public request accepts an owner identity.
 service MarketplaceService {
   // BeginProviderAuthorization manages the authenticated user's personal connection.
-  rpc BeginProviderAuthorization(BeginProviderAuthorizationRequest) returns (BeginProviderAuthorizationResponse);
+  rpc BeginProviderAuthorization(BeginProviderAuthorizationRequest) returns (BeginProviderAuthorizationResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // CompleteProviderAuthorization manages the authenticated user's personal connection.
-  rpc CompleteProviderAuthorization(CompleteProviderAuthorizationRequest) returns (CompleteProviderAuthorizationResponse);
+  rpc CompleteProviderAuthorization(CompleteProviderAuthorizationRequest) returns (CompleteProviderAuthorizationResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // GetProviderConnectionState manages the authenticated user's personal connection.
-  rpc GetProviderConnectionState(GetProviderConnectionStateRequest) returns (GetProviderConnectionStateResponse);
+  rpc GetProviderConnectionState(GetProviderConnectionStateRequest) returns (GetProviderConnectionStateResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // ListAccessibleRepositories lists repositories last observed as reachable under the user's authorization.
-  rpc ListAccessibleRepositories(ListAccessibleRepositoriesRequest) returns (ListAccessibleRepositoriesResponse);
+  rpc ListAccessibleRepositories(ListAccessibleRepositoriesRequest) returns (ListAccessibleRepositoriesResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // GetProviderAccess describes the accounts, repositories and permissions the authorization last reached.
-  rpc GetProviderAccess(GetProviderAccessRequest) returns (GetProviderAccessResponse);
+  rpc GetProviderAccess(GetProviderAccessRequest) returns (GetProviderAccessResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // RefreshProviderAccess observes the authorization's reach now and returns it.
-  rpc RefreshProviderAccess(RefreshProviderAccessRequest) returns (RefreshProviderAccessResponse);
+  rpc RefreshProviderAccess(RefreshProviderAccessRequest) returns (RefreshProviderAccessResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
 
   // List configured personal authorization references, including inactive ones.
-  rpc ListPersonalAuthorizations(ListPersonalAuthorizationsRequest) returns (ListPersonalAuthorizationsResponse);
+  rpc ListPersonalAuthorizations(ListPersonalAuthorizationsRequest) returns (ListPersonalAuthorizationsResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // Ask the Provider to revoke the authenticated user's personal authorization.
-  rpc CancelPersonalAuthorization(CancelPersonalAuthorizationRequest) returns (CancelPersonalAuthorizationResponse);
+  rpc CancelPersonalAuthorization(CancelPersonalAuthorizationRequest) returns (CancelPersonalAuthorizationResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // Browse synchronized plugin releases.
-  rpc ListPlugins(ListPluginsRequest) returns (ListPluginsResponse);
+  rpc ListPlugins(ListPluginsRequest) returns (ListPluginsResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // Read the currently selected immutable release for a slug.
-  rpc GetPlugin(GetPluginRequest) returns (GetPluginResponse);
+  rpc GetPlugin(GetPluginRequest) returns (GetPluginResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // List the authenticated user's personal installations.
-  rpc ListInstalledPlugins(ListInstalledPluginsRequest) returns (ListInstalledPluginsResponse);
+  rpc ListInstalledPlugins(ListInstalledPluginsRequest) returns (ListInstalledPluginsResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // Read one personal installation including manual configuration.
-  rpc GetInstalledPlugin(GetInstalledPluginRequest) returns (GetInstalledPluginResponse);
+  rpc GetInstalledPlugin(GetInstalledPluginRequest) returns (GetInstalledPluginResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // Install a personal plugin; repeating preserves existing choices.
-  rpc InstallPlugin(InstallPluginRequest) returns (InstallPluginResponse);
+  rpc InstallPlugin(InstallPluginRequest) returns (InstallPluginResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // Include a personal installation in future default selections.
-  rpc EnablePlugin(EnablePluginRequest) returns (EnablePluginResponse);
+  rpc EnablePlugin(EnablePluginRequest) returns (EnablePluginResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // Exclude a personal installation while retaining its configuration.
-  rpc DisablePlugin(DisablePluginRequest) returns (DisablePluginResponse);
+  rpc DisablePlugin(DisablePluginRequest) returns (DisablePluginResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // Set typed manual values after validation.
-  rpc SetPluginConfiguration(SetPluginConfigurationRequest) returns (SetPluginConfigurationResponse);
+  rpc SetPluginConfiguration(SetPluginConfigurationRequest) returns (SetPluginConfigurationResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // Delete manual choices after validation.
-  rpc DeletePluginConfiguration(DeletePluginConfigurationRequest) returns (DeletePluginConfigurationResponse);
+  rpc DeletePluginConfiguration(DeletePluginConfigurationRequest) returns (DeletePluginConfigurationResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // Remove a personal installation and its manual configuration.
-  rpc UninstallPlugin(UninstallPluginRequest) returns (UninstallPluginResponse);
+  rpc UninstallPlugin(UninstallPluginRequest) returns (UninstallPluginResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // Browse the platform Connector catalog with the user's personal status.
-  rpc ListConnectors(ListConnectorsRequest) returns (ListConnectorsResponse);
+  rpc ListConnectors(ListConnectorsRequest) returns (ListConnectorsResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // Read one catalog Connector with the Plugins that use it.
-  rpc GetConnector(GetConnectorRequest) returns (GetConnectorResponse);
+  rpc GetConnector(GetConnectorRequest) returns (GetConnectorResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // List required Connectors and the user's personal installations.
-  rpc ListInstalledConnectors(ListInstalledConnectorsRequest) returns (ListInstalledConnectorsResponse);
+  rpc ListInstalledConnectors(ListInstalledConnectorsRequest) returns (ListInstalledConnectorsResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // Install a catalog Connector; Provider authorization is not required.
-  rpc InstallConnector(InstallConnectorRequest) returns (InstallConnectorResponse);
+  rpc InstallConnector(InstallConnectorRequest) returns (InstallConnectorResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // Include an installed Connector in future default selections.
-  rpc EnableConnector(EnableConnectorRequest) returns (EnableConnectorResponse);
+  rpc EnableConnector(EnableConnectorRequest) returns (EnableConnectorResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // Exclude an installed Connector while keeping the installation.
-  rpc DisableConnector(DisableConnectorRequest) returns (DisableConnectorResponse);
+  rpc DisableConnector(DisableConnectorRequest) returns (DisableConnectorResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // Remove a personal Connector installation; authorization is unaffected.
-  rpc UninstallConnector(UninstallConnectorRequest) returns (UninstallConnectorResponse);
+  rpc UninstallConnector(UninstallConnectorRequest) returns (UninstallConnectorResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
 }
 
 // ListPersonalAuthorizationsRequest uses only the authenticated user's identity.

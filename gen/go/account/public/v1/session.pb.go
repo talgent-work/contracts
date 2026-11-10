@@ -7,6 +7,7 @@
 package accountpublicv1
 
 import (
+	_ "github.com/talgent-work/contracts/gen/go/admission/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -199,7 +200,7 @@ var File_account_public_v1_session_proto protoreflect.FileDescriptor
 
 const file_account_public_v1_session_proto_rawDesc = "" +
 	"\n" +
-	"\x1faccount/public/v1/session.proto\x12\x11account.public.v1\"\x1a\n" +
+	"\x1faccount/public/v1/session.proto\x12\x11account.public.v1\x1a\x1cadmission/v1/admission.proto\"\x1a\n" +
 	"\x18GetCurrentSessionRequest\"X\n" +
 	"\x19GetCurrentSessionResponse\x12;\n" +
 	"\asession\x18\x01 \x01(\v2!.account.public.v1.CurrentSessionR\asession\"\xc2\x01\n" +
@@ -210,9 +211,10 @@ const file_account_public_v1_session_proto_rawDesc = "" +
 	"\rprimary_email\x18\x04 \x01(\tR\fprimaryEmail\x12\x1d\n" +
 	"\n" +
 	"avatar_url\x18\x05 \x01(\tR\tavatarUrl\x12\x14\n" +
-	"\x05roles\x18\x06 \x03(\tR\x05roles2\x80\x01\n" +
-	"\x0eSessionService\x12n\n" +
-	"\x11GetCurrentSession\x12+.account.public.v1.GetCurrentSessionRequest\x1a,.account.public.v1.GetCurrentSessionResponseBLZJgithub.com/talgent-work/contracts/gen/go/account/public/v1;accountpublicv1b\x06proto3"
+	"\x05roles\x18\x06 \x03(\tR\x05roles2\x89\x01\n" +
+	"\x0eSessionService\x12w\n" +
+	"\x11GetCurrentSession\x12+.account.public.v1.GetCurrentSessionRequest\x1a,.account.public.v1.GetCurrentSessionResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01BLZJgithub.com/talgent-work/contracts/gen/go/account/public/v1;accountpublicv1b\x06proto3"
 
 var (
 	file_account_public_v1_session_proto_rawDescOnce sync.Once

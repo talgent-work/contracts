@@ -576,7 +576,7 @@ var File_agent_private_v1_execution_feedback_proto protoreflect.FileDescriptor
 
 const file_agent_private_v1_execution_feedback_proto_rawDesc = "" +
 	"\n" +
-	")agent/private/v1/execution_feedback.proto\x12\x10agent.private.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1eagent/public/v1/progress.proto\x1a\x1fagent/public/v1/subagents.proto\"P\n" +
+	")agent/private/v1/execution_feedback.proto\x12\x10agent.private.v1\x1a\x1eagent/public/v1/progress.proto\x1a\x1fagent/public/v1/subagents.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"P\n" +
 	"\x16ConnectionEndedRequest\x12\x17\n" +
 	"\awork_id\x18\x01 \x01(\tR\x06workId\x12\x1d\n" +
 	"\n" +

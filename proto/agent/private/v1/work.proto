@@ -2,15 +2,15 @@ syntax = "proto3";
 
 package agent.private.v1;
 
-import "google/protobuf/struct.proto";
 import "agent/private/v1/work_subject.proto";
 import "agent/public/v1/appearance.proto";
-import "storage/private/v1/workspace.proto";
 import "agent/public/v1/harness.proto";
 import "agent/public/v1/model.proto";
 import "agent/public/v1/progress.proto";
 import "agent/public/v1/work_start_options.proto";
+import "google/protobuf/struct.proto";
 import "marketplace/public/v1/marketplace.proto";
+import "storage/private/v1/workspace.proto";
 
 option go_package = "github.com/talgent-work/contracts/gen/go/agent/private/v1;agentprivatev1";
 
@@ -514,9 +514,6 @@ message RespondToInteractionRequest {
 // RespondToInteractionResponse confirms response delivery, not interaction resolution.
 message RespondToInteractionResponse {}
 
-
-
-
 // VerifyWorkCredentialRequest carries the native process credential, not caller-declared product authority.
 message VerifyWorkCredentialRequest {
   // Work whose current live sandbox holds the credential.
@@ -794,8 +791,6 @@ message GetWorkOriginResponse {
   string project_id = 5;
 }
 
-
-
 // EnsureAgentDefinitionRequest is accepted only from authenticated internal callers.
 message EnsureAgentDefinitionRequest {
   // The Agent Owners a new definition starts with: the person for a person's
@@ -869,13 +864,6 @@ message ListWorkStartRepositoriesRequest {
   // The person whose personal Provider authorization is discovered.
   string repository_owner_id = 1;
 }
-
-
-
-
-
-
-
 
 // TransferAgentDefinitionOwnersRequest names the definition and its new Owners.
 message TransferAgentDefinitionOwnersRequest {

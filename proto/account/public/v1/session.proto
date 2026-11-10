@@ -2,13 +2,19 @@ syntax = "proto3";
 
 package account.public.v1;
 
+import "admission/v1/admission.proto";
+
 option go_package = "github.com/talgent-work/contracts/gen/go/account/public/v1;accountpublicv1";
 
 // SessionService tells the browser who is signed in, from the identity the
 // gateway verified; it reads and changes nothing else.
 service SessionService {
   // GetCurrentSession reads the signed-in person's identity.
-  rpc GetCurrentSession(GetCurrentSessionRequest) returns (GetCurrentSessionResponse);
+  rpc GetCurrentSession(GetCurrentSessionRequest) returns (GetCurrentSessionResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
 }
 
 // GetCurrentSessionRequest reads the caller's own identity.

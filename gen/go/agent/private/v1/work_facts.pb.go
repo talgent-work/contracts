@@ -631,7 +631,7 @@ var File_agent_private_v1_work_facts_proto protoreflect.FileDescriptor
 
 const file_agent_private_v1_work_facts_proto_rawDesc = "" +
 	"\n" +
-	"!agent/private/v1/work_facts.proto\x12\x10agent.private.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a#agent/private/v1/work_subject.proto\x1a\x1eagent/public/v1/progress.proto\x1a\x1dagent/public/v1/startup.proto\x1a\x1aagent/public/v1/work.proto\"\x87\x06\n" +
+	"!agent/private/v1/work_facts.proto\x12\x10agent.private.v1\x1a#agent/private/v1/work_subject.proto\x1a\x1eagent/public/v1/progress.proto\x1a\x1dagent/public/v1/startup.proto\x1a\x1aagent/public/v1/work.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x87\x06\n" +
 	"\tWorkFacts\x12\x17\n" +
 	"\awork_id\x18\x01 \x01(\tR\x06workId\x127\n" +
 	"\asubject\x18\x02 \x01(\v2\x1d.agent.private.v1.WorkSubjectR\asubject\x12\x1d\n" +

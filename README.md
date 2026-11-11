@@ -114,7 +114,7 @@ protobuf runtime; a library built on the contracts, such as `workbench-ui`, decl
 
 - [Trusted identity headers](docs/gateway-identity.md): what the public gateway and trusted
   in-cluster services tell a service about its caller
-  read-only mount of every JuiceFS Directory, and the claim a reader references
+- [Content path](docs/storage-content.md): `/v1/storage/content`
 - [Directory Locators](docs/directory-locators.md): the condition vocabulary and the Directories
   several contexts locate
 - [Contracts version header](docs/contracts-version.md): `talgent-contracts-version`

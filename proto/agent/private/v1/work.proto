@@ -814,6 +814,9 @@ message GetWorkStartOptionsRequest {
   // Plugins a new Work of the caller requires beside the definition's,
   // offered as required; ignored for an existing Work.
   repeated string required_plugins = 4;
+  // The Project a new Work of the caller belongs to; its Built-in Plugins are
+  // offered as required. Empty means none; ignored for an existing Work.
+  string project_id = 5;
 }
 
 // ListWorkStartRepositoriesRequest names the owner the trusted business caller

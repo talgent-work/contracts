@@ -2334,6 +2334,14 @@ export declare type GetWorkStartOptionsRequest = Message<"agent.private.v1.GetWo
    * @generated from field: repeated string required_plugins = 4;
    */
   requiredPlugins: string[];
+
+  /**
+   * The Project a new Work of the caller belongs to; its Built-in Plugins are
+   * offered as required. Empty means none; ignored for an existing Work.
+   *
+   * @generated from field: string project_id = 5;
+   */
+  projectId: string;
 };
 
 /**

@@ -4349,8 +4349,11 @@ type GetWorkStartOptionsRequest struct {
 	// Plugins a new Work of the caller requires beside the definition's,
 	// offered as required; ignored for an existing Work.
 	RequiredPlugins []string `protobuf:"bytes,4,rep,name=required_plugins,json=requiredPlugins,proto3" json:"required_plugins,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	// The Project a new Work of the caller belongs to; its Built-in Plugins are
+	// offered as required. Empty means none; ignored for an existing Work.
+	ProjectId     string `protobuf:"bytes,5,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetWorkStartOptionsRequest) Reset() {
@@ -4409,6 +4412,13 @@ func (x *GetWorkStartOptionsRequest) GetRequiredPlugins() []string {
 		return x.RequiredPlugins
 	}
 	return nil
+}
+
+func (x *GetWorkStartOptionsRequest) GetProjectId() string {
+	if x != nil {
+		return x.ProjectId
+	}
+	return ""
 }
 
 // ListWorkStartRepositoriesRequest names the owner the trusted business caller
@@ -4902,14 +4912,16 @@ const file_agent_private_v1_work_proto_rawDesc = "" +
 	"\n" +
 	"agent_name\x18\x03 \x01(\tR\tagentName\x129\n" +
 	"\n" +
-	"agent_icon\x18\x04 \x01(\v2\x1a.agent.public.v1.AgentIconR\tagentIcon\"\xa0\x01\n" +
+	"agent_icon\x18\x04 \x01(\v2\x1a.agent.public.v1.AgentIconR\tagentIcon\"\xbf\x01\n" +
 	"\x1aGetWorkStartOptionsRequest\x12\x1d\n" +
 	"\n" +
 	"subject_id\x18\x01 \x01(\tR\tsubjectId\x12\x17\n" +
 	"\awork_id\x18\x02 \x01(\tR\x06workId\x12\x1f\n" +
 	"\vemployee_id\x18\x03 \x01(\tR\n" +
 	"employeeId\x12)\n" +
-	"\x10required_plugins\x18\x04 \x03(\tR\x0frequiredPlugins\"R\n" +
+	"\x10required_plugins\x18\x04 \x03(\tR\x0frequiredPlugins\x12\x1d\n" +
+	"\n" +
+	"project_id\x18\x05 \x01(\tR\tprojectId\"R\n" +
 	" ListWorkStartRepositoriesRequest\x12.\n" +
 	"\x13repository_owner_id\x18\x01 \x01(\tR\x11repositoryOwnerId\"Y\n" +
 	"$TransferAgentDefinitionOwnersRequest\x12\x19\n" +

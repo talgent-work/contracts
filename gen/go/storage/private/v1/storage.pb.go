@@ -58,6 +58,19 @@ const (
 	ErrorReason_ERROR_REASON_INVALID_LOCATOR ErrorReason = 11
 	// A permanent Directory refuses reclamation.
 	ErrorReason_ERROR_REASON_PERMANENT_DIRECTORY ErrorReason = 12
+	// The mapped path does not lie strictly beneath the mapping prefix
+	// configured for the caller, or the caller has none.
+	ErrorReason_ERROR_REASON_MAPPING_OUTSIDE_PREFIX ErrorReason = 13
+	// The mapped path is, lies inside or lies above another mapping's path.
+	ErrorReason_ERROR_REASON_MAPPING_OVERLAPS ErrorReason = 14
+	// The Directory was once granted read-write, so a Harness may have written
+	// it bypassing Storage; it is never mapped.
+	ErrorReason_ERROR_REASON_DIRECTORY_GRANTED_READ_WRITE ErrorReason = 15
+	// The Directory is not on JuiceFS, the Mapped View's backend.
+	ErrorReason_ERROR_REASON_BACKEND_NOT_MAPPABLE ErrorReason = 16
+	// A read-write Mount Grant was asked for a mapped Directory, which is only
+	// ever mounted read-only.
+	ErrorReason_ERROR_REASON_DIRECTORY_MAPPED ErrorReason = 17
 )
 
 // Enum value maps for ErrorReason.
@@ -76,21 +89,31 @@ var (
 		10: "ERROR_REASON_DIRECTORY_RECLAIMED",
 		11: "ERROR_REASON_INVALID_LOCATOR",
 		12: "ERROR_REASON_PERMANENT_DIRECTORY",
+		13: "ERROR_REASON_MAPPING_OUTSIDE_PREFIX",
+		14: "ERROR_REASON_MAPPING_OVERLAPS",
+		15: "ERROR_REASON_DIRECTORY_GRANTED_READ_WRITE",
+		16: "ERROR_REASON_BACKEND_NOT_MAPPABLE",
+		17: "ERROR_REASON_DIRECTORY_MAPPED",
 	}
 	ErrorReason_value = map[string]int32{
-		"ERROR_REASON_UNSPECIFIED":             0,
-		"ERROR_REASON_FILE_NOT_FOUND":          1,
-		"ERROR_REASON_SOURCE_NOT_FOUND":        2,
-		"ERROR_REASON_INVALID_SOURCE":          3,
-		"ERROR_REASON_INVALID_NAME":            4,
-		"ERROR_REASON_INVALID_REQUEST":         5,
-		"ERROR_REASON_INVALID_WORKSPACE_PATH":  6,
-		"ERROR_REASON_NAME_TAKEN":              7,
-		"ERROR_REASON_DIRECTORY_NOT_OPEN":      8,
-		"ERROR_REASON_DIRECTORY_NOT_ALLOCATED": 9,
-		"ERROR_REASON_DIRECTORY_RECLAIMED":     10,
-		"ERROR_REASON_INVALID_LOCATOR":         11,
-		"ERROR_REASON_PERMANENT_DIRECTORY":     12,
+		"ERROR_REASON_UNSPECIFIED":                  0,
+		"ERROR_REASON_FILE_NOT_FOUND":               1,
+		"ERROR_REASON_SOURCE_NOT_FOUND":             2,
+		"ERROR_REASON_INVALID_SOURCE":               3,
+		"ERROR_REASON_INVALID_NAME":                 4,
+		"ERROR_REASON_INVALID_REQUEST":              5,
+		"ERROR_REASON_INVALID_WORKSPACE_PATH":       6,
+		"ERROR_REASON_NAME_TAKEN":                   7,
+		"ERROR_REASON_DIRECTORY_NOT_OPEN":           8,
+		"ERROR_REASON_DIRECTORY_NOT_ALLOCATED":      9,
+		"ERROR_REASON_DIRECTORY_RECLAIMED":          10,
+		"ERROR_REASON_INVALID_LOCATOR":              11,
+		"ERROR_REASON_PERMANENT_DIRECTORY":          12,
+		"ERROR_REASON_MAPPING_OUTSIDE_PREFIX":       13,
+		"ERROR_REASON_MAPPING_OVERLAPS":             14,
+		"ERROR_REASON_DIRECTORY_GRANTED_READ_WRITE": 15,
+		"ERROR_REASON_BACKEND_NOT_MAPPABLE":         16,
+		"ERROR_REASON_DIRECTORY_MAPPED":             17,
 	}
 )
 
@@ -2216,6 +2239,194 @@ func (x *ReadContentResponse) GetFiles() []*ContentFile {
 	return nil
 }
 
+// MapDirectoryRequest names the located Directory and where it is shown.
+type MapDirectoryRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The Directory with the backend and lifetime of its first allocation.
+	Directory *LocatedDirectory `protobuf:"bytes,1,opt,name=directory,proto3" json:"directory,omitempty"`
+	// Mapped path: a clean relative path of "/"-separated elements, each
+	// non-empty, never "." or "..", never starting with "." and never
+	// containing "\" or NUL, beneath the caller's mapping prefix. Storage never
+	// interprets it.
+	Path          string `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MapDirectoryRequest) Reset() {
+	*x = MapDirectoryRequest{}
+	mi := &file_storage_private_v1_storage_proto_msgTypes[31]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MapDirectoryRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MapDirectoryRequest) ProtoMessage() {}
+
+func (x *MapDirectoryRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_private_v1_storage_proto_msgTypes[31]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MapDirectoryRequest.ProtoReflect.Descriptor instead.
+func (*MapDirectoryRequest) Descriptor() ([]byte, []int) {
+	return file_storage_private_v1_storage_proto_rawDescGZIP(), []int{31}
+}
+
+func (x *MapDirectoryRequest) GetDirectory() *LocatedDirectory {
+	if x != nil {
+		return x.Directory
+	}
+	return nil
+}
+
+func (x *MapDirectoryRequest) GetPath() string {
+	if x != nil {
+		return x.Path
+	}
+	return ""
+}
+
+// MapDirectoryResponse acknowledges the mapping.
+type MapDirectoryResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MapDirectoryResponse) Reset() {
+	*x = MapDirectoryResponse{}
+	mi := &file_storage_private_v1_storage_proto_msgTypes[32]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MapDirectoryResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MapDirectoryResponse) ProtoMessage() {}
+
+func (x *MapDirectoryResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_private_v1_storage_proto_msgTypes[32]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MapDirectoryResponse.ProtoReflect.Descriptor instead.
+func (*MapDirectoryResponse) Descriptor() ([]byte, []int) {
+	return file_storage_private_v1_storage_proto_rawDescGZIP(), []int{32}
+}
+
+// UnmapDirectoryRequest names the Directory and the mapping removed.
+type UnmapDirectoryRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The Directory.
+	Directory *Directory `protobuf:"bytes,1,opt,name=directory,proto3" json:"directory,omitempty"`
+	// Mapped path the Directory was mapped at, beneath the caller's mapping
+	// prefix.
+	Path          string `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UnmapDirectoryRequest) Reset() {
+	*x = UnmapDirectoryRequest{}
+	mi := &file_storage_private_v1_storage_proto_msgTypes[33]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UnmapDirectoryRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UnmapDirectoryRequest) ProtoMessage() {}
+
+func (x *UnmapDirectoryRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_private_v1_storage_proto_msgTypes[33]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UnmapDirectoryRequest.ProtoReflect.Descriptor instead.
+func (*UnmapDirectoryRequest) Descriptor() ([]byte, []int) {
+	return file_storage_private_v1_storage_proto_rawDescGZIP(), []int{33}
+}
+
+func (x *UnmapDirectoryRequest) GetDirectory() *Directory {
+	if x != nil {
+		return x.Directory
+	}
+	return nil
+}
+
+func (x *UnmapDirectoryRequest) GetPath() string {
+	if x != nil {
+		return x.Path
+	}
+	return ""
+}
+
+// UnmapDirectoryResponse acknowledges the removal.
+type UnmapDirectoryResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UnmapDirectoryResponse) Reset() {
+	*x = UnmapDirectoryResponse{}
+	mi := &file_storage_private_v1_storage_proto_msgTypes[34]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UnmapDirectoryResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UnmapDirectoryResponse) ProtoMessage() {}
+
+func (x *UnmapDirectoryResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_private_v1_storage_proto_msgTypes[34]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UnmapDirectoryResponse.ProtoReflect.Descriptor instead.
+func (*UnmapDirectoryResponse) Descriptor() ([]byte, []int) {
+	return file_storage_private_v1_storage_proto_rawDescGZIP(), []int{34}
+}
+
 // FilePreview is how one file is shown.
 type FilePreview struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -2241,7 +2452,7 @@ type FilePreview struct {
 
 func (x *FilePreview) Reset() {
 	*x = FilePreview{}
-	mi := &file_storage_private_v1_storage_proto_msgTypes[31]
+	mi := &file_storage_private_v1_storage_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2253,7 +2464,7 @@ func (x *FilePreview) String() string {
 func (*FilePreview) ProtoMessage() {}
 
 func (x *FilePreview) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_storage_proto_msgTypes[31]
+	mi := &file_storage_private_v1_storage_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2266,7 +2477,7 @@ func (x *FilePreview) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FilePreview.ProtoReflect.Descriptor instead.
 func (*FilePreview) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_storage_proto_rawDescGZIP(), []int{31}
+	return file_storage_private_v1_storage_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *FilePreview) GetMode() PreviewMode {
@@ -2338,7 +2549,7 @@ type CreateShareLinkRequest struct {
 
 func (x *CreateShareLinkRequest) Reset() {
 	*x = CreateShareLinkRequest{}
-	mi := &file_storage_private_v1_storage_proto_msgTypes[32]
+	mi := &file_storage_private_v1_storage_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2350,7 +2561,7 @@ func (x *CreateShareLinkRequest) String() string {
 func (*CreateShareLinkRequest) ProtoMessage() {}
 
 func (x *CreateShareLinkRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_storage_proto_msgTypes[32]
+	mi := &file_storage_private_v1_storage_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2363,7 +2574,7 @@ func (x *CreateShareLinkRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateShareLinkRequest.ProtoReflect.Descriptor instead.
 func (*CreateShareLinkRequest) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_storage_proto_rawDescGZIP(), []int{32}
+	return file_storage_private_v1_storage_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *CreateShareLinkRequest) GetPosition() *FilePosition {
@@ -2391,7 +2602,7 @@ type CreateShareLinkResponse struct {
 
 func (x *CreateShareLinkResponse) Reset() {
 	*x = CreateShareLinkResponse{}
-	mi := &file_storage_private_v1_storage_proto_msgTypes[33]
+	mi := &file_storage_private_v1_storage_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2403,7 +2614,7 @@ func (x *CreateShareLinkResponse) String() string {
 func (*CreateShareLinkResponse) ProtoMessage() {}
 
 func (x *CreateShareLinkResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_storage_proto_msgTypes[33]
+	mi := &file_storage_private_v1_storage_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2416,7 +2627,7 @@ func (x *CreateShareLinkResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateShareLinkResponse.ProtoReflect.Descriptor instead.
 func (*CreateShareLinkResponse) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_storage_proto_rawDescGZIP(), []int{33}
+	return file_storage_private_v1_storage_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *CreateShareLinkResponse) GetShareLink() *ShareLink {
@@ -2439,7 +2650,7 @@ type RevokeShareLinksRequest struct {
 
 func (x *RevokeShareLinksRequest) Reset() {
 	*x = RevokeShareLinksRequest{}
-	mi := &file_storage_private_v1_storage_proto_msgTypes[34]
+	mi := &file_storage_private_v1_storage_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2451,7 +2662,7 @@ func (x *RevokeShareLinksRequest) String() string {
 func (*RevokeShareLinksRequest) ProtoMessage() {}
 
 func (x *RevokeShareLinksRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_storage_proto_msgTypes[34]
+	mi := &file_storage_private_v1_storage_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2464,7 +2675,7 @@ func (x *RevokeShareLinksRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RevokeShareLinksRequest.ProtoReflect.Descriptor instead.
 func (*RevokeShareLinksRequest) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_storage_proto_rawDescGZIP(), []int{34}
+	return file_storage_private_v1_storage_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *RevokeShareLinksRequest) GetPosition() *FilePosition {
@@ -2494,7 +2705,7 @@ type RevokeShareLinksResponse struct {
 
 func (x *RevokeShareLinksResponse) Reset() {
 	*x = RevokeShareLinksResponse{}
-	mi := &file_storage_private_v1_storage_proto_msgTypes[35]
+	mi := &file_storage_private_v1_storage_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2506,7 +2717,7 @@ func (x *RevokeShareLinksResponse) String() string {
 func (*RevokeShareLinksResponse) ProtoMessage() {}
 
 func (x *RevokeShareLinksResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_private_v1_storage_proto_msgTypes[35]
+	mi := &file_storage_private_v1_storage_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2519,7 +2730,7 @@ func (x *RevokeShareLinksResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RevokeShareLinksResponse.ProtoReflect.Descriptor instead.
 func (*RevokeShareLinksResponse) Descriptor() ([]byte, []int) {
-	return file_storage_private_v1_storage_proto_rawDescGZIP(), []int{35}
+	return file_storage_private_v1_storage_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *RevokeShareLinksResponse) GetRevoked() int32 {
@@ -2651,7 +2862,15 @@ const file_storage_private_v1_storage_proto_rawDesc = "" +
 	"\tdirectory\x18\x01 \x01(\v2\x1d.storage.private.v1.DirectoryR\tdirectory\x12\x14\n" +
 	"\x05paths\x18\x02 \x03(\tR\x05paths\"L\n" +
 	"\x13ReadContentResponse\x125\n" +
-	"\x05files\x18\x01 \x03(\v2\x1f.storage.private.v1.ContentFileR\x05files\"\xf8\x02\n" +
+	"\x05files\x18\x01 \x03(\v2\x1f.storage.private.v1.ContentFileR\x05files\"m\n" +
+	"\x13MapDirectoryRequest\x12B\n" +
+	"\tdirectory\x18\x01 \x01(\v2$.storage.private.v1.LocatedDirectoryR\tdirectory\x12\x12\n" +
+	"\x04path\x18\x02 \x01(\tR\x04path\"\x16\n" +
+	"\x14MapDirectoryResponse\"h\n" +
+	"\x15UnmapDirectoryRequest\x12;\n" +
+	"\tdirectory\x18\x01 \x01(\v2\x1d.storage.private.v1.DirectoryR\tdirectory\x12\x12\n" +
+	"\x04path\x18\x02 \x01(\tR\x04path\"\x18\n" +
+	"\x16UnmapDirectoryResponse\"\xf8\x02\n" +
 	"\vFilePreview\x123\n" +
 	"\x04mode\x18\x01 \x01(\x0e2\x1f.storage.private.v1.PreviewModeR\x04mode\x12<\n" +
 	"\adisplay\x18\x02 \x01(\x0e2\".storage.private.v1.PreviewDisplayR\adisplay\x12<\n" +
@@ -2676,7 +2895,7 @@ const file_storage_private_v1_storage_proto_rawDesc = "" +
 	"\x12created_by_user_id\x18\x02 \x01(\tR\x0fcreatedByUserId\"R\n" +
 	"\x18RevokeShareLinksResponse\x12\x18\n" +
 	"\arevoked\x18\x01 \x01(\x05R\arevoked\x12\x1c\n" +
-	"\tremaining\x18\x02 \x01(\x05R\tremaining*\xd4\x03\n" +
+	"\tremaining\x18\x02 \x01(\x05R\tremaining*\x99\x05\n" +
 	"\vErrorReason\x12\x1c\n" +
 	"\x18ERROR_REASON_UNSPECIFIED\x10\x00\x12\x1f\n" +
 	"\x1bERROR_REASON_FILE_NOT_FOUND\x10\x01\x12!\n" +
@@ -2691,7 +2910,12 @@ const file_storage_private_v1_storage_proto_rawDesc = "" +
 	" ERROR_REASON_DIRECTORY_RECLAIMED\x10\n" +
 	"\x12 \n" +
 	"\x1cERROR_REASON_INVALID_LOCATOR\x10\v\x12$\n" +
-	" ERROR_REASON_PERMANENT_DIRECTORY\x10\f*H\n" +
+	" ERROR_REASON_PERMANENT_DIRECTORY\x10\f\x12'\n" +
+	"#ERROR_REASON_MAPPING_OUTSIDE_PREFIX\x10\r\x12!\n" +
+	"\x1dERROR_REASON_MAPPING_OVERLAPS\x10\x0e\x12-\n" +
+	")ERROR_REASON_DIRECTORY_GRANTED_READ_WRITE\x10\x0f\x12%\n" +
+	"!ERROR_REASON_BACKEND_NOT_MAPPABLE\x10\x10\x12!\n" +
+	"\x1dERROR_REASON_DIRECTORY_MAPPED\x10\x11*H\n" +
 	"\aBackend\x12\x17\n" +
 	"\x13BACKEND_UNSPECIFIED\x10\x00\x12\x0f\n" +
 	"\vBACKEND_NAS\x10\x01\x12\x13\n" +
@@ -2724,8 +2948,7 @@ const file_storage_private_v1_storage_proto_rawDesc = "" +
 	"\x19PREVIEW_REFUSAL_TOO_LARGE\x10\x04\x12\x1b\n" +
 	"\x17PREVIEW_REFUSAL_CORRUPT\x10\x05\x12%\n" +
 	"!PREVIEW_REFUSAL_CONVERTER_REFUSED\x10\x06\x12'\n" +
-	"#PREVIEW_REFUSAL_RENDERING_TOO_LARGE\x10\a2\xcf\n" +
-	"\n" +
+	"#PREVIEW_REFUSAL_RENDERING_TOO_LARGE\x10\a2\x9b\f\n" +
 	"\x10DirectoryService\x12d\n" +
 	"\rOpenDirectory\x12(.storage.private.v1.OpenDirectoryRequest\x1a).storage.private.v1.OpenDirectoryResponse\x12X\n" +
 	"\tListFiles\x12$.storage.private.v1.ListFilesRequest\x1a%.storage.private.v1.ListFilesResponse\x12s\n" +
@@ -2741,7 +2964,9 @@ const file_storage_private_v1_storage_proto_rawDesc = "" +
 	"\x0eGetFilePreview\x12).storage.private.v1.GetFilePreviewRequest\x1a*.storage.private.v1.GetFilePreviewResponse\x12s\n" +
 	"\x12RequestFilePreview\x12-.storage.private.v1.RequestFilePreviewRequest\x1a..storage.private.v1.RequestFilePreviewResponse\x12g\n" +
 	"\x0eReplaceContent\x12).storage.private.v1.ReplaceContentRequest\x1a*.storage.private.v1.ReplaceContentResponse\x12^\n" +
-	"\vReadContent\x12&.storage.private.v1.ReadContentRequest\x1a'.storage.private.v1.ReadContentResponseBNZLgithub.com/talgent-work/contracts/gen/go/storage/private/v1;storageprivatev1b\x06proto3"
+	"\vReadContent\x12&.storage.private.v1.ReadContentRequest\x1a'.storage.private.v1.ReadContentResponse\x12a\n" +
+	"\fMapDirectory\x12'.storage.private.v1.MapDirectoryRequest\x1a(.storage.private.v1.MapDirectoryResponse\x12g\n" +
+	"\x0eUnmapDirectory\x12).storage.private.v1.UnmapDirectoryRequest\x1a*.storage.private.v1.UnmapDirectoryResponseBNZLgithub.com/talgent-work/contracts/gen/go/storage/private/v1;storageprivatev1b\x06proto3"
 
 var (
 	file_storage_private_v1_storage_proto_rawDescOnce sync.Once
@@ -2756,7 +2981,7 @@ func file_storage_private_v1_storage_proto_rawDescGZIP() []byte {
 }
 
 var file_storage_private_v1_storage_proto_enumTypes = make([]protoimpl.EnumInfo, 7)
-var file_storage_private_v1_storage_proto_msgTypes = make([]protoimpl.MessageInfo, 36)
+var file_storage_private_v1_storage_proto_msgTypes = make([]protoimpl.MessageInfo, 40)
 var file_storage_private_v1_storage_proto_goTypes = []any{
 	(ErrorReason)(0),                   // 0: storage.private.v1.ErrorReason
 	(Backend)(0),                       // 1: storage.private.v1.Backend
@@ -2796,12 +3021,16 @@ var file_storage_private_v1_storage_proto_goTypes = []any{
 	(*ReplaceContentResponse)(nil),     // 35: storage.private.v1.ReplaceContentResponse
 	(*ReadContentRequest)(nil),         // 36: storage.private.v1.ReadContentRequest
 	(*ReadContentResponse)(nil),        // 37: storage.private.v1.ReadContentResponse
-	(*FilePreview)(nil),                // 38: storage.private.v1.FilePreview
-	(*CreateShareLinkRequest)(nil),     // 39: storage.private.v1.CreateShareLinkRequest
-	(*CreateShareLinkResponse)(nil),    // 40: storage.private.v1.CreateShareLinkResponse
-	(*RevokeShareLinksRequest)(nil),    // 41: storage.private.v1.RevokeShareLinksRequest
-	(*RevokeShareLinksResponse)(nil),   // 42: storage.private.v1.RevokeShareLinksResponse
-	(*timestamppb.Timestamp)(nil),      // 43: google.protobuf.Timestamp
+	(*MapDirectoryRequest)(nil),        // 38: storage.private.v1.MapDirectoryRequest
+	(*MapDirectoryResponse)(nil),       // 39: storage.private.v1.MapDirectoryResponse
+	(*UnmapDirectoryRequest)(nil),      // 40: storage.private.v1.UnmapDirectoryRequest
+	(*UnmapDirectoryResponse)(nil),     // 41: storage.private.v1.UnmapDirectoryResponse
+	(*FilePreview)(nil),                // 42: storage.private.v1.FilePreview
+	(*CreateShareLinkRequest)(nil),     // 43: storage.private.v1.CreateShareLinkRequest
+	(*CreateShareLinkResponse)(nil),    // 44: storage.private.v1.CreateShareLinkResponse
+	(*RevokeShareLinksRequest)(nil),    // 45: storage.private.v1.RevokeShareLinksRequest
+	(*RevokeShareLinksResponse)(nil),   // 46: storage.private.v1.RevokeShareLinksResponse
+	(*timestamppb.Timestamp)(nil),      // 47: google.protobuf.Timestamp
 }
 var file_storage_private_v1_storage_proto_depIdxs = []int32{
 	1,  // 0: storage.private.v1.DirectoryLocator.backend:type_name -> storage.private.v1.Backend
@@ -2812,9 +3041,9 @@ var file_storage_private_v1_storage_proto_depIdxs = []int32{
 	1,  // 5: storage.private.v1.LocatedDirectory.backend:type_name -> storage.private.v1.Backend
 	2,  // 6: storage.private.v1.LocatedDirectory.lifetime:type_name -> storage.private.v1.Lifetime
 	10, // 7: storage.private.v1.FilePosition.directory:type_name -> storage.private.v1.Directory
-	43, // 8: storage.private.v1.ShareLink.created_at:type_name -> google.protobuf.Timestamp
+	47, // 8: storage.private.v1.ShareLink.created_at:type_name -> google.protobuf.Timestamp
 	12, // 9: storage.private.v1.File.position:type_name -> storage.private.v1.FilePosition
-	43, // 10: storage.private.v1.File.updated_at:type_name -> google.protobuf.Timestamp
+	47, // 10: storage.private.v1.File.updated_at:type_name -> google.protobuf.Timestamp
 	13, // 11: storage.private.v1.File.share_links:type_name -> storage.private.v1.ShareLink
 	11, // 12: storage.private.v1.OpenDirectoryRequest.directory:type_name -> storage.private.v1.LocatedDirectory
 	10, // 13: storage.private.v1.ListFilesRequest.directory:type_name -> storage.private.v1.Directory
@@ -2823,59 +3052,65 @@ var file_storage_private_v1_storage_proto_depIdxs = []int32{
 	14, // 16: storage.private.v1.ListDirectoryFilesResponse.files:type_name -> storage.private.v1.File
 	10, // 17: storage.private.v1.ListDirectoryFilesResponse.reclaimed:type_name -> storage.private.v1.Directory
 	12, // 18: storage.private.v1.IssueUploadRequest.position:type_name -> storage.private.v1.FilePosition
-	43, // 19: storage.private.v1.IssueUploadResponse.expires_at:type_name -> google.protobuf.Timestamp
+	47, // 19: storage.private.v1.IssueUploadResponse.expires_at:type_name -> google.protobuf.Timestamp
 	12, // 20: storage.private.v1.RenameFileRequest.position:type_name -> storage.private.v1.FilePosition
 	14, // 21: storage.private.v1.RenameFileResponse.file:type_name -> storage.private.v1.File
 	12, // 22: storage.private.v1.DeleteFileRequest.position:type_name -> storage.private.v1.FilePosition
 	12, // 23: storage.private.v1.IssueAccessLinkRequest.position:type_name -> storage.private.v1.FilePosition
 	3,  // 24: storage.private.v1.IssueAccessLinkRequest.disposition:type_name -> storage.private.v1.AccessDisposition
-	43, // 25: storage.private.v1.IssueAccessLinkResponse.expires_at:type_name -> google.protobuf.Timestamp
+	47, // 25: storage.private.v1.IssueAccessLinkResponse.expires_at:type_name -> google.protobuf.Timestamp
 	12, // 26: storage.private.v1.GetFilePreviewRequest.position:type_name -> storage.private.v1.FilePosition
-	38, // 27: storage.private.v1.GetFilePreviewResponse.preview:type_name -> storage.private.v1.FilePreview
+	42, // 27: storage.private.v1.GetFilePreviewResponse.preview:type_name -> storage.private.v1.FilePreview
 	12, // 28: storage.private.v1.RequestFilePreviewRequest.position:type_name -> storage.private.v1.FilePosition
-	38, // 29: storage.private.v1.RequestFilePreviewResponse.preview:type_name -> storage.private.v1.FilePreview
+	42, // 29: storage.private.v1.RequestFilePreviewResponse.preview:type_name -> storage.private.v1.FilePreview
 	10, // 30: storage.private.v1.ReplaceContentRequest.directory:type_name -> storage.private.v1.Directory
 	33, // 31: storage.private.v1.ReplaceContentRequest.files:type_name -> storage.private.v1.ContentFile
 	10, // 32: storage.private.v1.ReadContentRequest.directory:type_name -> storage.private.v1.Directory
 	33, // 33: storage.private.v1.ReadContentResponse.files:type_name -> storage.private.v1.ContentFile
-	4,  // 34: storage.private.v1.FilePreview.mode:type_name -> storage.private.v1.PreviewMode
-	5,  // 35: storage.private.v1.FilePreview.display:type_name -> storage.private.v1.PreviewDisplay
-	6,  // 36: storage.private.v1.FilePreview.refusal:type_name -> storage.private.v1.PreviewRefusal
-	43, // 37: storage.private.v1.FilePreview.expires_at:type_name -> google.protobuf.Timestamp
-	12, // 38: storage.private.v1.CreateShareLinkRequest.position:type_name -> storage.private.v1.FilePosition
-	13, // 39: storage.private.v1.CreateShareLinkResponse.share_link:type_name -> storage.private.v1.ShareLink
-	12, // 40: storage.private.v1.RevokeShareLinksRequest.position:type_name -> storage.private.v1.FilePosition
-	15, // 41: storage.private.v1.DirectoryService.OpenDirectory:input_type -> storage.private.v1.OpenDirectoryRequest
-	17, // 42: storage.private.v1.DirectoryService.ListFiles:input_type -> storage.private.v1.ListFilesRequest
-	19, // 43: storage.private.v1.DirectoryService.ListDirectoryFiles:input_type -> storage.private.v1.ListDirectoryFilesRequest
-	21, // 44: storage.private.v1.DirectoryService.IssueUpload:input_type -> storage.private.v1.IssueUploadRequest
-	23, // 45: storage.private.v1.DirectoryService.RenameFile:input_type -> storage.private.v1.RenameFileRequest
-	25, // 46: storage.private.v1.DirectoryService.DeleteFile:input_type -> storage.private.v1.DeleteFileRequest
-	27, // 47: storage.private.v1.DirectoryService.IssueAccessLink:input_type -> storage.private.v1.IssueAccessLinkRequest
-	39, // 48: storage.private.v1.DirectoryService.CreateShareLink:input_type -> storage.private.v1.CreateShareLinkRequest
-	41, // 49: storage.private.v1.DirectoryService.RevokeShareLinks:input_type -> storage.private.v1.RevokeShareLinksRequest
-	29, // 50: storage.private.v1.DirectoryService.GetFilePreview:input_type -> storage.private.v1.GetFilePreviewRequest
-	31, // 51: storage.private.v1.DirectoryService.RequestFilePreview:input_type -> storage.private.v1.RequestFilePreviewRequest
-	34, // 52: storage.private.v1.DirectoryService.ReplaceContent:input_type -> storage.private.v1.ReplaceContentRequest
-	36, // 53: storage.private.v1.DirectoryService.ReadContent:input_type -> storage.private.v1.ReadContentRequest
-	16, // 54: storage.private.v1.DirectoryService.OpenDirectory:output_type -> storage.private.v1.OpenDirectoryResponse
-	18, // 55: storage.private.v1.DirectoryService.ListFiles:output_type -> storage.private.v1.ListFilesResponse
-	20, // 56: storage.private.v1.DirectoryService.ListDirectoryFiles:output_type -> storage.private.v1.ListDirectoryFilesResponse
-	22, // 57: storage.private.v1.DirectoryService.IssueUpload:output_type -> storage.private.v1.IssueUploadResponse
-	24, // 58: storage.private.v1.DirectoryService.RenameFile:output_type -> storage.private.v1.RenameFileResponse
-	26, // 59: storage.private.v1.DirectoryService.DeleteFile:output_type -> storage.private.v1.DeleteFileResponse
-	28, // 60: storage.private.v1.DirectoryService.IssueAccessLink:output_type -> storage.private.v1.IssueAccessLinkResponse
-	40, // 61: storage.private.v1.DirectoryService.CreateShareLink:output_type -> storage.private.v1.CreateShareLinkResponse
-	42, // 62: storage.private.v1.DirectoryService.RevokeShareLinks:output_type -> storage.private.v1.RevokeShareLinksResponse
-	30, // 63: storage.private.v1.DirectoryService.GetFilePreview:output_type -> storage.private.v1.GetFilePreviewResponse
-	32, // 64: storage.private.v1.DirectoryService.RequestFilePreview:output_type -> storage.private.v1.RequestFilePreviewResponse
-	35, // 65: storage.private.v1.DirectoryService.ReplaceContent:output_type -> storage.private.v1.ReplaceContentResponse
-	37, // 66: storage.private.v1.DirectoryService.ReadContent:output_type -> storage.private.v1.ReadContentResponse
-	54, // [54:67] is the sub-list for method output_type
-	41, // [41:54] is the sub-list for method input_type
-	41, // [41:41] is the sub-list for extension type_name
-	41, // [41:41] is the sub-list for extension extendee
-	0,  // [0:41] is the sub-list for field type_name
+	11, // 34: storage.private.v1.MapDirectoryRequest.directory:type_name -> storage.private.v1.LocatedDirectory
+	10, // 35: storage.private.v1.UnmapDirectoryRequest.directory:type_name -> storage.private.v1.Directory
+	4,  // 36: storage.private.v1.FilePreview.mode:type_name -> storage.private.v1.PreviewMode
+	5,  // 37: storage.private.v1.FilePreview.display:type_name -> storage.private.v1.PreviewDisplay
+	6,  // 38: storage.private.v1.FilePreview.refusal:type_name -> storage.private.v1.PreviewRefusal
+	47, // 39: storage.private.v1.FilePreview.expires_at:type_name -> google.protobuf.Timestamp
+	12, // 40: storage.private.v1.CreateShareLinkRequest.position:type_name -> storage.private.v1.FilePosition
+	13, // 41: storage.private.v1.CreateShareLinkResponse.share_link:type_name -> storage.private.v1.ShareLink
+	12, // 42: storage.private.v1.RevokeShareLinksRequest.position:type_name -> storage.private.v1.FilePosition
+	15, // 43: storage.private.v1.DirectoryService.OpenDirectory:input_type -> storage.private.v1.OpenDirectoryRequest
+	17, // 44: storage.private.v1.DirectoryService.ListFiles:input_type -> storage.private.v1.ListFilesRequest
+	19, // 45: storage.private.v1.DirectoryService.ListDirectoryFiles:input_type -> storage.private.v1.ListDirectoryFilesRequest
+	21, // 46: storage.private.v1.DirectoryService.IssueUpload:input_type -> storage.private.v1.IssueUploadRequest
+	23, // 47: storage.private.v1.DirectoryService.RenameFile:input_type -> storage.private.v1.RenameFileRequest
+	25, // 48: storage.private.v1.DirectoryService.DeleteFile:input_type -> storage.private.v1.DeleteFileRequest
+	27, // 49: storage.private.v1.DirectoryService.IssueAccessLink:input_type -> storage.private.v1.IssueAccessLinkRequest
+	43, // 50: storage.private.v1.DirectoryService.CreateShareLink:input_type -> storage.private.v1.CreateShareLinkRequest
+	45, // 51: storage.private.v1.DirectoryService.RevokeShareLinks:input_type -> storage.private.v1.RevokeShareLinksRequest
+	29, // 52: storage.private.v1.DirectoryService.GetFilePreview:input_type -> storage.private.v1.GetFilePreviewRequest
+	31, // 53: storage.private.v1.DirectoryService.RequestFilePreview:input_type -> storage.private.v1.RequestFilePreviewRequest
+	34, // 54: storage.private.v1.DirectoryService.ReplaceContent:input_type -> storage.private.v1.ReplaceContentRequest
+	36, // 55: storage.private.v1.DirectoryService.ReadContent:input_type -> storage.private.v1.ReadContentRequest
+	38, // 56: storage.private.v1.DirectoryService.MapDirectory:input_type -> storage.private.v1.MapDirectoryRequest
+	40, // 57: storage.private.v1.DirectoryService.UnmapDirectory:input_type -> storage.private.v1.UnmapDirectoryRequest
+	16, // 58: storage.private.v1.DirectoryService.OpenDirectory:output_type -> storage.private.v1.OpenDirectoryResponse
+	18, // 59: storage.private.v1.DirectoryService.ListFiles:output_type -> storage.private.v1.ListFilesResponse
+	20, // 60: storage.private.v1.DirectoryService.ListDirectoryFiles:output_type -> storage.private.v1.ListDirectoryFilesResponse
+	22, // 61: storage.private.v1.DirectoryService.IssueUpload:output_type -> storage.private.v1.IssueUploadResponse
+	24, // 62: storage.private.v1.DirectoryService.RenameFile:output_type -> storage.private.v1.RenameFileResponse
+	26, // 63: storage.private.v1.DirectoryService.DeleteFile:output_type -> storage.private.v1.DeleteFileResponse
+	28, // 64: storage.private.v1.DirectoryService.IssueAccessLink:output_type -> storage.private.v1.IssueAccessLinkResponse
+	44, // 65: storage.private.v1.DirectoryService.CreateShareLink:output_type -> storage.private.v1.CreateShareLinkResponse
+	46, // 66: storage.private.v1.DirectoryService.RevokeShareLinks:output_type -> storage.private.v1.RevokeShareLinksResponse
+	30, // 67: storage.private.v1.DirectoryService.GetFilePreview:output_type -> storage.private.v1.GetFilePreviewResponse
+	32, // 68: storage.private.v1.DirectoryService.RequestFilePreview:output_type -> storage.private.v1.RequestFilePreviewResponse
+	35, // 69: storage.private.v1.DirectoryService.ReplaceContent:output_type -> storage.private.v1.ReplaceContentResponse
+	37, // 70: storage.private.v1.DirectoryService.ReadContent:output_type -> storage.private.v1.ReadContentResponse
+	39, // 71: storage.private.v1.DirectoryService.MapDirectory:output_type -> storage.private.v1.MapDirectoryResponse
+	41, // 72: storage.private.v1.DirectoryService.UnmapDirectory:output_type -> storage.private.v1.UnmapDirectoryResponse
+	58, // [58:73] is the sub-list for method output_type
+	43, // [43:58] is the sub-list for method input_type
+	43, // [43:43] is the sub-list for extension type_name
+	43, // [43:43] is the sub-list for extension extendee
+	0,  // [0:43] is the sub-list for field type_name
 }
 
 func init() { file_storage_private_v1_storage_proto_init() }
@@ -2889,7 +3124,7 @@ func file_storage_private_v1_storage_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_storage_private_v1_storage_proto_rawDesc), len(file_storage_private_v1_storage_proto_rawDesc)),
 			NumEnums:      7,
-			NumMessages:   36,
+			NumMessages:   40,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

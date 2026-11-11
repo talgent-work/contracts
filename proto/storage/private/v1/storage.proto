@@ -6,11 +6,12 @@ import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/talgent-work/contracts/gen/go/storage/private/v1;storageprivatev1";
 
-// DirectoryService is the File Space Command and Query Contracts and the
-// Reference Space Command and Query Contracts over Storage's one kind of
-// space, the Directory. A caller locates each Directory by applying a
-// DirectoryLocator to its own facts and decides who may read, write or share
-// before calling; Storage checks only the Space Token on writes.
+// DirectoryService is the File Space Command and Query Contracts, the
+// Reference Space Command and Query Contracts and the Mapped View Contract
+// over Storage's one kind of space, the Directory. A caller locates each
+// Directory by applying a DirectoryLocator to its own facts and decides who
+// may read, write or share before calling; Storage checks only the Space
+// Token on writes.
 service DirectoryService {
   // OpenDirectory opens a located Directory on its first need, allocating it
   // on its backend for its lifetime; repeating it returns the same Space
@@ -56,6 +57,24 @@ service DirectoryService {
   // ReadContent reads files of a Directory's current content by clean
   // relative path; before its first replacement it has no files.
   rpc ReadContent(ReadContentRequest) returns (ReadContentResponse);
+  // MapDirectory shows a located Directory's files at a mapped path of the
+  // Mapped View as the same files, never copies, and keeps them current
+  // through every change Storage carries out in the Directory until the
+  // mapping is removed or the Directory reclaimed. A Directory never opened
+  // is opened first; one Directory may be mapped at several paths. Repeating
+  // it changes nothing. Only a caller whose token has a mapping prefix is
+  // admitted, and only for a path strictly beneath that prefix: otherwise it
+  // refuses with MAPPING_OUTSIDE_PREFIX. A path at, inside or above another
+  // mapping's path refuses with MAPPING_OVERLAPS; a Directory once granted
+  // read-write with DIRECTORY_GRANTED_READ_WRITE; one not on JuiceFS with
+  // BACKEND_NOT_MAPPABLE; a reclaimed one with DIRECTORY_RECLAIMED; and a
+  // path that is not a mapped path with INVALID_REQUEST.
+  rpc MapDirectory(MapDirectoryRequest) returns (MapDirectoryResponse);
+  // UnmapDirectory removes a Directory's mapping at a mapped path with its
+  // files and the folders it emptied. Removing a mapping the Directory does
+  // not have at the path, or one of a Directory never opened or reclaimed,
+  // changes nothing. It is admitted as MapDirectory is.
+  rpc UnmapDirectory(UnmapDirectoryRequest) returns (UnmapDirectoryResponse);
 }
 
 // ErrorReason names why Storage refused a call. A refusal carries it as the
@@ -92,6 +111,19 @@ enum ErrorReason {
   ERROR_REASON_INVALID_LOCATOR = 11;
   // A permanent Directory refuses reclamation.
   ERROR_REASON_PERMANENT_DIRECTORY = 12;
+  // The mapped path does not lie strictly beneath the mapping prefix
+  // configured for the caller, or the caller has none.
+  ERROR_REASON_MAPPING_OUTSIDE_PREFIX = 13;
+  // The mapped path is, lies inside or lies above another mapping's path.
+  ERROR_REASON_MAPPING_OVERLAPS = 14;
+  // The Directory was once granted read-write, so a Harness may have written
+  // it bypassing Storage; it is never mapped.
+  ERROR_REASON_DIRECTORY_GRANTED_READ_WRITE = 15;
+  // The Directory is not on JuiceFS, the Mapped View's backend.
+  ERROR_REASON_BACKEND_NOT_MAPPABLE = 16;
+  // A read-write Mount Grant was asked for a mapped Directory, which is only
+  // ever mounted read-only.
+  ERROR_REASON_DIRECTORY_MAPPED = 17;
 }
 
 // Backend is where a Directory's files live, fixed at its first allocation.
@@ -393,6 +425,32 @@ message ReadContentResponse {
   // The files of the current content.
   repeated ContentFile files = 1;
 }
+
+// MapDirectoryRequest names the located Directory and where it is shown.
+message MapDirectoryRequest {
+  // The Directory with the backend and lifetime of its first allocation.
+  LocatedDirectory directory = 1;
+  // Mapped path: a clean relative path of "/"-separated elements, each
+  // non-empty, never "." or "..", never starting with "." and never
+  // containing "\" or NUL, beneath the caller's mapping prefix. Storage never
+  // interprets it.
+  string path = 2;
+}
+
+// MapDirectoryResponse acknowledges the mapping.
+message MapDirectoryResponse {}
+
+// UnmapDirectoryRequest names the Directory and the mapping removed.
+message UnmapDirectoryRequest {
+  // The Directory.
+  Directory directory = 1;
+  // Mapped path the Directory was mapped at, beneath the caller's mapping
+  // prefix.
+  string path = 2;
+}
+
+// UnmapDirectoryResponse acknowledges the removal.
+message UnmapDirectoryResponse {}
 
 // PreviewMode is how a file is shown.
 enum PreviewMode {

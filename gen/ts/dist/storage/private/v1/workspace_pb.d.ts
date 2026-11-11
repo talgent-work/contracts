@@ -539,7 +539,10 @@ export declare const SandboxMountService: GenService<{
    * allocation, prepares the mount points named inside it with every parent
    * owned by the sandbox user, and returns one Mount Grant per Directory in
    * request order. A Mount Grant is issued, never held: there is no unmount.
-   * A reclaimed Directory refuses with DIRECTORY_RECLAIMED.
+   * A reclaimed Directory refuses with DIRECTORY_RECLAIMED. A read-write
+   * request for a Directory mapped into the Mapped View refuses with
+   * DIRECTORY_MAPPED; a granted read-write mount keeps the Directory from
+   * ever being mapped.
    *
    * @generated from rpc storage.private.v1.SandboxMountService.AcquireMounts
    */

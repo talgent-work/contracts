@@ -95,7 +95,10 @@ type SandboxMountServiceClient interface {
 	// allocation, prepares the mount points named inside it with every parent
 	// owned by the sandbox user, and returns one Mount Grant per Directory in
 	// request order. A Mount Grant is issued, never held: there is no unmount.
-	// A reclaimed Directory refuses with DIRECTORY_RECLAIMED.
+	// A reclaimed Directory refuses with DIRECTORY_RECLAIMED. A read-write
+	// request for a Directory mapped into the Mapped View refuses with
+	// DIRECTORY_MAPPED; a granted read-write mount keeps the Directory from
+	// ever being mapped.
 	AcquireMounts(context.Context, *v1.AcquireMountsRequest) (*v1.AcquireMountsResponse, error)
 	// GetWorkspaceView lists one directory of a Work Directory as its sandbox
 	// sees it, with each Directory mounted inside it shown where Agent placed
@@ -134,7 +137,10 @@ type SandboxMountServiceHandler interface {
 	// allocation, prepares the mount points named inside it with every parent
 	// owned by the sandbox user, and returns one Mount Grant per Directory in
 	// request order. A Mount Grant is issued, never held: there is no unmount.
-	// A reclaimed Directory refuses with DIRECTORY_RECLAIMED.
+	// A reclaimed Directory refuses with DIRECTORY_RECLAIMED. A read-write
+	// request for a Directory mapped into the Mapped View refuses with
+	// DIRECTORY_MAPPED; a granted read-write mount keeps the Directory from
+	// ever being mapped.
 	AcquireMounts(context.Context, *v1.AcquireMountsRequest) (*v1.AcquireMountsResponse, error)
 	// GetWorkspaceView lists one directory of a Work Directory as its sandbox
 	// sees it, with each Directory mounted inside it shown where Agent placed

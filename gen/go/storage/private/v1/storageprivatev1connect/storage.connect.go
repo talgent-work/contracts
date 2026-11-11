@@ -62,6 +62,12 @@ const (
 	// DirectoryServiceReadContentProcedure is the procedure name of the DirectoryService's ReadContent
 	// RPC.
 	DirectoryServiceReadContentProcedure = "/storage.private.v1.DirectoryService/ReadContent"
+	// DirectoryServiceMapDirectoryProcedure is the procedure name of the DirectoryService's
+	// MapDirectory RPC.
+	DirectoryServiceMapDirectoryProcedure = "/storage.private.v1.DirectoryService/MapDirectory"
+	// DirectoryServiceUnmapDirectoryProcedure is the procedure name of the DirectoryService's
+	// UnmapDirectory RPC.
+	DirectoryServiceUnmapDirectoryProcedure = "/storage.private.v1.DirectoryService/UnmapDirectory"
 )
 
 var (
@@ -156,6 +162,20 @@ var (
 			Procedure:  DirectoryServiceReadContentProcedure,
 		}
 	})
+	directoryServiceMapDirectorySpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("DirectoryService").Methods().ByName("MapDirectory"),
+			Procedure:  DirectoryServiceMapDirectoryProcedure,
+		}
+	})
+	directoryServiceUnmapDirectorySpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_storage_private_v1_storage_proto.Services().ByName("DirectoryService").Methods().ByName("UnmapDirectory"),
+			Procedure:  DirectoryServiceUnmapDirectoryProcedure,
+		}
+	})
 )
 
 // DirectoryServiceClient is a client for the storage.private.v1.DirectoryService service.
@@ -204,6 +224,24 @@ type DirectoryServiceClient interface {
 	// ReadContent reads files of a Directory's current content by clean
 	// relative path; before its first replacement it has no files.
 	ReadContent(context.Context, *v1.ReadContentRequest) (*v1.ReadContentResponse, error)
+	// MapDirectory shows a located Directory's files at a mapped path of the
+	// Mapped View as the same files, never copies, and keeps them current
+	// through every change Storage carries out in the Directory until the
+	// mapping is removed or the Directory reclaimed. A Directory never opened
+	// is opened first; one Directory may be mapped at several paths. Repeating
+	// it changes nothing. Only a caller whose token has a mapping prefix is
+	// admitted, and only for a path strictly beneath that prefix: otherwise it
+	// refuses with MAPPING_OUTSIDE_PREFIX. A path at, inside or above another
+	// mapping's path refuses with MAPPING_OVERLAPS; a Directory once granted
+	// read-write with DIRECTORY_GRANTED_READ_WRITE; one not on JuiceFS with
+	// BACKEND_NOT_MAPPABLE; a reclaimed one with DIRECTORY_RECLAIMED; and a
+	// path that is not a mapped path with INVALID_REQUEST.
+	MapDirectory(context.Context, *v1.MapDirectoryRequest) (*v1.MapDirectoryResponse, error)
+	// UnmapDirectory removes a Directory's mapping at a mapped path with its
+	// files and the folders it emptied. Removing a mapping the Directory does
+	// not have at the path, or one of a Directory never opened or reclaimed,
+	// changes nothing. It is admitted as MapDirectory is.
+	UnmapDirectory(context.Context, *v1.UnmapDirectoryRequest) (*v1.UnmapDirectoryResponse, error)
 }
 
 // NewDirectoryServiceClient constructs a client for the storage.private.v1.DirectoryService
@@ -258,6 +296,24 @@ type DirectoryServiceHandler interface {
 	// ReadContent reads files of a Directory's current content by clean
 	// relative path; before its first replacement it has no files.
 	ReadContent(context.Context, *v1.ReadContentRequest) (*v1.ReadContentResponse, error)
+	// MapDirectory shows a located Directory's files at a mapped path of the
+	// Mapped View as the same files, never copies, and keeps them current
+	// through every change Storage carries out in the Directory until the
+	// mapping is removed or the Directory reclaimed. A Directory never opened
+	// is opened first; one Directory may be mapped at several paths. Repeating
+	// it changes nothing. Only a caller whose token has a mapping prefix is
+	// admitted, and only for a path strictly beneath that prefix: otherwise it
+	// refuses with MAPPING_OUTSIDE_PREFIX. A path at, inside or above another
+	// mapping's path refuses with MAPPING_OVERLAPS; a Directory once granted
+	// read-write with DIRECTORY_GRANTED_READ_WRITE; one not on JuiceFS with
+	// BACKEND_NOT_MAPPABLE; a reclaimed one with DIRECTORY_RECLAIMED; and a
+	// path that is not a mapped path with INVALID_REQUEST.
+	MapDirectory(context.Context, *v1.MapDirectoryRequest) (*v1.MapDirectoryResponse, error)
+	// UnmapDirectory removes a Directory's mapping at a mapped path with its
+	// files and the folders it emptied. Removing a mapping the Directory does
+	// not have at the path, or one of a Directory never opened or reclaimed,
+	// changes nothing. It is admitted as MapDirectory is.
+	UnmapDirectory(context.Context, *v1.UnmapDirectoryRequest) (*v1.UnmapDirectoryResponse, error)
 }
 
 // RegisterDirectoryServiceHandler registers svc as the storage.private.v1.DirectoryService
@@ -278,6 +334,8 @@ func RegisterDirectoryServiceHandler(server *connect.Server, svc DirectoryServic
 		connect.Method{Spec: directoryServiceRequestFilePreviewSpec(), Handler: adapter.requestFilePreview},
 		connect.Method{Spec: directoryServiceReplaceContentSpec(), Handler: adapter.replaceContent},
 		connect.Method{Spec: directoryServiceReadContentSpec(), Handler: adapter.readContent},
+		connect.Method{Spec: directoryServiceMapDirectorySpec(), Handler: adapter.mapDirectory},
+		connect.Method{Spec: directoryServiceUnmapDirectorySpec(), Handler: adapter.unmapDirectory},
 	)
 }
 
@@ -334,6 +392,14 @@ func (UnimplementedDirectoryServiceHandler) ReplaceContent(context.Context, *v1.
 
 func (UnimplementedDirectoryServiceHandler) ReadContent(context.Context, *v1.ReadContentRequest) (*v1.ReadContentResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.DirectoryService.ReadContent is not implemented")
+}
+
+func (UnimplementedDirectoryServiceHandler) MapDirectory(context.Context, *v1.MapDirectoryRequest) (*v1.MapDirectoryResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.DirectoryService.MapDirectory is not implemented")
+}
+
+func (UnimplementedDirectoryServiceHandler) UnmapDirectory(context.Context, *v1.UnmapDirectoryRequest) (*v1.UnmapDirectoryResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "storage.private.v1.DirectoryService.UnmapDirectory is not implemented")
 }
 
 type directoryServiceClient struct {
@@ -439,6 +505,22 @@ func (c *directoryServiceClient) ReplaceContent(ctx context.Context, req *v1.Rep
 func (c *directoryServiceClient) ReadContent(ctx context.Context, req *v1.ReadContentRequest) (*v1.ReadContentResponse, error) {
 	var res v1.ReadContentResponse
 	if err := c.client.CallUnary(ctx, directoryServiceReadContentSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *directoryServiceClient) MapDirectory(ctx context.Context, req *v1.MapDirectoryRequest) (*v1.MapDirectoryResponse, error) {
+	var res v1.MapDirectoryResponse
+	if err := c.client.CallUnary(ctx, directoryServiceMapDirectorySpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *directoryServiceClient) UnmapDirectory(ctx context.Context, req *v1.UnmapDirectoryRequest) (*v1.UnmapDirectoryResponse, error) {
+	var res v1.UnmapDirectoryResponse
+	if err := c.client.CallUnary(ctx, directoryServiceUnmapDirectorySpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
@@ -596,6 +678,30 @@ func (h directoryServiceHandler) readContent(ctx context.Context, _ connect.Spec
 		return err
 	}
 	res, err := h.svc.ReadContent(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h directoryServiceHandler) mapDirectory(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.MapDirectoryRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.MapDirectory(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h directoryServiceHandler) unmapDirectory(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.UnmapDirectoryRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.UnmapDirectory(ctx, &req)
 	if err != nil {
 		return err
 	}

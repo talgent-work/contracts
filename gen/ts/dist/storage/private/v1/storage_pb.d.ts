@@ -883,6 +883,92 @@ export declare type ReadContentResponse = Message<"storage.private.v1.ReadConten
 export declare const ReadContentResponseSchema: GenMessage<ReadContentResponse>;
 
 /**
+ * MapDirectoryRequest names the located Directory and where it is shown.
+ *
+ * @generated from message storage.private.v1.MapDirectoryRequest
+ */
+export declare type MapDirectoryRequest = Message<"storage.private.v1.MapDirectoryRequest"> & {
+  /**
+   * The Directory with the backend and lifetime of its first allocation.
+   *
+   * @generated from field: storage.private.v1.LocatedDirectory directory = 1;
+   */
+  directory?: LocatedDirectory;
+
+  /**
+   * Mapped path: a clean relative path of "/"-separated elements, each
+   * non-empty, never "." or "..", never starting with "." and never
+   * containing "\" or NUL, beneath the caller's mapping prefix. Storage never
+   * interprets it.
+   *
+   * @generated from field: string path = 2;
+   */
+  path: string;
+};
+
+/**
+ * Describes the message storage.private.v1.MapDirectoryRequest.
+ * Use `create(MapDirectoryRequestSchema)` to create a new message.
+ */
+export declare const MapDirectoryRequestSchema: GenMessage<MapDirectoryRequest>;
+
+/**
+ * MapDirectoryResponse acknowledges the mapping.
+ *
+ * @generated from message storage.private.v1.MapDirectoryResponse
+ */
+export declare type MapDirectoryResponse = Message<"storage.private.v1.MapDirectoryResponse"> & {
+};
+
+/**
+ * Describes the message storage.private.v1.MapDirectoryResponse.
+ * Use `create(MapDirectoryResponseSchema)` to create a new message.
+ */
+export declare const MapDirectoryResponseSchema: GenMessage<MapDirectoryResponse>;
+
+/**
+ * UnmapDirectoryRequest names the Directory and the mapping removed.
+ *
+ * @generated from message storage.private.v1.UnmapDirectoryRequest
+ */
+export declare type UnmapDirectoryRequest = Message<"storage.private.v1.UnmapDirectoryRequest"> & {
+  /**
+   * The Directory.
+   *
+   * @generated from field: storage.private.v1.Directory directory = 1;
+   */
+  directory?: Directory;
+
+  /**
+   * Mapped path the Directory was mapped at, beneath the caller's mapping
+   * prefix.
+   *
+   * @generated from field: string path = 2;
+   */
+  path: string;
+};
+
+/**
+ * Describes the message storage.private.v1.UnmapDirectoryRequest.
+ * Use `create(UnmapDirectoryRequestSchema)` to create a new message.
+ */
+export declare const UnmapDirectoryRequestSchema: GenMessage<UnmapDirectoryRequest>;
+
+/**
+ * UnmapDirectoryResponse acknowledges the removal.
+ *
+ * @generated from message storage.private.v1.UnmapDirectoryResponse
+ */
+export declare type UnmapDirectoryResponse = Message<"storage.private.v1.UnmapDirectoryResponse"> & {
+};
+
+/**
+ * Describes the message storage.private.v1.UnmapDirectoryResponse.
+ * Use `create(UnmapDirectoryResponseSchema)` to create a new message.
+ */
+export declare const UnmapDirectoryResponseSchema: GenMessage<UnmapDirectoryResponse>;
+
+/**
  * FilePreview is how one file is shown.
  *
  * @generated from message storage.private.v1.FilePreview
@@ -1154,6 +1240,44 @@ export enum ErrorReason {
    * @generated from enum value: ERROR_REASON_PERMANENT_DIRECTORY = 12;
    */
   PERMANENT_DIRECTORY = 12,
+
+  /**
+   * The mapped path does not lie strictly beneath the mapping prefix
+   * configured for the caller, or the caller has none.
+   *
+   * @generated from enum value: ERROR_REASON_MAPPING_OUTSIDE_PREFIX = 13;
+   */
+  MAPPING_OUTSIDE_PREFIX = 13,
+
+  /**
+   * The mapped path is, lies inside or lies above another mapping's path.
+   *
+   * @generated from enum value: ERROR_REASON_MAPPING_OVERLAPS = 14;
+   */
+  MAPPING_OVERLAPS = 14,
+
+  /**
+   * The Directory was once granted read-write, so a Harness may have written
+   * it bypassing Storage; it is never mapped.
+   *
+   * @generated from enum value: ERROR_REASON_DIRECTORY_GRANTED_READ_WRITE = 15;
+   */
+  DIRECTORY_GRANTED_READ_WRITE = 15,
+
+  /**
+   * The Directory is not on JuiceFS, the Mapped View's backend.
+   *
+   * @generated from enum value: ERROR_REASON_BACKEND_NOT_MAPPABLE = 16;
+   */
+  BACKEND_NOT_MAPPABLE = 16,
+
+  /**
+   * A read-write Mount Grant was asked for a mapped Directory, which is only
+   * ever mounted read-only.
+   *
+   * @generated from enum value: ERROR_REASON_DIRECTORY_MAPPED = 17;
+   */
+  DIRECTORY_MAPPED = 17,
 }
 
 /**
@@ -1423,11 +1547,12 @@ export enum PreviewRefusal {
 export declare const PreviewRefusalSchema: GenEnum<PreviewRefusal>;
 
 /**
- * DirectoryService is the File Space Command and Query Contracts and the
- * Reference Space Command and Query Contracts over Storage's one kind of
- * space, the Directory. A caller locates each Directory by applying a
- * DirectoryLocator to its own facts and decides who may read, write or share
- * before calling; Storage checks only the Space Token on writes.
+ * DirectoryService is the File Space Command and Query Contracts, the
+ * Reference Space Command and Query Contracts and the Mapped View Contract
+ * over Storage's one kind of space, the Directory. A caller locates each
+ * Directory by applying a DirectoryLocator to its own facts and decides who
+ * may read, write or share before calling; Storage checks only the Space
+ * Token on writes.
  *
  * @generated from service storage.private.v1.DirectoryService
  */
@@ -1579,6 +1704,40 @@ export declare const DirectoryService: GenService<{
     methodKind: "unary";
     input: typeof ReadContentRequestSchema;
     output: typeof ReadContentResponseSchema;
+  },
+  /**
+   * MapDirectory shows a located Directory's files at a mapped path of the
+   * Mapped View as the same files, never copies, and keeps them current
+   * through every change Storage carries out in the Directory until the
+   * mapping is removed or the Directory reclaimed. A Directory never opened
+   * is opened first; one Directory may be mapped at several paths. Repeating
+   * it changes nothing. Only a caller whose token has a mapping prefix is
+   * admitted, and only for a path strictly beneath that prefix: otherwise it
+   * refuses with MAPPING_OUTSIDE_PREFIX. A path at, inside or above another
+   * mapping's path refuses with MAPPING_OVERLAPS; a Directory once granted
+   * read-write with DIRECTORY_GRANTED_READ_WRITE; one not on JuiceFS with
+   * BACKEND_NOT_MAPPABLE; a reclaimed one with DIRECTORY_RECLAIMED; and a
+   * path that is not a mapped path with INVALID_REQUEST.
+   *
+   * @generated from rpc storage.private.v1.DirectoryService.MapDirectory
+   */
+  mapDirectory: {
+    methodKind: "unary";
+    input: typeof MapDirectoryRequestSchema;
+    output: typeof MapDirectoryResponseSchema;
+  },
+  /**
+   * UnmapDirectory removes a Directory's mapping at a mapped path with its
+   * files and the folders it emptied. Removing a mapping the Directory does
+   * not have at the path, or one of a Directory never opened or reclaimed,
+   * changes nothing. It is admitted as MapDirectory is.
+   *
+   * @generated from rpc storage.private.v1.DirectoryService.UnmapDirectory
+   */
+  unmapDirectory: {
+    methodKind: "unary";
+    input: typeof UnmapDirectoryRequestSchema;
+    output: typeof UnmapDirectoryResponseSchema;
   },
 }>;
 

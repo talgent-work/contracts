@@ -33,6 +33,9 @@ const (
 	Principal_PRINCIPAL_USER Principal = 1
 	// A Work's Agent, by its Work's Agent Account; it carries no person.
 	Principal_PRINCIPAL_AGENT Principal = 2
+	// An Application, by its id: a third-party program that calls as itself and
+	// carries no person.
+	Principal_PRINCIPAL_APPLICATION Principal = 3
 )
 
 // Enum value maps for Principal.
@@ -41,11 +44,13 @@ var (
 		0: "PRINCIPAL_UNSPECIFIED",
 		1: "PRINCIPAL_USER",
 		2: "PRINCIPAL_AGENT",
+		3: "PRINCIPAL_APPLICATION",
 	}
 	Principal_value = map[string]int32{
 		"PRINCIPAL_UNSPECIFIED": 0,
 		"PRINCIPAL_USER":        1,
 		"PRINCIPAL_AGENT":       2,
+		"PRINCIPAL_APPLICATION": 3,
 	}
 )
 
@@ -163,11 +168,12 @@ const file_admission_v1_admission_proto_rawDesc = "" +
 	"\n" +
 	"principals\x18\x01 \x03(\x0e2\x17.admission.v1.PrincipalR\n" +
 	"principals\x12\x1c\n" +
-	"\tanonymous\x18\x02 \x01(\bR\tanonymous*O\n" +
+	"\tanonymous\x18\x02 \x01(\bR\tanonymous*j\n" +
 	"\tPrincipal\x12\x19\n" +
 	"\x15PRINCIPAL_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0ePRINCIPAL_USER\x10\x01\x12\x13\n" +
-	"\x0fPRINCIPAL_AGENT\x10\x02:Q\n" +
+	"\x0fPRINCIPAL_AGENT\x10\x02\x12\x19\n" +
+	"\x15PRINCIPAL_APPLICATION\x10\x03:Q\n" +
 	"\x06admits\x12\x1e.google.protobuf.MethodOptions\x18\xb8\x8e\x03 \x01(\v2\x17.admission.v1.AdmissionR\x06admitsBCZAgithub.com/talgent-work/contracts/gen/go/admission/v1;admissionv1b\x06proto3"
 
 var (

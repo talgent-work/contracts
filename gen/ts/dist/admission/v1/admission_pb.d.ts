@@ -68,6 +68,14 @@ export enum Principal {
    * @generated from enum value: PRINCIPAL_AGENT = 2;
    */
   AGENT = 2,
+
+  /**
+   * An Application, by its id: a third-party program that calls as itself and
+   * carries no person.
+   *
+   * @generated from enum value: PRINCIPAL_APPLICATION = 3;
+   */
+  APPLICATION = 3,
 }
 
 /**

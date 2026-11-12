@@ -15,6 +15,9 @@ enum Principal {
   PRINCIPAL_USER = 1;
   // A Work's Agent, by its Work's Agent Account; it carries no person.
   PRINCIPAL_AGENT = 2;
+  // An Application, by its id: a third-party program that calls as itself and
+  // carries no person.
+  PRINCIPAL_APPLICATION = 3;
 }
 
 // Admission declares which callers a public procedure accepts. A service

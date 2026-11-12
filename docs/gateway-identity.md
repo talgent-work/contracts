@@ -7,8 +7,10 @@ Header names are case-insensitive.
 
 ## Admission
 
-Every request speaks for exactly one Principal: a `user` (a signed-in person, by their Account)
-or an `agent` (a Work's Agent, by the Work's Agent Account). Each public procedure declares the
+Every request speaks for exactly one Principal: a `user` (a signed-in person, by their Account),
+an `agent` (a Work's Agent, by the Work's Agent Account) or an `application` (a third-party
+program, by its Application, with a token from the [client credentials
+grant](application-tokens.md)). Each public procedure declares the
 Principals it admits with the method option `admission.v1.admits`
 ([README](../README.md#admission)); a procedure declared `anonymous` admits a caller without
 one. A service refuses a Principal its procedure does not declare, and every caller of a
@@ -24,8 +26,8 @@ its claims. A claim the token lacks writes no header.
 |---|---|
 | `x-talgent-authenticated-by` | Always `envoy`; set by the gateway on every route it authenticates |
 | `x-talgent-issuer` | Claim `iss` |
-| `x-talgent-principal` | Claim `principal`: `user` or `agent` |
-| `x-talgent-subject` | Claim `sub`: the Account id of a `user`, or the Work id of an `agent`; a canonical lowercase UUID |
+| `x-talgent-principal` | Claim `principal`: `user`, `agent` or `application` |
+| `x-talgent-subject` | Claim `sub`: the Account id of a `user`, the Work id of an `agent`, or the Application id of an `application`; a canonical lowercase UUID |
 
 A `user` token's claims:
 
@@ -48,11 +50,14 @@ An `agent` token's claims, its Work's facts fixed when the Work was created:
 | `x-talgent-work-subject-id` | Claim `work_subject_id` |
 | `x-talgent-represented-user-id` | Claim `for`: the Account id of the person the Agent represents, a canonical lowercase UUID |
 
+An `application` token carries no further claims.
+
 A service admits such a request only when `x-talgent-authenticated-by` is `envoy`,
 `x-talgent-principal` names a known Principal, `x-talgent-subject` is a canonical lowercase UUID,
 and an `agent` carries its required claims; otherwise it answers `Unauthenticated`. Values are
-trimmed of surrounding whitespace, and empty roles are dropped. An `agent` request never speaks
-for a person: not even the one its Agent represents.
+trimmed of surrounding whitespace, and empty roles are dropped. Neither an `agent` nor an
+`application` request ever speaks for a person: not even the one an Agent represents or the
+person who owns the Application.
 
 Before it routes a request, the gateway removes every identity header a client sent, once for the
 whole gateway: `x-talgent-authenticated-by`, every claim header above, `x-talgent-service-id`,

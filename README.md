@@ -34,7 +34,7 @@ code is never edited by hand; only a package's own files, such as `gen/ts/packag
 ## Admission
 
 Every public procedure declares the callers it accepts with the `admission.v1.admits` method
-option: the Principals (`PRINCIPAL_USER`, `PRINCIPAL_AGENT` or both), or `anonymous` for a
+option: the Principals (any of `PRINCIPAL_USER`, `PRINCIPAL_AGENT` and `PRINCIPAL_APPLICATION`), or `anonymous` for a
 caller that holds no credential yet:
 
 ```proto
@@ -114,6 +114,7 @@ protobuf runtime; a library built on the contracts, such as `workbench-ui`, decl
 
 - [Trusted identity headers](docs/gateway-identity.md): what the public gateway and trusted
   in-cluster services tell a service about its caller
+- [Application tokens](docs/application-tokens.md): `/auth/token`, the client credentials grant
 - [Content path](docs/storage-content.md): `/v1/storage/content`
 - [Directory Locators](docs/directory-locators.md): the condition vocabulary and the Directories
   several contexts locate

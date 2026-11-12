@@ -1,0 +1,110 @@
+syntax = "proto3";
+
+package account.public.v1;
+
+import "admission/v1/admission.proto";
+
+option go_package = "github.com/talgent-work/contracts/gen/go/account/public/v1;accountpublicv1";
+
+// ApplicationService lets a person register Applications and read the ones
+// they own. An Application is a third-party program that calls the public APIs
+// as itself; it obtains its Identity Token with the OAuth 2.0 client
+// credentials grant (docs/application-tokens.md). Only its Application Owner
+// reads or manages it.
+service ApplicationService {
+  // RegisterApplication registers an Application owned by the caller and
+  // issues its first Client Secret, which this response shows once.
+  rpc RegisterApplication(RegisterApplicationRequest) returns (RegisterApplicationResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
+  // ListOwnedApplications lists the caller's Applications, oldest first.
+  rpc ListOwnedApplications(ListOwnedApplicationsRequest) returns (ListOwnedApplicationsResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
+  // GetApplication reads one Application the caller owns; NotFound for any
+  // other.
+  rpc GetApplication(GetApplicationRequest) returns (GetApplicationResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
+}
+
+// Application is a registered Application as its Application Owner sees it.
+message Application {
+  // The Application's id, a canonical lowercase UUID; also its OAuth client id
+  // and the subject of its Identity Tokens.
+  string id = 1;
+  // The name its Application Owner manages it by.
+  string name = 2;
+  // When it was registered.
+  int64 registered_at_unix_ms = 3;
+  // Its Client Secrets that still match: the current one first, then one in
+  // its rotation overlap. Never the secret itself.
+  repeated ClientSecret client_secrets = 4;
+}
+
+// ClientSecretState is where a Client Secret stands.
+enum ClientSecretState {
+  // Never sent.
+  CLIENT_SECRET_STATE_UNSPECIFIED = 0;
+  // The Application's current secret.
+  CLIENT_SECRET_STATE_CURRENT = 1;
+  // A replaced secret that still matches until its overlap ends.
+  CLIENT_SECRET_STATE_OVERLAPPING = 2;
+}
+
+// ClientSecret describes one Client Secret without revealing it.
+message ClientSecret {
+  // The secret's id within its Application.
+  string id = 1;
+  // Whether it is current or overlapping.
+  ClientSecretState state = 2;
+  // The secret's last four characters, so its owner can tell secrets apart.
+  string hint = 3;
+  // When it was issued.
+  int64 issued_at_unix_ms = 4;
+  // When it last obtained an Identity Token; 0 when never.
+  int64 last_used_at_unix_ms = 5;
+  // When an overlapping secret stops matching; 0 for the current one.
+  int64 overlap_ends_at_unix_ms = 6;
+}
+
+// RegisterApplicationRequest names the new Application.
+message RegisterApplicationRequest {
+  // 1 to 60 characters after trimming.
+  string name = 1;
+}
+
+// RegisterApplicationResponse is the new Application and its first secret.
+message RegisterApplicationResponse {
+  // The registered Application.
+  Application application = 1;
+  // The Client Secret itself. It is shown only here; Account keeps a digest.
+  string client_secret = 2;
+}
+
+// ListOwnedApplicationsRequest lists the caller's own Applications.
+message ListOwnedApplicationsRequest {}
+
+// ListOwnedApplicationsResponse is every Application the caller owns.
+message ListOwnedApplicationsResponse {
+  // The caller's Applications.
+  repeated Application applications = 1;
+}
+
+// GetApplicationRequest names one Application.
+message GetApplicationRequest {
+  // The Application's id.
+  string application_id = 1;
+}
+
+// GetApplicationResponse is the Application.
+message GetApplicationResponse {
+  // The Application.
+  Application application = 1;
+}

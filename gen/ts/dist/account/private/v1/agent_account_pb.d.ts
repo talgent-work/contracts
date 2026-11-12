@@ -68,6 +68,14 @@ export declare type IssueWorkIdentityTokenRequest = Message<"account.private.v1.
    * @generated from field: string represented_user_id = 7;
    */
   representedUserId: string;
+
+  /**
+   * The Application that owns the Work, a canonical lowercase UUID; empty for
+   * a Work no Application owns. Such a Work represents no person.
+   *
+   * @generated from field: string application_id = 8;
+   */
+  applicationId: string;
 };
 
 /**

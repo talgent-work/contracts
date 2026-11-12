@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package account.private.v1;
+
+option go_package = "github.com/talgent-work/contracts/gen/go/account/private/v1;accountprivatev1";
+
+// ApplicationOwnershipService tells trusted contexts who owns an
+// Application. Only in-cluster callers with x-talgent-service-id reach it;
+// it is never mounted through the public gateway. It answers for a removed
+// Application too, so its owner keeps reading what it produced.
+service ApplicationOwnershipService {
+  // GetApplication reads one Application, removed or not. An unknown
+  // Application is NotFound.
+  rpc GetApplication(GetApplicationRequest) returns (GetApplicationResponse);
+}
+
+// GetApplicationRequest names an Application.
+message GetApplicationRequest {
+  // The Application, a canonical lowercase UUID.
+  string application_id = 1;
+}
+
+// GetApplicationResponse is the Application.
+message GetApplicationResponse {
+  // The Application.
+  OwnedApplication application = 1;
+}
+
+// OwnedApplication is an Application with its Application Owner.
+message OwnedApplication {
+  // The Application, a canonical lowercase UUID.
+  string application_id = 1;
+  // The name its Application Owner manages it by.
+  string name = 2;
+  // The Account id of the person who registered it, which never changes.
+  string owner_user_id = 3;
+  // Whether the Application was removed for good; it then obtains no token.
+  bool removed = 4;
+}

@@ -49,6 +49,7 @@ An `agent` token's claims, its Work's facts fixed when the Work was created:
 | `x-talgent-work-subject-kind` | Claim `work_subject_kind` |
 | `x-talgent-work-subject-id` | Claim `work_subject_id` |
 | `x-talgent-represented-user-id` | Claim `for`: the Account id of the person the Agent represents, a canonical lowercase UUID |
+| `x-talgent-application-id` | Claim `application_id`: the Application that owns the Work, a canonical lowercase UUID |
 
 An `application` token carries no further claims.
 
@@ -57,7 +58,8 @@ A service admits such a request only when `x-talgent-authenticated-by` is `envoy
 and an `agent` carries its required claims; otherwise it answers `Unauthenticated`. Values are
 trimmed of surrounding whitespace, and empty roles are dropped. Neither an `agent` nor an
 `application` request ever speaks for a person: not even the one an Agent represents or the
-person who owns the Application.
+person who owns the Application. An `agent` request never speaks for the Application that owns its Work either:
+`x-talgent-application-id` only states that ownership.
 
 Before it routes a request, the gateway removes every identity header a client sent, once for the
 whole gateway: `x-talgent-authenticated-by`, every claim header above, `x-talgent-service-id`,

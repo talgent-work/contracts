@@ -13,9 +13,11 @@ option go_package = "github.com/talgent-work/contracts/gen/go/agent/public/v2;ag
 
 // WorkService is an owner's use of their own Agent: the Standalone Works they
 // start for themselves, which have no Subject and no Project, their sharing,
-// and the person's Personal Library. Every operation acts for the
-// authenticated caller under the AgentDefinition Agent locates from its
-// identity, which Agent establishes on its first need. The Works of a Work's
+// and the person's Personal Library. The owner is a person or an
+// Application; sharing, repository choices and the Personal Library are a
+// person's alone. Every operation acts for the authenticated caller under the
+// AgentDefinition Agent locates from its identity, which Agent establishes on
+// its first need. The Works of a Work's
 // own run, its turns and its files are AgentWorkService's and
 // WorkFileService's in agent.public.v1.
 service WorkService {
@@ -23,7 +25,7 @@ service WorkService {
   // the caller's own AgentDefinition.
   rpc GetWorkStartOptions(GetWorkStartOptionsRequest) returns (GetWorkStartOptionsResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // ListWorkStartRepositories lists the repositories the caller may check out
@@ -37,20 +39,20 @@ service WorkService {
   // its first input. A repeated request identity returns the Work it started.
   rpc StartWork(StartWorkRequest) returns (StartWorkResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // ListWorks lists the caller's Standalone Works, closed ones included, most
   // recently updated first.
   rpc ListWorks(ListWorksRequest) returns (ListWorksResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // ChangeWorkTitle replaces a Standalone Work's display title.
   rpc ChangeWorkTitle(ChangeWorkTitleRequest) returns (ChangeWorkTitleResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // SearchShareReaders finds people in the User Directory a Standalone Work

@@ -37,6 +37,9 @@ message IssueWorkIdentityTokenRequest {
   // The Account id of the person the Agent represents; empty for an Agent
   // that represents no one, such as the PM Coordinator.
   string represented_user_id = 7;
+  // The Application that owns the Work, a canonical lowercase UUID; empty for
+  // a Work no Application owns. Such a Work represents no person.
+  string application_id = 8;
 }
 
 // IssueWorkIdentityTokenResponse is the signed token and its expiry.

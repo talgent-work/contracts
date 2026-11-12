@@ -1401,18 +1401,18 @@ const file_agent_public_v2_work_proto_rawDesc = "" +
 	"standalone\"\x82\x01\n" +
 	"\x18ListLibraryFilesResponse\x122\n" +
 	"\x05files\x18\x01 \x03(\v2\x1c.agent.public.v2.LibraryFileR\x05files\x122\n" +
-	"\x05works\x18\x02 \x03(\v2\x1c.agent.public.v2.LibraryWorkR\x05works2\x85\b\n" +
-	"\vWorkService\x12y\n" +
-	"\x13GetWorkStartOptions\x12+.agent.public.v2.GetWorkStartOptionsRequest\x1a,.agent.public.v2.GetWorkStartOptionsResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12\x8b\x01\n" +
+	"\x05works\x18\x02 \x03(\v2\x1c.agent.public.v2.LibraryWorkR\x05works2\x89\b\n" +
+	"\vWorkService\x12z\n" +
+	"\x13GetWorkStartOptions\x12+.agent.public.v2.GetWorkStartOptionsRequest\x1a,.agent.public.v2.GetWorkStartOptionsResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12\x8b\x01\n" +
 	"\x19ListWorkStartRepositories\x121.agent.public.v2.ListWorkStartRepositoriesRequest\x1a2.agent.public.v2.ListWorkStartRepositoriesResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12[\n" +
-	"\tStartWork\x12!.agent.public.v2.StartWorkRequest\x1a\".agent.public.v2.StartWorkResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12[\n" +
-	"\tListWorks\x12!.agent.public.v2.ListWorksRequest\x1a\".agent.public.v2.ListWorksResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12m\n" +
-	"\x0fChangeWorkTitle\x12'.agent.public.v2.ChangeWorkTitleRequest\x1a(.agent.public.v2.ChangeWorkTitleResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12v\n" +
+	"\x01\x01\x12\\\n" +
+	"\tStartWork\x12!.agent.public.v2.StartWorkRequest\x1a\".agent.public.v2.StartWorkResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12\\\n" +
+	"\tListWorks\x12!.agent.public.v2.ListWorksRequest\x1a\".agent.public.v2.ListWorksResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12n\n" +
+	"\x0fChangeWorkTitle\x12'.agent.public.v2.ChangeWorkTitleRequest\x1a(.agent.public.v2.ChangeWorkTitleResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12v\n" +
 	"\x12SearchShareReaders\x12*.agent.public.v2.SearchShareReadersRequest\x1a+.agent.public.v2.SearchShareReadersResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x01\x12m\n" +
 	"\x0fGetShareReaders\x12'.agent.public.v2.GetShareReadersRequest\x1a(.agent.public.v2.GetShareReadersResponse\"\a\xc2\xf3\x18\x03\n" +

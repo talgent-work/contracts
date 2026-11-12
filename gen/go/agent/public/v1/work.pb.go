@@ -2810,7 +2810,7 @@ const file_agent_public_v1_work_proto_rawDesc = "" +
 	"\x12WorkLifecycleEvent\x12\x14\n" +
 	"\x05state\x18\x01 \x01(\tR\x05state\x12;\n" +
 	"\voccurred_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
-	"occurredAt2\xa7\x15\n" +
+	"occurredAt2\xb7\x15\n" +
 	"\x10AgentWorkService\x12\x8b\x01\n" +
 	"\x19ChangeWorkAgentAppearance\x121.agent.public.v1.ChangeWorkAgentAppearanceRequest\x1a2.agent.public.v1.ChangeWorkAgentAppearanceResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x01\x12j\n" +
@@ -2821,45 +2821,45 @@ const file_agent_public_v1_work_proto_rawDesc = "" +
 	"\fGetAgentSoul\x12$.agent.public.v1.GetAgentSoulRequest\x1a%.agent.public.v1.GetAgentSoulResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x01\x12m\n" +
 	"\x0fChangeAgentSoul\x12'.agent.public.v1.ChangeAgentSoulRequest\x1a(.agent.public.v1.ChangeAgentSoulResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12y\n" +
-	"\x13GetWorkCapabilities\x12+.agent.public.v1.GetWorkCapabilitiesRequest\x1a,.agent.public.v1.GetWorkCapabilitiesResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12|\n" +
-	"\x14GetWorkPluginResults\x12,.agent.public.v1.GetWorkPluginResultsRequest\x1a-.agent.public.v1.GetWorkPluginResultsResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12|\n" +
-	"\x14GetWorkServiceAccess\x12,.agent.public.v1.GetWorkServiceAccessRequest\x1a-.agent.public.v1.GetWorkServiceAccessResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12^\n" +
+	"\x01\x01\x12z\n" +
+	"\x13GetWorkCapabilities\x12+.agent.public.v1.GetWorkCapabilitiesRequest\x1a,.agent.public.v1.GetWorkCapabilitiesResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12}\n" +
+	"\x14GetWorkPluginResults\x12,.agent.public.v1.GetWorkPluginResultsRequest\x1a-.agent.public.v1.GetWorkPluginResultsResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12}\n" +
+	"\x14GetWorkServiceAccess\x12,.agent.public.v1.GetWorkServiceAccessRequest\x1a-.agent.public.v1.GetWorkServiceAccessResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12_\n" +
 	"\n" +
-	"CancelTurn\x12\".agent.public.v1.CancelTurnRequest\x1a#.agent.public.v1.CancelTurnResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12j\n" +
-	"\x0eGetCurrentTurn\x12&.agent.public.v1.GetCurrentTurnRequest\x1a'.agent.public.v1.GetCurrentTurnResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12\x85\x01\n" +
-	"\x17ListPendingInteractions\x12/.agent.public.v1.ListPendingInteractionsRequest\x1a0.agent.public.v1.ListPendingInteractionsResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12U\n" +
-	"\aGetWork\x12\x1f.agent.public.v1.GetWorkRequest\x1a .agent.public.v1.GetWorkResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12|\n" +
+	"CancelTurn\x12\".agent.public.v1.CancelTurnRequest\x1a#.agent.public.v1.CancelTurnResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12k\n" +
+	"\x0eGetCurrentTurn\x12&.agent.public.v1.GetCurrentTurnRequest\x1a'.agent.public.v1.GetCurrentTurnResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12\x86\x01\n" +
+	"\x17ListPendingInteractions\x12/.agent.public.v1.ListPendingInteractionsRequest\x1a0.agent.public.v1.ListPendingInteractionsResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12V\n" +
+	"\aGetWork\x12\x1f.agent.public.v1.GetWorkRequest\x1a .agent.public.v1.GetWorkResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12|\n" +
 	"\x14ChangeWorkVisibility\x12,.agent.public.v1.ChangeWorkVisibilityRequest\x1a-.agent.public.v1.ChangeWorkVisibilityResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x01\x12m\n" +
 	"\x0fRevokeWorkShare\x12'.agent.public.v1.RevokeWorkShareRequest\x1a(.agent.public.v1.RevokeWorkShareResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12\x85\x01\n" +
-	"\x17ListWorkLifecycleEvents\x12/.agent.public.v1.ListWorkLifecycleEventsRequest\x1a0.agent.public.v1.ListWorkLifecycleEventsResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12X\n" +
-	"\bStopWork\x12 .agent.public.v1.StopWorkRequest\x1a!.agent.public.v1.StopWorkResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12^\n" +
+	"\x01\x01\x12\x86\x01\n" +
+	"\x17ListWorkLifecycleEvents\x12/.agent.public.v1.ListWorkLifecycleEventsRequest\x1a0.agent.public.v1.ListWorkLifecycleEventsResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12Y\n" +
+	"\bStopWork\x12 .agent.public.v1.StopWorkRequest\x1a!.agent.public.v1.StopWorkResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12_\n" +
 	"\n" +
-	"ResumeWork\x12\".agent.public.v1.ResumeWorkRequest\x1a#.agent.public.v1.ResumeWorkResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12a\n" +
-	"\vRestartWork\x12#.agent.public.v1.RestartWorkRequest\x1a$.agent.public.v1.RestartWorkResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12a\n" +
-	"\vArchiveWork\x12#.agent.public.v1.ArchiveWorkRequest\x1a$.agent.public.v1.ArchiveWorkResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12a\n" +
-	"\vSendMessage\x12#.agent.public.v1.SendMessageRequest\x1a$.agent.public.v1.SendMessageResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12|\n" +
-	"\x14RespondToInteraction\x12,.agent.public.v1.RespondToInteractionRequest\x1a-.agent.public.v1.RespondToInteractionResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12p\n" +
-	"\x10SetThinkingLevel\x12(.agent.public.v1.SetThinkingLevelRequest\x1a).agent.public.v1.SetThinkingLevelResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12p\n" +
-	"\x10GetThinkingLevel\x12(.agent.public.v1.GetThinkingLevelRequest\x1a).agent.public.v1.GetThinkingLevelResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12s\n" +
+	"ResumeWork\x12\".agent.public.v1.ResumeWorkRequest\x1a#.agent.public.v1.ResumeWorkResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12b\n" +
+	"\vRestartWork\x12#.agent.public.v1.RestartWorkRequest\x1a$.agent.public.v1.RestartWorkResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12b\n" +
+	"\vArchiveWork\x12#.agent.public.v1.ArchiveWorkRequest\x1a$.agent.public.v1.ArchiveWorkResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12b\n" +
+	"\vSendMessage\x12#.agent.public.v1.SendMessageRequest\x1a$.agent.public.v1.SendMessageResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12}\n" +
+	"\x14RespondToInteraction\x12,.agent.public.v1.RespondToInteractionRequest\x1a-.agent.public.v1.RespondToInteractionResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12q\n" +
+	"\x10SetThinkingLevel\x12(.agent.public.v1.SetThinkingLevelRequest\x1a).agent.public.v1.SetThinkingLevelResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12q\n" +
+	"\x10GetThinkingLevel\x12(.agent.public.v1.GetThinkingLevelRequest\x1a).agent.public.v1.GetThinkingLevelResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12s\n" +
 	"\x11SetPermissionMode\x12).agent.public.v1.SetPermissionModeRequest\x1a*.agent.public.v1.SetPermissionModeResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x01BHZFgithub.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1b\x06proto3"
 

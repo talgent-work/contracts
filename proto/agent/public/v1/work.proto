@@ -19,9 +19,12 @@ import "google/protobuf/timestamp.proto";
 option go_package = "github.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1";
 
 // AgentWorkService is the neutral "my Work" API. Every Work operation is
-// admitted only for the Work's owner; ChangeWorkAgentAppearance addresses an
+// admitted only for the Work's owner, a person or an Application, which
+// reaches only its own Works; ChangeWorkAgentAppearance addresses an
 // AgentDefinition and is admitted only for the human it represents. Both are
-// decided from Agent's own facts.
+// decided from Agent's own facts. The Agent's appearance and Soul, a Work's
+// visibility and Work Shares, and a Managed Computer's permission mode are a
+// person's alone and admit no Application.
 service AgentWorkService {
   // ChangeWorkAgentAppearance changes the name and icon of the Work Agent that
   // represents the caller; only that human may change it.
@@ -60,19 +63,19 @@ service AgentWorkService {
   // GetWorkCapabilities reads actual Harness candidates and their latest updates.
   rpc GetWorkCapabilities(GetWorkCapabilitiesRequest) returns (GetWorkCapabilitiesResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // GetWorkPluginResults reads installation and loading projections for selected plugins.
   rpc GetWorkPluginResults(GetWorkPluginResultsRequest) returns (GetWorkPluginResultsResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // GetWorkServiceAccess reads fixed selection and latest safe supply feedback.
   rpc GetWorkServiceAccess(GetWorkServiceAccessRequest) returns (GetWorkServiceAccessResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // CancelTurn interrupts only the addressed turn, leaving the Work running.
@@ -80,7 +83,7 @@ service AgentWorkService {
   // observed, such as during a Disconnection.
   rpc CancelTurn(CancelTurnRequest) returns (CancelTurnResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // GetCurrentTurn reads native activity independently of paginated history.
@@ -88,7 +91,7 @@ service AgentWorkService {
   // observed, such as during a Disconnection.
   rpc GetCurrentTurn(GetCurrentTurnRequest) returns (GetCurrentTurnResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // ListPendingInteractions reads the Harness requests awaiting the user's reply,
@@ -96,13 +99,13 @@ service AgentWorkService {
   // the Work's execution environment is not observed.
   rpc ListPendingInteractions(ListPendingInteractionsRequest) returns (ListPendingInteractionsResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // GetWork reads the caller's own Work without changing the record.
   rpc GetWork(GetWorkRequest) returns (GetWorkResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // ChangeWorkVisibility switches the caller's own Work between private and
@@ -124,55 +127,55 @@ service AgentWorkService {
   // ListWorkLifecycleEvents reads the Work's lifecycle transitions for its continuous timeline.
   rpc ListWorkLifecycleEvents(ListWorkLifecycleEventsRequest) returns (ListWorkLifecycleEventsResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // StopWork requests normal stop of the observed execution.
   rpc StopWork(StopWorkRequest) returns (StopWorkResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // ResumeWork explicitly resumes the fixed assignee's stopped conversation.
   rpc ResumeWork(ResumeWorkRequest) returns (ResumeWorkResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // RestartWork retries a Failed Work using its existing native Session when present.
   rpc RestartWork(RestartWorkRequest) returns (RestartWorkResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // ArchiveWork permanently closes an eligible stopped or failed conversation.
   rpc ArchiveWork(ArchiveWorkRequest) returns (ArchiveWorkResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // SendMessage delivers ordinary input to an existing AgentWork.
   rpc SendMessage(SendMessageRequest) returns (SendMessageResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // RespondToInteraction replies to the current required interaction.
   rpc RespondToInteraction(RespondToInteractionRequest) returns (RespondToInteractionResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // SetThinkingLevel adjusts the current Work Harness and retains its accepted setting.
   rpc SetThinkingLevel(SetThinkingLevelRequest) returns (SetThinkingLevelResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // GetThinkingLevel reads the retained setting for an accessible Work in any state.
   rpc GetThinkingLevel(GetThinkingLevelRequest) returns (GetThinkingLevelResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // SetPermissionMode changes the permission mode of a running Work on a

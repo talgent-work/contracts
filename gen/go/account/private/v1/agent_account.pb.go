@@ -42,8 +42,11 @@ type IssueWorkIdentityTokenRequest struct {
 	// The Account id of the person the Agent represents; empty for an Agent
 	// that represents no one, such as the PM Coordinator.
 	RepresentedUserId string `protobuf:"bytes,7,opt,name=represented_user_id,json=representedUserId,proto3" json:"represented_user_id,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	// The Application that owns the Work, a canonical lowercase UUID; empty for
+	// a Work no Application owns. Such a Work represents no person.
+	ApplicationId string `protobuf:"bytes,8,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *IssueWorkIdentityTokenRequest) Reset() {
@@ -125,6 +128,13 @@ func (x *IssueWorkIdentityTokenRequest) GetRepresentedUserId() string {
 	return ""
 }
 
+func (x *IssueWorkIdentityTokenRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
+	}
+	return ""
+}
+
 // IssueWorkIdentityTokenResponse is the signed token and its expiry.
 type IssueWorkIdentityTokenResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -184,7 +194,7 @@ var File_account_private_v1_agent_account_proto protoreflect.FileDescriptor
 
 const file_account_private_v1_agent_account_proto_rawDesc = "" +
 	"\n" +
-	"&account/private/v1/agent_account.proto\x12\x12account.private.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x90\x02\n" +
+	"&account/private/v1/agent_account.proto\x12\x12account.private.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xb7\x02\n" +
 	"\x1dIssueWorkIdentityTokenRequest\x12\x17\n" +
 	"\awork_id\x18\x01 \x01(\tR\x06workId\x12\x1d\n" +
 	"\n" +
@@ -193,7 +203,8 @@ const file_account_private_v1_agent_account_proto_rawDesc = "" +
 	"\apurpose\x18\x04 \x01(\tR\apurpose\x12*\n" +
 	"\x11work_subject_kind\x18\x05 \x01(\tR\x0fworkSubjectKind\x12&\n" +
 	"\x0fwork_subject_id\x18\x06 \x01(\tR\rworkSubjectId\x12.\n" +
-	"\x13represented_user_id\x18\a \x01(\tR\x11representedUserId\"q\n" +
+	"\x13represented_user_id\x18\a \x01(\tR\x11representedUserId\x12%\n" +
+	"\x0eapplication_id\x18\b \x01(\tR\rapplicationId\"q\n" +
 	"\x1eIssueWorkIdentityTokenResponse\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\x129\n" +
 	"\n" +

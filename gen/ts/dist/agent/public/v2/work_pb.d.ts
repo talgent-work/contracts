@@ -677,9 +677,11 @@ export declare const ListLibraryFilesResponseSchema: GenMessage<ListLibraryFiles
 /**
  * WorkService is an owner's use of their own Agent: the Standalone Works they
  * start for themselves, which have no Subject and no Project, their sharing,
- * and the person's Personal Library. Every operation acts for the
- * authenticated caller under the AgentDefinition Agent locates from its
- * identity, which Agent establishes on its first need. The Works of a Work's
+ * and the person's Personal Library. The owner is a person or an
+ * Application; sharing, repository choices and the Personal Library are a
+ * person's alone. Every operation acts for the authenticated caller under the
+ * AgentDefinition Agent locates from its identity, which Agent establishes on
+ * its first need. The Works of a Work's
  * own run, its turns and its files are AgentWorkService's and
  * WorkFileService's in agent.public.v1.
  *

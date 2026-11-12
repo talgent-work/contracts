@@ -1370,9 +1370,12 @@ export declare const WorkLifecycleEventSchema: GenMessage<WorkLifecycleEvent>;
 
 /**
  * AgentWorkService is the neutral "my Work" API. Every Work operation is
- * admitted only for the Work's owner; ChangeWorkAgentAppearance addresses an
+ * admitted only for the Work's owner, a person or an Application, which
+ * reaches only its own Works; ChangeWorkAgentAppearance addresses an
  * AgentDefinition and is admitted only for the human it represents. Both are
- * decided from Agent's own facts.
+ * decided from Agent's own facts. The Agent's appearance and Soul, a Work's
+ * visibility and Work Shares, and a Managed Computer's permission mode are a
+ * person's alone and admit no Application.
  *
  * @generated from service agent.public.v1.AgentWorkService
  */

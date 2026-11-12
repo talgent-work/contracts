@@ -22,11 +22,11 @@ code is never edited by hand; only a package's own files, such as `gen/ts/packag
 
 ## Naming
 
-- A proto package is `<context>.<surface>.v1`, such as `storage.private.v1`.
-- Its Go package is `github.com/talgent-work/contracts/gen/go/<context>/<surface>/v1`, named
-  `<context><surface>v1`; Connect stubs are in its `<context><surface>v1connect` subpackage,
+- A proto package is `<context>.<surface>.vN`, such as `storage.private.v1`.
+- Its Go package is `github.com/talgent-work/contracts/gen/go/<context>/<surface>/vN`, named
+  `<context><surface>vN`; Connect stubs are in its `<context><surface>vNconnect` subpackage,
   generated for `connectrpc.com/connect/v2`.
-- Its TypeScript module is `@talgent/contracts/<context>/<surface>/v1/<file>_pb`, generated
+- Its TypeScript module is `@talgent/contracts/<context>/<surface>/vN/<file>_pb`, generated
   for protobuf-es v2; its services serve Connect-ES 2 clients directly.
 - An Integration Message is named `<Fact>V1`. Its message kind, and the topic it is published
   on, is its full name, such as `storage.integration.v1.FileChangedV1`.
@@ -57,6 +57,11 @@ A package version is a wire promise. Within `vN` a contract only grows: new fiel
 enum values, with removed field numbers reserved. A breaking change opens `vN+1` beside it until
 `vN` retires. The release version and the package version are independent; consumers ignore
 fields they do not know.
+
+`vN+1` holds what the change replaces, and may import the unchanged messages of `vN`; what it
+replaces in `vN` is marked `deprecated` and still served. Once nothing consumes it, a release
+removes it: that release is a minor tagged by hand, and `buf.yaml` exempts the removed files from
+the breaking check until the next release compares against it.
 
 ## Releases
 

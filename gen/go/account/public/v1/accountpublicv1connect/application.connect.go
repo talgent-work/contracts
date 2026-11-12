@@ -104,10 +104,11 @@ type ApplicationServiceClient interface {
 	// RegisterApplication registers an Application owned by the caller and
 	// issues its first Client Secret, which this response shows once.
 	RegisterApplication(context.Context, *v1.RegisterApplicationRequest) (*v1.RegisterApplicationResponse, error)
-	// ListOwnedApplications lists the caller's Applications, oldest first.
+	// ListOwnedApplications lists the caller's Applications, oldest first,
+	// removed ones included: their owner still reads their Works and usage.
 	ListOwnedApplications(context.Context, *v1.ListOwnedApplicationsRequest) (*v1.ListOwnedApplicationsResponse, error)
-	// GetApplication reads one Application the caller owns; NotFound for any
-	// other.
+	// GetApplication reads one Application the caller owns, removed or not;
+	// NotFound for any other.
 	GetApplication(context.Context, *v1.GetApplicationRequest) (*v1.GetApplicationResponse, error)
 	// RotateClientSecret issues a new current Client Secret, shown once in this
 	// response. The replaced current secret keeps matching for a bounded
@@ -138,10 +139,11 @@ type ApplicationServiceHandler interface {
 	// RegisterApplication registers an Application owned by the caller and
 	// issues its first Client Secret, which this response shows once.
 	RegisterApplication(context.Context, *v1.RegisterApplicationRequest) (*v1.RegisterApplicationResponse, error)
-	// ListOwnedApplications lists the caller's Applications, oldest first.
+	// ListOwnedApplications lists the caller's Applications, oldest first,
+	// removed ones included: their owner still reads their Works and usage.
 	ListOwnedApplications(context.Context, *v1.ListOwnedApplicationsRequest) (*v1.ListOwnedApplicationsResponse, error)
-	// GetApplication reads one Application the caller owns; NotFound for any
-	// other.
+	// GetApplication reads one Application the caller owns, removed or not;
+	// NotFound for any other.
 	GetApplication(context.Context, *v1.GetApplicationRequest) (*v1.GetApplicationResponse, error)
 	// RotateClientSecret issues a new current Client Secret, shown once in this
 	// response. The replaced current secret keeps matching for a bounded

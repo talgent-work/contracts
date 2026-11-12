@@ -52,6 +52,14 @@ export declare type Application = Message<"account.public.v1.Application"> & {
    * @generated from field: int64 secret_overlap_seconds = 5;
    */
   secretOverlapSeconds: bigint;
+
+  /**
+   * Whether it was removed: it holds no Client Secret and its owner can only
+   * read its Works and usage.
+   *
+   * @generated from field: bool removed = 6;
+   */
+  removed: boolean;
 };
 
 /**
@@ -468,7 +476,8 @@ export declare const ApplicationService: GenService<{
     output: typeof RegisterApplicationResponseSchema;
   },
   /**
-   * ListOwnedApplications lists the caller's Applications, oldest first.
+   * ListOwnedApplications lists the caller's Applications, oldest first,
+   * removed ones included: their owner still reads their Works and usage.
    *
    * @generated from rpc account.public.v1.ApplicationService.ListOwnedApplications
    */
@@ -478,8 +487,8 @@ export declare const ApplicationService: GenService<{
     output: typeof ListOwnedApplicationsResponseSchema;
   },
   /**
-   * GetApplication reads one Application the caller owns; NotFound for any
-   * other.
+   * GetApplication reads one Application the caller owns, removed or not;
+   * NotFound for any other.
    *
    * @generated from rpc account.public.v1.ApplicationService.GetApplication
    */

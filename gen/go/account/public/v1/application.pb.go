@@ -90,8 +90,11 @@ type Application struct {
 	ClientSecrets []*ClientSecret `protobuf:"bytes,4,rep,name=client_secrets,json=clientSecrets,proto3" json:"client_secrets,omitempty"`
 	// How long a replaced Client Secret keeps matching after a rotation.
 	SecretOverlapSeconds int64 `protobuf:"varint,5,opt,name=secret_overlap_seconds,json=secretOverlapSeconds,proto3" json:"secret_overlap_seconds,omitempty"`
-	unknownFields        protoimpl.UnknownFields
-	sizeCache            protoimpl.SizeCache
+	// Whether it was removed: it holds no Client Secret and its owner can only
+	// read its Works and usage.
+	Removed       bool `protobuf:"varint,6,opt,name=removed,proto3" json:"removed,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Application) Reset() {
@@ -157,6 +160,13 @@ func (x *Application) GetSecretOverlapSeconds() int64 {
 		return x.SecretOverlapSeconds
 	}
 	return 0
+}
+
+func (x *Application) GetRemoved() bool {
+	if x != nil {
+		return x.Removed
+	}
+	return false
 }
 
 // ClientSecret describes one Client Secret without revealing it.
@@ -918,13 +928,14 @@ var File_account_public_v1_application_proto protoreflect.FileDescriptor
 
 const file_account_public_v1_application_proto_rawDesc = "" +
 	"\n" +
-	"#account/public/v1/application.proto\x12\x11account.public.v1\x1a\x1cadmission/v1/admission.proto\"\xe2\x01\n" +
+	"#account/public/v1/application.proto\x12\x11account.public.v1\x1a\x1cadmission/v1/admission.proto\"\xfc\x01\n" +
 	"\vApplication\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x121\n" +
 	"\x15registered_at_unix_ms\x18\x03 \x01(\x03R\x12registeredAtUnixMs\x12F\n" +
 	"\x0eclient_secrets\x18\x04 \x03(\v2\x1f.account.public.v1.ClientSecretR\rclientSecrets\x124\n" +
-	"\x16secret_overlap_seconds\x18\x05 \x01(\x03R\x14secretOverlapSeconds\"\xff\x01\n" +
+	"\x16secret_overlap_seconds\x18\x05 \x01(\x03R\x14secretOverlapSeconds\x12\x18\n" +
+	"\aremoved\x18\x06 \x01(\bR\aremoved\"\xff\x01\n" +
 	"\fClientSecret\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12:\n" +
 	"\x05state\x18\x02 \x01(\x0e2$.account.public.v1.ClientSecretStateR\x05state\x12\x12\n" +

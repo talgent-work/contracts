@@ -220,7 +220,8 @@ export declare type ShareLink = Message<"storage.private.v1.ShareLink"> & {
   url: string;
 
   /**
-   * The person the owner's context named when creating it.
+   * The person the owner's context named when creating it; empty when it
+   * named an Application.
    *
    * @generated from field: string created_by_user_id = 3;
    */
@@ -232,6 +233,14 @@ export declare type ShareLink = Message<"storage.private.v1.ShareLink"> & {
    * @generated from field: google.protobuf.Timestamp created_at = 4;
    */
   createdAt?: Timestamp;
+
+  /**
+   * The Application the owner's context named when creating it; empty when
+   * it named a person.
+   *
+   * @generated from field: string created_by_application_id = 5;
+   */
+  createdByApplicationId: string;
 };
 
 /**
@@ -1069,7 +1078,8 @@ export declare type FilePreview = Message<"storage.private.v1.FilePreview"> & {
 export declare const FilePreviewSchema: GenMessage<FilePreview>;
 
 /**
- * CreateShareLinkRequest names the file and its sharer.
+ * CreateShareLinkRequest names the file and its sharer, exactly one person or
+ * one Application the owner's context admitted.
  *
  * @generated from message storage.private.v1.CreateShareLinkRequest
  */
@@ -1087,6 +1097,13 @@ export declare type CreateShareLinkRequest = Message<"storage.private.v1.CreateS
    * @generated from field: string created_by_user_id = 2;
    */
   createdByUserId: string;
+
+  /**
+   * The Application sharing it.
+   *
+   * @generated from field: string created_by_application_id = 3;
+   */
+  createdByApplicationId: string;
 };
 
 /**
@@ -1116,7 +1133,8 @@ export declare type CreateShareLinkResponse = Message<"storage.private.v1.Create
 export declare const CreateShareLinkResponseSchema: GenMessage<CreateShareLinkResponse>;
 
 /**
- * RevokeShareLinksRequest names the file and whose links end.
+ * RevokeShareLinksRequest names the file and whose links end: the links one
+ * person or one Application created, or, naming neither, every link.
  *
  * @generated from message storage.private.v1.RevokeShareLinksRequest
  */
@@ -1129,11 +1147,18 @@ export declare type RevokeShareLinksRequest = Message<"storage.private.v1.Revoke
   position?: FilePosition;
 
   /**
-   * Only the links this person created end; empty ends every link.
+   * Only the links this person created end.
    *
    * @generated from field: string created_by_user_id = 2;
    */
   createdByUserId: string;
+
+  /**
+   * Only the links this Application created end.
+   *
+   * @generated from field: string created_by_application_id = 3;
+   */
+  createdByApplicationId: string;
 };
 
 /**

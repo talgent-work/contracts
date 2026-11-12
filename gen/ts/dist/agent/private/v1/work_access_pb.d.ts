@@ -53,7 +53,7 @@ export declare type AdmitWorkReaderRequest = Message<"agent.private.v1.AdmitWork
   workId: string;
 
   /**
-   * Reading human.
+   * The reading person or Application.
    *
    * @generated from field: string reader_id = 2;
    */

@@ -865,12 +865,16 @@ type ShareLink struct {
 	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
 	// URL through which anyone holding it reads the file.
 	Url string `protobuf:"bytes,2,opt,name=url,proto3" json:"url,omitempty"`
-	// The person the owner's context named when creating it.
+	// The person the owner's context named when creating it; empty when it
+	// named an Application.
 	CreatedByUserId string `protobuf:"bytes,3,opt,name=created_by_user_id,json=createdByUserId,proto3" json:"created_by_user_id,omitempty"`
 	// Creation time.
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	// The Application the owner's context named when creating it; empty when
+	// it named a person.
+	CreatedByApplicationId string `protobuf:"bytes,5,opt,name=created_by_application_id,json=createdByApplicationId,proto3" json:"created_by_application_id,omitempty"`
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
 }
 
 func (x *ShareLink) Reset() {
@@ -929,6 +933,13 @@ func (x *ShareLink) GetCreatedAt() *timestamppb.Timestamp {
 		return x.CreatedAt
 	}
 	return nil
+}
+
+func (x *ShareLink) GetCreatedByApplicationId() string {
+	if x != nil {
+		return x.CreatedByApplicationId
+	}
+	return ""
 }
 
 // File is one Attachment or Artifact at its File position: an Attachment
@@ -2575,15 +2586,18 @@ func (x *FilePreview) GetRendering() bool {
 	return false
 }
 
-// CreateShareLinkRequest names the file and its sharer.
+// CreateShareLinkRequest names the file and its sharer, exactly one person or
+// one Application the owner's context admitted.
 type CreateShareLinkRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The file.
 	Position *FilePosition `protobuf:"bytes,1,opt,name=position,proto3" json:"position,omitempty"`
 	// The person sharing it.
 	CreatedByUserId string `protobuf:"bytes,2,opt,name=created_by_user_id,json=createdByUserId,proto3" json:"created_by_user_id,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	// The Application sharing it.
+	CreatedByApplicationId string `protobuf:"bytes,3,opt,name=created_by_application_id,json=createdByApplicationId,proto3" json:"created_by_application_id,omitempty"`
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
 }
 
 func (x *CreateShareLinkRequest) Reset() {
@@ -2626,6 +2640,13 @@ func (x *CreateShareLinkRequest) GetPosition() *FilePosition {
 func (x *CreateShareLinkRequest) GetCreatedByUserId() string {
 	if x != nil {
 		return x.CreatedByUserId
+	}
+	return ""
+}
+
+func (x *CreateShareLinkRequest) GetCreatedByApplicationId() string {
+	if x != nil {
+		return x.CreatedByApplicationId
 	}
 	return ""
 }
@@ -2676,15 +2697,18 @@ func (x *CreateShareLinkResponse) GetShareLink() *ShareLink {
 	return nil
 }
 
-// RevokeShareLinksRequest names the file and whose links end.
+// RevokeShareLinksRequest names the file and whose links end: the links one
+// person or one Application created, or, naming neither, every link.
 type RevokeShareLinksRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The file.
 	Position *FilePosition `protobuf:"bytes,1,opt,name=position,proto3" json:"position,omitempty"`
-	// Only the links this person created end; empty ends every link.
+	// Only the links this person created end.
 	CreatedByUserId string `protobuf:"bytes,2,opt,name=created_by_user_id,json=createdByUserId,proto3" json:"created_by_user_id,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	// Only the links this Application created end.
+	CreatedByApplicationId string `protobuf:"bytes,3,opt,name=created_by_application_id,json=createdByApplicationId,proto3" json:"created_by_application_id,omitempty"`
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
 }
 
 func (x *RevokeShareLinksRequest) Reset() {
@@ -2727,6 +2751,13 @@ func (x *RevokeShareLinksRequest) GetPosition() *FilePosition {
 func (x *RevokeShareLinksRequest) GetCreatedByUserId() string {
 	if x != nil {
 		return x.CreatedByUserId
+	}
+	return ""
+}
+
+func (x *RevokeShareLinksRequest) GetCreatedByApplicationId() string {
+	if x != nil {
+		return x.CreatedByApplicationId
 	}
 	return ""
 }
@@ -2812,13 +2843,14 @@ const file_storage_private_v1_storage_proto_rawDesc = "" +
 	"\blifetime\x18\x03 \x01(\x0e2\x1c.storage.private.v1.LifetimeR\blifetime\"_\n" +
 	"\fFilePosition\x12;\n" +
 	"\tdirectory\x18\x01 \x01(\v2\x1d.storage.private.v1.DirectoryR\tdirectory\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\"\x9b\x01\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\"\xd6\x01\n" +
 	"\tShareLink\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\x12\x10\n" +
 	"\x03url\x18\x02 \x01(\tR\x03url\x12+\n" +
 	"\x12created_by_user_id\x18\x03 \x01(\tR\x0fcreatedByUserId\x129\n" +
 	"\n" +
-	"created_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\x94\x03\n" +
+	"created_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"\x19created_by_application_id\x18\x05 \x01(\tR\x16createdByApplicationId\"\x94\x03\n" +
 	"\x04File\x12<\n" +
 	"\bposition\x18\x01 \x01(\v2 .storage.private.v1.FilePositionR\bposition\x12\x1d\n" +
 	"\n" +
@@ -2927,16 +2959,18 @@ const file_storage_private_v1_storage_proto_rawDesc = "" +
 	"accessPath\x129\n" +
 	"\n" +
 	"expires_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\x12\x1c\n" +
-	"\trendering\x18\b \x01(\bR\trendering\"\x83\x01\n" +
+	"\trendering\x18\b \x01(\bR\trendering\"\xbe\x01\n" +
 	"\x16CreateShareLinkRequest\x12<\n" +
 	"\bposition\x18\x01 \x01(\v2 .storage.private.v1.FilePositionR\bposition\x12+\n" +
-	"\x12created_by_user_id\x18\x02 \x01(\tR\x0fcreatedByUserId\"W\n" +
+	"\x12created_by_user_id\x18\x02 \x01(\tR\x0fcreatedByUserId\x129\n" +
+	"\x19created_by_application_id\x18\x03 \x01(\tR\x16createdByApplicationId\"W\n" +
 	"\x17CreateShareLinkResponse\x12<\n" +
 	"\n" +
-	"share_link\x18\x01 \x01(\v2\x1d.storage.private.v1.ShareLinkR\tshareLink\"\x84\x01\n" +
+	"share_link\x18\x01 \x01(\v2\x1d.storage.private.v1.ShareLinkR\tshareLink\"\xbf\x01\n" +
 	"\x17RevokeShareLinksRequest\x12<\n" +
 	"\bposition\x18\x01 \x01(\v2 .storage.private.v1.FilePositionR\bposition\x12+\n" +
-	"\x12created_by_user_id\x18\x02 \x01(\tR\x0fcreatedByUserId\"R\n" +
+	"\x12created_by_user_id\x18\x02 \x01(\tR\x0fcreatedByUserId\x129\n" +
+	"\x19created_by_application_id\x18\x03 \x01(\tR\x16createdByApplicationId\"R\n" +
 	"\x18RevokeShareLinksResponse\x12\x18\n" +
 	"\arevoked\x18\x01 \x01(\x05R\arevoked\x12\x1c\n" +
 	"\tremaining\x18\x02 \x01(\x05R\tremaining*\x99\x05\n" +

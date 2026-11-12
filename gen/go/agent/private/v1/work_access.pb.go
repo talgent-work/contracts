@@ -140,7 +140,7 @@ type AdmitWorkReaderRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Work whose message stream is read.
 	WorkId string `protobuf:"bytes,1,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
-	// Reading human.
+	// The reading person or Application.
 	ReaderId string `protobuf:"bytes,2,opt,name=reader_id,json=readerId,proto3" json:"reader_id,omitempty"`
 	// Optional trusted admission for a public Work.
 	Admission *ReaderAdmission `protobuf:"bytes,3,opt,name=admission,proto3" json:"admission,omitempty"`

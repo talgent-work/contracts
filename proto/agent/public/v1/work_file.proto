@@ -9,8 +9,8 @@ option go_package = "github.com/talgent-work/contracts/gen/go/agent/public/v1;ag
 
 // WorkFileService serves the files of a Work's File Space. A Standalone Work's
 // owner, a person or an Application, uploads, renames and deletes its
-// Attachments and deletes its Artifacts until the Work is Closed; a person
-// owner also manages Share Links at any time. The owner and its Work Share
+// Attachments and deletes its Artifacts until the Work is Closed, and manages
+// Share Links at any time. The owner and its Work Share
 // holders read. Of a Work with a Subject or a
 // Project, whose files its caller governs, only the Artifacts are read here,
 // by its owner and Work Share holders, as the Personal Library shows them.
@@ -53,13 +53,13 @@ service WorkFileService {
   // CreateWorkFileShareLink creates a Share Link to one file.
   rpc CreateWorkFileShareLink(CreateWorkFileShareLinkRequest) returns (CreateWorkFileShareLinkResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // StopWorkFileSharing revokes every Share Link to one file.
   rpc StopWorkFileSharing(StopWorkFileSharingRequest) returns (StopWorkFileSharingResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // GetWorkFilePreview tells how one file is shown.
@@ -102,10 +102,12 @@ message WorkFileShareLink {
   string token = 1;
   // Public URL.
   string url = 2;
-  // Who created it.
+  // The person who created it; empty when an Application did.
   string created_by_user_id = 3;
   // When it was created.
   google.protobuf.Timestamp created_at = 4;
+  // The Application that created it; empty when a person did.
+  string created_by_application_id = 5;
 }
 
 // WorkFile is one file of a Work's File Space.

@@ -331,12 +331,14 @@ type WorkFileShareLink struct {
 	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
 	// Public URL.
 	Url string `protobuf:"bytes,2,opt,name=url,proto3" json:"url,omitempty"`
-	// Who created it.
+	// The person who created it; empty when an Application did.
 	CreatedByUserId string `protobuf:"bytes,3,opt,name=created_by_user_id,json=createdByUserId,proto3" json:"created_by_user_id,omitempty"`
 	// When it was created.
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	// The Application that created it; empty when a person did.
+	CreatedByApplicationId string `protobuf:"bytes,5,opt,name=created_by_application_id,json=createdByApplicationId,proto3" json:"created_by_application_id,omitempty"`
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
 }
 
 func (x *WorkFileShareLink) Reset() {
@@ -395,6 +397,13 @@ func (x *WorkFileShareLink) GetCreatedAt() *timestamppb.Timestamp {
 		return x.CreatedAt
 	}
 	return nil
+}
+
+func (x *WorkFileShareLink) GetCreatedByApplicationId() string {
+	if x != nil {
+		return x.CreatedByApplicationId
+	}
+	return ""
 }
 
 // WorkFile is one file of a Work's File Space.
@@ -1609,13 +1618,14 @@ var File_agent_public_v1_work_file_proto protoreflect.FileDescriptor
 
 const file_agent_public_v1_work_file_proto_rawDesc = "" +
 	"\n" +
-	"\x1fagent/public/v1/work_file.proto\x12\x0fagent.public.v1\x1a\x1cadmission/v1/admission.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa3\x01\n" +
+	"\x1fagent/public/v1/work_file.proto\x12\x0fagent.public.v1\x1a\x1cadmission/v1/admission.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xde\x01\n" +
 	"\x11WorkFileShareLink\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\x12\x10\n" +
 	"\x03url\x18\x02 \x01(\tR\x03url\x12+\n" +
 	"\x12created_by_user_id\x18\x03 \x01(\tR\x0fcreatedByUserId\x129\n" +
 	"\n" +
-	"created_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\x8e\x03\n" +
+	"created_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"\x19created_by_application_id\x18\x05 \x01(\tR\x16createdByApplicationId\"\x8e\x03\n" +
 	"\bWorkFile\x12\x17\n" +
 	"\awork_id\x18\x01 \x01(\tR\x06workId\x121\n" +
 	"\x04kind\x18\x02 \x01(\x0e2\x1d.agent.public.v1.WorkFileKindR\x04kind\x12\x12\n" +
@@ -1728,7 +1738,7 @@ const file_agent_public_v1_work_file_proto_rawDesc = "" +
 	"#WORK_FILE_PREVIEW_REFUSAL_TOO_LARGE\x10\x04\x12%\n" +
 	"!WORK_FILE_PREVIEW_REFUSAL_CORRUPT\x10\x05\x12/\n" +
 	"+WORK_FILE_PREVIEW_REFUSAL_CONVERTER_REFUSED\x10\x06\x121\n" +
-	"-WORK_FILE_PREVIEW_REFUSAL_RENDERING_TOO_LARGE\x10\a2\x88\t\n" +
+	"-WORK_FILE_PREVIEW_REFUSAL_RENDERING_TOO_LARGE\x10\a2\x8a\t\n" +
 	"\x0fWorkFileService\x12h\n" +
 	"\rListWorkFiles\x12%.agent.public.v1.ListWorkFilesRequest\x1a&.agent.public.v1.ListWorkFilesResponse\"\b\xc2\xf3\x18\x04\n" +
 	"\x02\x01\x03\x12\x8f\x01\n" +
@@ -1739,11 +1749,11 @@ const file_agent_public_v1_work_file_proto_rawDesc = "" +
 	"\x0eDeleteWorkFile\x12&.agent.public.v1.DeleteWorkFileRequest\x1a'.agent.public.v1.DeleteWorkFileResponse\"\b\xc2\xf3\x18\x04\n" +
 	"\x02\x01\x03\x12\x8a\x01\n" +
 	"\x18CreateWorkFileAccessLink\x120.agent.public.v1.CreateWorkFileAccessLinkRequest\x1a1.agent.public.v1.CreateWorkFileAccessLinkResponse\"\t\xc2\xf3\x18\x05\n" +
-	"\x03\x01\x02\x03\x12\x85\x01\n" +
-	"\x17CreateWorkFileShareLink\x12/.agent.public.v1.CreateWorkFileShareLinkRequest\x1a0.agent.public.v1.CreateWorkFileShareLinkResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12y\n" +
-	"\x13StopWorkFileSharing\x12+.agent.public.v1.StopWorkFileSharingRequest\x1a,.agent.public.v1.StopWorkFileSharingResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12w\n" +
+	"\x03\x01\x02\x03\x12\x86\x01\n" +
+	"\x17CreateWorkFileShareLink\x12/.agent.public.v1.CreateWorkFileShareLinkRequest\x1a0.agent.public.v1.CreateWorkFileShareLinkResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12z\n" +
+	"\x13StopWorkFileSharing\x12+.agent.public.v1.StopWorkFileSharingRequest\x1a,.agent.public.v1.StopWorkFileSharingResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12w\n" +
 	"\x12GetWorkFilePreview\x12*.agent.public.v1.GetWorkFilePreviewRequest\x1a+.agent.public.v1.GetWorkFilePreviewResponse\"\b\xc2\xf3\x18\x04\n" +
 	"\x02\x01\x03\x12\x83\x01\n" +
 	"\x16RequestWorkFilePreview\x12..agent.public.v1.RequestWorkFilePreviewRequest\x1a/.agent.public.v1.RequestWorkFilePreviewResponse\"\b\xc2\xf3\x18\x04\n" +

@@ -48,7 +48,7 @@ enum WorkReadBasis {
 message AdmitWorkReaderRequest {
   // Work whose message stream is read.
   string work_id = 1;
-  // Reading human.
+  // The reading person or Application.
   string reader_id = 2;
   // Optional trusted admission for a public Work.
   ReaderAdmission admission = 3;

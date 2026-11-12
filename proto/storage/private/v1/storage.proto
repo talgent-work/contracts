@@ -226,10 +226,14 @@ message ShareLink {
   string token = 1;
   // URL through which anyone holding it reads the file.
   string url = 2;
-  // The person the owner's context named when creating it.
+  // The person the owner's context named when creating it; empty when it
+  // named an Application.
   string created_by_user_id = 3;
   // Creation time.
   google.protobuf.Timestamp created_at = 4;
+  // The Application the owner's context named when creating it; empty when
+  // it named a person.
+  string created_by_application_id = 5;
 }
 
 // File is one Attachment or Artifact at its File position: an Attachment
@@ -531,12 +535,15 @@ message FilePreview {
   bool rendering = 8;
 }
 
-// CreateShareLinkRequest names the file and its sharer.
+// CreateShareLinkRequest names the file and its sharer, exactly one person or
+// one Application the owner's context admitted.
 message CreateShareLinkRequest {
   // The file.
   FilePosition position = 1;
   // The person sharing it.
   string created_by_user_id = 2;
+  // The Application sharing it.
+  string created_by_application_id = 3;
 }
 
 // CreateShareLinkResponse returns the new link.
@@ -545,12 +552,15 @@ message CreateShareLinkResponse {
   ShareLink share_link = 1;
 }
 
-// RevokeShareLinksRequest names the file and whose links end.
+// RevokeShareLinksRequest names the file and whose links end: the links one
+// person or one Application created, or, naming neither, every link.
 message RevokeShareLinksRequest {
   // The file.
   FilePosition position = 1;
-  // Only the links this person created end; empty ends every link.
+  // Only the links this person created end.
   string created_by_user_id = 2;
+  // Only the links this Application created end.
+  string created_by_application_id = 3;
 }
 
 // RevokeShareLinksResponse reports what ended and what stays active.

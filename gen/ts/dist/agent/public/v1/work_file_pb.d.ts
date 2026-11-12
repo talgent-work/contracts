@@ -32,7 +32,7 @@ export declare type WorkFileShareLink = Message<"agent.public.v1.WorkFileShareLi
   url: string;
 
   /**
-   * Who created it.
+   * The person who created it; empty when an Application did.
    *
    * @generated from field: string created_by_user_id = 3;
    */
@@ -44,6 +44,13 @@ export declare type WorkFileShareLink = Message<"agent.public.v1.WorkFileShareLi
    * @generated from field: google.protobuf.Timestamp created_at = 4;
    */
   createdAt?: Timestamp;
+
+  /**
+   * The Application that created it; empty when a person did.
+   *
+   * @generated from field: string created_by_application_id = 5;
+   */
+  createdByApplicationId: string;
 };
 
 /**
@@ -910,8 +917,8 @@ export declare const WorkFilePreviewRefusalSchema: GenEnum<WorkFilePreviewRefusa
 /**
  * WorkFileService serves the files of a Work's File Space. A Standalone Work's
  * owner, a person or an Application, uploads, renames and deletes its
- * Attachments and deletes its Artifacts until the Work is Closed; a person
- * owner also manages Share Links at any time. The owner and its Work Share
+ * Attachments and deletes its Artifacts until the Work is Closed, and manages
+ * Share Links at any time. The owner and its Work Share
  * holders read. Of a Work with a Subject or a
  * Project, whose files its caller governs, only the Artifacts are read here,
  * by its owner and Work Share holders, as the Personal Library shows them.

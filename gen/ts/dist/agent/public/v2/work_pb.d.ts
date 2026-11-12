@@ -787,8 +787,9 @@ export declare const WorkService: GenService<{
     output: typeof GetWorkStartOptionsResponseSchema;
   },
   /**
-   * ListWorkStartRepositories lists the repositories the caller may check out
-   * in a new Standalone Work.
+   * ListWorkStartRepositories lists the repositories the caller, a person or
+   * an Application, may check out in a new Standalone Work under its own
+   * Provider Authorization.
    *
    * @generated from rpc agent.public.v2.WorkService.ListWorkStartRepositories
    */

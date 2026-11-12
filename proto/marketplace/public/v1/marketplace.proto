@@ -14,53 +14,56 @@ option go_package = "github.com/talgent-work/contracts/gen/go/marketplace/public
 // and an Application Owner reaches it under their own identity, admitted
 // through Account's Application ownership.
 service MarketplaceService {
-  // BeginProviderAuthorization manages the authenticated user's personal connection.
+  // BeginProviderAuthorization starts connecting a Provider for the caller, or
+  // for an Application the caller owns. Connecting needs a person's browser,
+  // so an Application does not call it.
   rpc BeginProviderAuthorization(BeginProviderAuthorizationRequest) returns (BeginProviderAuthorizationResponse) {
     option (admission.v1.admits) = {
       principals: [PRINCIPAL_USER]
     };
   }
-  // CompleteProviderAuthorization manages the authenticated user's personal connection.
+  // CompleteProviderAuthorization completes the connection the matching Begin
+  // started, for the same owner.
   rpc CompleteProviderAuthorization(CompleteProviderAuthorizationRequest) returns (CompleteProviderAuthorizationResponse) {
     option (admission.v1.admits) = {
       principals: [PRINCIPAL_USER]
     };
   }
-  // GetProviderConnectionState manages the authenticated user's personal connection.
+  // GetProviderConnectionState describes the owner's connection to a Provider.
   rpc GetProviderConnectionState(GetProviderConnectionStateRequest) returns (GetProviderConnectionStateResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
-  // ListAccessibleRepositories lists repositories last observed as reachable under the user's authorization.
+  // ListAccessibleRepositories lists repositories last observed as reachable under the owner's authorization.
   rpc ListAccessibleRepositories(ListAccessibleRepositoriesRequest) returns (ListAccessibleRepositoriesResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // GetProviderAccess describes the accounts, repositories and permissions the authorization last reached.
   rpc GetProviderAccess(GetProviderAccessRequest) returns (GetProviderAccessResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // RefreshProviderAccess observes the authorization's reach now and returns it.
   rpc RefreshProviderAccess(RefreshProviderAccessRequest) returns (RefreshProviderAccessResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
 
-  // List configured personal authorization references, including inactive ones.
+  // List the owner's authorization references, including inactive ones.
   rpc ListPersonalAuthorizations(ListPersonalAuthorizationsRequest) returns (ListPersonalAuthorizationsResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
-  // Ask the Provider to revoke the authenticated user's personal authorization.
+  // Ask the Provider to revoke one of the owner's authorizations.
   rpc CancelPersonalAuthorization(CancelPersonalAuthorizationRequest) returns (CancelPersonalAuthorizationResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // Browse synchronized plugin releases.
@@ -167,13 +170,22 @@ service MarketplaceService {
   }
 }
 
-// ListPersonalAuthorizationsRequest uses only the authenticated user's identity.
-message ListPersonalAuthorizationsRequest {}
+// ListPersonalAuthorizationsRequest selects the owner.
+message ListPersonalAuthorizationsRequest {
+  // An Application the caller owns, whose Provider Authorizations the
+  // request reaches; empty for the caller's own. An Application leaves it
+  // empty or names itself.
+  string application_id = 1;
+}
 
-// The owner comes exclusively from trusted authentication context.
+// CancelPersonalAuthorizationRequest names one of the owner's authorizations.
 message CancelPersonalAuthorizationRequest {
-  // Stable personal authorization reference.
+  // Stable authorization reference.
   string authorization_id = 1;
+  // An Application the caller owns, whose Provider Authorizations the
+  // request reaches; empty for the caller's own. An Application leaves it
+  // empty or names itself.
+  string application_id = 2;
 }
 
 // Success means the Provider confirmed revocation, or it was already recorded.

@@ -11,7 +11,7 @@ import type { Message } from "@bufbuild/protobuf";
 export declare const file_marketplace_public_v1_connections: GenFile;
 
 /**
- * ProviderAuthorization describes a provider authorization owned by a user.
+ * ProviderAuthorization describes a provider authorization and its owner.
  *
  * @generated from message marketplace.public.v1.ProviderAuthorization
  */
@@ -52,7 +52,7 @@ export declare type ProviderAuthorization = Message<"marketplace.public.v1.Provi
   providerLogin: string;
 
   /**
-   * owner user id field.
+   * The owner: a person's id, or an Application's id.
    *
    * @generated from field: string owner_user_id = 6;
    */
@@ -66,7 +66,7 @@ export declare type ProviderAuthorization = Message<"marketplace.public.v1.Provi
 export declare const ProviderAuthorizationSchema: GenMessage<ProviderAuthorization>;
 
 /**
- * BeginProviderAuthorizationRequest starts provider authorization for the actor.
+ * BeginProviderAuthorizationRequest starts provider authorization for the owner.
  *
  * @generated from message marketplace.public.v1.BeginProviderAuthorizationRequest
  */
@@ -84,6 +84,15 @@ export declare type BeginProviderAuthorizationRequest = Message<"marketplace.pub
    * @generated from field: string redirect_uri = 2;
    */
   redirectUri: string;
+
+  /**
+   * An Application the caller owns, whose Provider Authorizations the
+   * request reaches; empty for the caller's own. An Application leaves it
+   * empty or names itself.
+   *
+   * @generated from field: string application_id = 3;
+   */
+  applicationId: string;
 };
 
 /**
@@ -145,6 +154,15 @@ export declare type CompleteProviderAuthorizationRequest = Message<"marketplace.
    * @generated from field: string redirect_uri = 4;
    */
   redirectUri: string;
+
+  /**
+   * An Application the caller owns, whose Provider Authorizations the
+   * request reaches; empty for the caller's own. An Application leaves it
+   * empty or names itself.
+   *
+   * @generated from field: string application_id = 5;
+   */
+  applicationId: string;
 };
 
 /**
@@ -185,6 +203,15 @@ export declare type GetProviderConnectionStateRequest = Message<"marketplace.pub
    * @generated from field: string provider = 1;
    */
   provider: string;
+
+  /**
+   * An Application the caller owns, whose Provider Authorizations the
+   * request reaches; empty for the caller's own. An Application leaves it
+   * empty or names itself.
+   *
+   * @generated from field: string application_id = 2;
+   */
+  applicationId: string;
 };
 
 /**
@@ -214,7 +241,7 @@ export declare type GetProviderConnectionStateResponse = Message<"marketplace.pu
 export declare const GetProviderConnectionStateResponseSchema: GenMessage<GetProviderConnectionStateResponse>;
 
 /**
- * ProviderConnectionState describes the authenticated actor's provider connection.
+ * ProviderConnectionState describes the owner's provider connection.
  *
  * @generated from message marketplace.public.v1.ProviderConnectionState
  */
@@ -319,7 +346,7 @@ export declare const ProviderConnectionStateSchema: GenMessage<ProviderConnectio
 
 /**
  * ListAccessibleRepositoriesRequest selects repositories reachable under the
- * authenticated user's current Provider authorization.
+ * owner's current Provider authorization.
  *
  * @generated from message marketplace.public.v1.ListAccessibleRepositoriesRequest
  */
@@ -330,6 +357,15 @@ export declare type ListAccessibleRepositoriesRequest = Message<"marketplace.pub
    * @generated from field: string provider = 1;
    */
   provider: string;
+
+  /**
+   * An Application the caller owns, whose Provider Authorizations the
+   * request reaches; empty for the caller's own. An Application leaves it
+   * empty or names itself.
+   *
+   * @generated from field: string application_id = 2;
+   */
+  applicationId: string;
 };
 
 /**
@@ -427,6 +463,15 @@ export declare type GetProviderAccessRequest = Message<"marketplace.public.v1.Ge
    * @generated from field: string provider = 1;
    */
   provider: string;
+
+  /**
+   * An Application the caller owns, whose Provider Authorizations the
+   * request reaches; empty for the caller's own. An Application leaves it
+   * empty or names itself.
+   *
+   * @generated from field: string application_id = 2;
+   */
+  applicationId: string;
 };
 
 /**
@@ -436,7 +481,7 @@ export declare type GetProviderAccessRequest = Message<"marketplace.public.v1.Ge
 export declare const GetProviderAccessRequestSchema: GenMessage<GetProviderAccessRequest>;
 
 /**
- * GetProviderAccessResponse describes what the user's authorization reached when
+ * GetProviderAccessResponse describes what the owner's authorization reached when
  * last observed. Reading it never asks the Provider.
  *
  * @generated from message marketplace.public.v1.GetProviderAccessResponse
@@ -505,6 +550,15 @@ export declare type RefreshProviderAccessRequest = Message<"marketplace.public.v
    * @generated from field: string provider = 1;
    */
   provider: string;
+
+  /**
+   * An Application the caller owns, whose Provider Authorizations the
+   * request reaches; empty for the caller's own. An Application leaves it
+   * empty or names itself.
+   *
+   * @generated from field: string application_id = 2;
+   */
+  applicationId: string;
 };
 
 /**

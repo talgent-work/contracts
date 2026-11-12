@@ -21,7 +21,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// ProviderAuthorization describes a provider authorization owned by a user.
+// ProviderAuthorization describes a provider authorization and its owner.
 type ProviderAuthorization struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Stable personal authorization reference, preserved by reauthorization.
@@ -34,7 +34,7 @@ type ProviderAuthorization struct {
 	ProviderAccountId string `protobuf:"bytes,4,opt,name=provider_account_id,json=providerAccountId,proto3" json:"provider_account_id,omitempty"`
 	// provider login field.
 	ProviderLogin string `protobuf:"bytes,5,opt,name=provider_login,json=providerLogin,proto3" json:"provider_login,omitempty"`
-	// owner user id field.
+	// The owner: a person's id, or an Application's id.
 	OwnerUserId   string `protobuf:"bytes,6,opt,name=owner_user_id,json=ownerUserId,proto3" json:"owner_user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -112,13 +112,17 @@ func (x *ProviderAuthorization) GetOwnerUserId() string {
 	return ""
 }
 
-// BeginProviderAuthorizationRequest starts provider authorization for the actor.
+// BeginProviderAuthorizationRequest starts provider authorization for the owner.
 type BeginProviderAuthorizationRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// provider field.
 	Provider string `protobuf:"bytes,1,opt,name=provider,proto3" json:"provider,omitempty"`
 	// redirect uri field.
-	RedirectUri   string `protobuf:"bytes,2,opt,name=redirect_uri,json=redirectUri,proto3" json:"redirect_uri,omitempty"`
+	RedirectUri string `protobuf:"bytes,2,opt,name=redirect_uri,json=redirectUri,proto3" json:"redirect_uri,omitempty"`
+	// An Application the caller owns, whose Provider Authorizations the
+	// request reaches; empty for the caller's own. An Application leaves it
+	// empty or names itself.
+	ApplicationId string `protobuf:"bytes,3,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -163,6 +167,13 @@ func (x *BeginProviderAuthorizationRequest) GetProvider() string {
 func (x *BeginProviderAuthorizationRequest) GetRedirectUri() string {
 	if x != nil {
 		return x.RedirectUri
+	}
+	return ""
+}
+
+func (x *BeginProviderAuthorizationRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
 	}
 	return ""
 }
@@ -223,7 +234,11 @@ type CompleteProviderAuthorizationRequest struct {
 	// state field.
 	State string `protobuf:"bytes,3,opt,name=state,proto3" json:"state,omitempty"`
 	// redirect uri field.
-	RedirectUri   string `protobuf:"bytes,4,opt,name=redirect_uri,json=redirectUri,proto3" json:"redirect_uri,omitempty"`
+	RedirectUri string `protobuf:"bytes,4,opt,name=redirect_uri,json=redirectUri,proto3" json:"redirect_uri,omitempty"`
+	// An Application the caller owns, whose Provider Authorizations the
+	// request reaches; empty for the caller's own. An Application leaves it
+	// empty or names itself.
+	ApplicationId string `protobuf:"bytes,5,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -286,6 +301,13 @@ func (x *CompleteProviderAuthorizationRequest) GetRedirectUri() string {
 	return ""
 }
 
+func (x *CompleteProviderAuthorizationRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
+	}
+	return ""
+}
+
 // CompleteProviderAuthorizationResponse returns the stored authorization summary.
 type CompleteProviderAuthorizationResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -336,7 +358,11 @@ func (x *CompleteProviderAuthorizationResponse) GetAuthorization() *ProviderAuth
 type GetProviderConnectionStateRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// provider field.
-	Provider      string `protobuf:"bytes,1,opt,name=provider,proto3" json:"provider,omitempty"`
+	Provider string `protobuf:"bytes,1,opt,name=provider,proto3" json:"provider,omitempty"`
+	// An Application the caller owns, whose Provider Authorizations the
+	// request reaches; empty for the caller's own. An Application leaves it
+	// empty or names itself.
+	ApplicationId string `protobuf:"bytes,2,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -374,6 +400,13 @@ func (*GetProviderConnectionStateRequest) Descriptor() ([]byte, []int) {
 func (x *GetProviderConnectionStateRequest) GetProvider() string {
 	if x != nil {
 		return x.Provider
+	}
+	return ""
+}
+
+func (x *GetProviderConnectionStateRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
 	}
 	return ""
 }
@@ -424,7 +457,7 @@ func (x *GetProviderConnectionStateResponse) GetState() *ProviderConnectionState
 	return nil
 }
 
-// ProviderConnectionState describes the authenticated actor's provider connection.
+// ProviderConnectionState describes the owner's provider connection.
 type ProviderConnectionState struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Stable personal authorization reference; empty when no authorization exists.
@@ -579,11 +612,15 @@ func (x *ProviderConnectionState) GetLastFailureCode() string {
 }
 
 // ListAccessibleRepositoriesRequest selects repositories reachable under the
-// authenticated user's current Provider authorization.
+// owner's current Provider authorization.
 type ListAccessibleRepositoriesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Provider identity; empty means github.
-	Provider      string `protobuf:"bytes,1,opt,name=provider,proto3" json:"provider,omitempty"`
+	Provider string `protobuf:"bytes,1,opt,name=provider,proto3" json:"provider,omitempty"`
+	// An Application the caller owns, whose Provider Authorizations the
+	// request reaches; empty for the caller's own. An Application leaves it
+	// empty or names itself.
+	ApplicationId string `protobuf:"bytes,2,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -621,6 +658,13 @@ func (*ListAccessibleRepositoriesRequest) Descriptor() ([]byte, []int) {
 func (x *ListAccessibleRepositoriesRequest) GetProvider() string {
 	if x != nil {
 		return x.Provider
+	}
+	return ""
+}
+
+func (x *ListAccessibleRepositoriesRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
 	}
 	return ""
 }
@@ -768,7 +812,11 @@ func (x *AccessibleRepository) GetDefaultBranch() string {
 type GetProviderAccessRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Provider identity; empty means github.
-	Provider      string `protobuf:"bytes,1,opt,name=provider,proto3" json:"provider,omitempty"`
+	Provider string `protobuf:"bytes,1,opt,name=provider,proto3" json:"provider,omitempty"`
+	// An Application the caller owns, whose Provider Authorizations the
+	// request reaches; empty for the caller's own. An Application leaves it
+	// empty or names itself.
+	ApplicationId string `protobuf:"bytes,2,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -810,7 +858,14 @@ func (x *GetProviderAccessRequest) GetProvider() string {
 	return ""
 }
 
-// GetProviderAccessResponse describes what the user's authorization reached when
+func (x *GetProviderAccessRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
+	}
+	return ""
+}
+
+// GetProviderAccessResponse describes what the owner's authorization reached when
 // last observed. Reading it never asks the Provider.
 type GetProviderAccessResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -908,7 +963,11 @@ func (x *GetProviderAccessResponse) GetObservedAtUnixMs() int64 {
 type RefreshProviderAccessRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Provider identity; empty means github.
-	Provider      string `protobuf:"bytes,1,opt,name=provider,proto3" json:"provider,omitempty"`
+	Provider string `protobuf:"bytes,1,opt,name=provider,proto3" json:"provider,omitempty"`
+	// An Application the caller owns, whose Provider Authorizations the
+	// request reaches; empty for the caller's own. An Application leaves it
+	// empty or names itself.
+	ApplicationId string `protobuf:"bytes,2,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -946,6 +1005,13 @@ func (*RefreshProviderAccessRequest) Descriptor() ([]byte, []int) {
 func (x *RefreshProviderAccessRequest) GetProvider() string {
 	if x != nil {
 		return x.Provider
+	}
+	return ""
+}
+
+func (x *RefreshProviderAccessRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
 	}
 	return ""
 }
@@ -1154,21 +1220,24 @@ const file_marketplace_public_v1_connections_proto_rawDesc = "" +
 	"\bprovider\x18\x03 \x01(\tR\bprovider\x12.\n" +
 	"\x13provider_account_id\x18\x04 \x01(\tR\x11providerAccountId\x12%\n" +
 	"\x0eprovider_login\x18\x05 \x01(\tR\rproviderLogin\x12\"\n" +
-	"\rowner_user_id\x18\x06 \x01(\tR\vownerUserId\"b\n" +
+	"\rowner_user_id\x18\x06 \x01(\tR\vownerUserId\"\x89\x01\n" +
 	"!BeginProviderAuthorizationRequest\x12\x1a\n" +
 	"\bprovider\x18\x01 \x01(\tR\bprovider\x12!\n" +
-	"\fredirect_uri\x18\x02 \x01(\tR\vredirectUri\"Q\n" +
+	"\fredirect_uri\x18\x02 \x01(\tR\vredirectUri\x12%\n" +
+	"\x0eapplication_id\x18\x03 \x01(\tR\rapplicationId\"Q\n" +
 	"\"BeginProviderAuthorizationResponse\x12+\n" +
-	"\x11authorization_url\x18\x01 \x01(\tR\x10authorizationUrl\"\x8f\x01\n" +
+	"\x11authorization_url\x18\x01 \x01(\tR\x10authorizationUrl\"\xb6\x01\n" +
 	"$CompleteProviderAuthorizationRequest\x12\x1a\n" +
 	"\bprovider\x18\x01 \x01(\tR\bprovider\x12\x12\n" +
 	"\x04code\x18\x02 \x01(\tR\x04code\x12\x14\n" +
 	"\x05state\x18\x03 \x01(\tR\x05state\x12!\n" +
-	"\fredirect_uri\x18\x04 \x01(\tR\vredirectUri\"{\n" +
+	"\fredirect_uri\x18\x04 \x01(\tR\vredirectUri\x12%\n" +
+	"\x0eapplication_id\x18\x05 \x01(\tR\rapplicationId\"{\n" +
 	"%CompleteProviderAuthorizationResponse\x12R\n" +
-	"\rauthorization\x18\x01 \x01(\v2,.marketplace.public.v1.ProviderAuthorizationR\rauthorization\"?\n" +
+	"\rauthorization\x18\x01 \x01(\v2,.marketplace.public.v1.ProviderAuthorizationR\rauthorization\"f\n" +
 	"!GetProviderConnectionStateRequest\x12\x1a\n" +
-	"\bprovider\x18\x01 \x01(\tR\bprovider\"j\n" +
+	"\bprovider\x18\x01 \x01(\tR\bprovider\x12%\n" +
+	"\x0eapplication_id\x18\x02 \x01(\tR\rapplicationId\"j\n" +
 	"\"GetProviderConnectionStateResponse\x12D\n" +
 	"\x05state\x18\x01 \x01(\v2..marketplace.public.v1.ProviderConnectionStateR\x05state\"\xe8\x04\n" +
 	"\x17ProviderConnectionState\x12)\n" +
@@ -1186,9 +1255,10 @@ const file_marketplace_public_v1_connections_proto_rawDesc = "" +
 	" \x01(\x03R\x1aaccessTokenExpiresAtUnixMs\x12E\n" +
 	" refresh_token_expires_at_unix_ms\x18\v \x01(\x03R\x1brefreshTokenExpiresAtUnixMs\x124\n" +
 	"\x17last_checked_at_unix_ms\x18\f \x01(\x03R\x13lastCheckedAtUnixMs\x12*\n" +
-	"\x11last_failure_code\x18\r \x01(\tR\x0flastFailureCode\"?\n" +
+	"\x11last_failure_code\x18\r \x01(\tR\x0flastFailureCode\"f\n" +
 	"!ListAccessibleRepositoriesRequest\x12\x1a\n" +
-	"\bprovider\x18\x01 \x01(\tR\bprovider\"u\n" +
+	"\bprovider\x18\x01 \x01(\tR\bprovider\x12%\n" +
+	"\x0eapplication_id\x18\x02 \x01(\tR\rapplicationId\"u\n" +
 	"\"ListAccessibleRepositoriesResponse\x12O\n" +
 	"\frepositories\x18\x01 \x03(\v2+.marketplace.public.v1.AccessibleRepositoryR\frepositories\"\xb3\x01\n" +
 	"\x14AccessibleRepository\x12\x0e\n" +
@@ -1197,9 +1267,10 @@ const file_marketplace_public_v1_connections_proto_rawDesc = "" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x1b\n" +
 	"\tclone_url\x18\x04 \x01(\tR\bcloneUrl\x12\x17\n" +
 	"\aweb_url\x18\x05 \x01(\tR\x06webUrl\x12%\n" +
-	"\x0edefault_branch\x18\x06 \x01(\tR\rdefaultBranch\"6\n" +
+	"\x0edefault_branch\x18\x06 \x01(\tR\rdefaultBranch\"]\n" +
 	"\x18GetProviderAccessRequest\x12\x1a\n" +
-	"\bprovider\x18\x01 \x01(\tR\bprovider\"\xef\x02\n" +
+	"\bprovider\x18\x01 \x01(\tR\bprovider\x12%\n" +
+	"\x0eapplication_id\x18\x02 \x01(\tR\rapplicationId\"\xef\x02\n" +
 	"\x19GetProviderAccessResponse\x12D\n" +
 	"\x05state\x18\x01 \x01(\v2..marketplace.public.v1.ProviderConnectionStateR\x05state\x12B\n" +
 	"\baccounts\x18\x02 \x03(\v2&.marketplace.public.v1.ProviderAccountR\baccounts\x12K\n" +
@@ -1207,9 +1278,10 @@ const file_marketplace_public_v1_connections_proto_rawDesc = "" +
 	"\n" +
 	"manage_url\x18\x04 \x01(\tR\tmanageUrl\x12-\n" +
 	"\x12access_unavailable\x18\x05 \x01(\bR\x11accessUnavailable\x12-\n" +
-	"\x13observed_at_unix_ms\x18\x06 \x01(\x03R\x10observedAtUnixMs\":\n" +
+	"\x13observed_at_unix_ms\x18\x06 \x01(\x03R\x10observedAtUnixMs\"a\n" +
 	"\x1cRefreshProviderAccessRequest\x12\x1a\n" +
-	"\bprovider\x18\x01 \x01(\tR\bprovider\"i\n" +
+	"\bprovider\x18\x01 \x01(\tR\bprovider\x12%\n" +
+	"\x0eapplication_id\x18\x02 \x01(\tR\rapplicationId\"i\n" +
 	"\x1dRefreshProviderAccessResponse\x12H\n" +
 	"\x06access\x18\x01 \x01(\v20.marketplace.public.v1.GetProviderAccessResponseR\x06access\"\x81\x02\n" +
 	"\x0fProviderAccount\x12\x14\n" +

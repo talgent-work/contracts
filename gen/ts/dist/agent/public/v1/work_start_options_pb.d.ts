@@ -76,7 +76,8 @@ export declare const GetWorkStartOptionsResponseSchema: GenMessage<GetWorkStartO
  */
 export declare type WorkStartRepositories = Message<"agent.public.v1.WorkStartRepositories"> & {
   /**
-   * Repositories currently reachable under the represented human's authorization, by name.
+   * Repositories currently reachable under the owner's authorization, a
+   * person's or an Application's, by name.
    *
    * @generated from field: repeated agent.public.v1.WorkStartRepository repositories = 1;
    */

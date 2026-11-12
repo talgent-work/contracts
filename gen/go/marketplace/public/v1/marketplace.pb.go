@@ -23,9 +23,13 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// ListPersonalAuthorizationsRequest uses only the authenticated user's identity.
+// ListPersonalAuthorizationsRequest selects the owner.
 type ListPersonalAuthorizationsRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// An Application the caller owns, whose Provider Authorizations the
+	// request reaches; empty for the caller's own. An Application leaves it
+	// empty or names itself.
+	ApplicationId string `protobuf:"bytes,1,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -60,13 +64,24 @@ func (*ListPersonalAuthorizationsRequest) Descriptor() ([]byte, []int) {
 	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{0}
 }
 
-// The owner comes exclusively from trusted authentication context.
+func (x *ListPersonalAuthorizationsRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
+	}
+	return ""
+}
+
+// CancelPersonalAuthorizationRequest names one of the owner's authorizations.
 type CancelPersonalAuthorizationRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Stable personal authorization reference.
+	// Stable authorization reference.
 	AuthorizationId string `protobuf:"bytes,1,opt,name=authorization_id,json=authorizationId,proto3" json:"authorization_id,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	// An Application the caller owns, whose Provider Authorizations the
+	// request reaches; empty for the caller's own. An Application leaves it
+	// empty or names itself.
+	ApplicationId string `protobuf:"bytes,2,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CancelPersonalAuthorizationRequest) Reset() {
@@ -102,6 +117,13 @@ func (*CancelPersonalAuthorizationRequest) Descriptor() ([]byte, []int) {
 func (x *CancelPersonalAuthorizationRequest) GetAuthorizationId() string {
 	if x != nil {
 		return x.AuthorizationId
+	}
+	return ""
+}
+
+func (x *CancelPersonalAuthorizationRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
 	}
 	return ""
 }
@@ -3043,10 +3065,12 @@ var File_marketplace_public_v1_marketplace_proto protoreflect.FileDescriptor
 
 const file_marketplace_public_v1_marketplace_proto_rawDesc = "" +
 	"\n" +
-	"'marketplace/public/v1/marketplace.proto\x12\x15marketplace.public.v1\x1a\x1cadmission/v1/admission.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a'marketplace/public/v1/connections.proto\"#\n" +
-	"!ListPersonalAuthorizationsRequest\"O\n" +
+	"'marketplace/public/v1/marketplace.proto\x12\x15marketplace.public.v1\x1a\x1cadmission/v1/admission.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a'marketplace/public/v1/connections.proto\"J\n" +
+	"!ListPersonalAuthorizationsRequest\x12%\n" +
+	"\x0eapplication_id\x18\x01 \x01(\tR\rapplicationId\"v\n" +
 	"\"CancelPersonalAuthorizationRequest\x12)\n" +
-	"\x10authorization_id\x18\x01 \x01(\tR\x0fauthorizationId\"y\n" +
+	"\x10authorization_id\x18\x01 \x01(\tR\x0fauthorizationId\x12%\n" +
+	"\x0eapplication_id\x18\x02 \x01(\tR\rapplicationId\"y\n" +
 	"#CancelPersonalAuthorizationResponse\x12R\n" +
 	"\rauthorization\x18\x01 \x01(\v2,.marketplace.public.v1.PersonalAuthorizationR\rauthorization\"\x88\x01\n" +
 	"\x15PersonalAuthorization\x12+\n" +
@@ -3248,24 +3272,24 @@ const file_marketplace_public_v1_marketplace_proto_rawDesc = "" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\rR\aversion\x12%\n" +
 	"\x0eapplication_id\x18\x03 \x01(\tR\rapplicationId\"\x1c\n" +
-	"\x1aUninstallConnectorResponse2\xd2\x1a\n" +
+	"\x1aUninstallConnectorResponse2\xd9\x1a\n" +
 	"\x12MarketplaceService\x12\x9a\x01\n" +
 	"\x1aBeginProviderAuthorization\x128.marketplace.public.v1.BeginProviderAuthorizationRequest\x1a9.marketplace.public.v1.BeginProviderAuthorizationResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x01\x12\xa3\x01\n" +
 	"\x1dCompleteProviderAuthorization\x12;.marketplace.public.v1.CompleteProviderAuthorizationRequest\x1a<.marketplace.public.v1.CompleteProviderAuthorizationResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12\x9a\x01\n" +
-	"\x1aGetProviderConnectionState\x128.marketplace.public.v1.GetProviderConnectionStateRequest\x1a9.marketplace.public.v1.GetProviderConnectionStateResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12\x9a\x01\n" +
-	"\x1aListAccessibleRepositories\x128.marketplace.public.v1.ListAccessibleRepositoriesRequest\x1a9.marketplace.public.v1.ListAccessibleRepositoriesResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12\x7f\n" +
-	"\x11GetProviderAccess\x12/.marketplace.public.v1.GetProviderAccessRequest\x1a0.marketplace.public.v1.GetProviderAccessResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12\x8b\x01\n" +
-	"\x15RefreshProviderAccess\x123.marketplace.public.v1.RefreshProviderAccessRequest\x1a4.marketplace.public.v1.RefreshProviderAccessResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12\x9a\x01\n" +
-	"\x1aListPersonalAuthorizations\x128.marketplace.public.v1.ListPersonalAuthorizationsRequest\x1a9.marketplace.public.v1.ListPersonalAuthorizationsResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12\x9d\x01\n" +
-	"\x1bCancelPersonalAuthorization\x129.marketplace.public.v1.CancelPersonalAuthorizationRequest\x1a:.marketplace.public.v1.CancelPersonalAuthorizationResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12n\n" +
+	"\x01\x01\x12\x9b\x01\n" +
+	"\x1aGetProviderConnectionState\x128.marketplace.public.v1.GetProviderConnectionStateRequest\x1a9.marketplace.public.v1.GetProviderConnectionStateResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12\x9b\x01\n" +
+	"\x1aListAccessibleRepositories\x128.marketplace.public.v1.ListAccessibleRepositoriesRequest\x1a9.marketplace.public.v1.ListAccessibleRepositoriesResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12\x80\x01\n" +
+	"\x11GetProviderAccess\x12/.marketplace.public.v1.GetProviderAccessRequest\x1a0.marketplace.public.v1.GetProviderAccessResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12\x8c\x01\n" +
+	"\x15RefreshProviderAccess\x123.marketplace.public.v1.RefreshProviderAccessRequest\x1a4.marketplace.public.v1.RefreshProviderAccessResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12\x9b\x01\n" +
+	"\x1aListPersonalAuthorizations\x128.marketplace.public.v1.ListPersonalAuthorizationsRequest\x1a9.marketplace.public.v1.ListPersonalAuthorizationsResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12\x9e\x01\n" +
+	"\x1bCancelPersonalAuthorization\x129.marketplace.public.v1.CancelPersonalAuthorizationRequest\x1a:.marketplace.public.v1.CancelPersonalAuthorizationResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12n\n" +
 	"\vListPlugins\x12).marketplace.public.v1.ListPluginsRequest\x1a*.marketplace.public.v1.ListPluginsResponse\"\b\xc2\xf3\x18\x04\n" +
 	"\x02\x01\x03\x12h\n" +
 	"\tGetPlugin\x12'.marketplace.public.v1.GetPluginRequest\x1a(.marketplace.public.v1.GetPluginResponse\"\b\xc2\xf3\x18\x04\n" +

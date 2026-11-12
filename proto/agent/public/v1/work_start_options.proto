@@ -27,7 +27,8 @@ message GetWorkStartOptionsResponse {
 
 // WorkStartRepositories are the repositories a startup may check out.
 message WorkStartRepositories {
-  // Repositories currently reachable under the represented human's authorization, by name.
+  // Repositories currently reachable under the owner's authorization, a
+  // person's or an Application's, by name.
   repeated WorkStartRepository repositories = 1;
   // Discovery failed; startup without repository selections remains possible.
   bool repositories_unavailable = 2;

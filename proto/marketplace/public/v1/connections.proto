@@ -4,7 +4,7 @@ package marketplace.public.v1;
 
 option go_package = "github.com/talgent-work/contracts/gen/go/marketplace/public/v1;marketplacepublicv1";
 
-// ProviderAuthorization describes a provider authorization owned by a user.
+// ProviderAuthorization describes a provider authorization and its owner.
 message ProviderAuthorization {
   // Stable personal authorization reference, preserved by reauthorization.
   string id = 1;
@@ -16,16 +16,20 @@ message ProviderAuthorization {
   string provider_account_id = 4;
   // provider login field.
   string provider_login = 5;
-  // owner user id field.
+  // The owner: a person's id, or an Application's id.
   string owner_user_id = 6;
 }
 
-// BeginProviderAuthorizationRequest starts provider authorization for the actor.
+// BeginProviderAuthorizationRequest starts provider authorization for the owner.
 message BeginProviderAuthorizationRequest {
   // provider field.
   string provider = 1;
   // redirect uri field.
   string redirect_uri = 2;
+  // An Application the caller owns, whose Provider Authorizations the
+  // request reaches; empty for the caller's own. An Application leaves it
+  // empty or names itself.
+  string application_id = 3;
 }
 
 // BeginProviderAuthorizationResponse returns the URL the browser should open.
@@ -44,6 +48,10 @@ message CompleteProviderAuthorizationRequest {
   string state = 3;
   // redirect uri field.
   string redirect_uri = 4;
+  // An Application the caller owns, whose Provider Authorizations the
+  // request reaches; empty for the caller's own. An Application leaves it
+  // empty or names itself.
+  string application_id = 5;
 }
 
 // CompleteProviderAuthorizationResponse returns the stored authorization summary.
@@ -56,6 +64,10 @@ message CompleteProviderAuthorizationResponse {
 message GetProviderConnectionStateRequest {
   // provider field.
   string provider = 1;
+  // An Application the caller owns, whose Provider Authorizations the
+  // request reaches; empty for the caller's own. An Application leaves it
+  // empty or names itself.
+  string application_id = 2;
 }
 
 // GetProviderConnectionStateResponse is the response for provider connection state.
@@ -64,7 +76,7 @@ message GetProviderConnectionStateResponse {
   ProviderConnectionState state = 1;
 }
 
-// ProviderConnectionState describes the authenticated actor's provider connection.
+// ProviderConnectionState describes the owner's provider connection.
 message ProviderConnectionState {
   // Stable personal authorization reference; empty when no authorization exists.
   string authorization_id = 1;
@@ -95,10 +107,14 @@ message ProviderConnectionState {
 }
 
 // ListAccessibleRepositoriesRequest selects repositories reachable under the
-// authenticated user's current Provider authorization.
+// owner's current Provider authorization.
 message ListAccessibleRepositoriesRequest {
   // Provider identity; empty means github.
   string provider = 1;
+  // An Application the caller owns, whose Provider Authorizations the
+  // request reaches; empty for the caller's own. An Application leaves it
+  // empty or names itself.
+  string application_id = 2;
 }
 
 // ListAccessibleRepositoriesResponse is the union of every installation the
@@ -129,9 +145,13 @@ message AccessibleRepository {
 message GetProviderAccessRequest {
   // Provider identity; empty means github.
   string provider = 1;
+  // An Application the caller owns, whose Provider Authorizations the
+  // request reaches; empty for the caller's own. An Application leaves it
+  // empty or names itself.
+  string application_id = 2;
 }
 
-// GetProviderAccessResponse describes what the user's authorization reached when
+// GetProviderAccessResponse describes what the owner's authorization reached when
 // last observed. Reading it never asks the Provider.
 message GetProviderAccessResponse {
   // Current connection state.
@@ -154,6 +174,10 @@ message GetProviderAccessResponse {
 message RefreshProviderAccessRequest {
   // Provider identity; empty means github.
   string provider = 1;
+  // An Application the caller owns, whose Provider Authorizations the
+  // request reaches; empty for the caller's own. An Application leaves it
+  // empty or names itself.
+  string application_id = 2;
 }
 
 // RefreshProviderAccessResponse is the reach after the observation; when the

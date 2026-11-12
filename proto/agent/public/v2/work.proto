@@ -28,11 +28,12 @@ service WorkService {
       principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
-  // ListWorkStartRepositories lists the repositories the caller may check out
-  // in a new Standalone Work.
+  // ListWorkStartRepositories lists the repositories the caller, a person or
+  // an Application, may check out in a new Standalone Work under its own
+  // Provider Authorization.
   rpc ListWorkStartRepositories(ListWorkStartRepositoriesRequest) returns (ListWorkStartRepositoriesResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // StartWork starts a new Standalone Work with its own File Spaces and admits

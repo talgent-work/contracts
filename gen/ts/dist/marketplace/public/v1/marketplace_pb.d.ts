@@ -13,11 +13,19 @@ import type { BeginProviderAuthorizationRequestSchema, BeginProviderAuthorizatio
 export declare const file_marketplace_public_v1_marketplace: GenFile;
 
 /**
- * ListPersonalAuthorizationsRequest uses only the authenticated user's identity.
+ * ListPersonalAuthorizationsRequest selects the owner.
  *
  * @generated from message marketplace.public.v1.ListPersonalAuthorizationsRequest
  */
 export declare type ListPersonalAuthorizationsRequest = Message<"marketplace.public.v1.ListPersonalAuthorizationsRequest"> & {
+  /**
+   * An Application the caller owns, whose Provider Authorizations the
+   * request reaches; empty for the caller's own. An Application leaves it
+   * empty or names itself.
+   *
+   * @generated from field: string application_id = 1;
+   */
+  applicationId: string;
 };
 
 /**
@@ -27,17 +35,26 @@ export declare type ListPersonalAuthorizationsRequest = Message<"marketplace.pub
 export declare const ListPersonalAuthorizationsRequestSchema: GenMessage<ListPersonalAuthorizationsRequest>;
 
 /**
- * The owner comes exclusively from trusted authentication context.
+ * CancelPersonalAuthorizationRequest names one of the owner's authorizations.
  *
  * @generated from message marketplace.public.v1.CancelPersonalAuthorizationRequest
  */
 export declare type CancelPersonalAuthorizationRequest = Message<"marketplace.public.v1.CancelPersonalAuthorizationRequest"> & {
   /**
-   * Stable personal authorization reference.
+   * Stable authorization reference.
    *
    * @generated from field: string authorization_id = 1;
    */
   authorizationId: string;
+
+  /**
+   * An Application the caller owns, whose Provider Authorizations the
+   * request reaches; empty for the caller's own. An Application leaves it
+   * empty or names itself.
+   *
+   * @generated from field: string application_id = 2;
+   */
+  applicationId: string;
 };
 
 /**
@@ -1606,7 +1623,9 @@ export declare const UninstallConnectorResponseSchema: GenMessage<UninstallConne
  */
 export declare const MarketplaceService: GenService<{
   /**
-   * BeginProviderAuthorization manages the authenticated user's personal connection.
+   * BeginProviderAuthorization starts connecting a Provider for the caller, or
+   * for an Application the caller owns. Connecting needs a person's browser,
+   * so an Application does not call it.
    *
    * @generated from rpc marketplace.public.v1.MarketplaceService.BeginProviderAuthorization
    */
@@ -1616,7 +1635,8 @@ export declare const MarketplaceService: GenService<{
     output: typeof BeginProviderAuthorizationResponseSchema;
   },
   /**
-   * CompleteProviderAuthorization manages the authenticated user's personal connection.
+   * CompleteProviderAuthorization completes the connection the matching Begin
+   * started, for the same owner.
    *
    * @generated from rpc marketplace.public.v1.MarketplaceService.CompleteProviderAuthorization
    */
@@ -1626,7 +1646,7 @@ export declare const MarketplaceService: GenService<{
     output: typeof CompleteProviderAuthorizationResponseSchema;
   },
   /**
-   * GetProviderConnectionState manages the authenticated user's personal connection.
+   * GetProviderConnectionState describes the owner's connection to a Provider.
    *
    * @generated from rpc marketplace.public.v1.MarketplaceService.GetProviderConnectionState
    */
@@ -1636,7 +1656,7 @@ export declare const MarketplaceService: GenService<{
     output: typeof GetProviderConnectionStateResponseSchema;
   },
   /**
-   * ListAccessibleRepositories lists repositories last observed as reachable under the user's authorization.
+   * ListAccessibleRepositories lists repositories last observed as reachable under the owner's authorization.
    *
    * @generated from rpc marketplace.public.v1.MarketplaceService.ListAccessibleRepositories
    */
@@ -1666,7 +1686,7 @@ export declare const MarketplaceService: GenService<{
     output: typeof RefreshProviderAccessResponseSchema;
   },
   /**
-   * List configured personal authorization references, including inactive ones.
+   * List the owner's authorization references, including inactive ones.
    *
    * @generated from rpc marketplace.public.v1.MarketplaceService.ListPersonalAuthorizations
    */
@@ -1676,7 +1696,7 @@ export declare const MarketplaceService: GenService<{
     output: typeof ListPersonalAuthorizationsResponseSchema;
   },
   /**
-   * Ask the Provider to revoke the authenticated user's personal authorization.
+   * Ask the Provider to revoke one of the owner's authorizations.
    *
    * @generated from rpc marketplace.public.v1.MarketplaceService.CancelPersonalAuthorization
    */

@@ -118,7 +118,8 @@ func (x *GetWorkStartOptionsResponse) GetDefaultThinkingLevel() string {
 // WorkStartRepositories are the repositories a startup may check out.
 type WorkStartRepositories struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Repositories currently reachable under the represented human's authorization, by name.
+	// Repositories currently reachable under the owner's authorization, a
+	// person's or an Application's, by name.
 	Repositories []*WorkStartRepository `protobuf:"bytes,1,rep,name=repositories,proto3" json:"repositories,omitempty"`
 	// Discovery failed; startup without repository selections remains possible.
 	RepositoriesUnavailable bool `protobuf:"varint,2,opt,name=repositories_unavailable,json=repositoriesUnavailable,proto3" json:"repositories_unavailable,omitempty"`

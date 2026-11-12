@@ -281,21 +281,24 @@ var (
 
 // MarketplaceServiceClient is a client for the marketplace.public.v1.MarketplaceService service.
 type MarketplaceServiceClient interface {
-	// BeginProviderAuthorization manages the authenticated user's personal connection.
+	// BeginProviderAuthorization starts connecting a Provider for the caller, or
+	// for an Application the caller owns. Connecting needs a person's browser,
+	// so an Application does not call it.
 	BeginProviderAuthorization(context.Context, *v1.BeginProviderAuthorizationRequest) (*v1.BeginProviderAuthorizationResponse, error)
-	// CompleteProviderAuthorization manages the authenticated user's personal connection.
+	// CompleteProviderAuthorization completes the connection the matching Begin
+	// started, for the same owner.
 	CompleteProviderAuthorization(context.Context, *v1.CompleteProviderAuthorizationRequest) (*v1.CompleteProviderAuthorizationResponse, error)
-	// GetProviderConnectionState manages the authenticated user's personal connection.
+	// GetProviderConnectionState describes the owner's connection to a Provider.
 	GetProviderConnectionState(context.Context, *v1.GetProviderConnectionStateRequest) (*v1.GetProviderConnectionStateResponse, error)
-	// ListAccessibleRepositories lists repositories last observed as reachable under the user's authorization.
+	// ListAccessibleRepositories lists repositories last observed as reachable under the owner's authorization.
 	ListAccessibleRepositories(context.Context, *v1.ListAccessibleRepositoriesRequest) (*v1.ListAccessibleRepositoriesResponse, error)
 	// GetProviderAccess describes the accounts, repositories and permissions the authorization last reached.
 	GetProviderAccess(context.Context, *v1.GetProviderAccessRequest) (*v1.GetProviderAccessResponse, error)
 	// RefreshProviderAccess observes the authorization's reach now and returns it.
 	RefreshProviderAccess(context.Context, *v1.RefreshProviderAccessRequest) (*v1.RefreshProviderAccessResponse, error)
-	// List configured personal authorization references, including inactive ones.
+	// List the owner's authorization references, including inactive ones.
 	ListPersonalAuthorizations(context.Context, *v1.ListPersonalAuthorizationsRequest) (*v1.ListPersonalAuthorizationsResponse, error)
-	// Ask the Provider to revoke the authenticated user's personal authorization.
+	// Ask the Provider to revoke one of the owner's authorizations.
 	CancelPersonalAuthorization(context.Context, *v1.CancelPersonalAuthorizationRequest) (*v1.CancelPersonalAuthorizationResponse, error)
 	// Browse synchronized plugin releases.
 	ListPlugins(context.Context, *v1.ListPluginsRequest) (*v1.ListPluginsResponse, error)
@@ -342,21 +345,24 @@ func NewMarketplaceServiceClient(client *connect.Client) MarketplaceServiceClien
 // MarketplaceServiceHandler is an implementation of the marketplace.public.v1.MarketplaceService
 // service.
 type MarketplaceServiceHandler interface {
-	// BeginProviderAuthorization manages the authenticated user's personal connection.
+	// BeginProviderAuthorization starts connecting a Provider for the caller, or
+	// for an Application the caller owns. Connecting needs a person's browser,
+	// so an Application does not call it.
 	BeginProviderAuthorization(context.Context, *v1.BeginProviderAuthorizationRequest) (*v1.BeginProviderAuthorizationResponse, error)
-	// CompleteProviderAuthorization manages the authenticated user's personal connection.
+	// CompleteProviderAuthorization completes the connection the matching Begin
+	// started, for the same owner.
 	CompleteProviderAuthorization(context.Context, *v1.CompleteProviderAuthorizationRequest) (*v1.CompleteProviderAuthorizationResponse, error)
-	// GetProviderConnectionState manages the authenticated user's personal connection.
+	// GetProviderConnectionState describes the owner's connection to a Provider.
 	GetProviderConnectionState(context.Context, *v1.GetProviderConnectionStateRequest) (*v1.GetProviderConnectionStateResponse, error)
-	// ListAccessibleRepositories lists repositories last observed as reachable under the user's authorization.
+	// ListAccessibleRepositories lists repositories last observed as reachable under the owner's authorization.
 	ListAccessibleRepositories(context.Context, *v1.ListAccessibleRepositoriesRequest) (*v1.ListAccessibleRepositoriesResponse, error)
 	// GetProviderAccess describes the accounts, repositories and permissions the authorization last reached.
 	GetProviderAccess(context.Context, *v1.GetProviderAccessRequest) (*v1.GetProviderAccessResponse, error)
 	// RefreshProviderAccess observes the authorization's reach now and returns it.
 	RefreshProviderAccess(context.Context, *v1.RefreshProviderAccessRequest) (*v1.RefreshProviderAccessResponse, error)
-	// List configured personal authorization references, including inactive ones.
+	// List the owner's authorization references, including inactive ones.
 	ListPersonalAuthorizations(context.Context, *v1.ListPersonalAuthorizationsRequest) (*v1.ListPersonalAuthorizationsResponse, error)
-	// Ask the Provider to revoke the authenticated user's personal authorization.
+	// Ask the Provider to revoke one of the owner's authorizations.
 	CancelPersonalAuthorization(context.Context, *v1.CancelPersonalAuthorizationRequest) (*v1.CancelPersonalAuthorizationResponse, error)
 	// Browse synchronized plugin releases.
 	ListPlugins(context.Context, *v1.ListPluginsRequest) (*v1.ListPluginsResponse, error)

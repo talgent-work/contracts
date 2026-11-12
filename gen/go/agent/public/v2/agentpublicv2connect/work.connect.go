@@ -121,8 +121,9 @@ type WorkServiceClient interface {
 	// GetWorkStartOptions lists what a new Standalone Work may start with under
 	// the caller's own AgentDefinition.
 	GetWorkStartOptions(context.Context, *v2.GetWorkStartOptionsRequest) (*v2.GetWorkStartOptionsResponse, error)
-	// ListWorkStartRepositories lists the repositories the caller may check out
-	// in a new Standalone Work.
+	// ListWorkStartRepositories lists the repositories the caller, a person or
+	// an Application, may check out in a new Standalone Work under its own
+	// Provider Authorization.
 	ListWorkStartRepositories(context.Context, *v2.ListWorkStartRepositoriesRequest) (*v2.ListWorkStartRepositoriesResponse, error)
 	// StartWork starts a new Standalone Work with its own File Spaces and admits
 	// its first input. A repeated request identity returns the Work it started.
@@ -157,8 +158,9 @@ type WorkServiceHandler interface {
 	// GetWorkStartOptions lists what a new Standalone Work may start with under
 	// the caller's own AgentDefinition.
 	GetWorkStartOptions(context.Context, *v2.GetWorkStartOptionsRequest) (*v2.GetWorkStartOptionsResponse, error)
-	// ListWorkStartRepositories lists the repositories the caller may check out
-	// in a new Standalone Work.
+	// ListWorkStartRepositories lists the repositories the caller, a person or
+	// an Application, may check out in a new Standalone Work under its own
+	// Provider Authorization.
 	ListWorkStartRepositories(context.Context, *v2.ListWorkStartRepositoriesRequest) (*v2.ListWorkStartRepositoriesResponse, error)
 	// StartWork starts a new Standalone Work with its own File Spaces and admits
 	// its first input. A repeated request identity returns the Work it started.

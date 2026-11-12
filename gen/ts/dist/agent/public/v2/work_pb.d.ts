@@ -146,6 +146,15 @@ export declare type StartWorkRequest = Message<"agent.public.v2.StartWorkRequest
    * @generated from field: agent.public.v1.HarnessChoice harness = 8;
    */
   harness?: HarnessChoice;
+
+  /**
+   * The Application's own MCP endpoints for this Work only, admitted only
+   * when an Application starts the Work; at most 16, with names unique among
+   * them and the Work's Connectors.
+   *
+   * @generated from field: repeated agent.public.v2.ApplicationMcpEndpoint application_mcp_endpoints = 9;
+   */
+  applicationMcpEndpoints: ApplicationMcpEndpoint[];
 };
 
 /**
@@ -153,6 +162,46 @@ export declare type StartWorkRequest = Message<"agent.public.v2.StartWorkRequest
  * Use `create(StartWorkRequestSchema)` to create a new message.
  */
 export declare const StartWorkRequestSchema: GenMessage<StartWorkRequest>;
+
+/**
+ * ApplicationMcpEndpoint is one of the Application's own MCP servers that a
+ * Work it starts calls over streamable HTTP. It never enters the Connector
+ * catalog and no other Work sees it. The Work sends the headers unchanged for
+ * its whole life: the Application keeps them valid and revokes them itself;
+ * nothing in the Work renews them, and no read of the Work returns them.
+ *
+ * @generated from message agent.public.v2.ApplicationMcpEndpoint
+ */
+export declare type ApplicationMcpEndpoint = Message<"agent.public.v2.ApplicationMcpEndpoint"> & {
+  /**
+   * Server name the Agent sees: a letter or digit, then letters, digits,
+   * '-' or '_', at most 64 characters.
+   *
+   * @generated from field: string name = 1;
+   */
+  name: string;
+
+  /**
+   * Absolute http or https URL without credentials, at most 2048 characters.
+   *
+   * @generated from field: string url = 2;
+   */
+  url: string;
+
+  /**
+   * Request headers sent with every call, at most 32; each name is an HTTP
+   * header token of at most 128 characters and each value at most 8192.
+   *
+   * @generated from field: map<string, string> headers = 3;
+   */
+  headers: { [key: string]: string };
+};
+
+/**
+ * Describes the message agent.public.v2.ApplicationMcpEndpoint.
+ * Use `create(ApplicationMcpEndpointSchema)` to create a new message.
+ */
+export declare const ApplicationMcpEndpointSchema: GenMessage<ApplicationMcpEndpoint>;
 
 /**
  * StartWorkResponse identifies the started Work; its readiness is observed

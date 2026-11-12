@@ -126,6 +126,26 @@ message StartWorkRequest {
   string computer_id = 7;
   // The Harness choices, admitted only on a Managed Computer.
   agent.public.v1.HarnessChoice harness = 8;
+  // The Application's own MCP endpoints for this Work only, admitted only
+  // when an Application starts the Work; at most 16, with names unique among
+  // them and the Work's Connectors.
+  repeated ApplicationMcpEndpoint application_mcp_endpoints = 9;
+}
+
+// ApplicationMcpEndpoint is one of the Application's own MCP servers that a
+// Work it starts calls over streamable HTTP. It never enters the Connector
+// catalog and no other Work sees it. The Work sends the headers unchanged for
+// its whole life: the Application keeps them valid and revokes them itself;
+// nothing in the Work renews them, and no read of the Work returns them.
+message ApplicationMcpEndpoint {
+  // Server name the Agent sees: a letter or digit, then letters, digits,
+  // '-' or '_', at most 64 characters.
+  string name = 1;
+  // Absolute http or https URL without credentials, at most 2048 characters.
+  string url = 2;
+  // Request headers sent with every call, at most 32; each name is an HTTP
+  // header token of at most 128 characters and each value at most 8192.
+  map<string, string> headers = 3;
 }
 
 // StartWorkResponse identifies the started Work; its readiness is observed

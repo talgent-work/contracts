@@ -210,9 +210,13 @@ type StartWorkRequest struct {
 	// caller's own Managed Computers; empty runs it on the first Cloud.
 	ComputerId string `protobuf:"bytes,7,opt,name=computer_id,json=computerId,proto3" json:"computer_id,omitempty"`
 	// The Harness choices, admitted only on a Managed Computer.
-	Harness       *v1.HarnessChoice `protobuf:"bytes,8,opt,name=harness,proto3" json:"harness,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	Harness *v1.HarnessChoice `protobuf:"bytes,8,opt,name=harness,proto3" json:"harness,omitempty"`
+	// The Application's own MCP endpoints for this Work only, admitted only
+	// when an Application starts the Work; at most 16, with names unique among
+	// them and the Work's Connectors.
+	ApplicationMcpEndpoints []*ApplicationMcpEndpoint `protobuf:"bytes,9,rep,name=application_mcp_endpoints,json=applicationMcpEndpoints,proto3" json:"application_mcp_endpoints,omitempty"`
+	unknownFields           protoimpl.UnknownFields
+	sizeCache               protoimpl.SizeCache
 }
 
 func (x *StartWorkRequest) Reset() {
@@ -301,6 +305,83 @@ func (x *StartWorkRequest) GetHarness() *v1.HarnessChoice {
 	return nil
 }
 
+func (x *StartWorkRequest) GetApplicationMcpEndpoints() []*ApplicationMcpEndpoint {
+	if x != nil {
+		return x.ApplicationMcpEndpoints
+	}
+	return nil
+}
+
+// ApplicationMcpEndpoint is one of the Application's own MCP servers that a
+// Work it starts calls over streamable HTTP. It never enters the Connector
+// catalog and no other Work sees it. The Work sends the headers unchanged for
+// its whole life: the Application keeps them valid and revokes them itself;
+// nothing in the Work renews them, and no read of the Work returns them.
+type ApplicationMcpEndpoint struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Server name the Agent sees: a letter or digit, then letters, digits,
+	// '-' or '_', at most 64 characters.
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	// Absolute http or https URL without credentials, at most 2048 characters.
+	Url string `protobuf:"bytes,2,opt,name=url,proto3" json:"url,omitempty"`
+	// Request headers sent with every call, at most 32; each name is an HTTP
+	// header token of at most 128 characters and each value at most 8192.
+	Headers       map[string]string `protobuf:"bytes,3,rep,name=headers,proto3" json:"headers,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ApplicationMcpEndpoint) Reset() {
+	*x = ApplicationMcpEndpoint{}
+	mi := &file_agent_public_v2_work_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ApplicationMcpEndpoint) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ApplicationMcpEndpoint) ProtoMessage() {}
+
+func (x *ApplicationMcpEndpoint) ProtoReflect() protoreflect.Message {
+	mi := &file_agent_public_v2_work_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ApplicationMcpEndpoint.ProtoReflect.Descriptor instead.
+func (*ApplicationMcpEndpoint) Descriptor() ([]byte, []int) {
+	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *ApplicationMcpEndpoint) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *ApplicationMcpEndpoint) GetUrl() string {
+	if x != nil {
+		return x.Url
+	}
+	return ""
+}
+
+func (x *ApplicationMcpEndpoint) GetHeaders() map[string]string {
+	if x != nil {
+		return x.Headers
+	}
+	return nil
+}
+
 // StartWorkResponse identifies the started Work; its readiness is observed
 // through agent.public.v1.AgentWorkService.
 type StartWorkResponse struct {
@@ -313,7 +394,7 @@ type StartWorkResponse struct {
 
 func (x *StartWorkResponse) Reset() {
 	*x = StartWorkResponse{}
-	mi := &file_agent_public_v2_work_proto_msgTypes[5]
+	mi := &file_agent_public_v2_work_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -325,7 +406,7 @@ func (x *StartWorkResponse) String() string {
 func (*StartWorkResponse) ProtoMessage() {}
 
 func (x *StartWorkResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_public_v2_work_proto_msgTypes[5]
+	mi := &file_agent_public_v2_work_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -338,7 +419,7 @@ func (x *StartWorkResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StartWorkResponse.ProtoReflect.Descriptor instead.
 func (*StartWorkResponse) Descriptor() ([]byte, []int) {
-	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{5}
+	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *StartWorkResponse) GetWorkId() string {
@@ -359,7 +440,7 @@ type ListWorksRequest struct {
 
 func (x *ListWorksRequest) Reset() {
 	*x = ListWorksRequest{}
-	mi := &file_agent_public_v2_work_proto_msgTypes[6]
+	mi := &file_agent_public_v2_work_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -371,7 +452,7 @@ func (x *ListWorksRequest) String() string {
 func (*ListWorksRequest) ProtoMessage() {}
 
 func (x *ListWorksRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_public_v2_work_proto_msgTypes[6]
+	mi := &file_agent_public_v2_work_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -384,7 +465,7 @@ func (x *ListWorksRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListWorksRequest.ProtoReflect.Descriptor instead.
 func (*ListWorksRequest) Descriptor() ([]byte, []int) {
-	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{6}
+	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ListWorksRequest) GetLimit() uint32 {
@@ -420,7 +501,7 @@ type WorkSummary struct {
 
 func (x *WorkSummary) Reset() {
 	*x = WorkSummary{}
-	mi := &file_agent_public_v2_work_proto_msgTypes[7]
+	mi := &file_agent_public_v2_work_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -432,7 +513,7 @@ func (x *WorkSummary) String() string {
 func (*WorkSummary) ProtoMessage() {}
 
 func (x *WorkSummary) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_public_v2_work_proto_msgTypes[7]
+	mi := &file_agent_public_v2_work_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -445,7 +526,7 @@ func (x *WorkSummary) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WorkSummary.ProtoReflect.Descriptor instead.
 func (*WorkSummary) Descriptor() ([]byte, []int) {
-	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{7}
+	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *WorkSummary) GetWorkId() string {
@@ -515,7 +596,7 @@ type ListWorksResponse struct {
 
 func (x *ListWorksResponse) Reset() {
 	*x = ListWorksResponse{}
-	mi := &file_agent_public_v2_work_proto_msgTypes[8]
+	mi := &file_agent_public_v2_work_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -527,7 +608,7 @@ func (x *ListWorksResponse) String() string {
 func (*ListWorksResponse) ProtoMessage() {}
 
 func (x *ListWorksResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_public_v2_work_proto_msgTypes[8]
+	mi := &file_agent_public_v2_work_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -540,7 +621,7 @@ func (x *ListWorksResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListWorksResponse.ProtoReflect.Descriptor instead.
 func (*ListWorksResponse) Descriptor() ([]byte, []int) {
-	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{8}
+	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ListWorksResponse) GetWorks() []*WorkSummary {
@@ -563,7 +644,7 @@ type ChangeWorkTitleRequest struct {
 
 func (x *ChangeWorkTitleRequest) Reset() {
 	*x = ChangeWorkTitleRequest{}
-	mi := &file_agent_public_v2_work_proto_msgTypes[9]
+	mi := &file_agent_public_v2_work_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -575,7 +656,7 @@ func (x *ChangeWorkTitleRequest) String() string {
 func (*ChangeWorkTitleRequest) ProtoMessage() {}
 
 func (x *ChangeWorkTitleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_public_v2_work_proto_msgTypes[9]
+	mi := &file_agent_public_v2_work_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -588,7 +669,7 @@ func (x *ChangeWorkTitleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChangeWorkTitleRequest.ProtoReflect.Descriptor instead.
 func (*ChangeWorkTitleRequest) Descriptor() ([]byte, []int) {
-	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{9}
+	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *ChangeWorkTitleRequest) GetWorkId() string {
@@ -616,7 +697,7 @@ type ChangeWorkTitleResponse struct {
 
 func (x *ChangeWorkTitleResponse) Reset() {
 	*x = ChangeWorkTitleResponse{}
-	mi := &file_agent_public_v2_work_proto_msgTypes[10]
+	mi := &file_agent_public_v2_work_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -628,7 +709,7 @@ func (x *ChangeWorkTitleResponse) String() string {
 func (*ChangeWorkTitleResponse) ProtoMessage() {}
 
 func (x *ChangeWorkTitleResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_public_v2_work_proto_msgTypes[10]
+	mi := &file_agent_public_v2_work_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -641,7 +722,7 @@ func (x *ChangeWorkTitleResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChangeWorkTitleResponse.ProtoReflect.Descriptor instead.
 func (*ChangeWorkTitleResponse) Descriptor() ([]byte, []int) {
-	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{10}
+	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *ChangeWorkTitleResponse) GetTitle() string {
@@ -668,7 +749,7 @@ type DirectoryUser struct {
 
 func (x *DirectoryUser) Reset() {
 	*x = DirectoryUser{}
-	mi := &file_agent_public_v2_work_proto_msgTypes[11]
+	mi := &file_agent_public_v2_work_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -680,7 +761,7 @@ func (x *DirectoryUser) String() string {
 func (*DirectoryUser) ProtoMessage() {}
 
 func (x *DirectoryUser) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_public_v2_work_proto_msgTypes[11]
+	mi := &file_agent_public_v2_work_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -693,7 +774,7 @@ func (x *DirectoryUser) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DirectoryUser.ProtoReflect.Descriptor instead.
 func (*DirectoryUser) Descriptor() ([]byte, []int) {
-	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{11}
+	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *DirectoryUser) GetUserId() string {
@@ -737,7 +818,7 @@ type SearchShareReadersRequest struct {
 
 func (x *SearchShareReadersRequest) Reset() {
 	*x = SearchShareReadersRequest{}
-	mi := &file_agent_public_v2_work_proto_msgTypes[12]
+	mi := &file_agent_public_v2_work_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -749,7 +830,7 @@ func (x *SearchShareReadersRequest) String() string {
 func (*SearchShareReadersRequest) ProtoMessage() {}
 
 func (x *SearchShareReadersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_public_v2_work_proto_msgTypes[12]
+	mi := &file_agent_public_v2_work_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -762,7 +843,7 @@ func (x *SearchShareReadersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchShareReadersRequest.ProtoReflect.Descriptor instead.
 func (*SearchShareReadersRequest) Descriptor() ([]byte, []int) {
-	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{12}
+	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *SearchShareReadersRequest) GetQuery() string {
@@ -790,7 +871,7 @@ type SearchShareReadersResponse struct {
 
 func (x *SearchShareReadersResponse) Reset() {
 	*x = SearchShareReadersResponse{}
-	mi := &file_agent_public_v2_work_proto_msgTypes[13]
+	mi := &file_agent_public_v2_work_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -802,7 +883,7 @@ func (x *SearchShareReadersResponse) String() string {
 func (*SearchShareReadersResponse) ProtoMessage() {}
 
 func (x *SearchShareReadersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_public_v2_work_proto_msgTypes[13]
+	mi := &file_agent_public_v2_work_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -815,7 +896,7 @@ func (x *SearchShareReadersResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchShareReadersResponse.ProtoReflect.Descriptor instead.
 func (*SearchShareReadersResponse) Descriptor() ([]byte, []int) {
-	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{13}
+	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *SearchShareReadersResponse) GetUsers() []*DirectoryUser {
@@ -836,7 +917,7 @@ type GetShareReadersRequest struct {
 
 func (x *GetShareReadersRequest) Reset() {
 	*x = GetShareReadersRequest{}
-	mi := &file_agent_public_v2_work_proto_msgTypes[14]
+	mi := &file_agent_public_v2_work_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -848,7 +929,7 @@ func (x *GetShareReadersRequest) String() string {
 func (*GetShareReadersRequest) ProtoMessage() {}
 
 func (x *GetShareReadersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_public_v2_work_proto_msgTypes[14]
+	mi := &file_agent_public_v2_work_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -861,7 +942,7 @@ func (x *GetShareReadersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetShareReadersRequest.ProtoReflect.Descriptor instead.
 func (*GetShareReadersRequest) Descriptor() ([]byte, []int) {
-	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{14}
+	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *GetShareReadersRequest) GetUserIds() []string {
@@ -882,7 +963,7 @@ type GetShareReadersResponse struct {
 
 func (x *GetShareReadersResponse) Reset() {
 	*x = GetShareReadersResponse{}
-	mi := &file_agent_public_v2_work_proto_msgTypes[15]
+	mi := &file_agent_public_v2_work_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -894,7 +975,7 @@ func (x *GetShareReadersResponse) String() string {
 func (*GetShareReadersResponse) ProtoMessage() {}
 
 func (x *GetShareReadersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_public_v2_work_proto_msgTypes[15]
+	mi := &file_agent_public_v2_work_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -907,7 +988,7 @@ func (x *GetShareReadersResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetShareReadersResponse.ProtoReflect.Descriptor instead.
 func (*GetShareReadersResponse) Descriptor() ([]byte, []int) {
-	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{15}
+	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *GetShareReadersResponse) GetUsers() []*DirectoryUser {
@@ -930,7 +1011,7 @@ type GrantWorkShareRequest struct {
 
 func (x *GrantWorkShareRequest) Reset() {
 	*x = GrantWorkShareRequest{}
-	mi := &file_agent_public_v2_work_proto_msgTypes[16]
+	mi := &file_agent_public_v2_work_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -942,7 +1023,7 @@ func (x *GrantWorkShareRequest) String() string {
 func (*GrantWorkShareRequest) ProtoMessage() {}
 
 func (x *GrantWorkShareRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_public_v2_work_proto_msgTypes[16]
+	mi := &file_agent_public_v2_work_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -955,7 +1036,7 @@ func (x *GrantWorkShareRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GrantWorkShareRequest.ProtoReflect.Descriptor instead.
 func (*GrantWorkShareRequest) Descriptor() ([]byte, []int) {
-	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{16}
+	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *GrantWorkShareRequest) GetWorkId() string {
@@ -981,7 +1062,7 @@ type GrantWorkShareResponse struct {
 
 func (x *GrantWorkShareResponse) Reset() {
 	*x = GrantWorkShareResponse{}
-	mi := &file_agent_public_v2_work_proto_msgTypes[17]
+	mi := &file_agent_public_v2_work_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -993,7 +1074,7 @@ func (x *GrantWorkShareResponse) String() string {
 func (*GrantWorkShareResponse) ProtoMessage() {}
 
 func (x *GrantWorkShareResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_public_v2_work_proto_msgTypes[17]
+	mi := &file_agent_public_v2_work_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1006,7 +1087,7 @@ func (x *GrantWorkShareResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GrantWorkShareResponse.ProtoReflect.Descriptor instead.
 func (*GrantWorkShareResponse) Descriptor() ([]byte, []int) {
-	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{17}
+	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{18}
 }
 
 // ListLibraryFilesRequest searches and narrows the Personal Library.
@@ -1026,7 +1107,7 @@ type ListLibraryFilesRequest struct {
 
 func (x *ListLibraryFilesRequest) Reset() {
 	*x = ListLibraryFilesRequest{}
-	mi := &file_agent_public_v2_work_proto_msgTypes[18]
+	mi := &file_agent_public_v2_work_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1038,7 +1119,7 @@ func (x *ListLibraryFilesRequest) String() string {
 func (*ListLibraryFilesRequest) ProtoMessage() {}
 
 func (x *ListLibraryFilesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_public_v2_work_proto_msgTypes[18]
+	mi := &file_agent_public_v2_work_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1051,7 +1132,7 @@ func (x *ListLibraryFilesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListLibraryFilesRequest.ProtoReflect.Descriptor instead.
 func (*ListLibraryFilesRequest) Descriptor() ([]byte, []int) {
-	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{18}
+	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *ListLibraryFilesRequest) GetNameQuery() string {
@@ -1105,7 +1186,7 @@ type LibraryFile struct {
 
 func (x *LibraryFile) Reset() {
 	*x = LibraryFile{}
-	mi := &file_agent_public_v2_work_proto_msgTypes[19]
+	mi := &file_agent_public_v2_work_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1117,7 +1198,7 @@ func (x *LibraryFile) String() string {
 func (*LibraryFile) ProtoMessage() {}
 
 func (x *LibraryFile) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_public_v2_work_proto_msgTypes[19]
+	mi := &file_agent_public_v2_work_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1130,7 +1211,7 @@ func (x *LibraryFile) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LibraryFile.ProtoReflect.Descriptor instead.
 func (*LibraryFile) Descriptor() ([]byte, []int) {
-	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{19}
+	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *LibraryFile) GetWorkId() string {
@@ -1200,7 +1281,7 @@ type LibraryWork struct {
 
 func (x *LibraryWork) Reset() {
 	*x = LibraryWork{}
-	mi := &file_agent_public_v2_work_proto_msgTypes[20]
+	mi := &file_agent_public_v2_work_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1212,7 +1293,7 @@ func (x *LibraryWork) String() string {
 func (*LibraryWork) ProtoMessage() {}
 
 func (x *LibraryWork) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_public_v2_work_proto_msgTypes[20]
+	mi := &file_agent_public_v2_work_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1225,7 +1306,7 @@ func (x *LibraryWork) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LibraryWork.ProtoReflect.Descriptor instead.
 func (*LibraryWork) Descriptor() ([]byte, []int) {
-	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{20}
+	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *LibraryWork) GetWorkId() string {
@@ -1270,7 +1351,7 @@ type ListLibraryFilesResponse struct {
 
 func (x *ListLibraryFilesResponse) Reset() {
 	*x = ListLibraryFilesResponse{}
-	mi := &file_agent_public_v2_work_proto_msgTypes[21]
+	mi := &file_agent_public_v2_work_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1282,7 +1363,7 @@ func (x *ListLibraryFilesResponse) String() string {
 func (*ListLibraryFilesResponse) ProtoMessage() {}
 
 func (x *ListLibraryFilesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_public_v2_work_proto_msgTypes[21]
+	mi := &file_agent_public_v2_work_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1295,7 +1376,7 @@ func (x *ListLibraryFilesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListLibraryFilesResponse.ProtoReflect.Descriptor instead.
 func (*ListLibraryFilesResponse) Descriptor() ([]byte, []int) {
-	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{21}
+	return file_agent_public_v2_work_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *ListLibraryFilesResponse) GetFiles() []*LibraryFile {
@@ -1322,7 +1403,7 @@ const file_agent_public_v2_work_proto_rawDesc = "" +
 	"\aoptions\x18\x01 \x01(\v2,.agent.public.v1.GetWorkStartOptionsResponseR\aoptions\"\"\n" +
 	" ListWorkStartRepositoriesRequest\"o\n" +
 	"!ListWorkStartRepositoriesResponse\x12J\n" +
-	"\frepositories\x18\x01 \x01(\v2&.agent.public.v1.WorkStartRepositoriesR\frepositories\"\xce\x03\n" +
+	"\frepositories\x18\x01 \x01(\v2&.agent.public.v1.WorkStartRepositoriesR\frepositories\"\xb3\x04\n" +
 	"\x10StartWorkRequest\x12\x1d\n" +
 	"\n" +
 	"request_id\x18\x01 \x01(\tR\trequestId\x12'\n" +
@@ -1333,7 +1414,15 @@ const file_agent_public_v2_work_proto_rawDesc = "" +
 	"\x0ethinking_level\x18\x06 \x01(\tR\rthinkingLevel\x12\x1f\n" +
 	"\vcomputer_id\x18\a \x01(\tR\n" +
 	"computerId\x128\n" +
-	"\aharness\x18\b \x01(\v2\x1e.agent.public.v1.HarnessChoiceR\aharness\",\n" +
+	"\aharness\x18\b \x01(\v2\x1e.agent.public.v1.HarnessChoiceR\aharness\x12c\n" +
+	"\x19application_mcp_endpoints\x18\t \x03(\v2'.agent.public.v2.ApplicationMcpEndpointR\x17applicationMcpEndpoints\"\xca\x01\n" +
+	"\x16ApplicationMcpEndpoint\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x10\n" +
+	"\x03url\x18\x02 \x01(\tR\x03url\x12N\n" +
+	"\aheaders\x18\x03 \x03(\v24.agent.public.v2.ApplicationMcpEndpoint.HeadersEntryR\aheaders\x1a:\n" +
+	"\fHeadersEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\",\n" +
 	"\x11StartWorkResponse\x12\x17\n" +
 	"\awork_id\x18\x01 \x01(\tR\x06workId\"(\n" +
 	"\x10ListWorksRequest\x12\x14\n" +
@@ -1434,79 +1523,83 @@ func file_agent_public_v2_work_proto_rawDescGZIP() []byte {
 	return file_agent_public_v2_work_proto_rawDescData
 }
 
-var file_agent_public_v2_work_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
+var file_agent_public_v2_work_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
 var file_agent_public_v2_work_proto_goTypes = []any{
 	(*GetWorkStartOptionsRequest)(nil),        // 0: agent.public.v2.GetWorkStartOptionsRequest
 	(*GetWorkStartOptionsResponse)(nil),       // 1: agent.public.v2.GetWorkStartOptionsResponse
 	(*ListWorkStartRepositoriesRequest)(nil),  // 2: agent.public.v2.ListWorkStartRepositoriesRequest
 	(*ListWorkStartRepositoriesResponse)(nil), // 3: agent.public.v2.ListWorkStartRepositoriesResponse
 	(*StartWorkRequest)(nil),                  // 4: agent.public.v2.StartWorkRequest
-	(*StartWorkResponse)(nil),                 // 5: agent.public.v2.StartWorkResponse
-	(*ListWorksRequest)(nil),                  // 6: agent.public.v2.ListWorksRequest
-	(*WorkSummary)(nil),                       // 7: agent.public.v2.WorkSummary
-	(*ListWorksResponse)(nil),                 // 8: agent.public.v2.ListWorksResponse
-	(*ChangeWorkTitleRequest)(nil),            // 9: agent.public.v2.ChangeWorkTitleRequest
-	(*ChangeWorkTitleResponse)(nil),           // 10: agent.public.v2.ChangeWorkTitleResponse
-	(*DirectoryUser)(nil),                     // 11: agent.public.v2.DirectoryUser
-	(*SearchShareReadersRequest)(nil),         // 12: agent.public.v2.SearchShareReadersRequest
-	(*SearchShareReadersResponse)(nil),        // 13: agent.public.v2.SearchShareReadersResponse
-	(*GetShareReadersRequest)(nil),            // 14: agent.public.v2.GetShareReadersRequest
-	(*GetShareReadersResponse)(nil),           // 15: agent.public.v2.GetShareReadersResponse
-	(*GrantWorkShareRequest)(nil),             // 16: agent.public.v2.GrantWorkShareRequest
-	(*GrantWorkShareResponse)(nil),            // 17: agent.public.v2.GrantWorkShareResponse
-	(*ListLibraryFilesRequest)(nil),           // 18: agent.public.v2.ListLibraryFilesRequest
-	(*LibraryFile)(nil),                       // 19: agent.public.v2.LibraryFile
-	(*LibraryWork)(nil),                       // 20: agent.public.v2.LibraryWork
-	(*ListLibraryFilesResponse)(nil),          // 21: agent.public.v2.ListLibraryFilesResponse
-	(*v1.GetWorkStartOptionsResponse)(nil),    // 22: agent.public.v1.GetWorkStartOptionsResponse
-	(*v1.WorkStartRepositories)(nil),          // 23: agent.public.v1.WorkStartRepositories
-	(*v1.RepositorySelection)(nil),            // 24: agent.public.v1.RepositorySelection
-	(*v1.CreationCapabilities)(nil),           // 25: agent.public.v1.CreationCapabilities
-	(*v1.WorkModelSelection)(nil),             // 26: agent.public.v1.WorkModelSelection
-	(*v1.HarnessChoice)(nil),                  // 27: agent.public.v1.HarnessChoice
-	(*timestamppb.Timestamp)(nil),             // 28: google.protobuf.Timestamp
+	(*ApplicationMcpEndpoint)(nil),            // 5: agent.public.v2.ApplicationMcpEndpoint
+	(*StartWorkResponse)(nil),                 // 6: agent.public.v2.StartWorkResponse
+	(*ListWorksRequest)(nil),                  // 7: agent.public.v2.ListWorksRequest
+	(*WorkSummary)(nil),                       // 8: agent.public.v2.WorkSummary
+	(*ListWorksResponse)(nil),                 // 9: agent.public.v2.ListWorksResponse
+	(*ChangeWorkTitleRequest)(nil),            // 10: agent.public.v2.ChangeWorkTitleRequest
+	(*ChangeWorkTitleResponse)(nil),           // 11: agent.public.v2.ChangeWorkTitleResponse
+	(*DirectoryUser)(nil),                     // 12: agent.public.v2.DirectoryUser
+	(*SearchShareReadersRequest)(nil),         // 13: agent.public.v2.SearchShareReadersRequest
+	(*SearchShareReadersResponse)(nil),        // 14: agent.public.v2.SearchShareReadersResponse
+	(*GetShareReadersRequest)(nil),            // 15: agent.public.v2.GetShareReadersRequest
+	(*GetShareReadersResponse)(nil),           // 16: agent.public.v2.GetShareReadersResponse
+	(*GrantWorkShareRequest)(nil),             // 17: agent.public.v2.GrantWorkShareRequest
+	(*GrantWorkShareResponse)(nil),            // 18: agent.public.v2.GrantWorkShareResponse
+	(*ListLibraryFilesRequest)(nil),           // 19: agent.public.v2.ListLibraryFilesRequest
+	(*LibraryFile)(nil),                       // 20: agent.public.v2.LibraryFile
+	(*LibraryWork)(nil),                       // 21: agent.public.v2.LibraryWork
+	(*ListLibraryFilesResponse)(nil),          // 22: agent.public.v2.ListLibraryFilesResponse
+	nil,                                       // 23: agent.public.v2.ApplicationMcpEndpoint.HeadersEntry
+	(*v1.GetWorkStartOptionsResponse)(nil),    // 24: agent.public.v1.GetWorkStartOptionsResponse
+	(*v1.WorkStartRepositories)(nil),          // 25: agent.public.v1.WorkStartRepositories
+	(*v1.RepositorySelection)(nil),            // 26: agent.public.v1.RepositorySelection
+	(*v1.CreationCapabilities)(nil),           // 27: agent.public.v1.CreationCapabilities
+	(*v1.WorkModelSelection)(nil),             // 28: agent.public.v1.WorkModelSelection
+	(*v1.HarnessChoice)(nil),                  // 29: agent.public.v1.HarnessChoice
+	(*timestamppb.Timestamp)(nil),             // 30: google.protobuf.Timestamp
 }
 var file_agent_public_v2_work_proto_depIdxs = []int32{
-	22, // 0: agent.public.v2.GetWorkStartOptionsResponse.options:type_name -> agent.public.v1.GetWorkStartOptionsResponse
-	23, // 1: agent.public.v2.ListWorkStartRepositoriesResponse.repositories:type_name -> agent.public.v1.WorkStartRepositories
-	24, // 2: agent.public.v2.StartWorkRequest.repository_selections:type_name -> agent.public.v1.RepositorySelection
-	25, // 3: agent.public.v2.StartWorkRequest.creation_capabilities:type_name -> agent.public.v1.CreationCapabilities
-	26, // 4: agent.public.v2.StartWorkRequest.model:type_name -> agent.public.v1.WorkModelSelection
-	27, // 5: agent.public.v2.StartWorkRequest.harness:type_name -> agent.public.v1.HarnessChoice
-	28, // 6: agent.public.v2.WorkSummary.created_at:type_name -> google.protobuf.Timestamp
-	28, // 7: agent.public.v2.WorkSummary.updated_at:type_name -> google.protobuf.Timestamp
-	28, // 8: agent.public.v2.WorkSummary.disconnected_since:type_name -> google.protobuf.Timestamp
-	7,  // 9: agent.public.v2.ListWorksResponse.works:type_name -> agent.public.v2.WorkSummary
-	11, // 10: agent.public.v2.SearchShareReadersResponse.users:type_name -> agent.public.v2.DirectoryUser
-	11, // 11: agent.public.v2.GetShareReadersResponse.users:type_name -> agent.public.v2.DirectoryUser
-	28, // 12: agent.public.v2.ListLibraryFilesRequest.added_after:type_name -> google.protobuf.Timestamp
-	28, // 13: agent.public.v2.ListLibraryFilesRequest.added_before:type_name -> google.protobuf.Timestamp
-	28, // 14: agent.public.v2.LibraryFile.added_at:type_name -> google.protobuf.Timestamp
-	19, // 15: agent.public.v2.ListLibraryFilesResponse.files:type_name -> agent.public.v2.LibraryFile
-	20, // 16: agent.public.v2.ListLibraryFilesResponse.works:type_name -> agent.public.v2.LibraryWork
-	0,  // 17: agent.public.v2.WorkService.GetWorkStartOptions:input_type -> agent.public.v2.GetWorkStartOptionsRequest
-	2,  // 18: agent.public.v2.WorkService.ListWorkStartRepositories:input_type -> agent.public.v2.ListWorkStartRepositoriesRequest
-	4,  // 19: agent.public.v2.WorkService.StartWork:input_type -> agent.public.v2.StartWorkRequest
-	6,  // 20: agent.public.v2.WorkService.ListWorks:input_type -> agent.public.v2.ListWorksRequest
-	9,  // 21: agent.public.v2.WorkService.ChangeWorkTitle:input_type -> agent.public.v2.ChangeWorkTitleRequest
-	12, // 22: agent.public.v2.WorkService.SearchShareReaders:input_type -> agent.public.v2.SearchShareReadersRequest
-	14, // 23: agent.public.v2.WorkService.GetShareReaders:input_type -> agent.public.v2.GetShareReadersRequest
-	16, // 24: agent.public.v2.WorkService.GrantWorkShare:input_type -> agent.public.v2.GrantWorkShareRequest
-	18, // 25: agent.public.v2.WorkService.ListLibraryFiles:input_type -> agent.public.v2.ListLibraryFilesRequest
-	1,  // 26: agent.public.v2.WorkService.GetWorkStartOptions:output_type -> agent.public.v2.GetWorkStartOptionsResponse
-	3,  // 27: agent.public.v2.WorkService.ListWorkStartRepositories:output_type -> agent.public.v2.ListWorkStartRepositoriesResponse
-	5,  // 28: agent.public.v2.WorkService.StartWork:output_type -> agent.public.v2.StartWorkResponse
-	8,  // 29: agent.public.v2.WorkService.ListWorks:output_type -> agent.public.v2.ListWorksResponse
-	10, // 30: agent.public.v2.WorkService.ChangeWorkTitle:output_type -> agent.public.v2.ChangeWorkTitleResponse
-	13, // 31: agent.public.v2.WorkService.SearchShareReaders:output_type -> agent.public.v2.SearchShareReadersResponse
-	15, // 32: agent.public.v2.WorkService.GetShareReaders:output_type -> agent.public.v2.GetShareReadersResponse
-	17, // 33: agent.public.v2.WorkService.GrantWorkShare:output_type -> agent.public.v2.GrantWorkShareResponse
-	21, // 34: agent.public.v2.WorkService.ListLibraryFiles:output_type -> agent.public.v2.ListLibraryFilesResponse
-	26, // [26:35] is the sub-list for method output_type
-	17, // [17:26] is the sub-list for method input_type
-	17, // [17:17] is the sub-list for extension type_name
-	17, // [17:17] is the sub-list for extension extendee
-	0,  // [0:17] is the sub-list for field type_name
+	24, // 0: agent.public.v2.GetWorkStartOptionsResponse.options:type_name -> agent.public.v1.GetWorkStartOptionsResponse
+	25, // 1: agent.public.v2.ListWorkStartRepositoriesResponse.repositories:type_name -> agent.public.v1.WorkStartRepositories
+	26, // 2: agent.public.v2.StartWorkRequest.repository_selections:type_name -> agent.public.v1.RepositorySelection
+	27, // 3: agent.public.v2.StartWorkRequest.creation_capabilities:type_name -> agent.public.v1.CreationCapabilities
+	28, // 4: agent.public.v2.StartWorkRequest.model:type_name -> agent.public.v1.WorkModelSelection
+	29, // 5: agent.public.v2.StartWorkRequest.harness:type_name -> agent.public.v1.HarnessChoice
+	5,  // 6: agent.public.v2.StartWorkRequest.application_mcp_endpoints:type_name -> agent.public.v2.ApplicationMcpEndpoint
+	23, // 7: agent.public.v2.ApplicationMcpEndpoint.headers:type_name -> agent.public.v2.ApplicationMcpEndpoint.HeadersEntry
+	30, // 8: agent.public.v2.WorkSummary.created_at:type_name -> google.protobuf.Timestamp
+	30, // 9: agent.public.v2.WorkSummary.updated_at:type_name -> google.protobuf.Timestamp
+	30, // 10: agent.public.v2.WorkSummary.disconnected_since:type_name -> google.protobuf.Timestamp
+	8,  // 11: agent.public.v2.ListWorksResponse.works:type_name -> agent.public.v2.WorkSummary
+	12, // 12: agent.public.v2.SearchShareReadersResponse.users:type_name -> agent.public.v2.DirectoryUser
+	12, // 13: agent.public.v2.GetShareReadersResponse.users:type_name -> agent.public.v2.DirectoryUser
+	30, // 14: agent.public.v2.ListLibraryFilesRequest.added_after:type_name -> google.protobuf.Timestamp
+	30, // 15: agent.public.v2.ListLibraryFilesRequest.added_before:type_name -> google.protobuf.Timestamp
+	30, // 16: agent.public.v2.LibraryFile.added_at:type_name -> google.protobuf.Timestamp
+	20, // 17: agent.public.v2.ListLibraryFilesResponse.files:type_name -> agent.public.v2.LibraryFile
+	21, // 18: agent.public.v2.ListLibraryFilesResponse.works:type_name -> agent.public.v2.LibraryWork
+	0,  // 19: agent.public.v2.WorkService.GetWorkStartOptions:input_type -> agent.public.v2.GetWorkStartOptionsRequest
+	2,  // 20: agent.public.v2.WorkService.ListWorkStartRepositories:input_type -> agent.public.v2.ListWorkStartRepositoriesRequest
+	4,  // 21: agent.public.v2.WorkService.StartWork:input_type -> agent.public.v2.StartWorkRequest
+	7,  // 22: agent.public.v2.WorkService.ListWorks:input_type -> agent.public.v2.ListWorksRequest
+	10, // 23: agent.public.v2.WorkService.ChangeWorkTitle:input_type -> agent.public.v2.ChangeWorkTitleRequest
+	13, // 24: agent.public.v2.WorkService.SearchShareReaders:input_type -> agent.public.v2.SearchShareReadersRequest
+	15, // 25: agent.public.v2.WorkService.GetShareReaders:input_type -> agent.public.v2.GetShareReadersRequest
+	17, // 26: agent.public.v2.WorkService.GrantWorkShare:input_type -> agent.public.v2.GrantWorkShareRequest
+	19, // 27: agent.public.v2.WorkService.ListLibraryFiles:input_type -> agent.public.v2.ListLibraryFilesRequest
+	1,  // 28: agent.public.v2.WorkService.GetWorkStartOptions:output_type -> agent.public.v2.GetWorkStartOptionsResponse
+	3,  // 29: agent.public.v2.WorkService.ListWorkStartRepositories:output_type -> agent.public.v2.ListWorkStartRepositoriesResponse
+	6,  // 30: agent.public.v2.WorkService.StartWork:output_type -> agent.public.v2.StartWorkResponse
+	9,  // 31: agent.public.v2.WorkService.ListWorks:output_type -> agent.public.v2.ListWorksResponse
+	11, // 32: agent.public.v2.WorkService.ChangeWorkTitle:output_type -> agent.public.v2.ChangeWorkTitleResponse
+	14, // 33: agent.public.v2.WorkService.SearchShareReaders:output_type -> agent.public.v2.SearchShareReadersResponse
+	16, // 34: agent.public.v2.WorkService.GetShareReaders:output_type -> agent.public.v2.GetShareReadersResponse
+	18, // 35: agent.public.v2.WorkService.GrantWorkShare:output_type -> agent.public.v2.GrantWorkShareResponse
+	22, // 36: agent.public.v2.WorkService.ListLibraryFiles:output_type -> agent.public.v2.ListLibraryFilesResponse
+	28, // [28:37] is the sub-list for method output_type
+	19, // [19:28] is the sub-list for method input_type
+	19, // [19:19] is the sub-list for extension type_name
+	19, // [19:19] is the sub-list for extension extendee
+	0,  // [0:19] is the sub-list for field type_name
 }
 
 func init() { file_agent_public_v2_work_proto_init() }
@@ -1520,7 +1613,7 @@ func file_agent_public_v2_work_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_agent_public_v2_work_proto_rawDesc), len(file_agent_public_v2_work_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   22,
+			NumMessages:   24,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

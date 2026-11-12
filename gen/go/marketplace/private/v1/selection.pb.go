@@ -22,7 +22,8 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// ReadPersonalPluginsRequest selects an owner-scoped page.
+// ReadPersonalPluginsRequest selects a page of the delegated owner's
+// installations: the delegated id names a person or an Application.
 type ReadPersonalPluginsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Exclusive slug cursor.
@@ -234,7 +235,8 @@ func (x *ResolvePluginResponse) GetCatalogName() string {
 	return ""
 }
 
-// ReadConnectorSelectionRequest uses only the delegated owner.
+// ReadConnectorSelectionRequest uses only the delegated owner, a person or an
+// Application.
 type ReadConnectorSelectionRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields

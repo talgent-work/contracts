@@ -642,6 +642,15 @@ export declare type ListInstalledPluginsRequest = Message<"marketplace.public.v1
    * @generated from field: uint32 page_size = 2;
    */
   pageSize: number;
+
+  /**
+   * An Application the caller owns, whose installations the request
+   * reaches; empty for the caller's own. An Application leaves it empty or
+   * names itself.
+   *
+   * @generated from field: string application_id = 3;
+   */
+  applicationId: string;
 };
 
 /**
@@ -689,6 +698,15 @@ export declare type GetInstalledPluginRequest = Message<"marketplace.public.v1.G
    * @generated from field: string slug = 1;
    */
   slug: string;
+
+  /**
+   * An Application the caller owns, whose installations the request
+   * reaches; empty for the caller's own. An Application leaves it empty or
+   * names itself.
+   *
+   * @generated from field: string application_id = 2;
+   */
+  applicationId: string;
 };
 
 /**
@@ -736,6 +754,15 @@ export declare type InstallPluginRequest = Message<"marketplace.public.v1.Instal
    * @generated from field: google.protobuf.Struct configuration = 2;
    */
   configuration?: JsonObject;
+
+  /**
+   * An Application the caller owns, whose installations the request
+   * reaches; empty for the caller's own. An Application leaves it empty or
+   * names itself.
+   *
+   * @generated from field: string application_id = 3;
+   */
+  applicationId: string;
 };
 
 /**
@@ -783,6 +810,15 @@ export declare type EnablePluginRequest = Message<"marketplace.public.v1.EnableP
    * @generated from field: uint32 version = 2;
    */
   version: number;
+
+  /**
+   * An Application the caller owns, whose installations the request
+   * reaches; empty for the caller's own. An Application leaves it empty or
+   * names itself.
+   *
+   * @generated from field: string application_id = 3;
+   */
+  applicationId: string;
 };
 
 /**
@@ -830,6 +866,15 @@ export declare type DisablePluginRequest = Message<"marketplace.public.v1.Disabl
    * @generated from field: uint32 version = 2;
    */
   version: number;
+
+  /**
+   * An Application the caller owns, whose installations the request
+   * reaches; empty for the caller's own. An Application leaves it empty or
+   * names itself.
+   *
+   * @generated from field: string application_id = 3;
+   */
+  applicationId: string;
 };
 
 /**
@@ -884,6 +929,15 @@ export declare type SetPluginConfigurationRequest = Message<"marketplace.public.
    * @generated from field: google.protobuf.Struct values = 3;
    */
   values?: JsonObject;
+
+  /**
+   * An Application the caller owns, whose installations the request
+   * reaches; empty for the caller's own. An Application leaves it empty or
+   * names itself.
+   *
+   * @generated from field: string application_id = 4;
+   */
+  applicationId: string;
 };
 
 /**
@@ -938,6 +992,15 @@ export declare type DeletePluginConfigurationRequest = Message<"marketplace.publ
    * @generated from field: repeated string names = 3;
    */
   names: string[];
+
+  /**
+   * An Application the caller owns, whose installations the request
+   * reaches; empty for the caller's own. An Application leaves it empty or
+   * names itself.
+   *
+   * @generated from field: string application_id = 4;
+   */
+  applicationId: string;
 };
 
 /**
@@ -985,6 +1048,15 @@ export declare type UninstallPluginRequest = Message<"marketplace.public.v1.Unin
    * @generated from field: uint32 version = 2;
    */
   version: number;
+
+  /**
+   * An Application the caller owns, whose installations the request
+   * reaches; empty for the caller's own. An Application leaves it empty or
+   * names itself.
+   *
+   * @generated from field: string application_id = 3;
+   */
+  applicationId: string;
 };
 
 /**
@@ -1178,6 +1250,14 @@ export declare const ConnectorPluginSchema: GenMessage<ConnectorPlugin>;
  * @generated from message marketplace.public.v1.ListConnectorsRequest
  */
 export declare type ListConnectorsRequest = Message<"marketplace.public.v1.ListConnectorsRequest"> & {
+  /**
+   * An Application the caller owns, whose installations the request
+   * reaches; empty for the caller's own. An Application leaves it empty or
+   * names itself.
+   *
+   * @generated from field: string application_id = 1;
+   */
+  applicationId: string;
 };
 
 /**
@@ -1218,6 +1298,15 @@ export declare type GetConnectorRequest = Message<"marketplace.public.v1.GetConn
    * @generated from field: string name = 1;
    */
   name: string;
+
+  /**
+   * An Application the caller owns, whose installations the request
+   * reaches; empty for the caller's own. An Application leaves it empty or
+   * names itself.
+   *
+   * @generated from field: string application_id = 2;
+   */
+  applicationId: string;
 };
 
 /**
@@ -1259,6 +1348,14 @@ export declare const GetConnectorResponseSchema: GenMessage<GetConnectorResponse
  * @generated from message marketplace.public.v1.ListInstalledConnectorsRequest
  */
 export declare type ListInstalledConnectorsRequest = Message<"marketplace.public.v1.ListInstalledConnectorsRequest"> & {
+  /**
+   * An Application the caller owns, whose installations the request
+   * reaches; empty for the caller's own. An Application leaves it empty or
+   * names itself.
+   *
+   * @generated from field: string application_id = 1;
+   */
+  applicationId: string;
 };
 
 /**
@@ -1299,6 +1396,15 @@ export declare type InstallConnectorRequest = Message<"marketplace.public.v1.Ins
    * @generated from field: string name = 1;
    */
   name: string;
+
+  /**
+   * An Application the caller owns, whose installations the request
+   * reaches; empty for the caller's own. An Application leaves it empty or
+   * names itself.
+   *
+   * @generated from field: string application_id = 2;
+   */
+  applicationId: string;
 };
 
 /**
@@ -1346,6 +1452,15 @@ export declare type EnableConnectorRequest = Message<"marketplace.public.v1.Enab
    * @generated from field: uint32 version = 2;
    */
   version: number;
+
+  /**
+   * An Application the caller owns, whose installations the request
+   * reaches; empty for the caller's own. An Application leaves it empty or
+   * names itself.
+   *
+   * @generated from field: string application_id = 3;
+   */
+  applicationId: string;
 };
 
 /**
@@ -1393,6 +1508,15 @@ export declare type DisableConnectorRequest = Message<"marketplace.public.v1.Dis
    * @generated from field: uint32 version = 2;
    */
   version: number;
+
+  /**
+   * An Application the caller owns, whose installations the request
+   * reaches; empty for the caller's own. An Application leaves it empty or
+   * names itself.
+   *
+   * @generated from field: string application_id = 3;
+   */
+  applicationId: string;
 };
 
 /**
@@ -1440,6 +1564,15 @@ export declare type UninstallConnectorRequest = Message<"marketplace.public.v1.U
    * @generated from field: uint32 version = 2;
    */
   version: number;
+
+  /**
+   * An Application the caller owns, whose installations the request
+   * reaches; empty for the caller's own. An Application leaves it empty or
+   * names itself.
+   *
+   * @generated from field: string application_id = 3;
+   */
+  applicationId: string;
 };
 
 /**
@@ -1463,8 +1596,11 @@ export declare type UninstallConnectorResponse = Message<"marketplace.public.v1.
 export declare const UninstallConnectorResponseSchema: GenMessage<UninstallConnectorResponse>;
 
 /**
- * MarketplaceService publishes catalog metadata and the authenticated user's
- * personal installation commands. No public request accepts an owner identity.
+ * MarketplaceService publishes catalog metadata and an owner's installation
+ * commands. The owner is the caller, a person or an Application, or an
+ * Application its caller owns: a request names no owner but that Application,
+ * and an Application Owner reaches it under their own identity, admitted
+ * through Account's Application ownership.
  *
  * @generated from service marketplace.public.v1.MarketplaceService
  */

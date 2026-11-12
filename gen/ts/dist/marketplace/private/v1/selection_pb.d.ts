@@ -12,7 +12,8 @@ import type { InstalledPlugin, PluginRelease } from "../../public/v1/marketplace
 export declare const file_marketplace_private_v1_selection: GenFile;
 
 /**
- * ReadPersonalPluginsRequest selects an owner-scoped page.
+ * ReadPersonalPluginsRequest selects a page of the delegated owner's
+ * installations: the delegated id names a person or an Application.
  *
  * @generated from message marketplace.private.v1.ReadPersonalPluginsRequest
  */
@@ -114,7 +115,8 @@ export declare type ResolvePluginResponse = Message<"marketplace.private.v1.Reso
 export declare const ResolvePluginResponseSchema: GenMessage<ResolvePluginResponse>;
 
 /**
- * ReadConnectorSelectionRequest uses only the delegated owner.
+ * ReadConnectorSelectionRequest uses only the delegated owner, a person or an
+ * Application.
  *
  * @generated from message marketplace.private.v1.ReadConnectorSelectionRequest
  */

@@ -8,8 +8,11 @@ import "marketplace/public/v1/connections.proto";
 
 option go_package = "github.com/talgent-work/contracts/gen/go/marketplace/public/v1;marketplacepublicv1";
 
-// MarketplaceService publishes catalog metadata and the authenticated user's
-// personal installation commands. No public request accepts an owner identity.
+// MarketplaceService publishes catalog metadata and an owner's installation
+// commands. The owner is the caller, a person or an Application, or an
+// Application its caller owns: a request names no owner but that Application,
+// and an Application Owner reaches it under their own identity, admitted
+// through Account's Application ownership.
 service MarketplaceService {
   // BeginProviderAuthorization manages the authenticated user's personal connection.
   rpc BeginProviderAuthorization(BeginProviderAuthorizationRequest) returns (BeginProviderAuthorizationResponse) {
@@ -63,103 +66,103 @@ service MarketplaceService {
   // Browse synchronized plugin releases.
   rpc ListPlugins(ListPluginsRequest) returns (ListPluginsResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // Read the currently selected immutable release for a slug.
   rpc GetPlugin(GetPluginRequest) returns (GetPluginResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // List the authenticated user's personal installations.
   rpc ListInstalledPlugins(ListInstalledPluginsRequest) returns (ListInstalledPluginsResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // Read one personal installation including manual configuration.
   rpc GetInstalledPlugin(GetInstalledPluginRequest) returns (GetInstalledPluginResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // Install a personal plugin; repeating preserves existing choices.
   rpc InstallPlugin(InstallPluginRequest) returns (InstallPluginResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // Include a personal installation in future default selections.
   rpc EnablePlugin(EnablePluginRequest) returns (EnablePluginResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // Exclude a personal installation while retaining its configuration.
   rpc DisablePlugin(DisablePluginRequest) returns (DisablePluginResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // Set typed manual values after validation.
   rpc SetPluginConfiguration(SetPluginConfigurationRequest) returns (SetPluginConfigurationResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // Delete manual choices after validation.
   rpc DeletePluginConfiguration(DeletePluginConfigurationRequest) returns (DeletePluginConfigurationResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // Remove a personal installation and its manual configuration.
   rpc UninstallPlugin(UninstallPluginRequest) returns (UninstallPluginResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // Browse the platform Connector catalog with the user's personal status.
   rpc ListConnectors(ListConnectorsRequest) returns (ListConnectorsResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // Read one catalog Connector with the Plugins that use it.
   rpc GetConnector(GetConnectorRequest) returns (GetConnectorResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // List required Connectors and the user's personal installations.
   rpc ListInstalledConnectors(ListInstalledConnectorsRequest) returns (ListInstalledConnectorsResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // Install a catalog Connector; Provider authorization is not required.
   rpc InstallConnector(InstallConnectorRequest) returns (InstallConnectorResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // Include an installed Connector in future default selections.
   rpc EnableConnector(EnableConnectorRequest) returns (EnableConnectorResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // Exclude an installed Connector while keeping the installation.
   rpc DisableConnector(DisableConnectorRequest) returns (DisableConnectorResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // Remove a personal Connector installation; authorization is unaffected.
   rpc UninstallConnector(UninstallConnectorRequest) returns (UninstallConnectorResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
 }
@@ -350,6 +353,10 @@ message ListInstalledPluginsRequest {
   string cursor = 1;
   // Page size, default 50, maximum 100.
   uint32 page_size = 2;
+  // An Application the caller owns, whose installations the request
+  // reaches; empty for the caller's own. An Application leaves it empty or
+  // names itself.
+  string application_id = 3;
 }
 
 // ListInstalledPluginsResponse is the published response.
@@ -364,6 +371,10 @@ message ListInstalledPluginsResponse {
 message GetInstalledPluginRequest {
   // Plugin slug.
   string slug = 1;
+  // An Application the caller owns, whose installations the request
+  // reaches; empty for the caller's own. An Application leaves it empty or
+  // names itself.
+  string application_id = 2;
 }
 
 // GetInstalledPluginResponse is the published response.
@@ -378,6 +389,10 @@ message InstallPluginRequest {
   string slug = 1;
   // Explicit typed manual values.
   google.protobuf.Struct configuration = 2;
+  // An Application the caller owns, whose installations the request
+  // reaches; empty for the caller's own. An Application leaves it empty or
+  // names itself.
+  string application_id = 3;
 }
 
 // InstallPluginResponse is the published response.
@@ -392,6 +407,10 @@ message EnablePluginRequest {
   string slug = 1;
   // Version read before this mutation; stale values are rejected.
   uint32 version = 2;
+  // An Application the caller owns, whose installations the request
+  // reaches; empty for the caller's own. An Application leaves it empty or
+  // names itself.
+  string application_id = 3;
 }
 
 // EnablePluginResponse is the published response.
@@ -406,6 +425,10 @@ message DisablePluginRequest {
   string slug = 1;
   // Version read before this mutation; stale values are rejected.
   uint32 version = 2;
+  // An Application the caller owns, whose installations the request
+  // reaches; empty for the caller's own. An Application leaves it empty or
+  // names itself.
+  string application_id = 3;
 }
 
 // DisablePluginResponse is the published response.
@@ -422,6 +445,10 @@ message SetPluginConfigurationRequest {
   uint32 version = 2;
   // Manual values to set; omitted fields remain unchanged.
   google.protobuf.Struct values = 3;
+  // An Application the caller owns, whose installations the request
+  // reaches; empty for the caller's own. An Application leaves it empty or
+  // names itself.
+  string application_id = 4;
 }
 
 // SetPluginConfigurationResponse is the published response.
@@ -438,6 +465,10 @@ message DeletePluginConfigurationRequest {
   uint32 version = 2;
   // Manual parameter names to delete.
   repeated string names = 3;
+  // An Application the caller owns, whose installations the request
+  // reaches; empty for the caller's own. An Application leaves it empty or
+  // names itself.
+  string application_id = 4;
 }
 
 // DeletePluginConfigurationResponse is the published response.
@@ -452,6 +483,10 @@ message UninstallPluginRequest {
   string slug = 1;
   // Version read before this mutation; stale values are rejected.
   uint32 version = 2;
+  // An Application the caller owns, whose installations the request
+  // reaches; empty for the caller's own. An Application leaves it empty or
+  // names itself.
+  string application_id = 3;
 }
 
 // UninstallPluginResponse is the published response.
@@ -506,7 +541,12 @@ message ConnectorPlugin {
 }
 
 // ListConnectorsRequest uses only the authenticated user's identity.
-message ListConnectorsRequest {}
+message ListConnectorsRequest {
+  // An Application the caller owns, whose installations the request
+  // reaches; empty for the caller's own. An Application leaves it empty or
+  // names itself.
+  string application_id = 1;
+}
 
 // ListConnectorsResponse contains every offered catalog entry.
 message ListConnectorsResponse {
@@ -518,6 +558,10 @@ message ListConnectorsResponse {
 message GetConnectorRequest {
   // Catalog Connector name.
   string name = 1;
+  // An Application the caller owns, whose installations the request
+  // reaches; empty for the caller's own. An Application leaves it empty or
+  // names itself.
+  string application_id = 2;
 }
 
 // GetConnectorResponse describes one catalog entry and its related Plugins.
@@ -529,7 +573,12 @@ message GetConnectorResponse {
 }
 
 // ListInstalledConnectorsRequest uses only the authenticated user's identity.
-message ListInstalledConnectorsRequest {}
+message ListInstalledConnectorsRequest {
+  // An Application the caller owns, whose installations the request
+  // reaches; empty for the caller's own. An Application leaves it empty or
+  // names itself.
+  string application_id = 1;
+}
 
 // ListInstalledConnectorsResponse contains required entries and installations.
 message ListInstalledConnectorsResponse {
@@ -541,6 +590,10 @@ message ListInstalledConnectorsResponse {
 message InstallConnectorRequest {
   // Catalog Connector name.
   string name = 1;
+  // An Application the caller owns, whose installations the request
+  // reaches; empty for the caller's own. An Application leaves it empty or
+  // names itself.
+  string application_id = 2;
 }
 
 // InstallConnectorResponse returns the entry after installation.
@@ -555,6 +608,10 @@ message EnableConnectorRequest {
   string name = 1;
   // Installation version read before this mutation; stale values are rejected.
   uint32 version = 2;
+  // An Application the caller owns, whose installations the request
+  // reaches; empty for the caller's own. An Application leaves it empty or
+  // names itself.
+  string application_id = 3;
 }
 
 // EnableConnectorResponse returns the entry after the change.
@@ -569,6 +626,10 @@ message DisableConnectorRequest {
   string name = 1;
   // Installation version read before this mutation; stale values are rejected.
   uint32 version = 2;
+  // An Application the caller owns, whose installations the request
+  // reaches; empty for the caller's own. An Application leaves it empty or
+  // names itself.
+  string application_id = 3;
 }
 
 // DisableConnectorResponse returns the entry after the change.
@@ -583,6 +644,10 @@ message UninstallConnectorRequest {
   string name = 1;
   // Installation version read before this mutation; stale values are rejected.
   uint32 version = 2;
+  // An Application the caller owns, whose installations the request
+  // reaches; empty for the caller's own. An Application leaves it empty or
+  // names itself.
+  string application_id = 3;
 }
 
 // UninstallConnectorResponse confirms removal.

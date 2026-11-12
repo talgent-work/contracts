@@ -1137,7 +1137,11 @@ type ListInstalledPluginsRequest struct {
 	// Exclusive slug cursor from the prior page.
 	Cursor string `protobuf:"bytes,1,opt,name=cursor,proto3" json:"cursor,omitempty"`
 	// Page size, default 50, maximum 100.
-	PageSize      uint32 `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageSize uint32 `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	// An Application the caller owns, whose installations the request
+	// reaches; empty for the caller's own. An Application leaves it empty or
+	// names itself.
+	ApplicationId string `protobuf:"bytes,3,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1184,6 +1188,13 @@ func (x *ListInstalledPluginsRequest) GetPageSize() uint32 {
 		return x.PageSize
 	}
 	return 0
+}
+
+func (x *ListInstalledPluginsRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
+	}
+	return ""
 }
 
 // ListInstalledPluginsResponse is the published response.
@@ -1245,7 +1256,11 @@ func (x *ListInstalledPluginsResponse) GetNextCursor() string {
 type GetInstalledPluginRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Plugin slug.
-	Slug          string `protobuf:"bytes,1,opt,name=slug,proto3" json:"slug,omitempty"`
+	Slug string `protobuf:"bytes,1,opt,name=slug,proto3" json:"slug,omitempty"`
+	// An Application the caller owns, whose installations the request
+	// reaches; empty for the caller's own. An Application leaves it empty or
+	// names itself.
+	ApplicationId string `protobuf:"bytes,2,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1283,6 +1298,13 @@ func (*GetInstalledPluginRequest) Descriptor() ([]byte, []int) {
 func (x *GetInstalledPluginRequest) GetSlug() string {
 	if x != nil {
 		return x.Slug
+	}
+	return ""
+}
+
+func (x *GetInstalledPluginRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
 	}
 	return ""
 }
@@ -1340,6 +1362,10 @@ type InstallPluginRequest struct {
 	Slug string `protobuf:"bytes,1,opt,name=slug,proto3" json:"slug,omitempty"`
 	// Explicit typed manual values.
 	Configuration *structpb.Struct `protobuf:"bytes,2,opt,name=configuration,proto3" json:"configuration,omitempty"`
+	// An Application the caller owns, whose installations the request
+	// reaches; empty for the caller's own. An Application leaves it empty or
+	// names itself.
+	ApplicationId string `protobuf:"bytes,3,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1386,6 +1412,13 @@ func (x *InstallPluginRequest) GetConfiguration() *structpb.Struct {
 		return x.Configuration
 	}
 	return nil
+}
+
+func (x *InstallPluginRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
+	}
+	return ""
 }
 
 // InstallPluginResponse is the published response.
@@ -1440,7 +1473,11 @@ type EnablePluginRequest struct {
 	// Plugin slug.
 	Slug string `protobuf:"bytes,1,opt,name=slug,proto3" json:"slug,omitempty"`
 	// Version read before this mutation; stale values are rejected.
-	Version       uint32 `protobuf:"varint,2,opt,name=version,proto3" json:"version,omitempty"`
+	Version uint32 `protobuf:"varint,2,opt,name=version,proto3" json:"version,omitempty"`
+	// An Application the caller owns, whose installations the request
+	// reaches; empty for the caller's own. An Application leaves it empty or
+	// names itself.
+	ApplicationId string `protobuf:"bytes,3,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1487,6 +1524,13 @@ func (x *EnablePluginRequest) GetVersion() uint32 {
 		return x.Version
 	}
 	return 0
+}
+
+func (x *EnablePluginRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
+	}
+	return ""
 }
 
 // EnablePluginResponse is the published response.
@@ -1541,7 +1585,11 @@ type DisablePluginRequest struct {
 	// Plugin slug.
 	Slug string `protobuf:"bytes,1,opt,name=slug,proto3" json:"slug,omitempty"`
 	// Version read before this mutation; stale values are rejected.
-	Version       uint32 `protobuf:"varint,2,opt,name=version,proto3" json:"version,omitempty"`
+	Version uint32 `protobuf:"varint,2,opt,name=version,proto3" json:"version,omitempty"`
+	// An Application the caller owns, whose installations the request
+	// reaches; empty for the caller's own. An Application leaves it empty or
+	// names itself.
+	ApplicationId string `protobuf:"bytes,3,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1588,6 +1636,13 @@ func (x *DisablePluginRequest) GetVersion() uint32 {
 		return x.Version
 	}
 	return 0
+}
+
+func (x *DisablePluginRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
+	}
+	return ""
 }
 
 // DisablePluginResponse is the published response.
@@ -1644,7 +1699,11 @@ type SetPluginConfigurationRequest struct {
 	// Version read before this mutation; stale values are rejected.
 	Version uint32 `protobuf:"varint,2,opt,name=version,proto3" json:"version,omitempty"`
 	// Manual values to set; omitted fields remain unchanged.
-	Values        *structpb.Struct `protobuf:"bytes,3,opt,name=values,proto3" json:"values,omitempty"`
+	Values *structpb.Struct `protobuf:"bytes,3,opt,name=values,proto3" json:"values,omitempty"`
+	// An Application the caller owns, whose installations the request
+	// reaches; empty for the caller's own. An Application leaves it empty or
+	// names itself.
+	ApplicationId string `protobuf:"bytes,4,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1698,6 +1757,13 @@ func (x *SetPluginConfigurationRequest) GetValues() *structpb.Struct {
 		return x.Values
 	}
 	return nil
+}
+
+func (x *SetPluginConfigurationRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
+	}
+	return ""
 }
 
 // SetPluginConfigurationResponse is the published response.
@@ -1754,7 +1820,11 @@ type DeletePluginConfigurationRequest struct {
 	// Version read before this mutation; stale values are rejected.
 	Version uint32 `protobuf:"varint,2,opt,name=version,proto3" json:"version,omitempty"`
 	// Manual parameter names to delete.
-	Names         []string `protobuf:"bytes,3,rep,name=names,proto3" json:"names,omitempty"`
+	Names []string `protobuf:"bytes,3,rep,name=names,proto3" json:"names,omitempty"`
+	// An Application the caller owns, whose installations the request
+	// reaches; empty for the caller's own. An Application leaves it empty or
+	// names itself.
+	ApplicationId string `protobuf:"bytes,4,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1810,6 +1880,13 @@ func (x *DeletePluginConfigurationRequest) GetNames() []string {
 	return nil
 }
 
+func (x *DeletePluginConfigurationRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
+	}
+	return ""
+}
+
 // DeletePluginConfigurationResponse is the published response.
 type DeletePluginConfigurationResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -1862,7 +1939,11 @@ type UninstallPluginRequest struct {
 	// Plugin slug.
 	Slug string `protobuf:"bytes,1,opt,name=slug,proto3" json:"slug,omitempty"`
 	// Version read before this mutation; stale values are rejected.
-	Version       uint32 `protobuf:"varint,2,opt,name=version,proto3" json:"version,omitempty"`
+	Version uint32 `protobuf:"varint,2,opt,name=version,proto3" json:"version,omitempty"`
+	// An Application the caller owns, whose installations the request
+	// reaches; empty for the caller's own. An Application leaves it empty or
+	// names itself.
+	ApplicationId string `protobuf:"bytes,3,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1909,6 +1990,13 @@ func (x *UninstallPluginRequest) GetVersion() uint32 {
 		return x.Version
 	}
 	return 0
+}
+
+func (x *UninstallPluginRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
+	}
+	return ""
 }
 
 // UninstallPluginResponse is the published response.
@@ -2223,7 +2311,11 @@ func (x *ConnectorPlugin) GetDescription() string {
 
 // ListConnectorsRequest uses only the authenticated user's identity.
 type ListConnectorsRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// An Application the caller owns, whose installations the request
+	// reaches; empty for the caller's own. An Application leaves it empty or
+	// names itself.
+	ApplicationId string `protobuf:"bytes,1,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2256,6 +2348,13 @@ func (x *ListConnectorsRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ListConnectorsRequest.ProtoReflect.Descriptor instead.
 func (*ListConnectorsRequest) Descriptor() ([]byte, []int) {
 	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{35}
+}
+
+func (x *ListConnectorsRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
+	}
+	return ""
 }
 
 // ListConnectorsResponse contains every offered catalog entry.
@@ -2308,7 +2407,11 @@ func (x *ListConnectorsResponse) GetConnectors() []*Connector {
 type GetConnectorRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Catalog Connector name.
-	Name          string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	// An Application the caller owns, whose installations the request
+	// reaches; empty for the caller's own. An Application leaves it empty or
+	// names itself.
+	ApplicationId string `protobuf:"bytes,2,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2346,6 +2449,13 @@ func (*GetConnectorRequest) Descriptor() ([]byte, []int) {
 func (x *GetConnectorRequest) GetName() string {
 	if x != nil {
 		return x.Name
+	}
+	return ""
+}
+
+func (x *GetConnectorRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
 	}
 	return ""
 }
@@ -2407,7 +2517,11 @@ func (x *GetConnectorResponse) GetPlugins() []*ConnectorPlugin {
 
 // ListInstalledConnectorsRequest uses only the authenticated user's identity.
 type ListInstalledConnectorsRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// An Application the caller owns, whose installations the request
+	// reaches; empty for the caller's own. An Application leaves it empty or
+	// names itself.
+	ApplicationId string `protobuf:"bytes,1,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2440,6 +2554,13 @@ func (x *ListInstalledConnectorsRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ListInstalledConnectorsRequest.ProtoReflect.Descriptor instead.
 func (*ListInstalledConnectorsRequest) Descriptor() ([]byte, []int) {
 	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{39}
+}
+
+func (x *ListInstalledConnectorsRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
+	}
+	return ""
 }
 
 // ListInstalledConnectorsResponse contains required entries and installations.
@@ -2492,7 +2613,11 @@ func (x *ListInstalledConnectorsResponse) GetConnectors() []*Connector {
 type InstallConnectorRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Catalog Connector name.
-	Name          string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	// An Application the caller owns, whose installations the request
+	// reaches; empty for the caller's own. An Application leaves it empty or
+	// names itself.
+	ApplicationId string `protobuf:"bytes,2,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2530,6 +2655,13 @@ func (*InstallConnectorRequest) Descriptor() ([]byte, []int) {
 func (x *InstallConnectorRequest) GetName() string {
 	if x != nil {
 		return x.Name
+	}
+	return ""
+}
+
+func (x *InstallConnectorRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
 	}
 	return ""
 }
@@ -2586,7 +2718,11 @@ type EnableConnectorRequest struct {
 	// Catalog Connector name.
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// Installation version read before this mutation; stale values are rejected.
-	Version       uint32 `protobuf:"varint,2,opt,name=version,proto3" json:"version,omitempty"`
+	Version uint32 `protobuf:"varint,2,opt,name=version,proto3" json:"version,omitempty"`
+	// An Application the caller owns, whose installations the request
+	// reaches; empty for the caller's own. An Application leaves it empty or
+	// names itself.
+	ApplicationId string `protobuf:"bytes,3,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2633,6 +2769,13 @@ func (x *EnableConnectorRequest) GetVersion() uint32 {
 		return x.Version
 	}
 	return 0
+}
+
+func (x *EnableConnectorRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
+	}
+	return ""
 }
 
 // EnableConnectorResponse returns the entry after the change.
@@ -2687,7 +2830,11 @@ type DisableConnectorRequest struct {
 	// Catalog Connector name.
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// Installation version read before this mutation; stale values are rejected.
-	Version       uint32 `protobuf:"varint,2,opt,name=version,proto3" json:"version,omitempty"`
+	Version uint32 `protobuf:"varint,2,opt,name=version,proto3" json:"version,omitempty"`
+	// An Application the caller owns, whose installations the request
+	// reaches; empty for the caller's own. An Application leaves it empty or
+	// names itself.
+	ApplicationId string `protobuf:"bytes,3,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2734,6 +2881,13 @@ func (x *DisableConnectorRequest) GetVersion() uint32 {
 		return x.Version
 	}
 	return 0
+}
+
+func (x *DisableConnectorRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
+	}
+	return ""
 }
 
 // DisableConnectorResponse returns the entry after the change.
@@ -2788,7 +2942,11 @@ type UninstallConnectorRequest struct {
 	// Catalog Connector name.
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// Installation version read before this mutation; stale values are rejected.
-	Version       uint32 `protobuf:"varint,2,opt,name=version,proto3" json:"version,omitempty"`
+	Version uint32 `protobuf:"varint,2,opt,name=version,proto3" json:"version,omitempty"`
+	// An Application the caller owns, whose installations the request
+	// reaches; empty for the caller's own. An Application leaves it empty or
+	// names itself.
+	ApplicationId string `protobuf:"bytes,3,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2835,6 +2993,13 @@ func (x *UninstallConnectorRequest) GetVersion() uint32 {
 		return x.Version
 	}
 	return 0
+}
+
+func (x *UninstallConnectorRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
+	}
+	return ""
 }
 
 // UninstallConnectorResponse confirms removal.
@@ -2972,48 +3137,56 @@ const file_marketplace_public_v1_marketplace_proto_rawDesc = "" +
 	"\x10GetPluginRequest\x12\x12\n" +
 	"\x04slug\x18\x01 \x01(\tR\x04slug\"Q\n" +
 	"\x11GetPluginResponse\x12<\n" +
-	"\x06plugin\x18\x01 \x01(\v2$.marketplace.public.v1.PluginReleaseR\x06plugin\"R\n" +
+	"\x06plugin\x18\x01 \x01(\v2$.marketplace.public.v1.PluginReleaseR\x06plugin\"y\n" +
 	"\x1bListInstalledPluginsRequest\x12\x16\n" +
 	"\x06cursor\x18\x01 \x01(\tR\x06cursor\x12\x1b\n" +
-	"\tpage_size\x18\x02 \x01(\rR\bpageSize\"\x81\x01\n" +
+	"\tpage_size\x18\x02 \x01(\rR\bpageSize\x12%\n" +
+	"\x0eapplication_id\x18\x03 \x01(\tR\rapplicationId\"\x81\x01\n" +
 	"\x1cListInstalledPluginsResponse\x12@\n" +
 	"\aplugins\x18\x01 \x03(\v2&.marketplace.public.v1.InstalledPluginR\aplugins\x12\x1f\n" +
 	"\vnext_cursor\x18\x02 \x01(\tR\n" +
-	"nextCursor\"/\n" +
+	"nextCursor\"V\n" +
 	"\x19GetInstalledPluginRequest\x12\x12\n" +
-	"\x04slug\x18\x01 \x01(\tR\x04slug\"\\\n" +
+	"\x04slug\x18\x01 \x01(\tR\x04slug\x12%\n" +
+	"\x0eapplication_id\x18\x02 \x01(\tR\rapplicationId\"\\\n" +
 	"\x1aGetInstalledPluginResponse\x12>\n" +
-	"\x06plugin\x18\x01 \x01(\v2&.marketplace.public.v1.InstalledPluginR\x06plugin\"i\n" +
+	"\x06plugin\x18\x01 \x01(\v2&.marketplace.public.v1.InstalledPluginR\x06plugin\"\x90\x01\n" +
 	"\x14InstallPluginRequest\x12\x12\n" +
 	"\x04slug\x18\x01 \x01(\tR\x04slug\x12=\n" +
-	"\rconfiguration\x18\x02 \x01(\v2\x17.google.protobuf.StructR\rconfiguration\"W\n" +
+	"\rconfiguration\x18\x02 \x01(\v2\x17.google.protobuf.StructR\rconfiguration\x12%\n" +
+	"\x0eapplication_id\x18\x03 \x01(\tR\rapplicationId\"W\n" +
 	"\x15InstallPluginResponse\x12>\n" +
-	"\x06plugin\x18\x01 \x01(\v2&.marketplace.public.v1.InstalledPluginR\x06plugin\"C\n" +
+	"\x06plugin\x18\x01 \x01(\v2&.marketplace.public.v1.InstalledPluginR\x06plugin\"j\n" +
 	"\x13EnablePluginRequest\x12\x12\n" +
 	"\x04slug\x18\x01 \x01(\tR\x04slug\x12\x18\n" +
-	"\aversion\x18\x02 \x01(\rR\aversion\"V\n" +
+	"\aversion\x18\x02 \x01(\rR\aversion\x12%\n" +
+	"\x0eapplication_id\x18\x03 \x01(\tR\rapplicationId\"V\n" +
 	"\x14EnablePluginResponse\x12>\n" +
-	"\x06plugin\x18\x01 \x01(\v2&.marketplace.public.v1.InstalledPluginR\x06plugin\"D\n" +
+	"\x06plugin\x18\x01 \x01(\v2&.marketplace.public.v1.InstalledPluginR\x06plugin\"k\n" +
 	"\x14DisablePluginRequest\x12\x12\n" +
 	"\x04slug\x18\x01 \x01(\tR\x04slug\x12\x18\n" +
-	"\aversion\x18\x02 \x01(\rR\aversion\"W\n" +
+	"\aversion\x18\x02 \x01(\rR\aversion\x12%\n" +
+	"\x0eapplication_id\x18\x03 \x01(\tR\rapplicationId\"W\n" +
 	"\x15DisablePluginResponse\x12>\n" +
-	"\x06plugin\x18\x01 \x01(\v2&.marketplace.public.v1.InstalledPluginR\x06plugin\"~\n" +
+	"\x06plugin\x18\x01 \x01(\v2&.marketplace.public.v1.InstalledPluginR\x06plugin\"\xa5\x01\n" +
 	"\x1dSetPluginConfigurationRequest\x12\x12\n" +
 	"\x04slug\x18\x01 \x01(\tR\x04slug\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\rR\aversion\x12/\n" +
-	"\x06values\x18\x03 \x01(\v2\x17.google.protobuf.StructR\x06values\"`\n" +
+	"\x06values\x18\x03 \x01(\v2\x17.google.protobuf.StructR\x06values\x12%\n" +
+	"\x0eapplication_id\x18\x04 \x01(\tR\rapplicationId\"`\n" +
 	"\x1eSetPluginConfigurationResponse\x12>\n" +
-	"\x06plugin\x18\x01 \x01(\v2&.marketplace.public.v1.InstalledPluginR\x06plugin\"f\n" +
+	"\x06plugin\x18\x01 \x01(\v2&.marketplace.public.v1.InstalledPluginR\x06plugin\"\x8d\x01\n" +
 	" DeletePluginConfigurationRequest\x12\x12\n" +
 	"\x04slug\x18\x01 \x01(\tR\x04slug\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\rR\aversion\x12\x14\n" +
-	"\x05names\x18\x03 \x03(\tR\x05names\"c\n" +
+	"\x05names\x18\x03 \x03(\tR\x05names\x12%\n" +
+	"\x0eapplication_id\x18\x04 \x01(\tR\rapplicationId\"c\n" +
 	"!DeletePluginConfigurationResponse\x12>\n" +
-	"\x06plugin\x18\x01 \x01(\v2&.marketplace.public.v1.InstalledPluginR\x06plugin\"F\n" +
+	"\x06plugin\x18\x01 \x01(\v2&.marketplace.public.v1.InstalledPluginR\x06plugin\"m\n" +
 	"\x16UninstallPluginRequest\x12\x12\n" +
 	"\x04slug\x18\x01 \x01(\tR\x04slug\x12\x18\n" +
-	"\aversion\x18\x02 \x01(\rR\aversion\"\x19\n" +
+	"\aversion\x18\x02 \x01(\rR\aversion\x12%\n" +
+	"\x0eapplication_id\x18\x03 \x01(\tR\rapplicationId\"\x19\n" +
 	"\x17UninstallPluginResponse\"\xf5\x01\n" +
 	"\x1dConnectorProviderRelationship\x12!\n" +
 	"\fconnector_id\x18\x01 \x01(\tR\vconnectorId\x12\x1a\n" +
@@ -3035,40 +3208,47 @@ const file_marketplace_public_v1_marketplace_proto_rawDesc = "" +
 	"\aoffered\x18\t \x01(\bR\aoffered\"G\n" +
 	"\x0fConnectorPlugin\x12\x12\n" +
 	"\x04slug\x18\x01 \x01(\tR\x04slug\x12 \n" +
-	"\vdescription\x18\x02 \x01(\tR\vdescription\"\x17\n" +
-	"\x15ListConnectorsRequest\"Z\n" +
+	"\vdescription\x18\x02 \x01(\tR\vdescription\">\n" +
+	"\x15ListConnectorsRequest\x12%\n" +
+	"\x0eapplication_id\x18\x01 \x01(\tR\rapplicationId\"Z\n" +
 	"\x16ListConnectorsResponse\x12@\n" +
 	"\n" +
 	"connectors\x18\x01 \x03(\v2 .marketplace.public.v1.ConnectorR\n" +
-	"connectors\")\n" +
+	"connectors\"P\n" +
 	"\x13GetConnectorRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\"\x98\x01\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12%\n" +
+	"\x0eapplication_id\x18\x02 \x01(\tR\rapplicationId\"\x98\x01\n" +
 	"\x14GetConnectorResponse\x12>\n" +
 	"\tconnector\x18\x01 \x01(\v2 .marketplace.public.v1.ConnectorR\tconnector\x12@\n" +
-	"\aplugins\x18\x02 \x03(\v2&.marketplace.public.v1.ConnectorPluginR\aplugins\" \n" +
-	"\x1eListInstalledConnectorsRequest\"c\n" +
+	"\aplugins\x18\x02 \x03(\v2&.marketplace.public.v1.ConnectorPluginR\aplugins\"G\n" +
+	"\x1eListInstalledConnectorsRequest\x12%\n" +
+	"\x0eapplication_id\x18\x01 \x01(\tR\rapplicationId\"c\n" +
 	"\x1fListInstalledConnectorsResponse\x12@\n" +
 	"\n" +
 	"connectors\x18\x01 \x03(\v2 .marketplace.public.v1.ConnectorR\n" +
-	"connectors\"-\n" +
+	"connectors\"T\n" +
 	"\x17InstallConnectorRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\"Z\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12%\n" +
+	"\x0eapplication_id\x18\x02 \x01(\tR\rapplicationId\"Z\n" +
 	"\x18InstallConnectorResponse\x12>\n" +
-	"\tconnector\x18\x01 \x01(\v2 .marketplace.public.v1.ConnectorR\tconnector\"F\n" +
+	"\tconnector\x18\x01 \x01(\v2 .marketplace.public.v1.ConnectorR\tconnector\"m\n" +
 	"\x16EnableConnectorRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
-	"\aversion\x18\x02 \x01(\rR\aversion\"Y\n" +
+	"\aversion\x18\x02 \x01(\rR\aversion\x12%\n" +
+	"\x0eapplication_id\x18\x03 \x01(\tR\rapplicationId\"Y\n" +
 	"\x17EnableConnectorResponse\x12>\n" +
-	"\tconnector\x18\x01 \x01(\v2 .marketplace.public.v1.ConnectorR\tconnector\"G\n" +
+	"\tconnector\x18\x01 \x01(\v2 .marketplace.public.v1.ConnectorR\tconnector\"n\n" +
 	"\x17DisableConnectorRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
-	"\aversion\x18\x02 \x01(\rR\aversion\"Z\n" +
+	"\aversion\x18\x02 \x01(\rR\aversion\x12%\n" +
+	"\x0eapplication_id\x18\x03 \x01(\tR\rapplicationId\"Z\n" +
 	"\x18DisableConnectorResponse\x12>\n" +
-	"\tconnector\x18\x01 \x01(\v2 .marketplace.public.v1.ConnectorR\tconnector\"I\n" +
+	"\tconnector\x18\x01 \x01(\v2 .marketplace.public.v1.ConnectorR\tconnector\"p\n" +
 	"\x19UninstallConnectorRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
-	"\aversion\x18\x02 \x01(\rR\aversion\"\x1c\n" +
-	"\x1aUninstallConnectorResponse2\xc1\x1a\n" +
+	"\aversion\x18\x02 \x01(\rR\aversion\x12%\n" +
+	"\x0eapplication_id\x18\x03 \x01(\tR\rapplicationId\"\x1c\n" +
+	"\x1aUninstallConnectorResponse2\xd2\x1a\n" +
 	"\x12MarketplaceService\x12\x9a\x01\n" +
 	"\x1aBeginProviderAuthorization\x128.marketplace.public.v1.BeginProviderAuthorizationRequest\x1a9.marketplace.public.v1.BeginProviderAuthorizationResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x01\x12\xa3\x01\n" +
@@ -3085,41 +3265,41 @@ const file_marketplace_public_v1_marketplace_proto_rawDesc = "" +
 	"\x1aListPersonalAuthorizations\x128.marketplace.public.v1.ListPersonalAuthorizationsRequest\x1a9.marketplace.public.v1.ListPersonalAuthorizationsResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x01\x12\x9d\x01\n" +
 	"\x1bCancelPersonalAuthorization\x129.marketplace.public.v1.CancelPersonalAuthorizationRequest\x1a:.marketplace.public.v1.CancelPersonalAuthorizationResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12m\n" +
-	"\vListPlugins\x12).marketplace.public.v1.ListPluginsRequest\x1a*.marketplace.public.v1.ListPluginsResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12g\n" +
-	"\tGetPlugin\x12'.marketplace.public.v1.GetPluginRequest\x1a(.marketplace.public.v1.GetPluginResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12\x88\x01\n" +
-	"\x14ListInstalledPlugins\x122.marketplace.public.v1.ListInstalledPluginsRequest\x1a3.marketplace.public.v1.ListInstalledPluginsResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12\x82\x01\n" +
-	"\x12GetInstalledPlugin\x120.marketplace.public.v1.GetInstalledPluginRequest\x1a1.marketplace.public.v1.GetInstalledPluginResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12s\n" +
-	"\rInstallPlugin\x12+.marketplace.public.v1.InstallPluginRequest\x1a,.marketplace.public.v1.InstallPluginResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12p\n" +
-	"\fEnablePlugin\x12*.marketplace.public.v1.EnablePluginRequest\x1a+.marketplace.public.v1.EnablePluginResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12s\n" +
-	"\rDisablePlugin\x12+.marketplace.public.v1.DisablePluginRequest\x1a,.marketplace.public.v1.DisablePluginResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12\x8e\x01\n" +
-	"\x16SetPluginConfiguration\x124.marketplace.public.v1.SetPluginConfigurationRequest\x1a5.marketplace.public.v1.SetPluginConfigurationResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12\x97\x01\n" +
-	"\x19DeletePluginConfiguration\x127.marketplace.public.v1.DeletePluginConfigurationRequest\x1a8.marketplace.public.v1.DeletePluginConfigurationResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12y\n" +
-	"\x0fUninstallPlugin\x12-.marketplace.public.v1.UninstallPluginRequest\x1a..marketplace.public.v1.UninstallPluginResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12v\n" +
-	"\x0eListConnectors\x12,.marketplace.public.v1.ListConnectorsRequest\x1a-.marketplace.public.v1.ListConnectorsResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12p\n" +
-	"\fGetConnector\x12*.marketplace.public.v1.GetConnectorRequest\x1a+.marketplace.public.v1.GetConnectorResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12\x91\x01\n" +
-	"\x17ListInstalledConnectors\x125.marketplace.public.v1.ListInstalledConnectorsRequest\x1a6.marketplace.public.v1.ListInstalledConnectorsResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12|\n" +
-	"\x10InstallConnector\x12..marketplace.public.v1.InstallConnectorRequest\x1a/.marketplace.public.v1.InstallConnectorResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12y\n" +
-	"\x0fEnableConnector\x12-.marketplace.public.v1.EnableConnectorRequest\x1a..marketplace.public.v1.EnableConnectorResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12|\n" +
-	"\x10DisableConnector\x12..marketplace.public.v1.DisableConnectorRequest\x1a/.marketplace.public.v1.DisableConnectorResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12\x82\x01\n" +
-	"\x12UninstallConnector\x120.marketplace.public.v1.UninstallConnectorRequest\x1a1.marketplace.public.v1.UninstallConnectorResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01BTZRgithub.com/talgent-work/contracts/gen/go/marketplace/public/v1;marketplacepublicv1b\x06proto3"
+	"\x01\x01\x12n\n" +
+	"\vListPlugins\x12).marketplace.public.v1.ListPluginsRequest\x1a*.marketplace.public.v1.ListPluginsResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12h\n" +
+	"\tGetPlugin\x12'.marketplace.public.v1.GetPluginRequest\x1a(.marketplace.public.v1.GetPluginResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12\x89\x01\n" +
+	"\x14ListInstalledPlugins\x122.marketplace.public.v1.ListInstalledPluginsRequest\x1a3.marketplace.public.v1.ListInstalledPluginsResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12\x83\x01\n" +
+	"\x12GetInstalledPlugin\x120.marketplace.public.v1.GetInstalledPluginRequest\x1a1.marketplace.public.v1.GetInstalledPluginResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12t\n" +
+	"\rInstallPlugin\x12+.marketplace.public.v1.InstallPluginRequest\x1a,.marketplace.public.v1.InstallPluginResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12q\n" +
+	"\fEnablePlugin\x12*.marketplace.public.v1.EnablePluginRequest\x1a+.marketplace.public.v1.EnablePluginResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12t\n" +
+	"\rDisablePlugin\x12+.marketplace.public.v1.DisablePluginRequest\x1a,.marketplace.public.v1.DisablePluginResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12\x8f\x01\n" +
+	"\x16SetPluginConfiguration\x124.marketplace.public.v1.SetPluginConfigurationRequest\x1a5.marketplace.public.v1.SetPluginConfigurationResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12\x98\x01\n" +
+	"\x19DeletePluginConfiguration\x127.marketplace.public.v1.DeletePluginConfigurationRequest\x1a8.marketplace.public.v1.DeletePluginConfigurationResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12z\n" +
+	"\x0fUninstallPlugin\x12-.marketplace.public.v1.UninstallPluginRequest\x1a..marketplace.public.v1.UninstallPluginResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12w\n" +
+	"\x0eListConnectors\x12,.marketplace.public.v1.ListConnectorsRequest\x1a-.marketplace.public.v1.ListConnectorsResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12q\n" +
+	"\fGetConnector\x12*.marketplace.public.v1.GetConnectorRequest\x1a+.marketplace.public.v1.GetConnectorResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12\x92\x01\n" +
+	"\x17ListInstalledConnectors\x125.marketplace.public.v1.ListInstalledConnectorsRequest\x1a6.marketplace.public.v1.ListInstalledConnectorsResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12}\n" +
+	"\x10InstallConnector\x12..marketplace.public.v1.InstallConnectorRequest\x1a/.marketplace.public.v1.InstallConnectorResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12z\n" +
+	"\x0fEnableConnector\x12-.marketplace.public.v1.EnableConnectorRequest\x1a..marketplace.public.v1.EnableConnectorResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12}\n" +
+	"\x10DisableConnector\x12..marketplace.public.v1.DisableConnectorRequest\x1a/.marketplace.public.v1.DisableConnectorResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12\x83\x01\n" +
+	"\x12UninstallConnector\x120.marketplace.public.v1.UninstallConnectorRequest\x1a1.marketplace.public.v1.UninstallConnectorResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03BTZRgithub.com/talgent-work/contracts/gen/go/marketplace/public/v1;marketplacepublicv1b\x06proto3"
 
 var (
 	file_marketplace_public_v1_marketplace_proto_rawDescOnce sync.Once

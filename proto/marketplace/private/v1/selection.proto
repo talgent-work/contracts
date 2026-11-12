@@ -17,7 +17,8 @@ service SelectionService {
   rpc ReadConnectorSelection(ReadConnectorSelectionRequest) returns (ReadConnectorSelectionResponse);
 }
 
-// ReadPersonalPluginsRequest selects an owner-scoped page.
+// ReadPersonalPluginsRequest selects a page of the delegated owner's
+// installations: the delegated id names a person or an Application.
 message ReadPersonalPluginsRequest {
   // Exclusive slug cursor.
   string cursor = 1;
@@ -48,7 +49,8 @@ message ResolvePluginResponse {
   string catalog_name = 2;
 }
 
-// ReadConnectorSelectionRequest uses only the delegated owner.
+// ReadConnectorSelectionRequest uses only the delegated owner, a person or an
+// Application.
 message ReadConnectorSelectionRequest {}
 
 // ReadConnectorSelectionResponse is trusted startup input, never a UI response.

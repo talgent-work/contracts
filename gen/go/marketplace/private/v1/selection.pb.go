@@ -182,7 +182,10 @@ func (x *ResolvePluginRequest) GetSlug() string {
 type ResolvePluginResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Complete selected release.
-	Plugin        *v1.PluginRelease `protobuf:"bytes,1,opt,name=plugin,proto3" json:"plugin,omitempty"`
+	Plugin *v1.PluginRelease `protobuf:"bytes,1,opt,name=plugin,proto3" json:"plugin,omitempty"`
+	// Name of the catalog that publishes the release. A Harness installs the
+	// release from a marketplace of this name, so every Work names it the same.
+	CatalogName   string `protobuf:"bytes,2,opt,name=catalog_name,json=catalogName,proto3" json:"catalog_name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -222,6 +225,13 @@ func (x *ResolvePluginResponse) GetPlugin() *v1.PluginRelease {
 		return x.Plugin
 	}
 	return nil
+}
+
+func (x *ResolvePluginResponse) GetCatalogName() string {
+	if x != nil {
+		return x.CatalogName
+	}
+	return ""
 }
 
 // ReadConnectorSelectionRequest uses only the delegated owner.
@@ -492,9 +502,10 @@ const file_marketplace_private_v1_selection_proto_rawDesc = "" +
 	"\vnext_cursor\x18\x02 \x01(\tR\n" +
 	"nextCursor\"*\n" +
 	"\x14ResolvePluginRequest\x12\x12\n" +
-	"\x04slug\x18\x01 \x01(\tR\x04slug\"U\n" +
+	"\x04slug\x18\x01 \x01(\tR\x04slug\"x\n" +
 	"\x15ResolvePluginResponse\x12<\n" +
-	"\x06plugin\x18\x01 \x01(\v2$.marketplace.public.v1.PluginReleaseR\x06plugin\"\x1f\n" +
+	"\x06plugin\x18\x01 \x01(\v2$.marketplace.public.v1.PluginReleaseR\x06plugin\x12!\n" +
+	"\fcatalog_name\x18\x02 \x01(\tR\vcatalogName\"\x1f\n" +
 	"\x1dReadConnectorSelectionRequest\"\x9e\x01\n" +
 	"\x1eReadConnectorSelectionResponse\x12H\n" +
 	"\n" +

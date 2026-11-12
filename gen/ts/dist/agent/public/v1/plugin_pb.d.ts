@@ -67,7 +67,8 @@ export declare type WorkPluginResult = Message<"agent.public.v1.WorkPluginResult
   slug: string;
 
   /**
-   * Fixed release version, not the current catalog version.
+   * Version of the release whose declarations the Work last took; the
+   * Harness may load a newer one.
    *
    * @generated from field: string release_version = 2;
    */
@@ -114,6 +115,14 @@ export declare type WorkPluginResult = Message<"agent.public.v1.WorkPluginResult
    * @generated from field: google.protobuf.Timestamp updated_at = 8;
    */
   updatedAt?: Timestamp;
+
+  /**
+   * Version the Work's Harness reported loading; empty unless loading
+   * succeeded and the Harness reported a version.
+   *
+   * @generated from field: string loaded_version = 9;
+   */
+  loadedVersion: string;
 };
 
 /**

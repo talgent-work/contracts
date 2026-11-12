@@ -43,6 +43,9 @@ message ResolvePluginRequest {
 message ResolvePluginResponse {
   // Complete selected release.
   marketplace.public.v1.PluginRelease plugin = 1;
+  // Name of the catalog that publishes the release. A Harness installs the
+  // release from a marketplace of this name, so every Work names it the same.
+  string catalog_name = 2;
 }
 
 // ReadConnectorSelectionRequest uses only the delegated owner.

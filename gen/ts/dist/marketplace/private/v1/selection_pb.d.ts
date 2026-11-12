@@ -97,6 +97,14 @@ export declare type ResolvePluginResponse = Message<"marketplace.private.v1.Reso
    * @generated from field: marketplace.public.v1.PluginRelease plugin = 1;
    */
   plugin?: PluginRelease;
+
+  /**
+   * Name of the catalog that publishes the release. A Harness installs the
+   * release from a marketplace of this name, so every Work names it the same.
+   *
+   * @generated from field: string catalog_name = 2;
+   */
+  catalogName: string;
 };
 
 /**

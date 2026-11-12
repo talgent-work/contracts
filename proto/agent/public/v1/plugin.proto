@@ -24,7 +24,8 @@ message GetWorkPluginResultsResponse {
 message WorkPluginResult {
   // Logical identity retained by the Work.
   string slug = 1;
-  // Fixed release version, not the current catalog version.
+  // Version of the release whose declarations the Work last took; the
+  // Harness may load a newer one.
   string release_version = 2;
   // Original catalog source retained by the Work.
   string source = 3;
@@ -38,6 +39,9 @@ message WorkPluginResult {
   string loading_reason = 7;
   // Time of the latest stored observation; absent before any feedback.
   google.protobuf.Timestamp updated_at = 8;
+  // Version the Work's Harness reported loading; empty unless loading
+  // succeeded and the Harness reported a version.
+  string loaded_version = 9;
 }
 
 // PluginPreparationStatus is an observation, not an execution gate.

@@ -174,7 +174,8 @@ type WorkPluginResult struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Logical identity retained by the Work.
 	Slug string `protobuf:"bytes,1,opt,name=slug,proto3" json:"slug,omitempty"`
-	// Fixed release version, not the current catalog version.
+	// Version of the release whose declarations the Work last took; the
+	// Harness may load a newer one.
 	ReleaseVersion string `protobuf:"bytes,2,opt,name=release_version,json=releaseVersion,proto3" json:"release_version,omitempty"`
 	// Original catalog source retained by the Work.
 	Source string `protobuf:"bytes,3,opt,name=source,proto3" json:"source,omitempty"`
@@ -187,7 +188,10 @@ type WorkPluginResult struct {
 	// Safe loading failure code; empty unless loading failed.
 	LoadingReason string `protobuf:"bytes,7,opt,name=loading_reason,json=loadingReason,proto3" json:"loading_reason,omitempty"`
 	// Time of the latest stored observation; absent before any feedback.
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	// Version the Work's Harness reported loading; empty unless loading
+	// succeeded and the Harness reported a version.
+	LoadedVersion string `protobuf:"bytes,9,opt,name=loaded_version,json=loadedVersion,proto3" json:"loaded_version,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -278,6 +282,13 @@ func (x *WorkPluginResult) GetUpdatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
+func (x *WorkPluginResult) GetLoadedVersion() string {
+	if x != nil {
+		return x.LoadedVersion
+	}
+	return ""
+}
+
 var File_agent_public_v1_plugin_proto protoreflect.FileDescriptor
 
 const file_agent_public_v1_plugin_proto_rawDesc = "" +
@@ -286,7 +297,7 @@ const file_agent_public_v1_plugin_proto_rawDesc = "" +
 	"\x1bGetWorkPluginResultsRequest\x12\x17\n" +
 	"\awork_id\x18\x01 \x01(\tR\x06workId\"[\n" +
 	"\x1cGetWorkPluginResultsResponse\x12;\n" +
-	"\aplugins\x18\x01 \x03(\v2!.agent.public.v1.WorkPluginResultR\aplugins\"\x8c\x03\n" +
+	"\aplugins\x18\x01 \x03(\v2!.agent.public.v1.WorkPluginResultR\aplugins\"\xb3\x03\n" +
 	"\x10WorkPluginResult\x12\x12\n" +
 	"\x04slug\x18\x01 \x01(\tR\x04slug\x12'\n" +
 	"\x0frelease_version\x18\x02 \x01(\tR\x0ereleaseVersion\x12\x16\n" +
@@ -296,7 +307,8 @@ const file_agent_public_v1_plugin_proto_rawDesc = "" +
 	"\aloading\x18\x06 \x01(\x0e2(.agent.public.v1.PluginPreparationStatusR\aloading\x12%\n" +
 	"\x0eloading_reason\x18\a \x01(\tR\rloadingReason\x129\n" +
 	"\n" +
-	"updated_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt*\x93\x01\n" +
+	"updated_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12%\n" +
+	"\x0eloaded_version\x18\t \x01(\tR\rloadedVersion*\x93\x01\n" +
 	"\x17PluginPreparationStatus\x12)\n" +
 	"%PLUGIN_PREPARATION_STATUS_UNSPECIFIED\x10\x00\x12'\n" +
 	"#PLUGIN_PREPARATION_STATUS_SUCCEEDED\x10\x01\x12$\n" +

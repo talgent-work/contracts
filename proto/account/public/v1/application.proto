@@ -47,6 +47,15 @@ service ApplicationService {
       principals: [PRINCIPAL_USER]
     };
   }
+  // RemoveApplication removes an Application for good: every Client Secret
+  // is revoked at once, so the grant refuses it, a token already issued stops
+  // at its expiry, and its Works are closed. It never returns. NotFound for an
+  // Application the caller does not own or already removed.
+  rpc RemoveApplication(RemoveApplicationRequest) returns (RemoveApplicationResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
 }
 
 // Application is a registered Application as its Application Owner sees it.
@@ -155,3 +164,12 @@ message RevokeClientSecretResponse {
   // The Application, without the revoked secret.
   Application application = 1;
 }
+
+// RemoveApplicationRequest names the Application its owner removes.
+message RemoveApplicationRequest {
+  // The Application's id.
+  string application_id = 1;
+}
+
+// RemoveApplicationResponse confirms the removal.
+message RemoveApplicationResponse {}

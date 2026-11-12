@@ -14,6 +14,9 @@ switch without downtime; a secret already in an earlier overlap ends at once. A 
 (`ApplicationService.RevokeClientSecret`) is refused from then on, while tokens it already obtained
 stop at their short expiry.
 
+Removing the Application (`ApplicationService.RemoveApplication`) revokes every Client Secret it
+holds at once; it never returns, and its tokens likewise stop at their short expiry.
+
 ## Request
 
 `POST <public origin>/auth/token`, `Content-Type: application/x-www-form-urlencoded`:

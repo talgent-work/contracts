@@ -39,6 +39,9 @@ const (
 	// ApplicationServiceRevokeClientSecretProcedure is the procedure name of the ApplicationService's
 	// RevokeClientSecret RPC.
 	ApplicationServiceRevokeClientSecretProcedure = "/account.public.v1.ApplicationService/RevokeClientSecret"
+	// ApplicationServiceRemoveApplicationProcedure is the procedure name of the ApplicationService's
+	// RemoveApplication RPC.
+	ApplicationServiceRemoveApplicationProcedure = "/account.public.v1.ApplicationService/RemoveApplication"
 )
 
 var (
@@ -77,6 +80,13 @@ var (
 			Procedure:  ApplicationServiceRevokeClientSecretProcedure,
 		}
 	})
+	applicationServiceRemoveApplicationSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_account_public_v1_application_proto.Services().ByName("ApplicationService").Methods().ByName("RemoveApplication"),
+			Procedure:  ApplicationServiceRemoveApplicationProcedure,
+		}
+	})
 )
 
 // ApplicationServiceClient is a client for the account.public.v1.ApplicationService service.
@@ -96,6 +106,11 @@ type ApplicationServiceClient interface {
 	// RevokeClientSecret ends one Client Secret at once; the grant refuses it
 	// from then on. NotFound for a secret that no longer matches.
 	RevokeClientSecret(context.Context, *v1.RevokeClientSecretRequest) (*v1.RevokeClientSecretResponse, error)
+	// RemoveApplication removes an Application for good: every Client Secret
+	// is revoked at once, so the grant refuses it, a token already issued stops
+	// at its expiry, and its Works are closed. It never returns. NotFound for an
+	// Application the caller does not own or already removed.
+	RemoveApplication(context.Context, *v1.RemoveApplicationRequest) (*v1.RemoveApplicationResponse, error)
 }
 
 // NewApplicationServiceClient constructs a client for the account.public.v1.ApplicationService
@@ -122,6 +137,11 @@ type ApplicationServiceHandler interface {
 	// RevokeClientSecret ends one Client Secret at once; the grant refuses it
 	// from then on. NotFound for a secret that no longer matches.
 	RevokeClientSecret(context.Context, *v1.RevokeClientSecretRequest) (*v1.RevokeClientSecretResponse, error)
+	// RemoveApplication removes an Application for good: every Client Secret
+	// is revoked at once, so the grant refuses it, a token already issued stops
+	// at its expiry, and its Works are closed. It never returns. NotFound for an
+	// Application the caller does not own or already removed.
+	RemoveApplication(context.Context, *v1.RemoveApplicationRequest) (*v1.RemoveApplicationResponse, error)
 }
 
 // RegisterApplicationServiceHandler registers svc as the account.public.v1.ApplicationService
@@ -134,6 +154,7 @@ func RegisterApplicationServiceHandler(server *connect.Server, svc ApplicationSe
 		connect.Method{Spec: applicationServiceGetApplicationSpec(), Handler: adapter.getApplication},
 		connect.Method{Spec: applicationServiceRotateClientSecretSpec(), Handler: adapter.rotateClientSecret},
 		connect.Method{Spec: applicationServiceRevokeClientSecretSpec(), Handler: adapter.revokeClientSecret},
+		connect.Method{Spec: applicationServiceRemoveApplicationSpec(), Handler: adapter.removeApplication},
 	)
 }
 
@@ -158,6 +179,10 @@ func (UnimplementedApplicationServiceHandler) RotateClientSecret(context.Context
 
 func (UnimplementedApplicationServiceHandler) RevokeClientSecret(context.Context, *v1.RevokeClientSecretRequest) (*v1.RevokeClientSecretResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, "account.public.v1.ApplicationService.RevokeClientSecret is not implemented")
+}
+
+func (UnimplementedApplicationServiceHandler) RemoveApplication(context.Context, *v1.RemoveApplicationRequest) (*v1.RemoveApplicationResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "account.public.v1.ApplicationService.RemoveApplication is not implemented")
 }
 
 type applicationServiceClient struct {
@@ -199,6 +224,14 @@ func (c *applicationServiceClient) RotateClientSecret(ctx context.Context, req *
 func (c *applicationServiceClient) RevokeClientSecret(ctx context.Context, req *v1.RevokeClientSecretRequest) (*v1.RevokeClientSecretResponse, error) {
 	var res v1.RevokeClientSecretResponse
 	if err := c.client.CallUnary(ctx, applicationServiceRevokeClientSecretSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *applicationServiceClient) RemoveApplication(ctx context.Context, req *v1.RemoveApplicationRequest) (*v1.RemoveApplicationResponse, error) {
+	var res v1.RemoveApplicationResponse
+	if err := c.client.CallUnary(ctx, applicationServiceRemoveApplicationSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
@@ -260,6 +293,18 @@ func (h applicationServiceHandler) revokeClientSecret(ctx context.Context, _ con
 		return err
 	}
 	res, err := h.svc.RevokeClientSecret(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h applicationServiceHandler) removeApplication(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.RemoveApplicationRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.RemoveApplication(ctx, &req)
 	if err != nil {
 		return err
 	}

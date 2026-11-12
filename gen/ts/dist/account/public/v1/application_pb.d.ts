@@ -333,6 +333,40 @@ export declare type RevokeClientSecretResponse = Message<"account.public.v1.Revo
 export declare const RevokeClientSecretResponseSchema: GenMessage<RevokeClientSecretResponse>;
 
 /**
+ * RemoveApplicationRequest names the Application its owner removes.
+ *
+ * @generated from message account.public.v1.RemoveApplicationRequest
+ */
+export declare type RemoveApplicationRequest = Message<"account.public.v1.RemoveApplicationRequest"> & {
+  /**
+   * The Application's id.
+   *
+   * @generated from field: string application_id = 1;
+   */
+  applicationId: string;
+};
+
+/**
+ * Describes the message account.public.v1.RemoveApplicationRequest.
+ * Use `create(RemoveApplicationRequestSchema)` to create a new message.
+ */
+export declare const RemoveApplicationRequestSchema: GenMessage<RemoveApplicationRequest>;
+
+/**
+ * RemoveApplicationResponse confirms the removal.
+ *
+ * @generated from message account.public.v1.RemoveApplicationResponse
+ */
+export declare type RemoveApplicationResponse = Message<"account.public.v1.RemoveApplicationResponse"> & {
+};
+
+/**
+ * Describes the message account.public.v1.RemoveApplicationResponse.
+ * Use `create(RemoveApplicationResponseSchema)` to create a new message.
+ */
+export declare const RemoveApplicationResponseSchema: GenMessage<RemoveApplicationResponse>;
+
+/**
  * ClientSecretState is where a Client Secret stands.
  *
  * @generated from enum account.public.v1.ClientSecretState
@@ -429,6 +463,19 @@ export declare const ApplicationService: GenService<{
     methodKind: "unary";
     input: typeof RevokeClientSecretRequestSchema;
     output: typeof RevokeClientSecretResponseSchema;
+  },
+  /**
+   * RemoveApplication removes an Application for good: every Client Secret
+   * is revoked at once, so the grant refuses it, a token already issued stops
+   * at its expiry, and its Works are closed. It never returns. NotFound for an
+   * Application the caller does not own or already removed.
+   *
+   * @generated from rpc account.public.v1.ApplicationService.RemoveApplication
+   */
+  removeApplication: {
+    methodKind: "unary";
+    input: typeof RemoveApplicationRequestSchema;
+    output: typeof RemoveApplicationResponseSchema;
   },
 }>;
 

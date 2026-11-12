@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package account.integration.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/talgent-work/contracts/gen/go/account/integration/v1;accountintegrationv1";
+
+// ApplicationRemovedV1 is a Published Fact: its Application Owner removed an
+// Application for good. Every Client Secret it held is revoked, so it obtains
+// no further Identity Token; a token already issued stops at its expiry. It
+// is published best effort after the removal commits and keyed by the
+// Application. Agent closes the Application's Works on it; a lost fact leaves
+// them open until their idle timeout stops them.
+message ApplicationRemovedV1 {
+  // Unique identity of this publication.
+  string event_id = 1;
+  // When the removal was committed.
+  google.protobuf.Timestamp occurred_at = 2;
+  // The removed Application.
+  string application_id = 3;
+}

@@ -730,6 +730,89 @@ func (x *RevokeClientSecretResponse) GetApplication() *Application {
 	return nil
 }
 
+// RemoveApplicationRequest names the Application its owner removes.
+type RemoveApplicationRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The Application's id.
+	ApplicationId string `protobuf:"bytes,1,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RemoveApplicationRequest) Reset() {
+	*x = RemoveApplicationRequest{}
+	mi := &file_account_public_v1_application_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RemoveApplicationRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RemoveApplicationRequest) ProtoMessage() {}
+
+func (x *RemoveApplicationRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_account_public_v1_application_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RemoveApplicationRequest.ProtoReflect.Descriptor instead.
+func (*RemoveApplicationRequest) Descriptor() ([]byte, []int) {
+	return file_account_public_v1_application_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *RemoveApplicationRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
+	}
+	return ""
+}
+
+// RemoveApplicationResponse confirms the removal.
+type RemoveApplicationResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RemoveApplicationResponse) Reset() {
+	*x = RemoveApplicationResponse{}
+	mi := &file_account_public_v1_application_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RemoveApplicationResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RemoveApplicationResponse) ProtoMessage() {}
+
+func (x *RemoveApplicationResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_account_public_v1_application_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RemoveApplicationResponse.ProtoReflect.Descriptor instead.
+func (*RemoveApplicationResponse) Descriptor() ([]byte, []int) {
+	return file_account_public_v1_application_proto_rawDescGZIP(), []int{13}
+}
+
 var File_account_public_v1_application_proto protoreflect.FileDescriptor
 
 const file_account_public_v1_application_proto_rawDesc = "" +
@@ -769,11 +852,14 @@ const file_account_public_v1_application_proto_rawDesc = "" +
 	"\x0eapplication_id\x18\x01 \x01(\tR\rapplicationId\x12(\n" +
 	"\x10client_secret_id\x18\x02 \x01(\tR\x0eclientSecretId\"^\n" +
 	"\x1aRevokeClientSecretResponse\x12@\n" +
-	"\vapplication\x18\x01 \x01(\v2\x1e.account.public.v1.ApplicationR\vapplication*~\n" +
+	"\vapplication\x18\x01 \x01(\v2\x1e.account.public.v1.ApplicationR\vapplication\"A\n" +
+	"\x18RemoveApplicationRequest\x12%\n" +
+	"\x0eapplication_id\x18\x01 \x01(\tR\rapplicationId\"\x1b\n" +
+	"\x19RemoveApplicationResponse*~\n" +
 	"\x11ClientSecretState\x12#\n" +
 	"\x1fCLIENT_SECRET_STATE_UNSPECIFIED\x10\x00\x12\x1f\n" +
 	"\x1bCLIENT_SECRET_STATE_CURRENT\x10\x01\x12#\n" +
-	"\x1fCLIENT_SECRET_STATE_OVERLAPPING\x10\x022\x81\x05\n" +
+	"\x1fCLIENT_SECRET_STATE_OVERLAPPING\x10\x022\xfa\x05\n" +
 	"\x12ApplicationService\x12}\n" +
 	"\x13RegisterApplication\x12-.account.public.v1.RegisterApplicationRequest\x1a..account.public.v1.RegisterApplicationResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x01\x12\x83\x01\n" +
@@ -784,6 +870,8 @@ const file_account_public_v1_application_proto_rawDesc = "" +
 	"\x12RotateClientSecret\x12,.account.public.v1.RotateClientSecretRequest\x1a-.account.public.v1.RotateClientSecretResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x01\x12z\n" +
 	"\x12RevokeClientSecret\x12,.account.public.v1.RevokeClientSecretRequest\x1a-.account.public.v1.RevokeClientSecretResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12w\n" +
+	"\x11RemoveApplication\x12+.account.public.v1.RemoveApplicationRequest\x1a,.account.public.v1.RemoveApplicationResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x01BLZJgithub.com/talgent-work/contracts/gen/go/account/public/v1;accountpublicv1b\x06proto3"
 
 var (
@@ -799,7 +887,7 @@ func file_account_public_v1_application_proto_rawDescGZIP() []byte {
 }
 
 var file_account_public_v1_application_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_account_public_v1_application_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_account_public_v1_application_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_account_public_v1_application_proto_goTypes = []any{
 	(ClientSecretState)(0),                // 0: account.public.v1.ClientSecretState
 	(*Application)(nil),                   // 1: account.public.v1.Application
@@ -814,6 +902,8 @@ var file_account_public_v1_application_proto_goTypes = []any{
 	(*RotateClientSecretResponse)(nil),    // 10: account.public.v1.RotateClientSecretResponse
 	(*RevokeClientSecretRequest)(nil),     // 11: account.public.v1.RevokeClientSecretRequest
 	(*RevokeClientSecretResponse)(nil),    // 12: account.public.v1.RevokeClientSecretResponse
+	(*RemoveApplicationRequest)(nil),      // 13: account.public.v1.RemoveApplicationRequest
+	(*RemoveApplicationResponse)(nil),     // 14: account.public.v1.RemoveApplicationResponse
 }
 var file_account_public_v1_application_proto_depIdxs = []int32{
 	2,  // 0: account.public.v1.Application.client_secrets:type_name -> account.public.v1.ClientSecret
@@ -828,13 +918,15 @@ var file_account_public_v1_application_proto_depIdxs = []int32{
 	7,  // 9: account.public.v1.ApplicationService.GetApplication:input_type -> account.public.v1.GetApplicationRequest
 	9,  // 10: account.public.v1.ApplicationService.RotateClientSecret:input_type -> account.public.v1.RotateClientSecretRequest
 	11, // 11: account.public.v1.ApplicationService.RevokeClientSecret:input_type -> account.public.v1.RevokeClientSecretRequest
-	4,  // 12: account.public.v1.ApplicationService.RegisterApplication:output_type -> account.public.v1.RegisterApplicationResponse
-	6,  // 13: account.public.v1.ApplicationService.ListOwnedApplications:output_type -> account.public.v1.ListOwnedApplicationsResponse
-	8,  // 14: account.public.v1.ApplicationService.GetApplication:output_type -> account.public.v1.GetApplicationResponse
-	10, // 15: account.public.v1.ApplicationService.RotateClientSecret:output_type -> account.public.v1.RotateClientSecretResponse
-	12, // 16: account.public.v1.ApplicationService.RevokeClientSecret:output_type -> account.public.v1.RevokeClientSecretResponse
-	12, // [12:17] is the sub-list for method output_type
-	7,  // [7:12] is the sub-list for method input_type
+	13, // 12: account.public.v1.ApplicationService.RemoveApplication:input_type -> account.public.v1.RemoveApplicationRequest
+	4,  // 13: account.public.v1.ApplicationService.RegisterApplication:output_type -> account.public.v1.RegisterApplicationResponse
+	6,  // 14: account.public.v1.ApplicationService.ListOwnedApplications:output_type -> account.public.v1.ListOwnedApplicationsResponse
+	8,  // 15: account.public.v1.ApplicationService.GetApplication:output_type -> account.public.v1.GetApplicationResponse
+	10, // 16: account.public.v1.ApplicationService.RotateClientSecret:output_type -> account.public.v1.RotateClientSecretResponse
+	12, // 17: account.public.v1.ApplicationService.RevokeClientSecret:output_type -> account.public.v1.RevokeClientSecretResponse
+	14, // 18: account.public.v1.ApplicationService.RemoveApplication:output_type -> account.public.v1.RemoveApplicationResponse
+	13, // [13:19] is the sub-list for method output_type
+	7,  // [7:13] is the sub-list for method input_type
 	7,  // [7:7] is the sub-list for extension type_name
 	7,  // [7:7] is the sub-list for extension extendee
 	0,  // [0:7] is the sub-list for field type_name
@@ -851,7 +943,7 @@ func file_account_public_v1_application_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_account_public_v1_application_proto_rawDesc), len(file_account_public_v1_application_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   12,
+			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

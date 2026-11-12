@@ -7,21 +7,22 @@ import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/talgent-work/contracts/gen/go/trace/public/v1;tracepublicv1";
 
-// TraceQueryService reads observations by Work, Project or person. A Work's
-// observations are scoped by its Project when it has one: the reader is
-// admitted by the Project access decision; a Work without a Project is named
-// without one, and its owner and Work Share holders read it.
+// TraceQueryService reads observations by Work, Project, person or
+// Application. A Work's observations are scoped by its Project when it has
+// one: the reader is admitted by the Project access decision; a Work without a
+// Project is named without one, and its owner, a person or an Application, and
+// its Work Share holders read it. An Application reads only its own Works.
 service TraceQueryService {
   // List retained structured native events of an authorized Project or Work.
   rpc ListEvents(ListEventsRequest) returns (ListEventsResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // ListSpansBySession lists one Work's spans.
   rpc ListSpansBySession(ListSpansBySessionRequest) returns (ListSpansBySessionResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // ListSpansByOwner lists a Project's spans carrying the caller attributes
@@ -34,13 +35,13 @@ service TraceQueryService {
   // GetSpan RPC.
   rpc GetSpan(GetSpanRequest) returns (GetSpanResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // GetSessionTraceMetrics reads one Work's measurements.
   rpc GetSessionTraceMetrics(GetSessionTraceMetricsRequest) returns (GetSessionTraceMetricsResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // GetProjectTraceMetrics reads a Project's measurements.
@@ -55,6 +56,23 @@ service TraceQueryService {
   rpc GetPersonalTraceMetrics(GetPersonalTraceMetricsRequest) returns (GetPersonalTraceMetricsResponse) {
     option (admission.v1.admits) = {
       principals: [PRINCIPAL_USER]
+    };
+  }
+  // GetApplicationTraceMetrics reads an Application's measurements across its
+  // Works, narrowed by Work Labels and broken down by one Work Label key. The
+  // Application reads its own; a person reads those of an Application they
+  // own, also after its removal.
+  rpc GetApplicationTraceMetrics(GetApplicationTraceMetricsRequest) returns (GetApplicationTraceMetricsResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
+    };
+  }
+  // ListSpansByApplication lists the spans of an Application's Works, narrowed
+  // by Work Labels, newest first. Its readers are those of
+  // GetApplicationTraceMetrics.
+  rpc ListSpansByApplication(ListSpansByApplicationRequest) returns (ListSpansByApplicationResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
 }
@@ -269,6 +287,8 @@ message TraceMetricBucket {
   string owner_context = 12;
   // Caller attribute naming that business object.
   string owner_id = 13;
+  // The Application that owns the Work, empty for a Work no Application owns.
+  string application_id = 14;
 }
 
 // TraceMetricTotal message.
@@ -331,6 +351,70 @@ message NativeEvent {
 message ListEventsResponse {
   // Events ordered by native timestamp and stable evidence identity.
   repeated NativeEvent events = 1;
+  // Opaque cursor for the next page, or empty when exhausted.
+  string next_cursor = 2;
+}
+
+// GetApplicationTraceMetricsRequest names a window of an Application's usage.
+message GetApplicationTraceMetricsRequest {
+  // The Application. A person names an Application they own; an Application
+  // leaves it empty or names itself.
+  string application_id = 1;
+  // start time field.
+  google.protobuf.Timestamp start_time = 2;
+  // end time field.
+  google.protobuf.Timestamp end_time = 3;
+  // step seconds field.
+  int32 step_seconds = 4;
+  // metric kinds field.
+  repeated string metric_kinds = 5;
+  // Narrows to the Works carrying every one of these Work Labels.
+  map<string, string> labels = 6;
+  // A Work Label key to break the usage down by; empty for none.
+  string breakdown_key = 7;
+}
+
+// GetApplicationTraceMetricsResponse is the Application's usage, with its
+// breakdown when one was asked for.
+message GetApplicationTraceMetricsResponse {
+  // buckets field.
+  repeated TraceMetricBucket buckets = 1;
+  // totals field.
+  repeated TraceMetricTotal totals = 2;
+  // One entry per value of the breakdown key among the measured Works, and
+  // one for the Works without the key; empty when no key was asked for.
+  repeated LabelUsage breakdown = 3;
+}
+
+// LabelUsage is the usage of the measured Works carrying one value of a Work
+// Label key, or of those without the key.
+message LabelUsage {
+  // The key's value; empty with labelled false for the Works without the key.
+  string value = 1;
+  // Whether the Works carry the key.
+  bool labelled = 2;
+  // The usage of those Works.
+  repeated TraceMetricTotal totals = 3;
+  // How many measured Works carry this value.
+  int32 work_count = 4;
+}
+
+// ListSpansByApplicationRequest names an Application's spans.
+message ListSpansByApplicationRequest {
+  // The Application, as in GetApplicationTraceMetricsRequest.
+  string application_id = 1;
+  // Narrows to the Works carrying every one of these Work Labels.
+  map<string, string> labels = 2;
+  // limit field.
+  int32 limit = 3;
+  // Opaque cursor returned by the previous page.
+  string after_cursor = 4;
+}
+
+// ListSpansByApplicationResponse lists the spans, newest first.
+message ListSpansByApplicationResponse {
+  // spans field.
+  repeated Span spans = 1;
   // Opaque cursor for the next page, or empty when exhausted.
   string next_cursor = 2;
 }

@@ -721,6 +721,13 @@ export declare type TraceMetricBucket = Message<"trace.public.v1.TraceMetricBuck
    * @generated from field: string owner_id = 13;
    */
   ownerId: string;
+
+  /**
+   * The Application that owns the Work, empty for a Work no Application owns.
+   *
+   * @generated from field: string application_id = 14;
+   */
+  applicationId: string;
 };
 
 /**
@@ -950,10 +957,220 @@ export declare type ListEventsResponse = Message<"trace.public.v1.ListEventsResp
 export declare const ListEventsResponseSchema: GenMessage<ListEventsResponse>;
 
 /**
- * TraceQueryService reads observations by Work, Project or person. A Work's
- * observations are scoped by its Project when it has one: the reader is
- * admitted by the Project access decision; a Work without a Project is named
- * without one, and its owner and Work Share holders read it.
+ * GetApplicationTraceMetricsRequest names a window of an Application's usage.
+ *
+ * @generated from message trace.public.v1.GetApplicationTraceMetricsRequest
+ */
+export declare type GetApplicationTraceMetricsRequest = Message<"trace.public.v1.GetApplicationTraceMetricsRequest"> & {
+  /**
+   * The Application. A person names an Application they own; an Application
+   * leaves it empty or names itself.
+   *
+   * @generated from field: string application_id = 1;
+   */
+  applicationId: string;
+
+  /**
+   * start time field.
+   *
+   * @generated from field: google.protobuf.Timestamp start_time = 2;
+   */
+  startTime?: Timestamp;
+
+  /**
+   * end time field.
+   *
+   * @generated from field: google.protobuf.Timestamp end_time = 3;
+   */
+  endTime?: Timestamp;
+
+  /**
+   * step seconds field.
+   *
+   * @generated from field: int32 step_seconds = 4;
+   */
+  stepSeconds: number;
+
+  /**
+   * metric kinds field.
+   *
+   * @generated from field: repeated string metric_kinds = 5;
+   */
+  metricKinds: string[];
+
+  /**
+   * Narrows to the Works carrying every one of these Work Labels.
+   *
+   * @generated from field: map<string, string> labels = 6;
+   */
+  labels: { [key: string]: string };
+
+  /**
+   * A Work Label key to break the usage down by; empty for none.
+   *
+   * @generated from field: string breakdown_key = 7;
+   */
+  breakdownKey: string;
+};
+
+/**
+ * Describes the message trace.public.v1.GetApplicationTraceMetricsRequest.
+ * Use `create(GetApplicationTraceMetricsRequestSchema)` to create a new message.
+ */
+export declare const GetApplicationTraceMetricsRequestSchema: GenMessage<GetApplicationTraceMetricsRequest>;
+
+/**
+ * GetApplicationTraceMetricsResponse is the Application's usage, with its
+ * breakdown when one was asked for.
+ *
+ * @generated from message trace.public.v1.GetApplicationTraceMetricsResponse
+ */
+export declare type GetApplicationTraceMetricsResponse = Message<"trace.public.v1.GetApplicationTraceMetricsResponse"> & {
+  /**
+   * buckets field.
+   *
+   * @generated from field: repeated trace.public.v1.TraceMetricBucket buckets = 1;
+   */
+  buckets: TraceMetricBucket[];
+
+  /**
+   * totals field.
+   *
+   * @generated from field: repeated trace.public.v1.TraceMetricTotal totals = 2;
+   */
+  totals: TraceMetricTotal[];
+
+  /**
+   * One entry per value of the breakdown key among the measured Works, and
+   * one for the Works without the key; empty when no key was asked for.
+   *
+   * @generated from field: repeated trace.public.v1.LabelUsage breakdown = 3;
+   */
+  breakdown: LabelUsage[];
+};
+
+/**
+ * Describes the message trace.public.v1.GetApplicationTraceMetricsResponse.
+ * Use `create(GetApplicationTraceMetricsResponseSchema)` to create a new message.
+ */
+export declare const GetApplicationTraceMetricsResponseSchema: GenMessage<GetApplicationTraceMetricsResponse>;
+
+/**
+ * LabelUsage is the usage of the measured Works carrying one value of a Work
+ * Label key, or of those without the key.
+ *
+ * @generated from message trace.public.v1.LabelUsage
+ */
+export declare type LabelUsage = Message<"trace.public.v1.LabelUsage"> & {
+  /**
+   * The key's value; empty with labelled false for the Works without the key.
+   *
+   * @generated from field: string value = 1;
+   */
+  value: string;
+
+  /**
+   * Whether the Works carry the key.
+   *
+   * @generated from field: bool labelled = 2;
+   */
+  labelled: boolean;
+
+  /**
+   * The usage of those Works.
+   *
+   * @generated from field: repeated trace.public.v1.TraceMetricTotal totals = 3;
+   */
+  totals: TraceMetricTotal[];
+
+  /**
+   * How many measured Works carry this value.
+   *
+   * @generated from field: int32 work_count = 4;
+   */
+  workCount: number;
+};
+
+/**
+ * Describes the message trace.public.v1.LabelUsage.
+ * Use `create(LabelUsageSchema)` to create a new message.
+ */
+export declare const LabelUsageSchema: GenMessage<LabelUsage>;
+
+/**
+ * ListSpansByApplicationRequest names an Application's spans.
+ *
+ * @generated from message trace.public.v1.ListSpansByApplicationRequest
+ */
+export declare type ListSpansByApplicationRequest = Message<"trace.public.v1.ListSpansByApplicationRequest"> & {
+  /**
+   * The Application, as in GetApplicationTraceMetricsRequest.
+   *
+   * @generated from field: string application_id = 1;
+   */
+  applicationId: string;
+
+  /**
+   * Narrows to the Works carrying every one of these Work Labels.
+   *
+   * @generated from field: map<string, string> labels = 2;
+   */
+  labels: { [key: string]: string };
+
+  /**
+   * limit field.
+   *
+   * @generated from field: int32 limit = 3;
+   */
+  limit: number;
+
+  /**
+   * Opaque cursor returned by the previous page.
+   *
+   * @generated from field: string after_cursor = 4;
+   */
+  afterCursor: string;
+};
+
+/**
+ * Describes the message trace.public.v1.ListSpansByApplicationRequest.
+ * Use `create(ListSpansByApplicationRequestSchema)` to create a new message.
+ */
+export declare const ListSpansByApplicationRequestSchema: GenMessage<ListSpansByApplicationRequest>;
+
+/**
+ * ListSpansByApplicationResponse lists the spans, newest first.
+ *
+ * @generated from message trace.public.v1.ListSpansByApplicationResponse
+ */
+export declare type ListSpansByApplicationResponse = Message<"trace.public.v1.ListSpansByApplicationResponse"> & {
+  /**
+   * spans field.
+   *
+   * @generated from field: repeated trace.public.v1.Span spans = 1;
+   */
+  spans: Span[];
+
+  /**
+   * Opaque cursor for the next page, or empty when exhausted.
+   *
+   * @generated from field: string next_cursor = 2;
+   */
+  nextCursor: string;
+};
+
+/**
+ * Describes the message trace.public.v1.ListSpansByApplicationResponse.
+ * Use `create(ListSpansByApplicationResponseSchema)` to create a new message.
+ */
+export declare const ListSpansByApplicationResponseSchema: GenMessage<ListSpansByApplicationResponse>;
+
+/**
+ * TraceQueryService reads observations by Work, Project, person or
+ * Application. A Work's observations are scoped by its Project when it has
+ * one: the reader is admitted by the Project access decision; a Work without a
+ * Project is named without one, and its owner, a person or an Application, and
+ * its Work Share holders read it. An Application reads only its own Works.
  *
  * @generated from service trace.public.v1.TraceQueryService
  */
@@ -1030,6 +1247,31 @@ export declare const TraceQueryService: GenService<{
     methodKind: "unary";
     input: typeof GetPersonalTraceMetricsRequestSchema;
     output: typeof GetPersonalTraceMetricsResponseSchema;
+  },
+  /**
+   * GetApplicationTraceMetrics reads an Application's measurements across its
+   * Works, narrowed by Work Labels and broken down by one Work Label key. The
+   * Application reads its own; a person reads those of an Application they
+   * own, also after its removal.
+   *
+   * @generated from rpc trace.public.v1.TraceQueryService.GetApplicationTraceMetrics
+   */
+  getApplicationTraceMetrics: {
+    methodKind: "unary";
+    input: typeof GetApplicationTraceMetricsRequestSchema;
+    output: typeof GetApplicationTraceMetricsResponseSchema;
+  },
+  /**
+   * ListSpansByApplication lists the spans of an Application's Works, narrowed
+   * by Work Labels, newest first. Its readers are those of
+   * GetApplicationTraceMetrics.
+   *
+   * @generated from rpc trace.public.v1.TraceQueryService.ListSpansByApplication
+   */
+  listSpansByApplication: {
+    methodKind: "unary";
+    input: typeof ListSpansByApplicationRequestSchema;
+    output: typeof ListSpansByApplicationResponseSchema;
   },
 }>;
 

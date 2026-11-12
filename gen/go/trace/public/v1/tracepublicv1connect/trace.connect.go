@@ -44,6 +44,12 @@ const (
 	// TraceQueryServiceGetPersonalTraceMetricsProcedure is the procedure name of the
 	// TraceQueryService's GetPersonalTraceMetrics RPC.
 	TraceQueryServiceGetPersonalTraceMetricsProcedure = "/trace.public.v1.TraceQueryService/GetPersonalTraceMetrics"
+	// TraceQueryServiceGetApplicationTraceMetricsProcedure is the procedure name of the
+	// TraceQueryService's GetApplicationTraceMetrics RPC.
+	TraceQueryServiceGetApplicationTraceMetricsProcedure = "/trace.public.v1.TraceQueryService/GetApplicationTraceMetrics"
+	// TraceQueryServiceListSpansByApplicationProcedure is the procedure name of the TraceQueryService's
+	// ListSpansByApplication RPC.
+	TraceQueryServiceListSpansByApplicationProcedure = "/trace.public.v1.TraceQueryService/ListSpansByApplication"
 )
 
 var (
@@ -96,6 +102,20 @@ var (
 			Procedure:  TraceQueryServiceGetPersonalTraceMetricsProcedure,
 		}
 	})
+	traceQueryServiceGetApplicationTraceMetricsSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_trace_public_v1_trace_proto.Services().ByName("TraceQueryService").Methods().ByName("GetApplicationTraceMetrics"),
+			Procedure:  TraceQueryServiceGetApplicationTraceMetricsProcedure,
+		}
+	})
+	traceQueryServiceListSpansByApplicationSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_trace_public_v1_trace_proto.Services().ByName("TraceQueryService").Methods().ByName("ListSpansByApplication"),
+			Procedure:  TraceQueryServiceListSpansByApplicationProcedure,
+		}
+	})
 )
 
 // TraceQueryServiceClient is a client for the trace.public.v1.TraceQueryService service.
@@ -117,6 +137,15 @@ type TraceQueryServiceClient interface {
 	// across every Work of their Agent, with or without a Project; only that
 	// person reads them.
 	GetPersonalTraceMetrics(context.Context, *v1.GetPersonalTraceMetricsRequest) (*v1.GetPersonalTraceMetricsResponse, error)
+	// GetApplicationTraceMetrics reads an Application's measurements across its
+	// Works, narrowed by Work Labels and broken down by one Work Label key. The
+	// Application reads its own; a person reads those of an Application they
+	// own, also after its removal.
+	GetApplicationTraceMetrics(context.Context, *v1.GetApplicationTraceMetricsRequest) (*v1.GetApplicationTraceMetricsResponse, error)
+	// ListSpansByApplication lists the spans of an Application's Works, narrowed
+	// by Work Labels, newest first. Its readers are those of
+	// GetApplicationTraceMetrics.
+	ListSpansByApplication(context.Context, *v1.ListSpansByApplicationRequest) (*v1.ListSpansByApplicationResponse, error)
 }
 
 // NewTraceQueryServiceClient constructs a client for the trace.public.v1.TraceQueryService service.
@@ -144,6 +173,15 @@ type TraceQueryServiceHandler interface {
 	// across every Work of their Agent, with or without a Project; only that
 	// person reads them.
 	GetPersonalTraceMetrics(context.Context, *v1.GetPersonalTraceMetricsRequest) (*v1.GetPersonalTraceMetricsResponse, error)
+	// GetApplicationTraceMetrics reads an Application's measurements across its
+	// Works, narrowed by Work Labels and broken down by one Work Label key. The
+	// Application reads its own; a person reads those of an Application they
+	// own, also after its removal.
+	GetApplicationTraceMetrics(context.Context, *v1.GetApplicationTraceMetricsRequest) (*v1.GetApplicationTraceMetricsResponse, error)
+	// ListSpansByApplication lists the spans of an Application's Works, narrowed
+	// by Work Labels, newest first. Its readers are those of
+	// GetApplicationTraceMetrics.
+	ListSpansByApplication(context.Context, *v1.ListSpansByApplicationRequest) (*v1.ListSpansByApplicationResponse, error)
 }
 
 // RegisterTraceQueryServiceHandler registers svc as the trace.public.v1.TraceQueryService
@@ -158,6 +196,8 @@ func RegisterTraceQueryServiceHandler(server *connect.Server, svc TraceQueryServ
 		connect.Method{Spec: traceQueryServiceGetSessionTraceMetricsSpec(), Handler: adapter.getSessionTraceMetrics},
 		connect.Method{Spec: traceQueryServiceGetProjectTraceMetricsSpec(), Handler: adapter.getProjectTraceMetrics},
 		connect.Method{Spec: traceQueryServiceGetPersonalTraceMetricsSpec(), Handler: adapter.getPersonalTraceMetrics},
+		connect.Method{Spec: traceQueryServiceGetApplicationTraceMetricsSpec(), Handler: adapter.getApplicationTraceMetrics},
+		connect.Method{Spec: traceQueryServiceListSpansByApplicationSpec(), Handler: adapter.listSpansByApplication},
 	)
 }
 
@@ -190,6 +230,14 @@ func (UnimplementedTraceQueryServiceHandler) GetProjectTraceMetrics(context.Cont
 
 func (UnimplementedTraceQueryServiceHandler) GetPersonalTraceMetrics(context.Context, *v1.GetPersonalTraceMetricsRequest) (*v1.GetPersonalTraceMetricsResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, "trace.public.v1.TraceQueryService.GetPersonalTraceMetrics is not implemented")
+}
+
+func (UnimplementedTraceQueryServiceHandler) GetApplicationTraceMetrics(context.Context, *v1.GetApplicationTraceMetricsRequest) (*v1.GetApplicationTraceMetricsResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "trace.public.v1.TraceQueryService.GetApplicationTraceMetrics is not implemented")
+}
+
+func (UnimplementedTraceQueryServiceHandler) ListSpansByApplication(context.Context, *v1.ListSpansByApplicationRequest) (*v1.ListSpansByApplicationResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "trace.public.v1.TraceQueryService.ListSpansByApplication is not implemented")
 }
 
 type traceQueryServiceClient struct {
@@ -247,6 +295,22 @@ func (c *traceQueryServiceClient) GetProjectTraceMetrics(ctx context.Context, re
 func (c *traceQueryServiceClient) GetPersonalTraceMetrics(ctx context.Context, req *v1.GetPersonalTraceMetricsRequest) (*v1.GetPersonalTraceMetricsResponse, error) {
 	var res v1.GetPersonalTraceMetricsResponse
 	if err := c.client.CallUnary(ctx, traceQueryServiceGetPersonalTraceMetricsSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *traceQueryServiceClient) GetApplicationTraceMetrics(ctx context.Context, req *v1.GetApplicationTraceMetricsRequest) (*v1.GetApplicationTraceMetricsResponse, error) {
+	var res v1.GetApplicationTraceMetricsResponse
+	if err := c.client.CallUnary(ctx, traceQueryServiceGetApplicationTraceMetricsSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *traceQueryServiceClient) ListSpansByApplication(ctx context.Context, req *v1.ListSpansByApplicationRequest) (*v1.ListSpansByApplicationResponse, error) {
+	var res v1.ListSpansByApplicationResponse
+	if err := c.client.CallUnary(ctx, traceQueryServiceListSpansByApplicationSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
@@ -332,6 +396,30 @@ func (h traceQueryServiceHandler) getPersonalTraceMetrics(ctx context.Context, _
 		return err
 	}
 	res, err := h.svc.GetPersonalTraceMetrics(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h traceQueryServiceHandler) getApplicationTraceMetrics(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.GetApplicationTraceMetricsRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.GetApplicationTraceMetrics(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h traceQueryServiceHandler) listSpansByApplication(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.ListSpansByApplicationRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.ListSpansByApplication(ctx, &req)
 	if err != nil {
 		return err
 	}

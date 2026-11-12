@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package agent.private.v1;
+
+option go_package = "github.com/talgent-work/contracts/gen/go/agent/private/v1;agentprivatev1";
+
+// WorkAttributionService tells a trusted context which named Works an
+// Application owns and the Work Labels each carries, so the context can
+// narrow and break down its own records by labels it keeps no copy of.
+service WorkAttributionService {
+  // ListWorkAttributions answers for the named Works the Application owns;
+  // a Work it does not own, or an unknown one, is left out.
+  rpc ListWorkAttributions(ListWorkAttributionsRequest) returns (ListWorkAttributionsResponse);
+}
+
+// ListWorkAttributionsRequest names an Application and some Works.
+message ListWorkAttributionsRequest {
+  // The Application, a canonical lowercase UUID.
+  string application_id = 1;
+  // The Works, at most 500.
+  repeated string work_ids = 2;
+}
+
+// ListWorkAttributionsResponse lists the named Works the Application owns.
+message ListWorkAttributionsResponse {
+  // The attributions, in no particular order.
+  repeated WorkAttribution works = 1;
+}
+
+// WorkAttribution is one Work with its Work Labels.
+message WorkAttribution {
+  // The Work.
+  string work_id = 1;
+  // Its Work Labels, fixed at its creation; empty for none.
+  map<string, string> labels = 2;
+}

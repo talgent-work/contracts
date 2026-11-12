@@ -34,6 +34,9 @@ const (
 	WorkReadBasis_WORK_READ_BASIS_SHARE WorkReadBasis = 2
 	// A reader the trusted caller admitted within a public Work's scope.
 	WorkReadBasis_WORK_READ_BASIS_PUBLIC WorkReadBasis = 3
+	// The Application Owner of the Application whose Work it is, reading only,
+	// also after the Application's removal.
+	WorkReadBasis_WORK_READ_BASIS_APPLICATION_OWNER WorkReadBasis = 4
 )
 
 // Enum value maps for WorkReadBasis.
@@ -43,12 +46,14 @@ var (
 		1: "WORK_READ_BASIS_OWNER",
 		2: "WORK_READ_BASIS_SHARE",
 		3: "WORK_READ_BASIS_PUBLIC",
+		4: "WORK_READ_BASIS_APPLICATION_OWNER",
 	}
 	WorkReadBasis_value = map[string]int32{
-		"WORK_READ_BASIS_UNSPECIFIED": 0,
-		"WORK_READ_BASIS_OWNER":       1,
-		"WORK_READ_BASIS_SHARE":       2,
-		"WORK_READ_BASIS_PUBLIC":      3,
+		"WORK_READ_BASIS_UNSPECIFIED":       0,
+		"WORK_READ_BASIS_OWNER":             1,
+		"WORK_READ_BASIS_SHARE":             2,
+		"WORK_READ_BASIS_PUBLIC":            3,
+		"WORK_READ_BASIS_APPLICATION_OWNER": 4,
 	}
 )
 
@@ -493,12 +498,13 @@ const file_agent_private_v1_work_access_proto_rawDesc = "" +
 	"\x1bRevokeDepartedReaderRequest\x12\x1b\n" +
 	"\treader_id\x18\x01 \x01(\tR\breaderId\x127\n" +
 	"\x05scope\x18\x02 \x01(\v2!.agent.private.v1.ReaderAdmissionR\x05scope\"\x1e\n" +
-	"\x1cRevokeDepartedReaderResponse*\x82\x01\n" +
+	"\x1cRevokeDepartedReaderResponse*\xa9\x01\n" +
 	"\rWorkReadBasis\x12\x1f\n" +
 	"\x1bWORK_READ_BASIS_UNSPECIFIED\x10\x00\x12\x19\n" +
 	"\x15WORK_READ_BASIS_OWNER\x10\x01\x12\x19\n" +
 	"\x15WORK_READ_BASIS_SHARE\x10\x02\x12\x1a\n" +
-	"\x16WORK_READ_BASIS_PUBLIC\x10\x032\xd7\x02\n" +
+	"\x16WORK_READ_BASIS_PUBLIC\x10\x03\x12%\n" +
+	"!WORK_READ_BASIS_APPLICATION_OWNER\x10\x042\xd7\x02\n" +
 	"\x11WorkAccessService\x12f\n" +
 	"\x0fAdmitWorkReader\x12(.agent.private.v1.AdmitWorkReaderRequest\x1a).agent.private.v1.AdmitWorkReaderResponse\x12c\n" +
 	"\x0eGrantWorkShare\x12'.agent.private.v1.GrantWorkShareRequest\x1a(.agent.private.v1.GrantWorkShareResponse\x12u\n" +

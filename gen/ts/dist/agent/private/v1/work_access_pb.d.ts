@@ -238,6 +238,14 @@ export enum WorkReadBasis {
    * @generated from enum value: WORK_READ_BASIS_PUBLIC = 3;
    */
   PUBLIC = 3,
+
+  /**
+   * The Application Owner of the Application whose Work it is, reading only,
+   * also after the Application's removal.
+   *
+   * @generated from enum value: WORK_READ_BASIS_APPLICATION_OWNER = 4;
+   */
+  APPLICATION_OWNER = 4,
 }
 
 /**

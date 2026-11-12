@@ -42,6 +42,9 @@ enum WorkReadBasis {
   WORK_READ_BASIS_SHARE = 2;
   // A reader the trusted caller admitted within a public Work's scope.
   WORK_READ_BASIS_PUBLIC = 3;
+  // The Application Owner of the Application whose Work it is, reading only,
+  // also after the Application's removal.
+  WORK_READ_BASIS_APPLICATION_OWNER = 4;
 }
 
 // AdmitWorkReaderRequest names the Work and the reader.

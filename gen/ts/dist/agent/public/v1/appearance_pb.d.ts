@@ -66,7 +66,8 @@ export declare type AgentAppearance = Message<"agent.public.v1.AgentAppearance">
 export declare const AgentAppearanceSchema: GenMessage<AgentAppearance>;
 
 /**
- * ChangeWorkAgentAppearanceRequest changes the caller's own Work Agent.
+ * ChangeWorkAgentAppearanceRequest changes the caller's own Work Agent, or the
+ * Agent of an Application the caller owns.
  *
  * @generated from message agent.public.v1.ChangeWorkAgentAppearanceRequest
  */

@@ -40,6 +40,13 @@ service ApplicationService {
       principals: [PRINCIPAL_USER]
     };
   }
+  // RenameApplication replaces the name the Application Owner manages it by.
+  // It names no Agent: the Application's Agent keeps its own appearance.
+  rpc RenameApplication(RenameApplicationRequest) returns (RenameApplicationResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
   // RevokeClientSecret ends one Client Secret at once; the grant refuses it
   // from then on. NotFound for a secret that no longer matches.
   rpc RevokeClientSecret(RevokeClientSecretRequest) returns (RevokeClientSecretResponse) {
@@ -173,3 +180,17 @@ message RemoveApplicationRequest {
 
 // RemoveApplicationResponse confirms the removal.
 message RemoveApplicationResponse {}
+
+// RenameApplicationRequest names the Application and its new name.
+message RenameApplicationRequest {
+  // The Application's id.
+  string application_id = 1;
+  // 1 to 60 characters after trimming.
+  string name = 2;
+}
+
+// RenameApplicationResponse is the renamed Application.
+message RenameApplicationResponse {
+  // The Application.
+  Application application = 1;
+}

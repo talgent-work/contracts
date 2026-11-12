@@ -21,7 +21,8 @@ message AgentAppearance {
   AgentIcon icon = 2;
 }
 
-// ChangeWorkAgentAppearanceRequest changes the caller's own Work Agent.
+// ChangeWorkAgentAppearanceRequest changes the caller's own Work Agent, or the
+// Agent of an Application the caller owns.
 message ChangeWorkAgentAppearanceRequest {
   // AgentDefinition of the Work Agent representing the caller.
   string agent_id = 1;

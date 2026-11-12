@@ -17,6 +17,12 @@ message GetWorkStartOptionsResponse {
   // Offered Connectors this Work may include, marked as Agent composes the
   // default selection; per-Work choices are differences from it.
   repeated WorkStartConnector connectors = 4;
+  // The definition's default Model Configuration while it is provided; empty
+  // defaults to the first of models.
+  string default_model_configuration_id = 5;
+  // The definition's default thinking level while the default model offers
+  // it; empty defaults to that model's own default.
+  string default_thinking_level = 6;
 }
 
 // WorkStartRepositories are the repositories a startup may check out.

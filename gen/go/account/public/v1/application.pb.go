@@ -813,6 +813,107 @@ func (*RemoveApplicationResponse) Descriptor() ([]byte, []int) {
 	return file_account_public_v1_application_proto_rawDescGZIP(), []int{13}
 }
 
+// RenameApplicationRequest names the Application and its new name.
+type RenameApplicationRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The Application's id.
+	ApplicationId string `protobuf:"bytes,1,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
+	// 1 to 60 characters after trimming.
+	Name          string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RenameApplicationRequest) Reset() {
+	*x = RenameApplicationRequest{}
+	mi := &file_account_public_v1_application_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RenameApplicationRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RenameApplicationRequest) ProtoMessage() {}
+
+func (x *RenameApplicationRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_account_public_v1_application_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RenameApplicationRequest.ProtoReflect.Descriptor instead.
+func (*RenameApplicationRequest) Descriptor() ([]byte, []int) {
+	return file_account_public_v1_application_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *RenameApplicationRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
+	}
+	return ""
+}
+
+func (x *RenameApplicationRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+// RenameApplicationResponse is the renamed Application.
+type RenameApplicationResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The Application.
+	Application   *Application `protobuf:"bytes,1,opt,name=application,proto3" json:"application,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RenameApplicationResponse) Reset() {
+	*x = RenameApplicationResponse{}
+	mi := &file_account_public_v1_application_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RenameApplicationResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RenameApplicationResponse) ProtoMessage() {}
+
+func (x *RenameApplicationResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_account_public_v1_application_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RenameApplicationResponse.ProtoReflect.Descriptor instead.
+func (*RenameApplicationResponse) Descriptor() ([]byte, []int) {
+	return file_account_public_v1_application_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *RenameApplicationResponse) GetApplication() *Application {
+	if x != nil {
+		return x.Application
+	}
+	return nil
+}
+
 var File_account_public_v1_application_proto protoreflect.FileDescriptor
 
 const file_account_public_v1_application_proto_rawDesc = "" +
@@ -855,11 +956,16 @@ const file_account_public_v1_application_proto_rawDesc = "" +
 	"\vapplication\x18\x01 \x01(\v2\x1e.account.public.v1.ApplicationR\vapplication\"A\n" +
 	"\x18RemoveApplicationRequest\x12%\n" +
 	"\x0eapplication_id\x18\x01 \x01(\tR\rapplicationId\"\x1b\n" +
-	"\x19RemoveApplicationResponse*~\n" +
+	"\x19RemoveApplicationResponse\"U\n" +
+	"\x18RenameApplicationRequest\x12%\n" +
+	"\x0eapplication_id\x18\x01 \x01(\tR\rapplicationId\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\"]\n" +
+	"\x19RenameApplicationResponse\x12@\n" +
+	"\vapplication\x18\x01 \x01(\v2\x1e.account.public.v1.ApplicationR\vapplication*~\n" +
 	"\x11ClientSecretState\x12#\n" +
 	"\x1fCLIENT_SECRET_STATE_UNSPECIFIED\x10\x00\x12\x1f\n" +
 	"\x1bCLIENT_SECRET_STATE_CURRENT\x10\x01\x12#\n" +
-	"\x1fCLIENT_SECRET_STATE_OVERLAPPING\x10\x022\xfa\x05\n" +
+	"\x1fCLIENT_SECRET_STATE_OVERLAPPING\x10\x022\xf3\x06\n" +
 	"\x12ApplicationService\x12}\n" +
 	"\x13RegisterApplication\x12-.account.public.v1.RegisterApplicationRequest\x1a..account.public.v1.RegisterApplicationResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x01\x12\x83\x01\n" +
@@ -868,6 +974,8 @@ const file_account_public_v1_application_proto_rawDesc = "" +
 	"\x0eGetApplication\x12(.account.public.v1.GetApplicationRequest\x1a).account.public.v1.GetApplicationResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x01\x12z\n" +
 	"\x12RotateClientSecret\x12,.account.public.v1.RotateClientSecretRequest\x1a-.account.public.v1.RotateClientSecretResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x01\x01\x12w\n" +
+	"\x11RenameApplication\x12+.account.public.v1.RenameApplicationRequest\x1a,.account.public.v1.RenameApplicationResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x01\x12z\n" +
 	"\x12RevokeClientSecret\x12,.account.public.v1.RevokeClientSecretRequest\x1a-.account.public.v1.RevokeClientSecretResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x01\x12w\n" +
@@ -887,7 +995,7 @@ func file_account_public_v1_application_proto_rawDescGZIP() []byte {
 }
 
 var file_account_public_v1_application_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_account_public_v1_application_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+var file_account_public_v1_application_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_account_public_v1_application_proto_goTypes = []any{
 	(ClientSecretState)(0),                // 0: account.public.v1.ClientSecretState
 	(*Application)(nil),                   // 1: account.public.v1.Application
@@ -904,6 +1012,8 @@ var file_account_public_v1_application_proto_goTypes = []any{
 	(*RevokeClientSecretResponse)(nil),    // 12: account.public.v1.RevokeClientSecretResponse
 	(*RemoveApplicationRequest)(nil),      // 13: account.public.v1.RemoveApplicationRequest
 	(*RemoveApplicationResponse)(nil),     // 14: account.public.v1.RemoveApplicationResponse
+	(*RenameApplicationRequest)(nil),      // 15: account.public.v1.RenameApplicationRequest
+	(*RenameApplicationResponse)(nil),     // 16: account.public.v1.RenameApplicationResponse
 }
 var file_account_public_v1_application_proto_depIdxs = []int32{
 	2,  // 0: account.public.v1.Application.client_secrets:type_name -> account.public.v1.ClientSecret
@@ -913,23 +1023,26 @@ var file_account_public_v1_application_proto_depIdxs = []int32{
 	1,  // 4: account.public.v1.GetApplicationResponse.application:type_name -> account.public.v1.Application
 	1,  // 5: account.public.v1.RotateClientSecretResponse.application:type_name -> account.public.v1.Application
 	1,  // 6: account.public.v1.RevokeClientSecretResponse.application:type_name -> account.public.v1.Application
-	3,  // 7: account.public.v1.ApplicationService.RegisterApplication:input_type -> account.public.v1.RegisterApplicationRequest
-	5,  // 8: account.public.v1.ApplicationService.ListOwnedApplications:input_type -> account.public.v1.ListOwnedApplicationsRequest
-	7,  // 9: account.public.v1.ApplicationService.GetApplication:input_type -> account.public.v1.GetApplicationRequest
-	9,  // 10: account.public.v1.ApplicationService.RotateClientSecret:input_type -> account.public.v1.RotateClientSecretRequest
-	11, // 11: account.public.v1.ApplicationService.RevokeClientSecret:input_type -> account.public.v1.RevokeClientSecretRequest
-	13, // 12: account.public.v1.ApplicationService.RemoveApplication:input_type -> account.public.v1.RemoveApplicationRequest
-	4,  // 13: account.public.v1.ApplicationService.RegisterApplication:output_type -> account.public.v1.RegisterApplicationResponse
-	6,  // 14: account.public.v1.ApplicationService.ListOwnedApplications:output_type -> account.public.v1.ListOwnedApplicationsResponse
-	8,  // 15: account.public.v1.ApplicationService.GetApplication:output_type -> account.public.v1.GetApplicationResponse
-	10, // 16: account.public.v1.ApplicationService.RotateClientSecret:output_type -> account.public.v1.RotateClientSecretResponse
-	12, // 17: account.public.v1.ApplicationService.RevokeClientSecret:output_type -> account.public.v1.RevokeClientSecretResponse
-	14, // 18: account.public.v1.ApplicationService.RemoveApplication:output_type -> account.public.v1.RemoveApplicationResponse
-	13, // [13:19] is the sub-list for method output_type
-	7,  // [7:13] is the sub-list for method input_type
-	7,  // [7:7] is the sub-list for extension type_name
-	7,  // [7:7] is the sub-list for extension extendee
-	0,  // [0:7] is the sub-list for field type_name
+	1,  // 7: account.public.v1.RenameApplicationResponse.application:type_name -> account.public.v1.Application
+	3,  // 8: account.public.v1.ApplicationService.RegisterApplication:input_type -> account.public.v1.RegisterApplicationRequest
+	5,  // 9: account.public.v1.ApplicationService.ListOwnedApplications:input_type -> account.public.v1.ListOwnedApplicationsRequest
+	7,  // 10: account.public.v1.ApplicationService.GetApplication:input_type -> account.public.v1.GetApplicationRequest
+	9,  // 11: account.public.v1.ApplicationService.RotateClientSecret:input_type -> account.public.v1.RotateClientSecretRequest
+	15, // 12: account.public.v1.ApplicationService.RenameApplication:input_type -> account.public.v1.RenameApplicationRequest
+	11, // 13: account.public.v1.ApplicationService.RevokeClientSecret:input_type -> account.public.v1.RevokeClientSecretRequest
+	13, // 14: account.public.v1.ApplicationService.RemoveApplication:input_type -> account.public.v1.RemoveApplicationRequest
+	4,  // 15: account.public.v1.ApplicationService.RegisterApplication:output_type -> account.public.v1.RegisterApplicationResponse
+	6,  // 16: account.public.v1.ApplicationService.ListOwnedApplications:output_type -> account.public.v1.ListOwnedApplicationsResponse
+	8,  // 17: account.public.v1.ApplicationService.GetApplication:output_type -> account.public.v1.GetApplicationResponse
+	10, // 18: account.public.v1.ApplicationService.RotateClientSecret:output_type -> account.public.v1.RotateClientSecretResponse
+	16, // 19: account.public.v1.ApplicationService.RenameApplication:output_type -> account.public.v1.RenameApplicationResponse
+	12, // 20: account.public.v1.ApplicationService.RevokeClientSecret:output_type -> account.public.v1.RevokeClientSecretResponse
+	14, // 21: account.public.v1.ApplicationService.RemoveApplication:output_type -> account.public.v1.RemoveApplicationResponse
+	15, // [15:22] is the sub-list for method output_type
+	8,  // [8:15] is the sub-list for method input_type
+	8,  // [8:8] is the sub-list for extension type_name
+	8,  // [8:8] is the sub-list for extension extendee
+	0,  // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_account_public_v1_application_proto_init() }
@@ -943,7 +1056,7 @@ func file_account_public_v1_application_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_account_public_v1_application_proto_rawDesc), len(file_account_public_v1_application_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   14,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

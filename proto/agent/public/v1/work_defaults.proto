@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package agent.public.v1;
+
+import "agent/public/v1/appearance.proto";
+import "agent/public/v1/work_start_options.proto";
+
+option go_package = "github.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1";
+
+// EnsureApplicationAgentRequest names an Application the caller owns.
+message EnsureApplicationAgentRequest {
+  // The Application, a canonical lowercase UUID.
+  string application_id = 1;
+}
+
+// EnsureApplicationAgentResponse is the Application's Agent.
+message EnsureApplicationAgentResponse {
+  // AgentDefinition of the Application's Agent.
+  string agent_id = 1;
+  // Current appearance.
+  AgentAppearance appearance = 2;
+}
+
+// WorkDefaults are what an Agent's new Works start with when their start
+// names none.
+message WorkDefaults {
+  // Startup Agent, as plugin:agent; empty starts with the Harness's own.
+  string startup_agent = 1;
+  // Model Configuration; empty starts with the first provided one.
+  string model_configuration_id = 2;
+  // Thinking level the default model offers; empty starts with that model's
+  // own default.
+  string thinking_level = 3;
+}
+
+// GetAgentWorkDefaultsRequest names the Application's Agent.
+message GetAgentWorkDefaultsRequest {
+  // AgentDefinition identity.
+  string agent_id = 1;
+}
+
+// GetAgentWorkDefaultsResponse is the Work defaults and what a new Work of
+// the Agent may start with, which they choose from.
+message GetAgentWorkDefaultsResponse {
+  // The saved Work defaults, as saved: a default no longer offered stays
+  // until it is replaced, and a start then uses the fallback.
+  WorkDefaults defaults = 1;
+  // What a new Work of the Agent may start with.
+  GetWorkStartOptionsResponse options = 2;
+}
+
+// ChangeAgentWorkDefaultsRequest replaces the Application's Agent's Work
+// defaults.
+message ChangeAgentWorkDefaultsRequest {
+  // AgentDefinition identity.
+  string agent_id = 1;
+  // The new Work defaults. A model is one of the provided Model
+  // Configurations, and a thinking level one that model offers.
+  WorkDefaults defaults = 2;
+}
+
+// ChangeAgentWorkDefaultsResponse is the Work defaults as saved.
+message ChangeAgentWorkDefaultsResponse {
+  // The saved Work defaults.
+  WorkDefaults defaults = 1;
+}

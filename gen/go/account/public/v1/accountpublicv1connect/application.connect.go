@@ -36,6 +36,9 @@ const (
 	// ApplicationServiceRotateClientSecretProcedure is the procedure name of the ApplicationService's
 	// RotateClientSecret RPC.
 	ApplicationServiceRotateClientSecretProcedure = "/account.public.v1.ApplicationService/RotateClientSecret"
+	// ApplicationServiceRenameApplicationProcedure is the procedure name of the ApplicationService's
+	// RenameApplication RPC.
+	ApplicationServiceRenameApplicationProcedure = "/account.public.v1.ApplicationService/RenameApplication"
 	// ApplicationServiceRevokeClientSecretProcedure is the procedure name of the ApplicationService's
 	// RevokeClientSecret RPC.
 	ApplicationServiceRevokeClientSecretProcedure = "/account.public.v1.ApplicationService/RevokeClientSecret"
@@ -73,6 +76,13 @@ var (
 			Procedure:  ApplicationServiceRotateClientSecretProcedure,
 		}
 	})
+	applicationServiceRenameApplicationSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_account_public_v1_application_proto.Services().ByName("ApplicationService").Methods().ByName("RenameApplication"),
+			Procedure:  ApplicationServiceRenameApplicationProcedure,
+		}
+	})
 	applicationServiceRevokeClientSecretSpec = sync.OnceValue(func() connect.Spec {
 		return connect.Spec{
 			StreamType: connect.StreamTypeUnary,
@@ -103,6 +113,9 @@ type ApplicationServiceClient interface {
 	// response. The replaced current secret keeps matching for a bounded
 	// overlap; a secret already in an earlier overlap ends at once.
 	RotateClientSecret(context.Context, *v1.RotateClientSecretRequest) (*v1.RotateClientSecretResponse, error)
+	// RenameApplication replaces the name the Application Owner manages it by.
+	// It names no Agent: the Application's Agent keeps its own appearance.
+	RenameApplication(context.Context, *v1.RenameApplicationRequest) (*v1.RenameApplicationResponse, error)
 	// RevokeClientSecret ends one Client Secret at once; the grant refuses it
 	// from then on. NotFound for a secret that no longer matches.
 	RevokeClientSecret(context.Context, *v1.RevokeClientSecretRequest) (*v1.RevokeClientSecretResponse, error)
@@ -134,6 +147,9 @@ type ApplicationServiceHandler interface {
 	// response. The replaced current secret keeps matching for a bounded
 	// overlap; a secret already in an earlier overlap ends at once.
 	RotateClientSecret(context.Context, *v1.RotateClientSecretRequest) (*v1.RotateClientSecretResponse, error)
+	// RenameApplication replaces the name the Application Owner manages it by.
+	// It names no Agent: the Application's Agent keeps its own appearance.
+	RenameApplication(context.Context, *v1.RenameApplicationRequest) (*v1.RenameApplicationResponse, error)
 	// RevokeClientSecret ends one Client Secret at once; the grant refuses it
 	// from then on. NotFound for a secret that no longer matches.
 	RevokeClientSecret(context.Context, *v1.RevokeClientSecretRequest) (*v1.RevokeClientSecretResponse, error)
@@ -153,6 +169,7 @@ func RegisterApplicationServiceHandler(server *connect.Server, svc ApplicationSe
 		connect.Method{Spec: applicationServiceListOwnedApplicationsSpec(), Handler: adapter.listOwnedApplications},
 		connect.Method{Spec: applicationServiceGetApplicationSpec(), Handler: adapter.getApplication},
 		connect.Method{Spec: applicationServiceRotateClientSecretSpec(), Handler: adapter.rotateClientSecret},
+		connect.Method{Spec: applicationServiceRenameApplicationSpec(), Handler: adapter.renameApplication},
 		connect.Method{Spec: applicationServiceRevokeClientSecretSpec(), Handler: adapter.revokeClientSecret},
 		connect.Method{Spec: applicationServiceRemoveApplicationSpec(), Handler: adapter.removeApplication},
 	)
@@ -175,6 +192,10 @@ func (UnimplementedApplicationServiceHandler) GetApplication(context.Context, *v
 
 func (UnimplementedApplicationServiceHandler) RotateClientSecret(context.Context, *v1.RotateClientSecretRequest) (*v1.RotateClientSecretResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, "account.public.v1.ApplicationService.RotateClientSecret is not implemented")
+}
+
+func (UnimplementedApplicationServiceHandler) RenameApplication(context.Context, *v1.RenameApplicationRequest) (*v1.RenameApplicationResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "account.public.v1.ApplicationService.RenameApplication is not implemented")
 }
 
 func (UnimplementedApplicationServiceHandler) RevokeClientSecret(context.Context, *v1.RevokeClientSecretRequest) (*v1.RevokeClientSecretResponse, error) {
@@ -216,6 +237,14 @@ func (c *applicationServiceClient) GetApplication(ctx context.Context, req *v1.G
 func (c *applicationServiceClient) RotateClientSecret(ctx context.Context, req *v1.RotateClientSecretRequest) (*v1.RotateClientSecretResponse, error) {
 	var res v1.RotateClientSecretResponse
 	if err := c.client.CallUnary(ctx, applicationServiceRotateClientSecretSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *applicationServiceClient) RenameApplication(ctx context.Context, req *v1.RenameApplicationRequest) (*v1.RenameApplicationResponse, error) {
+	var res v1.RenameApplicationResponse
+	if err := c.client.CallUnary(ctx, applicationServiceRenameApplicationSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
@@ -281,6 +310,18 @@ func (h applicationServiceHandler) rotateClientSecret(ctx context.Context, _ con
 		return err
 	}
 	res, err := h.svc.RotateClientSecret(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h applicationServiceHandler) renameApplication(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.RenameApplicationRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.RenameApplication(ctx, &req)
 	if err != nil {
 		return err
 	}

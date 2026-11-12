@@ -12,6 +12,7 @@ import "agent/public/v1/progress.proto";
 import "agent/public/v1/service_access.proto";
 import "agent/public/v1/soul.proto";
 import "agent/public/v1/startup.proto";
+import "agent/public/v1/work_defaults.proto";
 import "dispatcher/public/v1/unified_message.proto";
 import "google/protobuf/struct.proto";
 import "google/protobuf/timestamp.proto";
@@ -20,44 +21,74 @@ option go_package = "github.com/talgent-work/contracts/gen/go/agent/public/v1;ag
 
 // AgentWorkService is the neutral "my Work" API. Every Work operation is
 // admitted only for the Work's owner, a person or an Application, which
-// reaches only its own Works; ChangeWorkAgentAppearance addresses an
-// AgentDefinition and is admitted only for the human it represents. Both are
-// decided from Agent's own facts. The Agent's appearance and Soul, a Work's
-// visibility and Work Shares, and a Managed Computer's permission mode are a
-// person's alone and admit no Application.
+// reaches only its own Works. The Agent operations address an AgentDefinition:
+// its Owners, a person or the Application, read and replace its Soul and an
+// Application's Work defaults, and only a person changes an appearance, the
+// one their Work Agent represents them with, or, as Application Owner, an
+// Application's Agent's. An Application Owner reaches an Application's Agent
+// under their own identity, admitted through Account's Application ownership.
+// A Work's visibility and Work Shares and a Managed Computer's permission mode
+// are a person's alone and admit no Application.
 service AgentWorkService {
   // ChangeWorkAgentAppearance changes the name and icon of the Work Agent that
-  // represents the caller; only that human may change it.
+  // represents the caller, or of an Application's Agent for its Application
+  // Owner; nobody else may change it.
   rpc ChangeWorkAgentAppearance(ChangeWorkAgentAppearanceRequest) returns (ChangeWorkAgentAppearanceResponse) {
     option (admission.v1.admits) = {
       principals: [PRINCIPAL_USER]
     };
   }
-  // GetMyWorkAgent reads the caller's Work Agent, or the appearance it would
-  // start with when the caller has none yet; it never creates one.
+  // GetMyWorkAgent reads the caller's Work Agent, a person's or an
+  // Application's, or the appearance it would start with when the caller has
+  // none yet; it never creates one.
   rpc GetMyWorkAgent(GetMyWorkAgentRequest) returns (GetMyWorkAgentResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // EnsureMyWorkAgent returns the caller's Work Agent, establishing it when
   // the caller has none yet.
   rpc EnsureMyWorkAgent(EnsureMyWorkAgentRequest) returns (EnsureMyWorkAgentResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
-  // GetAgentSoul reads an Agent's Soul; only one of its Owners may read it.
+  // GetAgentSoul reads an Agent's Soul; only one of its Owners, or an
+  // Application's Agent's Application Owner, may read it.
   rpc GetAgentSoul(GetAgentSoulRequest) returns (GetAgentSoulResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
-  // ChangeAgentSoul replaces an Agent's Soul; only one of its Owners may. Each
+  // ChangeAgentSoul replaces an Agent's Soul; only one of its Owners, or an
+  // Application's Agent's Application Owner, may. Each
   // of its Works takes it up at its next start; running Turns are unaffected.
   rpc ChangeAgentSoul(ChangeAgentSoulRequest) returns (ChangeAgentSoulResponse) {
     option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
+    };
+  }
+  // EnsureApplicationAgent returns the Agent of an Application the caller
+  // owns, establishing it on its first need; PermissionDenied for any other
+  // Application and for a removed one.
+  rpc EnsureApplicationAgent(EnsureApplicationAgentRequest) returns (EnsureApplicationAgentResponse) {
+    option (admission.v1.admits) = {
       principals: [PRINCIPAL_USER]
+    };
+  }
+  // GetAgentWorkDefaults reads an Application's Agent's Work defaults with
+  // what they may name; only the Application or its Application Owner may.
+  rpc GetAgentWorkDefaults(GetAgentWorkDefaultsRequest) returns (GetAgentWorkDefaultsResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
+    };
+  }
+  // ChangeAgentWorkDefaults replaces an Application's Agent's Work defaults
+  // for the Works it creates afterwards; only the Application or its
+  // Application Owner may.
+  rpc ChangeAgentWorkDefaults(ChangeAgentWorkDefaultsRequest) returns (ChangeAgentWorkDefaultsResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // GetWorkCapabilities reads actual Harness candidates and their latest updates.

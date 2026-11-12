@@ -45,6 +45,22 @@ export declare type GetWorkStartOptionsResponse = Message<"agent.public.v1.GetWo
    * @generated from field: repeated agent.public.v1.WorkStartConnector connectors = 4;
    */
   connectors: WorkStartConnector[];
+
+  /**
+   * The definition's default Model Configuration while it is provided; empty
+   * defaults to the first of models.
+   *
+   * @generated from field: string default_model_configuration_id = 5;
+   */
+  defaultModelConfigurationId: string;
+
+  /**
+   * The definition's default thinking level while the default model offers
+   * it; empty defaults to that model's own default.
+   *
+   * @generated from field: string default_thinking_level = 6;
+   */
+  defaultThinkingLevel: string;
 };
 
 /**

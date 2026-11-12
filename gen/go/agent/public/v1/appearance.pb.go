@@ -132,7 +132,8 @@ func (x *AgentAppearance) GetIcon() *AgentIcon {
 	return nil
 }
 
-// ChangeWorkAgentAppearanceRequest changes the caller's own Work Agent.
+// ChangeWorkAgentAppearanceRequest changes the caller's own Work Agent, or the
+// Agent of an Application the caller owns.
 type ChangeWorkAgentAppearanceRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// AgentDefinition of the Work Agent representing the caller.

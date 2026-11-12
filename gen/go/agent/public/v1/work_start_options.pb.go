@@ -32,9 +32,15 @@ type GetWorkStartOptionsResponse struct {
 	DefaultStartupAgent string `protobuf:"bytes,3,opt,name=default_startup_agent,json=defaultStartupAgent,proto3" json:"default_startup_agent,omitempty"`
 	// Offered Connectors this Work may include, marked as Agent composes the
 	// default selection; per-Work choices are differences from it.
-	Connectors    []*WorkStartConnector `protobuf:"bytes,4,rep,name=connectors,proto3" json:"connectors,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	Connectors []*WorkStartConnector `protobuf:"bytes,4,rep,name=connectors,proto3" json:"connectors,omitempty"`
+	// The definition's default Model Configuration while it is provided; empty
+	// defaults to the first of models.
+	DefaultModelConfigurationId string `protobuf:"bytes,5,opt,name=default_model_configuration_id,json=defaultModelConfigurationId,proto3" json:"default_model_configuration_id,omitempty"`
+	// The definition's default thinking level while the default model offers
+	// it; empty defaults to that model's own default.
+	DefaultThinkingLevel string `protobuf:"bytes,6,opt,name=default_thinking_level,json=defaultThinkingLevel,proto3" json:"default_thinking_level,omitempty"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
 }
 
 func (x *GetWorkStartOptionsResponse) Reset() {
@@ -93,6 +99,20 @@ func (x *GetWorkStartOptionsResponse) GetConnectors() []*WorkStartConnector {
 		return x.Connectors
 	}
 	return nil
+}
+
+func (x *GetWorkStartOptionsResponse) GetDefaultModelConfigurationId() string {
+	if x != nil {
+		return x.DefaultModelConfigurationId
+	}
+	return ""
+}
+
+func (x *GetWorkStartOptionsResponse) GetDefaultThinkingLevel() string {
+	if x != nil {
+		return x.DefaultThinkingLevel
+	}
+	return ""
 }
 
 // WorkStartRepositories are the repositories a startup may check out.
@@ -476,14 +496,16 @@ var File_agent_public_v1_work_start_options_proto protoreflect.FileDescriptor
 
 const file_agent_public_v1_work_start_options_proto_rawDesc = "" +
 	"\n" +
-	"(agent/public/v1/work_start_options.proto\x12\x0fagent.public.v1\x1a\x1bagent/public/v1/model.proto\"\x8c\x02\n" +
+	"(agent/public/v1/work_start_options.proto\x12\x0fagent.public.v1\x1a\x1bagent/public/v1/model.proto\"\x87\x03\n" +
 	"\x1bGetWorkStartOptionsResponse\x128\n" +
 	"\x06models\x18\x01 \x03(\v2 .agent.public.v1.WorkModelOptionR\x06models\x12:\n" +
 	"\aplugins\x18\x02 \x03(\v2 .agent.public.v1.WorkStartPluginR\aplugins\x122\n" +
 	"\x15default_startup_agent\x18\x03 \x01(\tR\x13defaultStartupAgent\x12C\n" +
 	"\n" +
 	"connectors\x18\x04 \x03(\v2#.agent.public.v1.WorkStartConnectorR\n" +
-	"connectors\"\xd0\x01\n" +
+	"connectors\x12C\n" +
+	"\x1edefault_model_configuration_id\x18\x05 \x01(\tR\x1bdefaultModelConfigurationId\x124\n" +
+	"\x16default_thinking_level\x18\x06 \x01(\tR\x14defaultThinkingLevel\"\xd0\x01\n" +
 	"\x15WorkStartRepositories\x12H\n" +
 	"\frepositories\x18\x01 \x03(\v2$.agent.public.v1.WorkStartRepositoryR\frepositories\x129\n" +
 	"\x18repositories_unavailable\x18\x02 \x01(\bR\x17repositoriesUnavailable\x122\n" +

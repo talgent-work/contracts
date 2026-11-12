@@ -367,6 +367,53 @@ export declare type RemoveApplicationResponse = Message<"account.public.v1.Remov
 export declare const RemoveApplicationResponseSchema: GenMessage<RemoveApplicationResponse>;
 
 /**
+ * RenameApplicationRequest names the Application and its new name.
+ *
+ * @generated from message account.public.v1.RenameApplicationRequest
+ */
+export declare type RenameApplicationRequest = Message<"account.public.v1.RenameApplicationRequest"> & {
+  /**
+   * The Application's id.
+   *
+   * @generated from field: string application_id = 1;
+   */
+  applicationId: string;
+
+  /**
+   * 1 to 60 characters after trimming.
+   *
+   * @generated from field: string name = 2;
+   */
+  name: string;
+};
+
+/**
+ * Describes the message account.public.v1.RenameApplicationRequest.
+ * Use `create(RenameApplicationRequestSchema)` to create a new message.
+ */
+export declare const RenameApplicationRequestSchema: GenMessage<RenameApplicationRequest>;
+
+/**
+ * RenameApplicationResponse is the renamed Application.
+ *
+ * @generated from message account.public.v1.RenameApplicationResponse
+ */
+export declare type RenameApplicationResponse = Message<"account.public.v1.RenameApplicationResponse"> & {
+  /**
+   * The Application.
+   *
+   * @generated from field: account.public.v1.Application application = 1;
+   */
+  application?: Application;
+};
+
+/**
+ * Describes the message account.public.v1.RenameApplicationResponse.
+ * Use `create(RenameApplicationResponseSchema)` to create a new message.
+ */
+export declare const RenameApplicationResponseSchema: GenMessage<RenameApplicationResponse>;
+
+/**
  * ClientSecretState is where a Client Secret stands.
  *
  * @generated from enum account.public.v1.ClientSecretState
@@ -452,6 +499,17 @@ export declare const ApplicationService: GenService<{
     methodKind: "unary";
     input: typeof RotateClientSecretRequestSchema;
     output: typeof RotateClientSecretResponseSchema;
+  },
+  /**
+   * RenameApplication replaces the name the Application Owner manages it by.
+   * It names no Agent: the Application's Agent keeps its own appearance.
+   *
+   * @generated from rpc account.public.v1.ApplicationService.RenameApplication
+   */
+  renameApplication: {
+    methodKind: "unary";
+    input: typeof RenameApplicationRequestSchema;
+    output: typeof RenameApplicationResponseSchema;
   },
   /**
    * RevokeClientSecret ends one Client Secret at once; the grant refuses it

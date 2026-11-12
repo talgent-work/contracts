@@ -39,6 +39,15 @@ const (
 	// AgentWorkServiceChangeAgentSoulProcedure is the procedure name of the AgentWorkService's
 	// ChangeAgentSoul RPC.
 	AgentWorkServiceChangeAgentSoulProcedure = "/agent.public.v1.AgentWorkService/ChangeAgentSoul"
+	// AgentWorkServiceEnsureApplicationAgentProcedure is the procedure name of the AgentWorkService's
+	// EnsureApplicationAgent RPC.
+	AgentWorkServiceEnsureApplicationAgentProcedure = "/agent.public.v1.AgentWorkService/EnsureApplicationAgent"
+	// AgentWorkServiceGetAgentWorkDefaultsProcedure is the procedure name of the AgentWorkService's
+	// GetAgentWorkDefaults RPC.
+	AgentWorkServiceGetAgentWorkDefaultsProcedure = "/agent.public.v1.AgentWorkService/GetAgentWorkDefaults"
+	// AgentWorkServiceChangeAgentWorkDefaultsProcedure is the procedure name of the AgentWorkService's
+	// ChangeAgentWorkDefaults RPC.
+	AgentWorkServiceChangeAgentWorkDefaultsProcedure = "/agent.public.v1.AgentWorkService/ChangeAgentWorkDefaults"
 	// AgentWorkServiceGetWorkCapabilitiesProcedure is the procedure name of the AgentWorkService's
 	// GetWorkCapabilities RPC.
 	AgentWorkServiceGetWorkCapabilitiesProcedure = "/agent.public.v1.AgentWorkService/GetWorkCapabilities"
@@ -130,6 +139,27 @@ var (
 			StreamType: connect.StreamTypeUnary,
 			Schema:     v1.File_agent_public_v1_work_proto.Services().ByName("AgentWorkService").Methods().ByName("ChangeAgentSoul"),
 			Procedure:  AgentWorkServiceChangeAgentSoulProcedure,
+		}
+	})
+	agentWorkServiceEnsureApplicationAgentSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_agent_public_v1_work_proto.Services().ByName("AgentWorkService").Methods().ByName("EnsureApplicationAgent"),
+			Procedure:  AgentWorkServiceEnsureApplicationAgentProcedure,
+		}
+	})
+	agentWorkServiceGetAgentWorkDefaultsSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_agent_public_v1_work_proto.Services().ByName("AgentWorkService").Methods().ByName("GetAgentWorkDefaults"),
+			Procedure:  AgentWorkServiceGetAgentWorkDefaultsProcedure,
+		}
+	})
+	agentWorkServiceChangeAgentWorkDefaultsSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_agent_public_v1_work_proto.Services().ByName("AgentWorkService").Methods().ByName("ChangeAgentWorkDefaults"),
+			Procedure:  AgentWorkServiceChangeAgentWorkDefaultsProcedure,
 		}
 	})
 	agentWorkServiceGetWorkCapabilitiesSpec = sync.OnceValue(func() connect.Spec {
@@ -270,19 +300,34 @@ var (
 // AgentWorkServiceClient is a client for the agent.public.v1.AgentWorkService service.
 type AgentWorkServiceClient interface {
 	// ChangeWorkAgentAppearance changes the name and icon of the Work Agent that
-	// represents the caller; only that human may change it.
+	// represents the caller, or of an Application's Agent for its Application
+	// Owner; nobody else may change it.
 	ChangeWorkAgentAppearance(context.Context, *v1.ChangeWorkAgentAppearanceRequest) (*v1.ChangeWorkAgentAppearanceResponse, error)
-	// GetMyWorkAgent reads the caller's Work Agent, or the appearance it would
-	// start with when the caller has none yet; it never creates one.
+	// GetMyWorkAgent reads the caller's Work Agent, a person's or an
+	// Application's, or the appearance it would start with when the caller has
+	// none yet; it never creates one.
 	GetMyWorkAgent(context.Context, *v1.GetMyWorkAgentRequest) (*v1.GetMyWorkAgentResponse, error)
 	// EnsureMyWorkAgent returns the caller's Work Agent, establishing it when
 	// the caller has none yet.
 	EnsureMyWorkAgent(context.Context, *v1.EnsureMyWorkAgentRequest) (*v1.EnsureMyWorkAgentResponse, error)
-	// GetAgentSoul reads an Agent's Soul; only one of its Owners may read it.
+	// GetAgentSoul reads an Agent's Soul; only one of its Owners, or an
+	// Application's Agent's Application Owner, may read it.
 	GetAgentSoul(context.Context, *v1.GetAgentSoulRequest) (*v1.GetAgentSoulResponse, error)
-	// ChangeAgentSoul replaces an Agent's Soul; only one of its Owners may. Each
+	// ChangeAgentSoul replaces an Agent's Soul; only one of its Owners, or an
+	// Application's Agent's Application Owner, may. Each
 	// of its Works takes it up at its next start; running Turns are unaffected.
 	ChangeAgentSoul(context.Context, *v1.ChangeAgentSoulRequest) (*v1.ChangeAgentSoulResponse, error)
+	// EnsureApplicationAgent returns the Agent of an Application the caller
+	// owns, establishing it on its first need; PermissionDenied for any other
+	// Application and for a removed one.
+	EnsureApplicationAgent(context.Context, *v1.EnsureApplicationAgentRequest) (*v1.EnsureApplicationAgentResponse, error)
+	// GetAgentWorkDefaults reads an Application's Agent's Work defaults with
+	// what they may name; only the Application or its Application Owner may.
+	GetAgentWorkDefaults(context.Context, *v1.GetAgentWorkDefaultsRequest) (*v1.GetAgentWorkDefaultsResponse, error)
+	// ChangeAgentWorkDefaults replaces an Application's Agent's Work defaults
+	// for the Works it creates afterwards; only the Application or its
+	// Application Owner may.
+	ChangeAgentWorkDefaults(context.Context, *v1.ChangeAgentWorkDefaultsRequest) (*v1.ChangeAgentWorkDefaultsResponse, error)
 	// GetWorkCapabilities reads actual Harness candidates and their latest updates.
 	GetWorkCapabilities(context.Context, *v1.GetWorkCapabilitiesRequest) (*v1.GetWorkCapabilitiesResponse, error)
 	// GetWorkPluginResults reads installation and loading projections for selected plugins.
@@ -344,19 +389,34 @@ func NewAgentWorkServiceClient(client *connect.Client) AgentWorkServiceClient {
 // AgentWorkServiceHandler is an implementation of the agent.public.v1.AgentWorkService service.
 type AgentWorkServiceHandler interface {
 	// ChangeWorkAgentAppearance changes the name and icon of the Work Agent that
-	// represents the caller; only that human may change it.
+	// represents the caller, or of an Application's Agent for its Application
+	// Owner; nobody else may change it.
 	ChangeWorkAgentAppearance(context.Context, *v1.ChangeWorkAgentAppearanceRequest) (*v1.ChangeWorkAgentAppearanceResponse, error)
-	// GetMyWorkAgent reads the caller's Work Agent, or the appearance it would
-	// start with when the caller has none yet; it never creates one.
+	// GetMyWorkAgent reads the caller's Work Agent, a person's or an
+	// Application's, or the appearance it would start with when the caller has
+	// none yet; it never creates one.
 	GetMyWorkAgent(context.Context, *v1.GetMyWorkAgentRequest) (*v1.GetMyWorkAgentResponse, error)
 	// EnsureMyWorkAgent returns the caller's Work Agent, establishing it when
 	// the caller has none yet.
 	EnsureMyWorkAgent(context.Context, *v1.EnsureMyWorkAgentRequest) (*v1.EnsureMyWorkAgentResponse, error)
-	// GetAgentSoul reads an Agent's Soul; only one of its Owners may read it.
+	// GetAgentSoul reads an Agent's Soul; only one of its Owners, or an
+	// Application's Agent's Application Owner, may read it.
 	GetAgentSoul(context.Context, *v1.GetAgentSoulRequest) (*v1.GetAgentSoulResponse, error)
-	// ChangeAgentSoul replaces an Agent's Soul; only one of its Owners may. Each
+	// ChangeAgentSoul replaces an Agent's Soul; only one of its Owners, or an
+	// Application's Agent's Application Owner, may. Each
 	// of its Works takes it up at its next start; running Turns are unaffected.
 	ChangeAgentSoul(context.Context, *v1.ChangeAgentSoulRequest) (*v1.ChangeAgentSoulResponse, error)
+	// EnsureApplicationAgent returns the Agent of an Application the caller
+	// owns, establishing it on its first need; PermissionDenied for any other
+	// Application and for a removed one.
+	EnsureApplicationAgent(context.Context, *v1.EnsureApplicationAgentRequest) (*v1.EnsureApplicationAgentResponse, error)
+	// GetAgentWorkDefaults reads an Application's Agent's Work defaults with
+	// what they may name; only the Application or its Application Owner may.
+	GetAgentWorkDefaults(context.Context, *v1.GetAgentWorkDefaultsRequest) (*v1.GetAgentWorkDefaultsResponse, error)
+	// ChangeAgentWorkDefaults replaces an Application's Agent's Work defaults
+	// for the Works it creates afterwards; only the Application or its
+	// Application Owner may.
+	ChangeAgentWorkDefaults(context.Context, *v1.ChangeAgentWorkDefaultsRequest) (*v1.ChangeAgentWorkDefaultsResponse, error)
 	// GetWorkCapabilities reads actual Harness candidates and their latest updates.
 	GetWorkCapabilities(context.Context, *v1.GetWorkCapabilitiesRequest) (*v1.GetWorkCapabilitiesResponse, error)
 	// GetWorkPluginResults reads installation and loading projections for selected plugins.
@@ -419,6 +479,9 @@ func RegisterAgentWorkServiceHandler(server *connect.Server, svc AgentWorkServic
 		connect.Method{Spec: agentWorkServiceEnsureMyWorkAgentSpec(), Handler: adapter.ensureMyWorkAgent},
 		connect.Method{Spec: agentWorkServiceGetAgentSoulSpec(), Handler: adapter.getAgentSoul},
 		connect.Method{Spec: agentWorkServiceChangeAgentSoulSpec(), Handler: adapter.changeAgentSoul},
+		connect.Method{Spec: agentWorkServiceEnsureApplicationAgentSpec(), Handler: adapter.ensureApplicationAgent},
+		connect.Method{Spec: agentWorkServiceGetAgentWorkDefaultsSpec(), Handler: adapter.getAgentWorkDefaults},
+		connect.Method{Spec: agentWorkServiceChangeAgentWorkDefaultsSpec(), Handler: adapter.changeAgentWorkDefaults},
 		connect.Method{Spec: agentWorkServiceGetWorkCapabilitiesSpec(), Handler: adapter.getWorkCapabilities},
 		connect.Method{Spec: agentWorkServiceGetWorkPluginResultsSpec(), Handler: adapter.getWorkPluginResults},
 		connect.Method{Spec: agentWorkServiceGetWorkServiceAccessSpec(), Handler: adapter.getWorkServiceAccess},
@@ -462,6 +525,18 @@ func (UnimplementedAgentWorkServiceHandler) GetAgentSoul(context.Context, *v1.Ge
 
 func (UnimplementedAgentWorkServiceHandler) ChangeAgentSoul(context.Context, *v1.ChangeAgentSoulRequest) (*v1.ChangeAgentSoulResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, "agent.public.v1.AgentWorkService.ChangeAgentSoul is not implemented")
+}
+
+func (UnimplementedAgentWorkServiceHandler) EnsureApplicationAgent(context.Context, *v1.EnsureApplicationAgentRequest) (*v1.EnsureApplicationAgentResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "agent.public.v1.AgentWorkService.EnsureApplicationAgent is not implemented")
+}
+
+func (UnimplementedAgentWorkServiceHandler) GetAgentWorkDefaults(context.Context, *v1.GetAgentWorkDefaultsRequest) (*v1.GetAgentWorkDefaultsResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "agent.public.v1.AgentWorkService.GetAgentWorkDefaults is not implemented")
+}
+
+func (UnimplementedAgentWorkServiceHandler) ChangeAgentWorkDefaults(context.Context, *v1.ChangeAgentWorkDefaultsRequest) (*v1.ChangeAgentWorkDefaultsResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "agent.public.v1.AgentWorkService.ChangeAgentWorkDefaults is not implemented")
 }
 
 func (UnimplementedAgentWorkServiceHandler) GetWorkCapabilities(context.Context, *v1.GetWorkCapabilitiesRequest) (*v1.GetWorkCapabilitiesResponse, error) {
@@ -579,6 +654,30 @@ func (c *agentWorkServiceClient) GetAgentSoul(ctx context.Context, req *v1.GetAg
 func (c *agentWorkServiceClient) ChangeAgentSoul(ctx context.Context, req *v1.ChangeAgentSoulRequest) (*v1.ChangeAgentSoulResponse, error) {
 	var res v1.ChangeAgentSoulResponse
 	if err := c.client.CallUnary(ctx, agentWorkServiceChangeAgentSoulSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *agentWorkServiceClient) EnsureApplicationAgent(ctx context.Context, req *v1.EnsureApplicationAgentRequest) (*v1.EnsureApplicationAgentResponse, error) {
+	var res v1.EnsureApplicationAgentResponse
+	if err := c.client.CallUnary(ctx, agentWorkServiceEnsureApplicationAgentSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *agentWorkServiceClient) GetAgentWorkDefaults(ctx context.Context, req *v1.GetAgentWorkDefaultsRequest) (*v1.GetAgentWorkDefaultsResponse, error) {
+	var res v1.GetAgentWorkDefaultsResponse
+	if err := c.client.CallUnary(ctx, agentWorkServiceGetAgentWorkDefaultsSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *agentWorkServiceClient) ChangeAgentWorkDefaults(ctx context.Context, req *v1.ChangeAgentWorkDefaultsRequest) (*v1.ChangeAgentWorkDefaultsResponse, error) {
+	var res v1.ChangeAgentWorkDefaultsResponse
+	if err := c.client.CallUnary(ctx, agentWorkServiceChangeAgentWorkDefaultsSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
@@ -792,6 +891,42 @@ func (h agentWorkServiceHandler) changeAgentSoul(ctx context.Context, _ connect.
 		return err
 	}
 	res, err := h.svc.ChangeAgentSoul(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h agentWorkServiceHandler) ensureApplicationAgent(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.EnsureApplicationAgentRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.EnsureApplicationAgent(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h agentWorkServiceHandler) getAgentWorkDefaults(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.GetAgentWorkDefaultsRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.GetAgentWorkDefaults(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h agentWorkServiceHandler) changeAgentWorkDefaults(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.ChangeAgentWorkDefaultsRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.ChangeAgentWorkDefaults(ctx, &req)
 	if err != nil {
 		return err
 	}

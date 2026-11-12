@@ -12,6 +12,7 @@ import type { WorkProgress } from "./progress_pb.js";
 import type { PendingInteraction } from "../../../dispatcher/public/v1/unified_message_pb.js";
 import type { ChangeWorkAgentAppearanceRequestSchema, ChangeWorkAgentAppearanceResponseSchema, EnsureMyWorkAgentRequestSchema, EnsureMyWorkAgentResponseSchema, GetMyWorkAgentRequestSchema, GetMyWorkAgentResponseSchema } from "./appearance_pb.js";
 import type { ChangeAgentSoulRequestSchema, ChangeAgentSoulResponseSchema, GetAgentSoulRequestSchema, GetAgentSoulResponseSchema } from "./soul_pb.js";
+import type { ChangeAgentWorkDefaultsRequestSchema, ChangeAgentWorkDefaultsResponseSchema, EnsureApplicationAgentRequestSchema, EnsureApplicationAgentResponseSchema, GetAgentWorkDefaultsRequestSchema, GetAgentWorkDefaultsResponseSchema } from "./work_defaults_pb.js";
 import type { GetWorkCapabilitiesRequestSchema, GetWorkCapabilitiesResponseSchema } from "./capability_pb.js";
 import type { GetWorkPluginResultsRequestSchema, GetWorkPluginResultsResponseSchema } from "./plugin_pb.js";
 import type { GetWorkServiceAccessRequestSchema, GetWorkServiceAccessResponseSchema } from "./service_access_pb.js";
@@ -1371,18 +1372,22 @@ export declare const WorkLifecycleEventSchema: GenMessage<WorkLifecycleEvent>;
 /**
  * AgentWorkService is the neutral "my Work" API. Every Work operation is
  * admitted only for the Work's owner, a person or an Application, which
- * reaches only its own Works; ChangeWorkAgentAppearance addresses an
- * AgentDefinition and is admitted only for the human it represents. Both are
- * decided from Agent's own facts. The Agent's appearance and Soul, a Work's
- * visibility and Work Shares, and a Managed Computer's permission mode are a
- * person's alone and admit no Application.
+ * reaches only its own Works. The Agent operations address an AgentDefinition:
+ * its Owners, a person or the Application, read and replace its Soul and an
+ * Application's Work defaults, and only a person changes an appearance, the
+ * one their Work Agent represents them with, or, as Application Owner, an
+ * Application's Agent's. An Application Owner reaches an Application's Agent
+ * under their own identity, admitted through Account's Application ownership.
+ * A Work's visibility and Work Shares and a Managed Computer's permission mode
+ * are a person's alone and admit no Application.
  *
  * @generated from service agent.public.v1.AgentWorkService
  */
 export declare const AgentWorkService: GenService<{
   /**
    * ChangeWorkAgentAppearance changes the name and icon of the Work Agent that
-   * represents the caller; only that human may change it.
+   * represents the caller, or of an Application's Agent for its Application
+   * Owner; nobody else may change it.
    *
    * @generated from rpc agent.public.v1.AgentWorkService.ChangeWorkAgentAppearance
    */
@@ -1392,8 +1397,9 @@ export declare const AgentWorkService: GenService<{
     output: typeof ChangeWorkAgentAppearanceResponseSchema;
   },
   /**
-   * GetMyWorkAgent reads the caller's Work Agent, or the appearance it would
-   * start with when the caller has none yet; it never creates one.
+   * GetMyWorkAgent reads the caller's Work Agent, a person's or an
+   * Application's, or the appearance it would start with when the caller has
+   * none yet; it never creates one.
    *
    * @generated from rpc agent.public.v1.AgentWorkService.GetMyWorkAgent
    */
@@ -1414,7 +1420,8 @@ export declare const AgentWorkService: GenService<{
     output: typeof EnsureMyWorkAgentResponseSchema;
   },
   /**
-   * GetAgentSoul reads an Agent's Soul; only one of its Owners may read it.
+   * GetAgentSoul reads an Agent's Soul; only one of its Owners, or an
+   * Application's Agent's Application Owner, may read it.
    *
    * @generated from rpc agent.public.v1.AgentWorkService.GetAgentSoul
    */
@@ -1424,7 +1431,8 @@ export declare const AgentWorkService: GenService<{
     output: typeof GetAgentSoulResponseSchema;
   },
   /**
-   * ChangeAgentSoul replaces an Agent's Soul; only one of its Owners may. Each
+   * ChangeAgentSoul replaces an Agent's Soul; only one of its Owners, or an
+   * Application's Agent's Application Owner, may. Each
    * of its Works takes it up at its next start; running Turns are unaffected.
    *
    * @generated from rpc agent.public.v1.AgentWorkService.ChangeAgentSoul
@@ -1433,6 +1441,41 @@ export declare const AgentWorkService: GenService<{
     methodKind: "unary";
     input: typeof ChangeAgentSoulRequestSchema;
     output: typeof ChangeAgentSoulResponseSchema;
+  },
+  /**
+   * EnsureApplicationAgent returns the Agent of an Application the caller
+   * owns, establishing it on its first need; PermissionDenied for any other
+   * Application and for a removed one.
+   *
+   * @generated from rpc agent.public.v1.AgentWorkService.EnsureApplicationAgent
+   */
+  ensureApplicationAgent: {
+    methodKind: "unary";
+    input: typeof EnsureApplicationAgentRequestSchema;
+    output: typeof EnsureApplicationAgentResponseSchema;
+  },
+  /**
+   * GetAgentWorkDefaults reads an Application's Agent's Work defaults with
+   * what they may name; only the Application or its Application Owner may.
+   *
+   * @generated from rpc agent.public.v1.AgentWorkService.GetAgentWorkDefaults
+   */
+  getAgentWorkDefaults: {
+    methodKind: "unary";
+    input: typeof GetAgentWorkDefaultsRequestSchema;
+    output: typeof GetAgentWorkDefaultsResponseSchema;
+  },
+  /**
+   * ChangeAgentWorkDefaults replaces an Application's Agent's Work defaults
+   * for the Works it creates afterwards; only the Application or its
+   * Application Owner may.
+   *
+   * @generated from rpc agent.public.v1.AgentWorkService.ChangeAgentWorkDefaults
+   */
+  changeAgentWorkDefaults: {
+    methodKind: "unary";
+    input: typeof ChangeAgentWorkDefaultsRequestSchema;
+    output: typeof ChangeAgentWorkDefaultsResponseSchema;
   },
   /**
    * GetWorkCapabilities reads actual Harness candidates and their latest updates.

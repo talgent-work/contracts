@@ -75,6 +75,8 @@ message ReportRequest {
   // attachment to the process's sandbox, the origin of the Disconnection the
   // fact reports or ends. Repeated reports of one loss carry the same origin.
   google.protobuf.Timestamp detached_since = 16;
+  // For TITLE_OBSERVED: the title the Harness gave the Work's conversation.
+  string title = 17;
 }
 
 // InputOutcome is how a buffered input or reply left the Work's input buffer.
@@ -144,4 +146,7 @@ enum FeedbackKind {
   // Dispatcher attached again to the process's sandbox after the loss
   // reported with the same detached_since.
   FEEDBACK_KIND_ATTACHMENT_RETURNED = 16;
+  // The Harness titled the Work's conversation, or titled it anew; title
+  // carries it.
+  FEEDBACK_KIND_TITLE_OBSERVED = 17;
 }

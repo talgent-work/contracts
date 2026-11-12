@@ -181,6 +181,13 @@ export declare type ReportRequest = Message<"agent.private.v1.ReportRequest"> & 
    * @generated from field: google.protobuf.Timestamp detached_since = 16;
    */
   detachedSince?: Timestamp;
+
+  /**
+   * For TITLE_OBSERVED: the title the Harness gave the Work's conversation.
+   *
+   * @generated from field: string title = 17;
+   */
+  title: string;
 };
 
 /**
@@ -402,6 +409,14 @@ export enum FeedbackKind {
    * @generated from enum value: FEEDBACK_KIND_ATTACHMENT_RETURNED = 16;
    */
   ATTACHMENT_RETURNED = 16,
+
+  /**
+   * The Harness titled the Work's conversation, or titled it anew; title
+   * carries it.
+   *
+   * @generated from enum value: FEEDBACK_KIND_TITLE_OBSERVED = 17;
+   */
+  TITLE_OBSERVED = 17,
 }
 
 /**

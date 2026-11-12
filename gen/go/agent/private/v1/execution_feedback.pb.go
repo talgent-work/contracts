@@ -126,6 +126,9 @@ const (
 	// Dispatcher attached again to the process's sandbox after the loss
 	// reported with the same detached_since.
 	FeedbackKind_FEEDBACK_KIND_ATTACHMENT_RETURNED FeedbackKind = 16
+	// The Harness titled the Work's conversation, or titled it anew; title
+	// carries it.
+	FeedbackKind_FEEDBACK_KIND_TITLE_OBSERVED FeedbackKind = 17
 )
 
 // Enum value maps for FeedbackKind.
@@ -148,6 +151,7 @@ var (
 		14: "FEEDBACK_KIND_PERMISSION_MODE_OBSERVED",
 		15: "FEEDBACK_KIND_ATTACHMENT_LOST",
 		16: "FEEDBACK_KIND_ATTACHMENT_RETURNED",
+		17: "FEEDBACK_KIND_TITLE_OBSERVED",
 	}
 	FeedbackKind_value = map[string]int32{
 		"FEEDBACK_KIND_UNSPECIFIED":               0,
@@ -167,6 +171,7 @@ var (
 		"FEEDBACK_KIND_PERMISSION_MODE_OBSERVED":  14,
 		"FEEDBACK_KIND_ATTACHMENT_LOST":           15,
 		"FEEDBACK_KIND_ATTACHMENT_RETURNED":       16,
+		"FEEDBACK_KIND_TITLE_OBSERVED":            17,
 	}
 )
 
@@ -334,6 +339,8 @@ type ReportRequest struct {
 	// attachment to the process's sandbox, the origin of the Disconnection the
 	// fact reports or ends. Repeated reports of one loss carry the same origin.
 	DetachedSince *timestamppb.Timestamp `protobuf:"bytes,16,opt,name=detached_since,json=detachedSince,proto3" json:"detached_since,omitempty"`
+	// For TITLE_OBSERVED: the title the Harness gave the Work's conversation.
+	Title         string `protobuf:"bytes,17,opt,name=title,proto3" json:"title,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -480,6 +487,13 @@ func (x *ReportRequest) GetDetachedSince() *timestamppb.Timestamp {
 	return nil
 }
 
+func (x *ReportRequest) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
 // LoadedPlugin is a native loading fact, excluding paths and configuration.
 type LoadedPlugin struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -581,7 +595,7 @@ const file_agent_private_v1_execution_feedback_proto_rawDesc = "" +
 	"\awork_id\x18\x01 \x01(\tR\x06workId\x12\x1d\n" +
 	"\n" +
 	"process_id\x18\x02 \x01(\tR\tprocessId\"\x19\n" +
-	"\x17ConnectionEndedResponse\"\x88\x06\n" +
+	"\x17ConnectionEndedResponse\"\x9e\x06\n" +
 	"\rReportRequest\x12\x17\n" +
 	"\awork_id\x18\x01 \x01(\tR\x06workId\x122\n" +
 	"\x04kind\x18\x02 \x01(\x0e2\x1e.agent.private.v1.FeedbackKindR\x04kind\x12%\n" +
@@ -601,7 +615,8 @@ const file_agent_private_v1_execution_feedback_proto_rawDesc = "" +
 	"\rinput_outcome\x18\r \x01(\x0e2\x1e.agent.private.v1.InputOutcomeR\finputOutcome\x127\n" +
 	"\tsubagents\x18\x0e \x03(\v2\x19.agent.public.v1.SubAgentR\tsubagents\x12'\n" +
 	"\x0fpermission_mode\x18\x0f \x01(\tR\x0epermissionMode\x12A\n" +
-	"\x0edetached_since\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampR\rdetachedSince\"<\n" +
+	"\x0edetached_since\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampR\rdetachedSince\x12\x14\n" +
+	"\x05title\x18\x11 \x01(\tR\x05title\"<\n" +
 	"\fLoadedPlugin\x12\x12\n" +
 	"\x04slug\x18\x01 \x01(\tR\x04slug\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\tR\aversion\"\x10\n" +
@@ -610,7 +625,7 @@ const file_agent_private_v1_execution_feedback_proto_rawDesc = "" +
 	"\x19INPUT_OUTCOME_UNSPECIFIED\x10\x00\x12\x1b\n" +
 	"\x17INPUT_OUTCOME_COMPLETED\x10\x01\x12\x18\n" +
 	"\x14INPUT_OUTCOME_CLOSED\x10\x02\x12\x1b\n" +
-	"\x17INPUT_OUTCOME_ABANDONED\x10\x03*\xed\x04\n" +
+	"\x17INPUT_OUTCOME_ABANDONED\x10\x03*\x8f\x05\n" +
 	"\fFeedbackKind\x12\x1d\n" +
 	"\x19FEEDBACK_KIND_UNSPECIFIED\x10\x00\x12\x1a\n" +
 	"\x16FEEDBACK_KIND_PREPARED\x10\x01\x12\x19\n" +
@@ -629,7 +644,8 @@ const file_agent_private_v1_execution_feedback_proto_rawDesc = "" +
 	"\x1fFEEDBACK_KIND_SUBAGENTS_UPDATED\x10\r\x12*\n" +
 	"&FEEDBACK_KIND_PERMISSION_MODE_OBSERVED\x10\x0e\x12!\n" +
 	"\x1dFEEDBACK_KIND_ATTACHMENT_LOST\x10\x0f\x12%\n" +
-	"!FEEDBACK_KIND_ATTACHMENT_RETURNED\x10\x102\xcf\x01\n" +
+	"!FEEDBACK_KIND_ATTACHMENT_RETURNED\x10\x10\x12 \n" +
+	"\x1cFEEDBACK_KIND_TITLE_OBSERVED\x10\x112\xcf\x01\n" +
 	"\x18ExecutionFeedbackService\x12K\n" +
 	"\x06Report\x12\x1f.agent.private.v1.ReportRequest\x1a .agent.private.v1.ReportResponse\x12f\n" +
 	"\x0fConnectionEnded\x12(.agent.private.v1.ConnectionEndedRequest\x1a).agent.private.v1.ConnectionEndedResponseBJZHgithub.com/talgent-work/contracts/gen/go/agent/private/v1;agentprivatev1b\x06proto3"

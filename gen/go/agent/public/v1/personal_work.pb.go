@@ -1398,7 +1398,7 @@ const file_agent_public_v1_personal_work_proto_rawDesc = "" +
 	"\bpersonal\x18\x04 \x01(\bR\bpersonal\"\x82\x01\n" +
 	"\x18ListLibraryFilesResponse\x122\n" +
 	"\x05files\x18\x01 \x03(\v2\x1c.agent.public.v1.LibraryFileR\x05files\x122\n" +
-	"\x05works\x18\x02 \x03(\v2\x1c.agent.public.v1.LibraryWorkR\x05works2\xa0\t\n" +
+	"\x05works\x18\x02 \x03(\v2\x1c.agent.public.v1.LibraryWorkR\x05works2\xa5\t\n" +
 	"\x13PersonalWorkService\x12\x91\x01\n" +
 	"\x1bGetPersonalWorkStartOptions\x123.agent.public.v1.GetPersonalWorkStartOptionsRequest\x1a4.agent.public.v1.GetPersonalWorkStartOptionsResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x01\x12\xa3\x01\n" +
@@ -1417,7 +1417,7 @@ const file_agent_public_v1_personal_work_proto_rawDesc = "" +
 	"\x16GrantPersonalWorkShare\x12..agent.public.v1.GrantPersonalWorkShareRequest\x1a/.agent.public.v1.GrantPersonalWorkShareResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x01\x12q\n" +
 	"\x10ListLibraryFiles\x12(.agent.public.v1.ListLibraryFilesRequest\x1a).agent.public.v1.ListLibraryFilesResponse\"\b\xc2\xf3\x18\x04\n" +
-	"\x02\x01\x02BHZFgithub.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1b\x06proto3"
+	"\x02\x01\x02\x1a\x03\x88\x02\x01BHZFgithub.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1b\x06proto3"
 
 var (
 	file_agent_public_v1_personal_work_proto_rawDescOnce sync.Once

@@ -681,7 +681,11 @@ export declare const ListLibraryFilesResponseSchema: GenMessage<ListLibraryFiles
  * the authenticated person under their own employee definition, which Agent
  * establishes on its first need.
  *
+ * Retiring: agent.public.v2.WorkService carries these procedures under neutral
+ * names. This service stays until its last consumer moves, then goes.
+ *
  * @generated from service agent.public.v1.PersonalWorkService
+ * @deprecated
  */
 export declare const PersonalWorkService: GenService<{
   /**

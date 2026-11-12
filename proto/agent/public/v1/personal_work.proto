@@ -16,7 +16,12 @@ option go_package = "github.com/talgent-work/contracts/gen/go/agent/public/v1;ag
 // their sharing, and the person's Personal Library. Every operation acts for
 // the authenticated person under their own employee definition, which Agent
 // establishes on its first need.
+//
+// Retiring: agent.public.v2.WorkService carries these procedures under neutral
+// names. This service stays until its last consumer moves, then goes.
 service PersonalWorkService {
+  option deprecated = true;
+
   // GetPersonalWorkStartOptions lists what a new Personal Work may start
   // with under the person's employee definition.
   rpc GetPersonalWorkStartOptions(GetPersonalWorkStartOptionsRequest) returns (GetPersonalWorkStartOptionsResponse) {

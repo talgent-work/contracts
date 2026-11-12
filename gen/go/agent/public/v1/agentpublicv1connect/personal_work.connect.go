@@ -120,6 +120,8 @@ var (
 )
 
 // PersonalWorkServiceClient is a client for the agent.public.v1.PersonalWorkService service.
+//
+// Deprecated: do not use.
 type PersonalWorkServiceClient interface {
 	// GetPersonalWorkStartOptions lists what a new Personal Work may start
 	// with under the person's employee definition.
@@ -158,6 +160,8 @@ func NewPersonalWorkServiceClient(client *connect.Client) PersonalWorkServiceCli
 
 // PersonalWorkServiceHandler is an implementation of the agent.public.v1.PersonalWorkService
 // service.
+//
+// Deprecated: do not use.
 type PersonalWorkServiceHandler interface {
 	// GetPersonalWorkStartOptions lists what a new Personal Work may start
 	// with under the person's employee definition.

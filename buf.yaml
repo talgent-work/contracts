@@ -13,9 +13,3 @@ breaking:
     - FILE
   # Only stable packages (vN) promise to only grow; vNalphaM and vNbetaM may change.
   ignore_unstable_packages: true
-  # agent.public.v2.WorkService replaced the deprecated
-  # agent.public.v1.PersonalWorkService, which nothing consumes any more; this
-  # release removes it as a minor tagged by hand. The commit after that release
-  # removes this exemption, once the check compares against it.
-  ignore:
-    - proto/agent/public/v1/personal_work.proto

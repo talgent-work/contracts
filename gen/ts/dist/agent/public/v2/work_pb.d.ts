@@ -203,6 +203,8 @@ export declare type ApplicationMcpEndpoint = Message<"agent.public.v2.Applicatio
   /**
    * Request headers sent with every call, at most 32; each name is an HTTP
    * header token of at most 128 characters and each value at most 8192.
+   * Neither a value nor the URL may contain "${", which the Agent Harness
+   * would expand from the run's environment.
    *
    * @generated from field: map<string, string> headers = 3;
    */

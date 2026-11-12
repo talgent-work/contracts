@@ -340,6 +340,8 @@ type ApplicationMcpEndpoint struct {
 	Url string `protobuf:"bytes,2,opt,name=url,proto3" json:"url,omitempty"`
 	// Request headers sent with every call, at most 32; each name is an HTTP
 	// header token of at most 128 characters and each value at most 8192.
+	// Neither a value nor the URL may contain "${", which the Agent Harness
+	// would expand from the run's environment.
 	Headers       map[string]string `protobuf:"bytes,3,rep,name=headers,proto3" json:"headers,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache

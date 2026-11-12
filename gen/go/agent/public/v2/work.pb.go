@@ -456,7 +456,12 @@ type ListWorksRequest struct {
 	// Only Works in one of these Work States, as WorkSummary.state names them
 	// ("starting", "working", "stopping", "stopped", "failed", "closing",
 	// "closed"); empty lists every state. An unknown state is InvalidArgument.
-	States        []string `protobuf:"bytes,3,rep,name=states,proto3" json:"states,omitempty"`
+	States []string `protobuf:"bytes,3,rep,name=states,proto3" json:"states,omitempty"`
+	// The Application whose Works its Application Owner lists, read-only;
+	// empty lists the caller's own. An Application names only itself, and a
+	// person only an Application they own, also after its removal; anything
+	// else is PermissionDenied.
+	ApplicationId string `protobuf:"bytes,4,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -510,6 +515,13 @@ func (x *ListWorksRequest) GetStates() []string {
 		return x.States
 	}
 	return nil
+}
+
+func (x *ListWorksRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
+	}
+	return ""
 }
 
 // WorkSummary is one Standalone Work as its owner's list shows it.
@@ -1475,11 +1487,12 @@ const file_agent_public_v2_work_proto_rawDesc = "" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\",\n" +
 	"\x11StartWorkResponse\x12\x17\n" +
-	"\awork_id\x18\x01 \x01(\tR\x06workId\"\xc2\x01\n" +
+	"\awork_id\x18\x01 \x01(\tR\x06workId\"\xe9\x01\n" +
 	"\x10ListWorksRequest\x12\x14\n" +
 	"\x05limit\x18\x01 \x01(\rR\x05limit\x12E\n" +
 	"\x06labels\x18\x02 \x03(\v2-.agent.public.v2.ListWorksRequest.LabelsEntryR\x06labels\x12\x16\n" +
-	"\x06states\x18\x03 \x03(\tR\x06states\x1a9\n" +
+	"\x06states\x18\x03 \x03(\tR\x06states\x12%\n" +
+	"\x0eapplication_id\x18\x04 \x01(\tR\rapplicationId\x1a9\n" +
 	"\vLabelsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xcd\x03\n" +

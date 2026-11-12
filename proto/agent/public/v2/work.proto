@@ -43,8 +43,8 @@ service WorkService {
       principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
-  // ListWorks lists the caller's Standalone Works, closed ones included, most
-  // recently updated first.
+  // ListWorks lists the caller's Standalone Works, or an Application's to its
+  // Application Owner, closed ones included, most recently updated first.
   rpc ListWorks(ListWorksRequest) returns (ListWorksResponse) {
     option (admission.v1.admits) = {
       principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
@@ -176,6 +176,11 @@ message ListWorksRequest {
   // ("starting", "working", "stopping", "stopped", "failed", "closing",
   // "closed"); empty lists every state. An unknown state is InvalidArgument.
   repeated string states = 3;
+  // The Application whose Works its Application Owner lists, read-only;
+  // empty lists the caller's own. An Application names only itself, and a
+  // person only an Application they own, also after its removal; anything
+  // else is PermissionDenied.
+  string application_id = 4;
 }
 
 // WorkSummary is one Standalone Work as its owner's list shows it.

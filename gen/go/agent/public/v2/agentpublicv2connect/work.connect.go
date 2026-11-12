@@ -128,8 +128,8 @@ type WorkServiceClient interface {
 	// StartWork starts a new Standalone Work with its own File Spaces and admits
 	// its first input. A repeated request identity returns the Work it started.
 	StartWork(context.Context, *v2.StartWorkRequest) (*v2.StartWorkResponse, error)
-	// ListWorks lists the caller's Standalone Works, closed ones included, most
-	// recently updated first.
+	// ListWorks lists the caller's Standalone Works, or an Application's to its
+	// Application Owner, closed ones included, most recently updated first.
 	ListWorks(context.Context, *v2.ListWorksRequest) (*v2.ListWorksResponse, error)
 	// ChangeWorkTitle replaces a Standalone Work's display title.
 	ChangeWorkTitle(context.Context, *v2.ChangeWorkTitleRequest) (*v2.ChangeWorkTitleResponse, error)
@@ -165,8 +165,8 @@ type WorkServiceHandler interface {
 	// StartWork starts a new Standalone Work with its own File Spaces and admits
 	// its first input. A repeated request identity returns the Work it started.
 	StartWork(context.Context, *v2.StartWorkRequest) (*v2.StartWorkResponse, error)
-	// ListWorks lists the caller's Standalone Works, closed ones included, most
-	// recently updated first.
+	// ListWorks lists the caller's Standalone Works, or an Application's to its
+	// Application Owner, closed ones included, most recently updated first.
 	ListWorks(context.Context, *v2.ListWorksRequest) (*v2.ListWorksResponse, error)
 	// ChangeWorkTitle replaces a Standalone Work's display title.
 	ChangeWorkTitle(context.Context, *v2.ChangeWorkTitleRequest) (*v2.ChangeWorkTitleResponse, error)

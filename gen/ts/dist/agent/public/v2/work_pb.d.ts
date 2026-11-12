@@ -267,6 +267,16 @@ export declare type ListWorksRequest = Message<"agent.public.v2.ListWorksRequest
    * @generated from field: repeated string states = 3;
    */
   states: string[];
+
+  /**
+   * The Application whose Works its Application Owner lists, read-only;
+   * empty lists the caller's own. An Application names only itself, and a
+   * person only an Application they own, also after its removal; anything
+   * else is PermissionDenied.
+   *
+   * @generated from field: string application_id = 4;
+   */
+  applicationId: string;
 };
 
 /**
@@ -810,8 +820,8 @@ export declare const WorkService: GenService<{
     output: typeof StartWorkResponseSchema;
   },
   /**
-   * ListWorks lists the caller's Standalone Works, closed ones included, most
-   * recently updated first.
+   * ListWorks lists the caller's Standalone Works, or an Application's to its
+   * Application Owner, closed ones included, most recently updated first.
    *
    * @generated from rpc agent.public.v2.WorkService.ListWorks
    */

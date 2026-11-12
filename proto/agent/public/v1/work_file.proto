@@ -7,36 +7,37 @@ import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1";
 
-// WorkFileService serves the files of a Work's File Space. A Personal Work's
-// owner uploads, renames and deletes its Attachments and deletes its
-// Artifacts until the Work is Closed, and manages Share Links at any time;
-// the owner and its Work Share holders read. Of a Work with a Subject or a
+// WorkFileService serves the files of a Work's File Space. A Standalone Work's
+// owner, a person or an Application, uploads, renames and deletes its
+// Attachments and deletes its Artifacts until the Work is Closed; a person
+// owner also manages Share Links at any time. The owner and its Work Share
+// holders read. Of a Work with a Subject or a
 // Project, whose files its caller governs, only the Artifacts are read here,
 // by its owner and Work Share holders, as the Personal Library shows them.
 service WorkFileService {
-  // ListWorkFiles lists a Personal Work's Attachments and Artifacts.
+  // ListWorkFiles lists a Standalone Work's Attachments and Artifacts.
   rpc ListWorkFiles(ListWorkFilesRequest) returns (ListWorkFilesResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // CreateWorkAttachmentUpload issues the link through which one Attachment
   // is created or replaced.
   rpc CreateWorkAttachmentUpload(CreateWorkAttachmentUploadRequest) returns (CreateWorkAttachmentUploadResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // RenameWorkAttachment moves an Attachment to a free name.
   rpc RenameWorkAttachment(RenameWorkAttachmentRequest) returns (RenameWorkAttachmentResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // DeleteWorkFile deletes an Attachment or an Artifact.
   rpc DeleteWorkFile(DeleteWorkFileRequest) returns (DeleteWorkFileResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // CreateWorkFileAccessLink issues a short-lived link to read one file.
@@ -44,7 +45,8 @@ service WorkFileService {
     option (admission.v1.admits) = {
       principals: [
         PRINCIPAL_USER,
-        PRINCIPAL_AGENT
+        PRINCIPAL_AGENT,
+        PRINCIPAL_APPLICATION
       ]
     };
   }
@@ -63,13 +65,13 @@ service WorkFileService {
   // GetWorkFilePreview tells how one file is shown.
   rpc GetWorkFilePreview(GetWorkFilePreviewRequest) returns (GetWorkFilePreviewResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // RequestWorkFilePreview asks for a file's Preview Copy to be rendered.
   rpc RequestWorkFilePreview(RequestWorkFilePreviewRequest) returns (RequestWorkFilePreviewResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
 }
@@ -78,7 +80,7 @@ service WorkFileService {
 enum WorkFileKind {
   // WORK_FILE_KIND_UNSPECIFIED value.
   WORK_FILE_KIND_UNSPECIFIED = 0;
-  // A file a person uploaded for the Work to read.
+  // A file its owner uploaded for the Work to read.
   WORK_FILE_KIND_ATTACHMENT = 1;
   // A file the Work published.
   WORK_FILE_KIND_ARTIFACT = 2;
@@ -120,15 +122,17 @@ message WorkFile {
   string content_type = 5;
   // Last time the content changed.
   google.protobuf.Timestamp updated_at = 6;
-  // Who uploaded an Attachment.
+  // The person who uploaded an Attachment; empty when an Application did.
   string uploader_user_id = 7;
   // Active Share Links; only the owner sees them.
   repeated WorkFileShareLink share_links = 8;
+  // The Application that uploaded an Attachment; empty when a person did.
+  string uploader_application_id = 9;
 }
 
 // ListWorkFilesRequest names the Work.
 message ListWorkFilesRequest {
-  // A Personal Work the person may read.
+  // A Standalone Work the caller may read.
   string work_id = 1;
 }
 
@@ -140,7 +144,7 @@ message ListWorkFilesResponse {
 
 // CreateWorkAttachmentUploadRequest describes the intended write.
 message CreateWorkAttachmentUploadRequest {
-  // The owner's Personal Work.
+  // The owner's Standalone Work.
   string work_id = 1;
   // Attachment name.
   string name = 2;
@@ -160,7 +164,7 @@ message CreateWorkAttachmentUploadResponse {
 
 // RenameWorkAttachmentRequest names the Attachment and its new name.
 message RenameWorkAttachmentRequest {
-  // The owner's Personal Work.
+  // The owner's Standalone Work.
   string work_id = 1;
   // Current name.
   string name = 2;
@@ -173,7 +177,7 @@ message RenameWorkAttachmentResponse {}
 
 // DeleteWorkFileRequest names the file.
 message DeleteWorkFileRequest {
-  // The owner's Personal Work.
+  // The owner's Standalone Work.
   string work_id = 1;
   // Attachment or Artifact.
   WorkFileKind kind = 2;
@@ -186,7 +190,7 @@ message DeleteWorkFileResponse {}
 
 // CreateWorkFileAccessLinkRequest names the file.
 message CreateWorkFileAccessLinkRequest {
-  // A Work the person may read the file of.
+  // A Work the caller may read the file of.
   string work_id = 1;
   // Attachment or Artifact.
   WorkFileKind kind = 2;
@@ -208,7 +212,7 @@ message CreateWorkFileAccessLinkResponse {
 
 // CreateWorkFileShareLinkRequest names the file.
 message CreateWorkFileShareLinkRequest {
-  // The owner's Personal Work.
+  // The owner's Standalone Work.
   string work_id = 1;
   // Attachment or Artifact.
   WorkFileKind kind = 2;
@@ -224,7 +228,7 @@ message CreateWorkFileShareLinkResponse {
 
 // StopWorkFileSharingRequest names the file.
 message StopWorkFileSharingRequest {
-  // The owner's Personal Work.
+  // The owner's Standalone Work.
   string work_id = 1;
   // Attachment or Artifact.
   WorkFileKind kind = 2;
@@ -237,7 +241,7 @@ message StopWorkFileSharingResponse {}
 
 // GetWorkFilePreviewRequest names the file.
 message GetWorkFilePreviewRequest {
-  // A Work the person may read the file of.
+  // A Work the caller may read the file of.
   string work_id = 1;
   // Attachment or Artifact.
   WorkFileKind kind = 2;
@@ -253,7 +257,7 @@ message GetWorkFilePreviewResponse {
 
 // RequestWorkFilePreviewRequest names the file.
 message RequestWorkFilePreviewRequest {
-  // A Work the person may read the file of.
+  // A Work the caller may read the file of.
   string work_id = 1;
   // Attachment or Artifact.
   WorkFileKind kind = 2;

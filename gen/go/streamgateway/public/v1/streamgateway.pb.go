@@ -1404,16 +1404,16 @@ const file_streamgateway_public_v1_streamgateway_proto_rawDesc = "" +
 	"\x06reason\x18\x03 \x01(\tR\x06reason\x12\x18\n" +
 	"\amessage\x18\x04 \x01(\tR\amessage\x12;\n" +
 	"\voccurred_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
-	"occurredAt2\x99\x04\n" +
-	"\x14StreamGatewayService\x12s\n" +
-	"\vWatchStream\x12+.streamgateway.public.v1.WatchStreamRequest\x1a,.streamgateway.public.v1.WatchStreamResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x010\x01\x12\x8f\x01\n" +
-	"\x15ListMessagesBySession\x125.streamgateway.public.v1.ListMessagesBySessionRequest\x1a6.streamgateway.public.v1.ListMessagesBySessionResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12\x80\x01\n" +
-	"\x10GetMessageDetail\x120.streamgateway.public.v1.GetMessageDetailRequest\x1a1.streamgateway.public.v1.GetMessageDetailResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12w\n" +
-	"\rGetToolDetail\x12-.streamgateway.public.v1.GetToolDetailRequest\x1a..streamgateway.public.v1.GetToolDetailResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01BXZVgithub.com/talgent-work/contracts/gen/go/streamgateway/public/v1;streamgatewaypublicv1b\x06proto3"
+	"occurredAt2\x9d\x04\n" +
+	"\x14StreamGatewayService\x12t\n" +
+	"\vWatchStream\x12+.streamgateway.public.v1.WatchStreamRequest\x1a,.streamgateway.public.v1.WatchStreamResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x030\x01\x12\x90\x01\n" +
+	"\x15ListMessagesBySession\x125.streamgateway.public.v1.ListMessagesBySessionRequest\x1a6.streamgateway.public.v1.ListMessagesBySessionResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12\x81\x01\n" +
+	"\x10GetMessageDetail\x120.streamgateway.public.v1.GetMessageDetailRequest\x1a1.streamgateway.public.v1.GetMessageDetailResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12x\n" +
+	"\rGetToolDetail\x12-.streamgateway.public.v1.GetToolDetailRequest\x1a..streamgateway.public.v1.GetToolDetailResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03BXZVgithub.com/talgent-work/contracts/gen/go/streamgateway/public/v1;streamgatewaypublicv1b\x06proto3"
 
 var (
 	file_streamgateway_public_v1_streamgateway_proto_rawDescOnce sync.Once

@@ -42,7 +42,8 @@ enum FileOperation {
 // file Storage carried out, published best-effort. It names the Directory by
 // its owner and name, which each subscriber claims or ignores, and names the
 // file but carries no content. Changes a Harness makes through a mount are
-// never published. Exactly one of actor_user_id and actor_work_id is set.
+// never published. Exactly one of actor_user_id, actor_application_id and
+// actor_work_id is set.
 message FileChangedV1 {
   reserved 3, 4;
   reserved "owner", "kind";
@@ -62,4 +63,6 @@ message FileChangedV1 {
   string actor_user_id = 8;
   // The Work whose Agent made the change.
   string actor_work_id = 9;
+  // The Application that made the change.
+  string actor_application_id = 11;
 }

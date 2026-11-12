@@ -71,7 +71,8 @@ export declare const DirectorySchema: GenMessage<Directory>;
  * file Storage carried out, published best-effort. It names the Directory by
  * its owner and name, which each subscriber claims or ignores, and names the
  * file but carries no content. Changes a Harness makes through a mount are
- * never published. Exactly one of actor_user_id and actor_work_id is set.
+ * never published. Exactly one of actor_user_id, actor_application_id and
+ * actor_work_id is set.
  *
  * @generated from message storage.integration.v1.FileChangedV1
  */
@@ -131,6 +132,13 @@ export declare type FileChangedV1 = Message<"storage.integration.v1.FileChangedV
    * @generated from field: string actor_work_id = 9;
    */
   actorWorkId: string;
+
+  /**
+   * The Application that made the change.
+   *
+   * @generated from field: string actor_application_id = 11;
+   */
+  actorApplicationId: string;
 };
 
 /**

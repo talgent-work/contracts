@@ -948,9 +948,11 @@ type File struct {
 	// Work that published an Artifact.
 	WorkId string `protobuf:"bytes,8,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
 	// Active Share Links.
-	ShareLinks    []*ShareLink `protobuf:"bytes,9,rep,name=share_links,json=shareLinks,proto3" json:"share_links,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	ShareLinks []*ShareLink `protobuf:"bytes,9,rep,name=share_links,json=shareLinks,proto3" json:"share_links,omitempty"`
+	// Application that uploaded an Attachment.
+	UploaderApplicationId string `protobuf:"bytes,10,opt,name=uploader_application_id,json=uploaderApplicationId,proto3" json:"uploader_application_id,omitempty"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
 }
 
 func (x *File) Reset() {
@@ -1030,6 +1032,13 @@ func (x *File) GetShareLinks() []*ShareLink {
 		return x.ShareLinks
 	}
 	return nil
+}
+
+func (x *File) GetUploaderApplicationId() string {
+	if x != nil {
+		return x.UploaderApplicationId
+	}
+	return ""
 }
 
 // OpenDirectoryRequest names the located Directory.
@@ -1328,12 +1337,15 @@ type IssueUploadRequest struct {
 	SpaceToken string `protobuf:"bytes,2,opt,name=space_token,json=spaceToken,proto3" json:"space_token,omitempty"`
 	// True to replace the file at the position; false to create a new one.
 	Replace bool `protobuf:"varint,3,opt,name=replace,proto3" json:"replace,omitempty"`
-	// Person the upload is attributed to.
+	// Person the upload is attributed to; exactly one of uploader_user_id and
+	// uploader_application_id is set.
 	UploaderUserId string `protobuf:"bytes,4,opt,name=uploader_user_id,json=uploaderUserId,proto3" json:"uploader_user_id,omitempty"`
 	// Declared media type, kept with the file.
-	ContentType   string `protobuf:"bytes,5,opt,name=content_type,json=contentType,proto3" json:"content_type,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	ContentType string `protobuf:"bytes,5,opt,name=content_type,json=contentType,proto3" json:"content_type,omitempty"`
+	// Application the upload is attributed to.
+	UploaderApplicationId string `protobuf:"bytes,6,opt,name=uploader_application_id,json=uploaderApplicationId,proto3" json:"uploader_application_id,omitempty"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
 }
 
 func (x *IssueUploadRequest) Reset() {
@@ -1397,6 +1409,13 @@ func (x *IssueUploadRequest) GetUploaderUserId() string {
 func (x *IssueUploadRequest) GetContentType() string {
 	if x != nil {
 		return x.ContentType
+	}
+	return ""
+}
+
+func (x *IssueUploadRequest) GetUploaderApplicationId() string {
+	if x != nil {
+		return x.UploaderApplicationId
 	}
 	return ""
 }
@@ -1465,10 +1484,13 @@ type RenameFileRequest struct {
 	SpaceToken string `protobuf:"bytes,2,opt,name=space_token,json=spaceToken,proto3" json:"space_token,omitempty"`
 	// New name in the same Directory; it must be free.
 	NewName string `protobuf:"bytes,3,opt,name=new_name,json=newName,proto3" json:"new_name,omitempty"`
-	// The person renaming it, admitted by the owner's context.
-	ActorUserId   string `protobuf:"bytes,4,opt,name=actor_user_id,json=actorUserId,proto3" json:"actor_user_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	// The person renaming it, admitted by the owner's context; exactly one of
+	// actor_user_id and actor_application_id is set.
+	ActorUserId string `protobuf:"bytes,4,opt,name=actor_user_id,json=actorUserId,proto3" json:"actor_user_id,omitempty"`
+	// The Application renaming it, admitted by the owner's context.
+	ActorApplicationId string `protobuf:"bytes,5,opt,name=actor_application_id,json=actorApplicationId,proto3" json:"actor_application_id,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *RenameFileRequest) Reset() {
@@ -1529,6 +1551,13 @@ func (x *RenameFileRequest) GetActorUserId() string {
 	return ""
 }
 
+func (x *RenameFileRequest) GetActorApplicationId() string {
+	if x != nil {
+		return x.ActorApplicationId
+	}
+	return ""
+}
+
 // RenameFileResponse returns the renamed file.
 type RenameFileResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -1582,10 +1611,13 @@ type DeleteFileRequest struct {
 	Position *FilePosition `protobuf:"bytes,1,opt,name=position,proto3" json:"position,omitempty"`
 	// The Directory's credential.
 	SpaceToken string `protobuf:"bytes,2,opt,name=space_token,json=spaceToken,proto3" json:"space_token,omitempty"`
-	// The person deleting it, admitted by the owner's context.
-	ActorUserId   string `protobuf:"bytes,3,opt,name=actor_user_id,json=actorUserId,proto3" json:"actor_user_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	// The person deleting it, admitted by the owner's context; exactly one of
+	// actor_user_id and actor_application_id is set.
+	ActorUserId string `protobuf:"bytes,3,opt,name=actor_user_id,json=actorUserId,proto3" json:"actor_user_id,omitempty"`
+	// The Application deleting it, admitted by the owner's context.
+	ActorApplicationId string `protobuf:"bytes,4,opt,name=actor_application_id,json=actorApplicationId,proto3" json:"actor_application_id,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *DeleteFileRequest) Reset() {
@@ -1635,6 +1667,13 @@ func (x *DeleteFileRequest) GetSpaceToken() string {
 func (x *DeleteFileRequest) GetActorUserId() string {
 	if x != nil {
 		return x.ActorUserId
+	}
+	return ""
+}
+
+func (x *DeleteFileRequest) GetActorApplicationId() string {
+	if x != nil {
+		return x.ActorApplicationId
 	}
 	return ""
 }
@@ -2779,7 +2818,7 @@ const file_storage_private_v1_storage_proto_rawDesc = "" +
 	"\x03url\x18\x02 \x01(\tR\x03url\x12+\n" +
 	"\x12created_by_user_id\x18\x03 \x01(\tR\x0fcreatedByUserId\x129\n" +
 	"\n" +
-	"created_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xdc\x02\n" +
+	"created_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\x94\x03\n" +
 	"\x04File\x12<\n" +
 	"\bposition\x18\x01 \x01(\v2 .storage.private.v1.FilePositionR\bposition\x12\x1d\n" +
 	"\n" +
@@ -2790,7 +2829,9 @@ const file_storage_private_v1_storage_proto_rawDesc = "" +
 	"\x10uploader_user_id\x18\a \x01(\tR\x0euploaderUserId\x12\x17\n" +
 	"\awork_id\x18\b \x01(\tR\x06workId\x12>\n" +
 	"\vshare_links\x18\t \x03(\v2\x1d.storage.private.v1.ShareLinkR\n" +
-	"shareLinksJ\x04\b\x02\x10\x03J\x04\b\x03\x10\x04R\x04kindR\x04name\"Z\n" +
+	"shareLinks\x126\n" +
+	"\x17uploader_application_id\x18\n" +
+	" \x01(\tR\x15uploaderApplicationIdJ\x04\b\x02\x10\x03J\x04\b\x03\x10\x04R\x04kindR\x04name\"Z\n" +
 	"\x14OpenDirectoryRequest\x12B\n" +
 	"\tdirectory\x18\x01 \x01(\v2$.storage.private.v1.LocatedDirectoryR\tdirectory\"8\n" +
 	"\x15OpenDirectoryResponse\x12\x1f\n" +
@@ -2804,32 +2845,35 @@ const file_storage_private_v1_storage_proto_rawDesc = "" +
 	"\vdirectories\x18\x01 \x03(\v2\x1d.storage.private.v1.DirectoryR\vdirectories\"\x89\x01\n" +
 	"\x1aListDirectoryFilesResponse\x12.\n" +
 	"\x05files\x18\x01 \x03(\v2\x18.storage.private.v1.FileR\x05files\x12;\n" +
-	"\treclaimed\x18\x02 \x03(\v2\x1d.storage.private.v1.DirectoryR\treclaimed\"\xda\x01\n" +
+	"\treclaimed\x18\x02 \x03(\v2\x1d.storage.private.v1.DirectoryR\treclaimed\"\x92\x02\n" +
 	"\x12IssueUploadRequest\x12<\n" +
 	"\bposition\x18\x01 \x01(\v2 .storage.private.v1.FilePositionR\bposition\x12\x1f\n" +
 	"\vspace_token\x18\x02 \x01(\tR\n" +
 	"spaceToken\x12\x18\n" +
 	"\areplace\x18\x03 \x01(\bR\areplace\x12(\n" +
 	"\x10uploader_user_id\x18\x04 \x01(\tR\x0euploaderUserId\x12!\n" +
-	"\fcontent_type\x18\x05 \x01(\tR\vcontentType\"o\n" +
+	"\fcontent_type\x18\x05 \x01(\tR\vcontentType\x126\n" +
+	"\x17uploader_application_id\x18\x06 \x01(\tR\x15uploaderApplicationId\"o\n" +
 	"\x13IssueUploadResponse\x12\x1d\n" +
 	"\n" +
 	"upload_url\x18\x01 \x01(\tR\tuploadUrl\x129\n" +
 	"\n" +
-	"expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\xb1\x01\n" +
+	"expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\xe3\x01\n" +
 	"\x11RenameFileRequest\x12<\n" +
 	"\bposition\x18\x01 \x01(\v2 .storage.private.v1.FilePositionR\bposition\x12\x1f\n" +
 	"\vspace_token\x18\x02 \x01(\tR\n" +
 	"spaceToken\x12\x19\n" +
 	"\bnew_name\x18\x03 \x01(\tR\anewName\x12\"\n" +
-	"\ractor_user_id\x18\x04 \x01(\tR\vactorUserId\"B\n" +
+	"\ractor_user_id\x18\x04 \x01(\tR\vactorUserId\x120\n" +
+	"\x14actor_application_id\x18\x05 \x01(\tR\x12actorApplicationId\"B\n" +
 	"\x12RenameFileResponse\x12,\n" +
-	"\x04file\x18\x01 \x01(\v2\x18.storage.private.v1.FileR\x04file\"\x96\x01\n" +
+	"\x04file\x18\x01 \x01(\v2\x18.storage.private.v1.FileR\x04file\"\xc8\x01\n" +
 	"\x11DeleteFileRequest\x12<\n" +
 	"\bposition\x18\x01 \x01(\v2 .storage.private.v1.FilePositionR\bposition\x12\x1f\n" +
 	"\vspace_token\x18\x02 \x01(\tR\n" +
 	"spaceToken\x12\"\n" +
-	"\ractor_user_id\x18\x03 \x01(\tR\vactorUserId\"\x14\n" +
+	"\ractor_user_id\x18\x03 \x01(\tR\vactorUserId\x120\n" +
+	"\x14actor_application_id\x18\x04 \x01(\tR\x12actorApplicationId\"\x14\n" +
 	"\x12DeleteFileResponse\"\x9f\x01\n" +
 	"\x16IssueAccessLinkRequest\x12<\n" +
 	"\bposition\x18\x01 \x01(\v2 .storage.private.v1.FilePositionR\bposition\x12G\n" +

@@ -295,6 +295,13 @@ export declare type File = Message<"storage.private.v1.File"> & {
    * @generated from field: repeated storage.private.v1.ShareLink share_links = 9;
    */
   shareLinks: ShareLink[];
+
+  /**
+   * Application that uploaded an Attachment.
+   *
+   * @generated from field: string uploader_application_id = 10;
+   */
+  uploaderApplicationId: string;
 };
 
 /**
@@ -460,7 +467,8 @@ export declare type IssueUploadRequest = Message<"storage.private.v1.IssueUpload
   replace: boolean;
 
   /**
-   * Person the upload is attributed to.
+   * Person the upload is attributed to; exactly one of uploader_user_id and
+   * uploader_application_id is set.
    *
    * @generated from field: string uploader_user_id = 4;
    */
@@ -472,6 +480,13 @@ export declare type IssueUploadRequest = Message<"storage.private.v1.IssueUpload
    * @generated from field: string content_type = 5;
    */
   contentType: string;
+
+  /**
+   * Application the upload is attributed to.
+   *
+   * @generated from field: string uploader_application_id = 6;
+   */
+  uploaderApplicationId: string;
 };
 
 /**
@@ -535,11 +550,19 @@ export declare type RenameFileRequest = Message<"storage.private.v1.RenameFileRe
   newName: string;
 
   /**
-   * The person renaming it, admitted by the owner's context.
+   * The person renaming it, admitted by the owner's context; exactly one of
+   * actor_user_id and actor_application_id is set.
    *
    * @generated from field: string actor_user_id = 4;
    */
   actorUserId: string;
+
+  /**
+   * The Application renaming it, admitted by the owner's context.
+   *
+   * @generated from field: string actor_application_id = 5;
+   */
+  actorApplicationId: string;
 };
 
 /**
@@ -589,11 +612,19 @@ export declare type DeleteFileRequest = Message<"storage.private.v1.DeleteFileRe
   spaceToken: string;
 
   /**
-   * The person deleting it, admitted by the owner's context.
+   * The person deleting it, admitted by the owner's context; exactly one of
+   * actor_user_id and actor_application_id is set.
    *
    * @generated from field: string actor_user_id = 3;
    */
   actorUserId: string;
+
+  /**
+   * The Application deleting it, admitted by the owner's context.
+   *
+   * @generated from field: string actor_application_id = 4;
+   */
+  actorApplicationId: string;
 };
 
 /**

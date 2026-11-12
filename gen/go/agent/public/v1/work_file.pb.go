@@ -29,7 +29,7 @@ type WorkFileKind int32
 const (
 	// WORK_FILE_KIND_UNSPECIFIED value.
 	WorkFileKind_WORK_FILE_KIND_UNSPECIFIED WorkFileKind = 0
-	// A file a person uploaded for the Work to read.
+	// A file its owner uploaded for the Work to read.
 	WorkFileKind_WORK_FILE_KIND_ATTACHMENT WorkFileKind = 1
 	// A file the Work published.
 	WorkFileKind_WORK_FILE_KIND_ARTIFACT WorkFileKind = 2
@@ -412,12 +412,14 @@ type WorkFile struct {
 	ContentType string `protobuf:"bytes,5,opt,name=content_type,json=contentType,proto3" json:"content_type,omitempty"`
 	// Last time the content changed.
 	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	// Who uploaded an Attachment.
+	// The person who uploaded an Attachment; empty when an Application did.
 	UploaderUserId string `protobuf:"bytes,7,opt,name=uploader_user_id,json=uploaderUserId,proto3" json:"uploader_user_id,omitempty"`
 	// Active Share Links; only the owner sees them.
-	ShareLinks    []*WorkFileShareLink `protobuf:"bytes,8,rep,name=share_links,json=shareLinks,proto3" json:"share_links,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	ShareLinks []*WorkFileShareLink `protobuf:"bytes,8,rep,name=share_links,json=shareLinks,proto3" json:"share_links,omitempty"`
+	// The Application that uploaded an Attachment; empty when a person did.
+	UploaderApplicationId string `protobuf:"bytes,9,opt,name=uploader_application_id,json=uploaderApplicationId,proto3" json:"uploader_application_id,omitempty"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
 }
 
 func (x *WorkFile) Reset() {
@@ -506,10 +508,17 @@ func (x *WorkFile) GetShareLinks() []*WorkFileShareLink {
 	return nil
 }
 
+func (x *WorkFile) GetUploaderApplicationId() string {
+	if x != nil {
+		return x.UploaderApplicationId
+	}
+	return ""
+}
+
 // ListWorkFilesRequest names the Work.
 type ListWorkFilesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// A Personal Work the person may read.
+	// A Standalone Work the caller may read.
 	WorkId        string `protobuf:"bytes,1,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -601,7 +610,7 @@ func (x *ListWorkFilesResponse) GetFiles() []*WorkFile {
 // CreateWorkAttachmentUploadRequest describes the intended write.
 type CreateWorkAttachmentUploadRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The owner's Personal Work.
+	// The owner's Standalone Work.
 	WorkId string `protobuf:"bytes,1,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
 	// Attachment name.
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
@@ -729,7 +738,7 @@ func (x *CreateWorkAttachmentUploadResponse) GetExpiresAt() *timestamppb.Timesta
 // RenameWorkAttachmentRequest names the Attachment and its new name.
 type RenameWorkAttachmentRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The owner's Personal Work.
+	// The owner's Standalone Work.
 	WorkId string `protobuf:"bytes,1,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
 	// Current name.
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
@@ -830,7 +839,7 @@ func (*RenameWorkAttachmentResponse) Descriptor() ([]byte, []int) {
 // DeleteWorkFileRequest names the file.
 type DeleteWorkFileRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The owner's Personal Work.
+	// The owner's Standalone Work.
 	WorkId string `protobuf:"bytes,1,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
 	// Attachment or Artifact.
 	Kind WorkFileKind `protobuf:"varint,2,opt,name=kind,proto3,enum=agent.public.v1.WorkFileKind" json:"kind,omitempty"`
@@ -931,7 +940,7 @@ func (*DeleteWorkFileResponse) Descriptor() ([]byte, []int) {
 // CreateWorkFileAccessLinkRequest names the file.
 type CreateWorkFileAccessLinkRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// A Work the person may read the file of.
+	// A Work the caller may read the file of.
 	WorkId string `protobuf:"bytes,1,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
 	// Attachment or Artifact.
 	Kind WorkFileKind `protobuf:"varint,2,opt,name=kind,proto3,enum=agent.public.v1.WorkFileKind" json:"kind,omitempty"`
@@ -1068,7 +1077,7 @@ func (x *CreateWorkFileAccessLinkResponse) GetAccessPath() string {
 // CreateWorkFileShareLinkRequest names the file.
 type CreateWorkFileShareLinkRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The owner's Personal Work.
+	// The owner's Standalone Work.
 	WorkId string `protobuf:"bytes,1,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
 	// Attachment or Artifact.
 	Kind WorkFileKind `protobuf:"varint,2,opt,name=kind,proto3,enum=agent.public.v1.WorkFileKind" json:"kind,omitempty"`
@@ -1178,7 +1187,7 @@ func (x *CreateWorkFileShareLinkResponse) GetShareLink() *WorkFileShareLink {
 // StopWorkFileSharingRequest names the file.
 type StopWorkFileSharingRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The owner's Personal Work.
+	// The owner's Standalone Work.
 	WorkId string `protobuf:"bytes,1,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
 	// Attachment or Artifact.
 	Kind WorkFileKind `protobuf:"varint,2,opt,name=kind,proto3,enum=agent.public.v1.WorkFileKind" json:"kind,omitempty"`
@@ -1279,7 +1288,7 @@ func (*StopWorkFileSharingResponse) Descriptor() ([]byte, []int) {
 // GetWorkFilePreviewRequest names the file.
 type GetWorkFilePreviewRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// A Work the person may read the file of.
+	// A Work the caller may read the file of.
 	WorkId string `protobuf:"bytes,1,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
 	// Attachment or Artifact.
 	Kind WorkFileKind `protobuf:"varint,2,opt,name=kind,proto3,enum=agent.public.v1.WorkFileKind" json:"kind,omitempty"`
@@ -1389,7 +1398,7 @@ func (x *GetWorkFilePreviewResponse) GetPreview() *WorkFilePreview {
 // RequestWorkFilePreviewRequest names the file.
 type RequestWorkFilePreviewRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// A Work the person may read the file of.
+	// A Work the caller may read the file of.
 	WorkId string `protobuf:"bytes,1,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
 	// Attachment or Artifact.
 	Kind WorkFileKind `protobuf:"varint,2,opt,name=kind,proto3,enum=agent.public.v1.WorkFileKind" json:"kind,omitempty"`
@@ -1606,7 +1615,7 @@ const file_agent_public_v1_work_file_proto_rawDesc = "" +
 	"\x03url\x18\x02 \x01(\tR\x03url\x12+\n" +
 	"\x12created_by_user_id\x18\x03 \x01(\tR\x0fcreatedByUserId\x129\n" +
 	"\n" +
-	"created_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xd6\x02\n" +
+	"created_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\x8e\x03\n" +
 	"\bWorkFile\x12\x17\n" +
 	"\awork_id\x18\x01 \x01(\tR\x06workId\x121\n" +
 	"\x04kind\x18\x02 \x01(\x0e2\x1d.agent.public.v1.WorkFileKindR\x04kind\x12\x12\n" +
@@ -1618,7 +1627,8 @@ const file_agent_public_v1_work_file_proto_rawDesc = "" +
 	"updated_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12(\n" +
 	"\x10uploader_user_id\x18\a \x01(\tR\x0euploaderUserId\x12C\n" +
 	"\vshare_links\x18\b \x03(\v2\".agent.public.v1.WorkFileShareLinkR\n" +
-	"shareLinks\"/\n" +
+	"shareLinks\x126\n" +
+	"\x17uploader_application_id\x18\t \x01(\tR\x15uploaderApplicationId\"/\n" +
 	"\x14ListWorkFilesRequest\x12\x17\n" +
 	"\awork_id\x18\x01 \x01(\tR\x06workId\"H\n" +
 	"\x15ListWorkFilesResponse\x12/\n" +
@@ -1718,26 +1728,26 @@ const file_agent_public_v1_work_file_proto_rawDesc = "" +
 	"#WORK_FILE_PREVIEW_REFUSAL_TOO_LARGE\x10\x04\x12%\n" +
 	"!WORK_FILE_PREVIEW_REFUSAL_CORRUPT\x10\x05\x12/\n" +
 	"+WORK_FILE_PREVIEW_REFUSAL_CONVERTER_REFUSED\x10\x06\x121\n" +
-	"-WORK_FILE_PREVIEW_REFUSAL_RENDERING_TOO_LARGE\x10\a2\x81\t\n" +
-	"\x0fWorkFileService\x12g\n" +
-	"\rListWorkFiles\x12%.agent.public.v1.ListWorkFilesRequest\x1a&.agent.public.v1.ListWorkFilesResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12\x8e\x01\n" +
-	"\x1aCreateWorkAttachmentUpload\x122.agent.public.v1.CreateWorkAttachmentUploadRequest\x1a3.agent.public.v1.CreateWorkAttachmentUploadResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12|\n" +
-	"\x14RenameWorkAttachment\x12,.agent.public.v1.RenameWorkAttachmentRequest\x1a-.agent.public.v1.RenameWorkAttachmentResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12j\n" +
-	"\x0eDeleteWorkFile\x12&.agent.public.v1.DeleteWorkFileRequest\x1a'.agent.public.v1.DeleteWorkFileResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12\x89\x01\n" +
-	"\x18CreateWorkFileAccessLink\x120.agent.public.v1.CreateWorkFileAccessLinkRequest\x1a1.agent.public.v1.CreateWorkFileAccessLinkResponse\"\b\xc2\xf3\x18\x04\n" +
-	"\x02\x01\x02\x12\x85\x01\n" +
+	"-WORK_FILE_PREVIEW_REFUSAL_RENDERING_TOO_LARGE\x10\a2\x88\t\n" +
+	"\x0fWorkFileService\x12h\n" +
+	"\rListWorkFiles\x12%.agent.public.v1.ListWorkFilesRequest\x1a&.agent.public.v1.ListWorkFilesResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12\x8f\x01\n" +
+	"\x1aCreateWorkAttachmentUpload\x122.agent.public.v1.CreateWorkAttachmentUploadRequest\x1a3.agent.public.v1.CreateWorkAttachmentUploadResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12}\n" +
+	"\x14RenameWorkAttachment\x12,.agent.public.v1.RenameWorkAttachmentRequest\x1a-.agent.public.v1.RenameWorkAttachmentResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12k\n" +
+	"\x0eDeleteWorkFile\x12&.agent.public.v1.DeleteWorkFileRequest\x1a'.agent.public.v1.DeleteWorkFileResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12\x8a\x01\n" +
+	"\x18CreateWorkFileAccessLink\x120.agent.public.v1.CreateWorkFileAccessLinkRequest\x1a1.agent.public.v1.CreateWorkFileAccessLinkResponse\"\t\xc2\xf3\x18\x05\n" +
+	"\x03\x01\x02\x03\x12\x85\x01\n" +
 	"\x17CreateWorkFileShareLink\x12/.agent.public.v1.CreateWorkFileShareLinkRequest\x1a0.agent.public.v1.CreateWorkFileShareLinkResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x01\x12y\n" +
 	"\x13StopWorkFileSharing\x12+.agent.public.v1.StopWorkFileSharingRequest\x1a,.agent.public.v1.StopWorkFileSharingResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12v\n" +
-	"\x12GetWorkFilePreview\x12*.agent.public.v1.GetWorkFilePreviewRequest\x1a+.agent.public.v1.GetWorkFilePreviewResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01\x12\x82\x01\n" +
-	"\x16RequestWorkFilePreview\x12..agent.public.v1.RequestWorkFilePreviewRequest\x1a/.agent.public.v1.RequestWorkFilePreviewResponse\"\a\xc2\xf3\x18\x03\n" +
-	"\x01\x01BHZFgithub.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1b\x06proto3"
+	"\x01\x01\x12w\n" +
+	"\x12GetWorkFilePreview\x12*.agent.public.v1.GetWorkFilePreviewRequest\x1a+.agent.public.v1.GetWorkFilePreviewResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12\x83\x01\n" +
+	"\x16RequestWorkFilePreview\x12..agent.public.v1.RequestWorkFilePreviewRequest\x1a/.agent.public.v1.RequestWorkFilePreviewResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03BHZFgithub.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1b\x06proto3"
 
 var (
 	file_agent_public_v1_work_file_proto_rawDescOnce sync.Once

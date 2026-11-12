@@ -199,7 +199,8 @@ func (x *Directory) GetName() string {
 // file Storage carried out, published best-effort. It names the Directory by
 // its owner and name, which each subscriber claims or ignores, and names the
 // file but carries no content. Changes a Harness makes through a mount are
-// never published. Exactly one of actor_user_id and actor_work_id is set.
+// never published. Exactly one of actor_user_id, actor_application_id and
+// actor_work_id is set.
 type FileChangedV1 struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Unique identity of this publication and of the change.
@@ -217,9 +218,11 @@ type FileChangedV1 struct {
 	// The person who made the change.
 	ActorUserId string `protobuf:"bytes,8,opt,name=actor_user_id,json=actorUserId,proto3" json:"actor_user_id,omitempty"`
 	// The Work whose Agent made the change.
-	ActorWorkId   string `protobuf:"bytes,9,opt,name=actor_work_id,json=actorWorkId,proto3" json:"actor_work_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	ActorWorkId string `protobuf:"bytes,9,opt,name=actor_work_id,json=actorWorkId,proto3" json:"actor_work_id,omitempty"`
+	// The Application that made the change.
+	ActorApplicationId string `protobuf:"bytes,11,opt,name=actor_application_id,json=actorApplicationId,proto3" json:"actor_application_id,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *FileChangedV1) Reset() {
@@ -308,6 +311,13 @@ func (x *FileChangedV1) GetActorWorkId() string {
 	return ""
 }
 
+func (x *FileChangedV1) GetActorApplicationId() string {
+	if x != nil {
+		return x.ActorApplicationId
+	}
+	return ""
+}
+
 var File_storage_integration_v1_file_changed_proto protoreflect.FileDescriptor
 
 const file_storage_integration_v1_file_changed_proto_rawDesc = "" +
@@ -318,7 +328,7 @@ const file_storage_integration_v1_file_changed_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\tR\x05value\"X\n" +
 	"\tDirectory\x127\n" +
 	"\x05owner\x18\x01 \x03(\v2!.storage.integration.v1.OwnerFactR\x05owner\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\"\x87\x03\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\"\xb9\x03\n" +
 	"\rFileChangedV1\x12\x19\n" +
 	"\bevent_id\x18\x01 \x01(\tR\aeventId\x12;\n" +
 	"\voccurred_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
@@ -329,7 +339,8 @@ const file_storage_integration_v1_file_changed_proto_rawDesc = "" +
 	"\rprevious_name\x18\x06 \x01(\tR\fpreviousName\x12C\n" +
 	"\toperation\x18\a \x01(\x0e2%.storage.integration.v1.FileOperationR\toperation\x12\"\n" +
 	"\ractor_user_id\x18\b \x01(\tR\vactorUserId\x12\"\n" +
-	"\ractor_work_id\x18\t \x01(\tR\vactorWorkIdJ\x04\b\x03\x10\x04J\x04\b\x04\x10\x05R\x05ownerR\x04kind*\xa0\x01\n" +
+	"\ractor_work_id\x18\t \x01(\tR\vactorWorkId\x120\n" +
+	"\x14actor_application_id\x18\v \x01(\tR\x12actorApplicationIdJ\x04\b\x03\x10\x04J\x04\b\x04\x10\x05R\x05ownerR\x04kind*\xa0\x01\n" +
 	"\rFileOperation\x12\x1e\n" +
 	"\x1aFILE_OPERATION_UNSPECIFIED\x10\x00\x12\x1a\n" +
 	"\x16FILE_OPERATION_CREATED\x10\x01\x12\x1b\n" +

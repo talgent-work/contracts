@@ -101,7 +101,7 @@ export declare type WorkFile = Message<"agent.public.v1.WorkFile"> & {
   updatedAt?: Timestamp;
 
   /**
-   * Who uploaded an Attachment.
+   * The person who uploaded an Attachment; empty when an Application did.
    *
    * @generated from field: string uploader_user_id = 7;
    */
@@ -113,6 +113,13 @@ export declare type WorkFile = Message<"agent.public.v1.WorkFile"> & {
    * @generated from field: repeated agent.public.v1.WorkFileShareLink share_links = 8;
    */
   shareLinks: WorkFileShareLink[];
+
+  /**
+   * The Application that uploaded an Attachment; empty when a person did.
+   *
+   * @generated from field: string uploader_application_id = 9;
+   */
+  uploaderApplicationId: string;
 };
 
 /**
@@ -128,7 +135,7 @@ export declare const WorkFileSchema: GenMessage<WorkFile>;
  */
 export declare type ListWorkFilesRequest = Message<"agent.public.v1.ListWorkFilesRequest"> & {
   /**
-   * A Personal Work the person may read.
+   * A Standalone Work the caller may read.
    *
    * @generated from field: string work_id = 1;
    */
@@ -168,7 +175,7 @@ export declare const ListWorkFilesResponseSchema: GenMessage<ListWorkFilesRespon
  */
 export declare type CreateWorkAttachmentUploadRequest = Message<"agent.public.v1.CreateWorkAttachmentUploadRequest"> & {
   /**
-   * The owner's Personal Work.
+   * The owner's Standalone Work.
    *
    * @generated from field: string work_id = 1;
    */
@@ -236,7 +243,7 @@ export declare const CreateWorkAttachmentUploadResponseSchema: GenMessage<Create
  */
 export declare type RenameWorkAttachmentRequest = Message<"agent.public.v1.RenameWorkAttachmentRequest"> & {
   /**
-   * The owner's Personal Work.
+   * The owner's Standalone Work.
    *
    * @generated from field: string work_id = 1;
    */
@@ -284,7 +291,7 @@ export declare const RenameWorkAttachmentResponseSchema: GenMessage<RenameWorkAt
  */
 export declare type DeleteWorkFileRequest = Message<"agent.public.v1.DeleteWorkFileRequest"> & {
   /**
-   * The owner's Personal Work.
+   * The owner's Standalone Work.
    *
    * @generated from field: string work_id = 1;
    */
@@ -332,7 +339,7 @@ export declare const DeleteWorkFileResponseSchema: GenMessage<DeleteWorkFileResp
  */
 export declare type CreateWorkFileAccessLinkRequest = Message<"agent.public.v1.CreateWorkFileAccessLinkRequest"> & {
   /**
-   * A Work the person may read the file of.
+   * A Work the caller may read the file of.
    *
    * @generated from field: string work_id = 1;
    */
@@ -407,7 +414,7 @@ export declare const CreateWorkFileAccessLinkResponseSchema: GenMessage<CreateWo
  */
 export declare type CreateWorkFileShareLinkRequest = Message<"agent.public.v1.CreateWorkFileShareLinkRequest"> & {
   /**
-   * The owner's Personal Work.
+   * The owner's Standalone Work.
    *
    * @generated from field: string work_id = 1;
    */
@@ -461,7 +468,7 @@ export declare const CreateWorkFileShareLinkResponseSchema: GenMessage<CreateWor
  */
 export declare type StopWorkFileSharingRequest = Message<"agent.public.v1.StopWorkFileSharingRequest"> & {
   /**
-   * The owner's Personal Work.
+   * The owner's Standalone Work.
    *
    * @generated from field: string work_id = 1;
    */
@@ -509,7 +516,7 @@ export declare const StopWorkFileSharingResponseSchema: GenMessage<StopWorkFileS
  */
 export declare type GetWorkFilePreviewRequest = Message<"agent.public.v1.GetWorkFilePreviewRequest"> & {
   /**
-   * A Work the person may read the file of.
+   * A Work the caller may read the file of.
    *
    * @generated from field: string work_id = 1;
    */
@@ -563,7 +570,7 @@ export declare const GetWorkFilePreviewResponseSchema: GenMessage<GetWorkFilePre
  */
 export declare type RequestWorkFilePreviewRequest = Message<"agent.public.v1.RequestWorkFilePreviewRequest"> & {
   /**
-   * A Work the person may read the file of.
+   * A Work the caller may read the file of.
    *
    * @generated from field: string work_id = 1;
    */
@@ -686,7 +693,7 @@ export enum WorkFileKind {
   UNSPECIFIED = 0,
 
   /**
-   * A file a person uploaded for the Work to read.
+   * A file its owner uploaded for the Work to read.
    *
    * @generated from enum value: WORK_FILE_KIND_ATTACHMENT = 1;
    */
@@ -901,10 +908,11 @@ export enum WorkFilePreviewRefusal {
 export declare const WorkFilePreviewRefusalSchema: GenEnum<WorkFilePreviewRefusal>;
 
 /**
- * WorkFileService serves the files of a Work's File Space. A Personal Work's
- * owner uploads, renames and deletes its Attachments and deletes its
- * Artifacts until the Work is Closed, and manages Share Links at any time;
- * the owner and its Work Share holders read. Of a Work with a Subject or a
+ * WorkFileService serves the files of a Work's File Space. A Standalone Work's
+ * owner, a person or an Application, uploads, renames and deletes its
+ * Attachments and deletes its Artifacts until the Work is Closed; a person
+ * owner also manages Share Links at any time. The owner and its Work Share
+ * holders read. Of a Work with a Subject or a
  * Project, whose files its caller governs, only the Artifacts are read here,
  * by its owner and Work Share holders, as the Personal Library shows them.
  *
@@ -912,7 +920,7 @@ export declare const WorkFilePreviewRefusalSchema: GenEnum<WorkFilePreviewRefusa
  */
 export declare const WorkFileService: GenService<{
   /**
-   * ListWorkFiles lists a Personal Work's Attachments and Artifacts.
+   * ListWorkFiles lists a Standalone Work's Attachments and Artifacts.
    *
    * @generated from rpc agent.public.v1.WorkFileService.ListWorkFiles
    */

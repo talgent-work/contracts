@@ -15,25 +15,25 @@ service StreamGatewayService {
   // WatchStream RPC.
   rpc WatchStream(WatchStreamRequest) returns (stream WatchStreamResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // ListMessagesBySession RPC.
   rpc ListMessagesBySession(ListMessagesBySessionRequest) returns (ListMessagesBySessionResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // Read a bounded page of original tool input/output or error detail.
   rpc GetMessageDetail(GetMessageDetailRequest) returns (GetMessageDetailResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
   // Read original input and output together, each bounded independently.
   rpc GetToolDetail(GetToolDetailRequest) returns (GetToolDetailResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER]
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
 }

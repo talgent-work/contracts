@@ -251,6 +251,8 @@ message File {
   string work_id = 8;
   // Active Share Links.
   repeated ShareLink share_links = 9;
+  // Application that uploaded an Attachment.
+  string uploader_application_id = 10;
 }
 
 // OpenDirectoryRequest names the located Directory.
@@ -301,10 +303,13 @@ message IssueUploadRequest {
   string space_token = 2;
   // True to replace the file at the position; false to create a new one.
   bool replace = 3;
-  // Person the upload is attributed to.
+  // Person the upload is attributed to; exactly one of uploader_user_id and
+  // uploader_application_id is set.
   string uploader_user_id = 4;
   // Declared media type, kept with the file.
   string content_type = 5;
+  // Application the upload is attributed to.
+  string uploader_application_id = 6;
 }
 
 // IssueUploadResponse carries the upload link.
@@ -323,8 +328,11 @@ message RenameFileRequest {
   string space_token = 2;
   // New name in the same Directory; it must be free.
   string new_name = 3;
-  // The person renaming it, admitted by the owner's context.
+  // The person renaming it, admitted by the owner's context; exactly one of
+  // actor_user_id and actor_application_id is set.
   string actor_user_id = 4;
+  // The Application renaming it, admitted by the owner's context.
+  string actor_application_id = 5;
 }
 
 // RenameFileResponse returns the renamed file.
@@ -339,8 +347,11 @@ message DeleteFileRequest {
   FilePosition position = 1;
   // The Directory's credential.
   string space_token = 2;
-  // The person deleting it, admitted by the owner's context.
+  // The person deleting it, admitted by the owner's context; exactly one of
+  // actor_user_id and actor_application_id is set.
   string actor_user_id = 3;
+  // The Application deleting it, admitted by the owner's context.
+  string actor_application_id = 4;
 }
 
 // DeleteFileResponse confirms the file is gone.

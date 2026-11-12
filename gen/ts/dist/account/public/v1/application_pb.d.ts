@@ -45,6 +45,13 @@ export declare type Application = Message<"account.public.v1.Application"> & {
    * @generated from field: repeated account.public.v1.ClientSecret client_secrets = 4;
    */
   clientSecrets: ClientSecret[];
+
+  /**
+   * How long a replaced Client Secret keeps matching after a rotation.
+   *
+   * @generated from field: int64 secret_overlap_seconds = 5;
+   */
+  secretOverlapSeconds: bigint;
 };
 
 /**

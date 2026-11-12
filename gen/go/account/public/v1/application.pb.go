@@ -88,8 +88,10 @@ type Application struct {
 	// Its Client Secrets that still match: the current one first, then one in
 	// its rotation overlap. Never the secret itself.
 	ClientSecrets []*ClientSecret `protobuf:"bytes,4,rep,name=client_secrets,json=clientSecrets,proto3" json:"client_secrets,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	// How long a replaced Client Secret keeps matching after a rotation.
+	SecretOverlapSeconds int64 `protobuf:"varint,5,opt,name=secret_overlap_seconds,json=secretOverlapSeconds,proto3" json:"secret_overlap_seconds,omitempty"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
 }
 
 func (x *Application) Reset() {
@@ -148,6 +150,13 @@ func (x *Application) GetClientSecrets() []*ClientSecret {
 		return x.ClientSecrets
 	}
 	return nil
+}
+
+func (x *Application) GetSecretOverlapSeconds() int64 {
+	if x != nil {
+		return x.SecretOverlapSeconds
+	}
+	return 0
 }
 
 // ClientSecret describes one Client Secret without revealing it.
@@ -725,12 +734,13 @@ var File_account_public_v1_application_proto protoreflect.FileDescriptor
 
 const file_account_public_v1_application_proto_rawDesc = "" +
 	"\n" +
-	"#account/public/v1/application.proto\x12\x11account.public.v1\x1a\x1cadmission/v1/admission.proto\"\xac\x01\n" +
+	"#account/public/v1/application.proto\x12\x11account.public.v1\x1a\x1cadmission/v1/admission.proto\"\xe2\x01\n" +
 	"\vApplication\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x121\n" +
 	"\x15registered_at_unix_ms\x18\x03 \x01(\x03R\x12registeredAtUnixMs\x12F\n" +
-	"\x0eclient_secrets\x18\x04 \x03(\v2\x1f.account.public.v1.ClientSecretR\rclientSecrets\"\xff\x01\n" +
+	"\x0eclient_secrets\x18\x04 \x03(\v2\x1f.account.public.v1.ClientSecretR\rclientSecrets\x124\n" +
+	"\x16secret_overlap_seconds\x18\x05 \x01(\x03R\x14secretOverlapSeconds\"\xff\x01\n" +
 	"\fClientSecret\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12:\n" +
 	"\x05state\x18\x02 \x01(\x0e2$.account.public.v1.ClientSecretStateR\x05state\x12\x12\n" +

@@ -61,6 +61,8 @@ message Application {
   // Its Client Secrets that still match: the current one first, then one in
   // its rotation overlap. Never the secret itself.
   repeated ClientSecret client_secrets = 4;
+  // How long a replaced Client Secret keeps matching after a rotation.
+  int64 secret_overlap_seconds = 5;
 }
 
 // ClientSecretState is where a Client Secret stands.

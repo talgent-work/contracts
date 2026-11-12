@@ -32,6 +32,21 @@ service ApplicationService {
       principals: [PRINCIPAL_USER]
     };
   }
+  // RotateClientSecret issues a new current Client Secret, shown once in this
+  // response. The replaced current secret keeps matching for a bounded
+  // overlap; a secret already in an earlier overlap ends at once.
+  rpc RotateClientSecret(RotateClientSecretRequest) returns (RotateClientSecretResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
+  // RevokeClientSecret ends one Client Secret at once; the grant refuses it
+  // from then on. NotFound for a secret that no longer matches.
+  rpc RevokeClientSecret(RevokeClientSecretRequest) returns (RevokeClientSecretResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
 }
 
 // Application is a registered Application as its Application Owner sees it.
@@ -106,5 +121,35 @@ message GetApplicationRequest {
 // GetApplicationResponse is the Application.
 message GetApplicationResponse {
   // The Application.
+  Application application = 1;
+}
+
+// RotateClientSecretRequest names the Application whose secret rotates.
+message RotateClientSecretRequest {
+  // The Application's id.
+  string application_id = 1;
+}
+
+// RotateClientSecretResponse is the Application after rotation and its new
+// secret.
+message RotateClientSecretResponse {
+  // The Application, its new current secret first.
+  Application application = 1;
+  // The new Client Secret itself. It is shown only here; Account keeps a
+  // digest.
+  string client_secret = 2;
+}
+
+// RevokeClientSecretRequest names one Client Secret of an Application.
+message RevokeClientSecretRequest {
+  // The Application's id.
+  string application_id = 1;
+  // The Client Secret's id.
+  string client_secret_id = 2;
+}
+
+// RevokeClientSecretResponse is the Application after revocation.
+message RevokeClientSecretResponse {
+  // The Application, without the revoked secret.
   Application application = 1;
 }

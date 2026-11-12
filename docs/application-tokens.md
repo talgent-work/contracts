@@ -5,6 +5,15 @@ grant ([RFC 6749 §4.4](https://www.rfc-editor.org/rfc/rfc6749#section-4.4)) and
 APIs with it as `Authorization: Bearer <token>`. Its client id is the Application id; its client
 secret is a Client Secret its Application Owner received when it was issued.
 
+## Client Secrets
+
+An Application holds at most one current Client Secret and one being replaced. When its Application
+Owner rotates the secret (`ApplicationService.RotateClientSecret`), the new secret is shown once and
+the replaced one keeps matching for a bounded overlap (24 hours by default), so the Application can
+switch without downtime; a secret already in an earlier overlap ends at once. A revoked secret
+(`ApplicationService.RevokeClientSecret`) is refused from then on, while tokens it already obtained
+stop at their short expiry.
+
 ## Request
 
 `POST <public origin>/auth/token`, `Content-Type: application/x-www-form-urlencoded`:

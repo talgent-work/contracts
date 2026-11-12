@@ -230,6 +230,102 @@ export declare type GetApplicationResponse = Message<"account.public.v1.GetAppli
 export declare const GetApplicationResponseSchema: GenMessage<GetApplicationResponse>;
 
 /**
+ * RotateClientSecretRequest names the Application whose secret rotates.
+ *
+ * @generated from message account.public.v1.RotateClientSecretRequest
+ */
+export declare type RotateClientSecretRequest = Message<"account.public.v1.RotateClientSecretRequest"> & {
+  /**
+   * The Application's id.
+   *
+   * @generated from field: string application_id = 1;
+   */
+  applicationId: string;
+};
+
+/**
+ * Describes the message account.public.v1.RotateClientSecretRequest.
+ * Use `create(RotateClientSecretRequestSchema)` to create a new message.
+ */
+export declare const RotateClientSecretRequestSchema: GenMessage<RotateClientSecretRequest>;
+
+/**
+ * RotateClientSecretResponse is the Application after rotation and its new
+ * secret.
+ *
+ * @generated from message account.public.v1.RotateClientSecretResponse
+ */
+export declare type RotateClientSecretResponse = Message<"account.public.v1.RotateClientSecretResponse"> & {
+  /**
+   * The Application, its new current secret first.
+   *
+   * @generated from field: account.public.v1.Application application = 1;
+   */
+  application?: Application;
+
+  /**
+   * The new Client Secret itself. It is shown only here; Account keeps a
+   * digest.
+   *
+   * @generated from field: string client_secret = 2;
+   */
+  clientSecret: string;
+};
+
+/**
+ * Describes the message account.public.v1.RotateClientSecretResponse.
+ * Use `create(RotateClientSecretResponseSchema)` to create a new message.
+ */
+export declare const RotateClientSecretResponseSchema: GenMessage<RotateClientSecretResponse>;
+
+/**
+ * RevokeClientSecretRequest names one Client Secret of an Application.
+ *
+ * @generated from message account.public.v1.RevokeClientSecretRequest
+ */
+export declare type RevokeClientSecretRequest = Message<"account.public.v1.RevokeClientSecretRequest"> & {
+  /**
+   * The Application's id.
+   *
+   * @generated from field: string application_id = 1;
+   */
+  applicationId: string;
+
+  /**
+   * The Client Secret's id.
+   *
+   * @generated from field: string client_secret_id = 2;
+   */
+  clientSecretId: string;
+};
+
+/**
+ * Describes the message account.public.v1.RevokeClientSecretRequest.
+ * Use `create(RevokeClientSecretRequestSchema)` to create a new message.
+ */
+export declare const RevokeClientSecretRequestSchema: GenMessage<RevokeClientSecretRequest>;
+
+/**
+ * RevokeClientSecretResponse is the Application after revocation.
+ *
+ * @generated from message account.public.v1.RevokeClientSecretResponse
+ */
+export declare type RevokeClientSecretResponse = Message<"account.public.v1.RevokeClientSecretResponse"> & {
+  /**
+   * The Application, without the revoked secret.
+   *
+   * @generated from field: account.public.v1.Application application = 1;
+   */
+  application?: Application;
+};
+
+/**
+ * Describes the message account.public.v1.RevokeClientSecretResponse.
+ * Use `create(RevokeClientSecretResponseSchema)` to create a new message.
+ */
+export declare const RevokeClientSecretResponseSchema: GenMessage<RevokeClientSecretResponse>;
+
+/**
  * ClientSecretState is where a Client Secret stands.
  *
  * @generated from enum account.public.v1.ClientSecretState
@@ -303,6 +399,29 @@ export declare const ApplicationService: GenService<{
     methodKind: "unary";
     input: typeof GetApplicationRequestSchema;
     output: typeof GetApplicationResponseSchema;
+  },
+  /**
+   * RotateClientSecret issues a new current Client Secret, shown once in this
+   * response. The replaced current secret keeps matching for a bounded
+   * overlap; a secret already in an earlier overlap ends at once.
+   *
+   * @generated from rpc account.public.v1.ApplicationService.RotateClientSecret
+   */
+  rotateClientSecret: {
+    methodKind: "unary";
+    input: typeof RotateClientSecretRequestSchema;
+    output: typeof RotateClientSecretResponseSchema;
+  },
+  /**
+   * RevokeClientSecret ends one Client Secret at once; the grant refuses it
+   * from then on. NotFound for a secret that no longer matches.
+   *
+   * @generated from rpc account.public.v1.ApplicationService.RevokeClientSecret
+   */
+  revokeClientSecret: {
+    methodKind: "unary";
+    input: typeof RevokeClientSecretRequestSchema;
+    output: typeof RevokeClientSecretResponseSchema;
   },
 }>;
 

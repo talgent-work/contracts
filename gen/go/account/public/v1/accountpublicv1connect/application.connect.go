@@ -33,6 +33,12 @@ const (
 	// ApplicationServiceGetApplicationProcedure is the procedure name of the ApplicationService's
 	// GetApplication RPC.
 	ApplicationServiceGetApplicationProcedure = "/account.public.v1.ApplicationService/GetApplication"
+	// ApplicationServiceRotateClientSecretProcedure is the procedure name of the ApplicationService's
+	// RotateClientSecret RPC.
+	ApplicationServiceRotateClientSecretProcedure = "/account.public.v1.ApplicationService/RotateClientSecret"
+	// ApplicationServiceRevokeClientSecretProcedure is the procedure name of the ApplicationService's
+	// RevokeClientSecret RPC.
+	ApplicationServiceRevokeClientSecretProcedure = "/account.public.v1.ApplicationService/RevokeClientSecret"
 )
 
 var (
@@ -57,6 +63,20 @@ var (
 			Procedure:  ApplicationServiceGetApplicationProcedure,
 		}
 	})
+	applicationServiceRotateClientSecretSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_account_public_v1_application_proto.Services().ByName("ApplicationService").Methods().ByName("RotateClientSecret"),
+			Procedure:  ApplicationServiceRotateClientSecretProcedure,
+		}
+	})
+	applicationServiceRevokeClientSecretSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_account_public_v1_application_proto.Services().ByName("ApplicationService").Methods().ByName("RevokeClientSecret"),
+			Procedure:  ApplicationServiceRevokeClientSecretProcedure,
+		}
+	})
 )
 
 // ApplicationServiceClient is a client for the account.public.v1.ApplicationService service.
@@ -69,6 +89,13 @@ type ApplicationServiceClient interface {
 	// GetApplication reads one Application the caller owns; NotFound for any
 	// other.
 	GetApplication(context.Context, *v1.GetApplicationRequest) (*v1.GetApplicationResponse, error)
+	// RotateClientSecret issues a new current Client Secret, shown once in this
+	// response. The replaced current secret keeps matching for a bounded
+	// overlap; a secret already in an earlier overlap ends at once.
+	RotateClientSecret(context.Context, *v1.RotateClientSecretRequest) (*v1.RotateClientSecretResponse, error)
+	// RevokeClientSecret ends one Client Secret at once; the grant refuses it
+	// from then on. NotFound for a secret that no longer matches.
+	RevokeClientSecret(context.Context, *v1.RevokeClientSecretRequest) (*v1.RevokeClientSecretResponse, error)
 }
 
 // NewApplicationServiceClient constructs a client for the account.public.v1.ApplicationService
@@ -88,6 +115,13 @@ type ApplicationServiceHandler interface {
 	// GetApplication reads one Application the caller owns; NotFound for any
 	// other.
 	GetApplication(context.Context, *v1.GetApplicationRequest) (*v1.GetApplicationResponse, error)
+	// RotateClientSecret issues a new current Client Secret, shown once in this
+	// response. The replaced current secret keeps matching for a bounded
+	// overlap; a secret already in an earlier overlap ends at once.
+	RotateClientSecret(context.Context, *v1.RotateClientSecretRequest) (*v1.RotateClientSecretResponse, error)
+	// RevokeClientSecret ends one Client Secret at once; the grant refuses it
+	// from then on. NotFound for a secret that no longer matches.
+	RevokeClientSecret(context.Context, *v1.RevokeClientSecretRequest) (*v1.RevokeClientSecretResponse, error)
 }
 
 // RegisterApplicationServiceHandler registers svc as the account.public.v1.ApplicationService
@@ -98,6 +132,8 @@ func RegisterApplicationServiceHandler(server *connect.Server, svc ApplicationSe
 		connect.Method{Spec: applicationServiceRegisterApplicationSpec(), Handler: adapter.registerApplication},
 		connect.Method{Spec: applicationServiceListOwnedApplicationsSpec(), Handler: adapter.listOwnedApplications},
 		connect.Method{Spec: applicationServiceGetApplicationSpec(), Handler: adapter.getApplication},
+		connect.Method{Spec: applicationServiceRotateClientSecretSpec(), Handler: adapter.rotateClientSecret},
+		connect.Method{Spec: applicationServiceRevokeClientSecretSpec(), Handler: adapter.revokeClientSecret},
 	)
 }
 
@@ -114,6 +150,14 @@ func (UnimplementedApplicationServiceHandler) ListOwnedApplications(context.Cont
 
 func (UnimplementedApplicationServiceHandler) GetApplication(context.Context, *v1.GetApplicationRequest) (*v1.GetApplicationResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, "account.public.v1.ApplicationService.GetApplication is not implemented")
+}
+
+func (UnimplementedApplicationServiceHandler) RotateClientSecret(context.Context, *v1.RotateClientSecretRequest) (*v1.RotateClientSecretResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "account.public.v1.ApplicationService.RotateClientSecret is not implemented")
+}
+
+func (UnimplementedApplicationServiceHandler) RevokeClientSecret(context.Context, *v1.RevokeClientSecretRequest) (*v1.RevokeClientSecretResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "account.public.v1.ApplicationService.RevokeClientSecret is not implemented")
 }
 
 type applicationServiceClient struct {
@@ -139,6 +183,22 @@ func (c *applicationServiceClient) ListOwnedApplications(ctx context.Context, re
 func (c *applicationServiceClient) GetApplication(ctx context.Context, req *v1.GetApplicationRequest) (*v1.GetApplicationResponse, error) {
 	var res v1.GetApplicationResponse
 	if err := c.client.CallUnary(ctx, applicationServiceGetApplicationSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *applicationServiceClient) RotateClientSecret(ctx context.Context, req *v1.RotateClientSecretRequest) (*v1.RotateClientSecretResponse, error) {
+	var res v1.RotateClientSecretResponse
+	if err := c.client.CallUnary(ctx, applicationServiceRotateClientSecretSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *applicationServiceClient) RevokeClientSecret(ctx context.Context, req *v1.RevokeClientSecretRequest) (*v1.RevokeClientSecretResponse, error) {
+	var res v1.RevokeClientSecretResponse
+	if err := c.client.CallUnary(ctx, applicationServiceRevokeClientSecretSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
@@ -176,6 +236,30 @@ func (h applicationServiceHandler) getApplication(ctx context.Context, _ connect
 		return err
 	}
 	res, err := h.svc.GetApplication(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h applicationServiceHandler) rotateClientSecret(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.RotateClientSecretRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.RotateClientSecret(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h applicationServiceHandler) revokeClientSecret(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.RevokeClientSecretRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.RevokeClientSecret(ctx, &req)
 	if err != nil {
 		return err
 	}

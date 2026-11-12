@@ -372,6 +372,9 @@ message GetApplicationTraceMetricsRequest {
   map<string, string> labels = 6;
   // A Work Label key to break the usage down by; empty for none.
   string breakdown_key = 7;
+  // Asks for the Work Label keys the measured Works carry, to choose a
+  // breakdown key from.
+  bool list_label_keys = 8;
 }
 
 // GetApplicationTraceMetricsResponse is the Application's usage, with its
@@ -384,6 +387,8 @@ message GetApplicationTraceMetricsResponse {
   // One entry per value of the breakdown key among the measured Works, and
   // one for the Works without the key; empty when no key was asked for.
   repeated LabelUsage breakdown = 3;
+  // The Work Label keys the measured Works carry, sorted, when asked for.
+  repeated string label_keys = 4;
 }
 
 // LabelUsage is the usage of the measured Works carrying one value of a Work

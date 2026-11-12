@@ -1011,6 +1011,14 @@ export declare type GetApplicationTraceMetricsRequest = Message<"trace.public.v1
    * @generated from field: string breakdown_key = 7;
    */
   breakdownKey: string;
+
+  /**
+   * Asks for the Work Label keys the measured Works carry, to choose a
+   * breakdown key from.
+   *
+   * @generated from field: bool list_label_keys = 8;
+   */
+  listLabelKeys: boolean;
 };
 
 /**
@@ -1047,6 +1055,13 @@ export declare type GetApplicationTraceMetricsResponse = Message<"trace.public.v
    * @generated from field: repeated trace.public.v1.LabelUsage breakdown = 3;
    */
   breakdown: LabelUsage[];
+
+  /**
+   * The Work Label keys the measured Works carry, sorted, when asked for.
+   *
+   * @generated from field: repeated string label_keys = 4;
+   */
+  labelKeys: string[];
 };
 
 /**

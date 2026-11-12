@@ -1619,7 +1619,10 @@ type GetApplicationTraceMetricsRequest struct {
 	// Narrows to the Works carrying every one of these Work Labels.
 	Labels map[string]string `protobuf:"bytes,6,rep,name=labels,proto3" json:"labels,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	// A Work Label key to break the usage down by; empty for none.
-	BreakdownKey  string `protobuf:"bytes,7,opt,name=breakdown_key,json=breakdownKey,proto3" json:"breakdown_key,omitempty"`
+	BreakdownKey string `protobuf:"bytes,7,opt,name=breakdown_key,json=breakdownKey,proto3" json:"breakdown_key,omitempty"`
+	// Asks for the Work Label keys the measured Works carry, to choose a
+	// breakdown key from.
+	ListLabelKeys bool `protobuf:"varint,8,opt,name=list_label_keys,json=listLabelKeys,proto3" json:"list_label_keys,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1703,6 +1706,13 @@ func (x *GetApplicationTraceMetricsRequest) GetBreakdownKey() string {
 	return ""
 }
 
+func (x *GetApplicationTraceMetricsRequest) GetListLabelKeys() bool {
+	if x != nil {
+		return x.ListLabelKeys
+	}
+	return false
+}
+
 // GetApplicationTraceMetricsResponse is the Application's usage, with its
 // breakdown when one was asked for.
 type GetApplicationTraceMetricsResponse struct {
@@ -1713,7 +1723,9 @@ type GetApplicationTraceMetricsResponse struct {
 	Totals []*TraceMetricTotal `protobuf:"bytes,2,rep,name=totals,proto3" json:"totals,omitempty"`
 	// One entry per value of the breakdown key among the measured Works, and
 	// one for the Works without the key; empty when no key was asked for.
-	Breakdown     []*LabelUsage `protobuf:"bytes,3,rep,name=breakdown,proto3" json:"breakdown,omitempty"`
+	Breakdown []*LabelUsage `protobuf:"bytes,3,rep,name=breakdown,proto3" json:"breakdown,omitempty"`
+	// The Work Label keys the measured Works carry, sorted, when asked for.
+	LabelKeys     []string `protobuf:"bytes,4,rep,name=label_keys,json=labelKeys,proto3" json:"label_keys,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1765,6 +1777,13 @@ func (x *GetApplicationTraceMetricsResponse) GetTotals() []*TraceMetricTotal {
 func (x *GetApplicationTraceMetricsResponse) GetBreakdown() []*LabelUsage {
 	if x != nil {
 		return x.Breakdown
+	}
+	return nil
+}
+
+func (x *GetApplicationTraceMetricsResponse) GetLabelKeys() []string {
+	if x != nil {
+		return x.LabelKeys
 	}
 	return nil
 }
@@ -2133,7 +2152,7 @@ const file_trace_public_v1_trace_proto_rawDesc = "" +
 	"\x12ListEventsResponse\x124\n" +
 	"\x06events\x18\x01 \x03(\v2\x1c.trace.public.v1.NativeEventR\x06events\x12\x1f\n" +
 	"\vnext_cursor\x18\x02 \x01(\tR\n" +
-	"nextCursor\"\xba\x03\n" +
+	"nextCursor\"\xe2\x03\n" +
 	"!GetApplicationTraceMetricsRequest\x12%\n" +
 	"\x0eapplication_id\x18\x01 \x01(\tR\rapplicationId\x129\n" +
 	"\n" +
@@ -2142,14 +2161,17 @@ const file_trace_public_v1_trace_proto_rawDesc = "" +
 	"\fstep_seconds\x18\x04 \x01(\x05R\vstepSeconds\x12!\n" +
 	"\fmetric_kinds\x18\x05 \x03(\tR\vmetricKinds\x12V\n" +
 	"\x06labels\x18\x06 \x03(\v2>.trace.public.v1.GetApplicationTraceMetricsRequest.LabelsEntryR\x06labels\x12#\n" +
-	"\rbreakdown_key\x18\a \x01(\tR\fbreakdownKey\x1a9\n" +
+	"\rbreakdown_key\x18\a \x01(\tR\fbreakdownKey\x12&\n" +
+	"\x0flist_label_keys\x18\b \x01(\bR\rlistLabelKeys\x1a9\n" +
 	"\vLabelsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xd8\x01\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xf7\x01\n" +
 	"\"GetApplicationTraceMetricsResponse\x12<\n" +
 	"\abuckets\x18\x01 \x03(\v2\".trace.public.v1.TraceMetricBucketR\abuckets\x129\n" +
 	"\x06totals\x18\x02 \x03(\v2!.trace.public.v1.TraceMetricTotalR\x06totals\x129\n" +
-	"\tbreakdown\x18\x03 \x03(\v2\x1b.trace.public.v1.LabelUsageR\tbreakdown\"\x98\x01\n" +
+	"\tbreakdown\x18\x03 \x03(\v2\x1b.trace.public.v1.LabelUsageR\tbreakdown\x12\x1d\n" +
+	"\n" +
+	"label_keys\x18\x04 \x03(\tR\tlabelKeys\"\x98\x01\n" +
 	"\n" +
 	"LabelUsage\x12\x14\n" +
 	"\x05value\x18\x01 \x01(\tR\x05value\x12\x1a\n" +

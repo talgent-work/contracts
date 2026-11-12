@@ -215,8 +215,15 @@ type StartWorkRequest struct {
 	// when an Application starts the Work; at most 16, with names unique among
 	// them and the Work's Connectors.
 	ApplicationMcpEndpoints []*ApplicationMcpEndpoint `protobuf:"bytes,9,rep,name=application_mcp_endpoints,json=applicationMcpEndpoints,proto3" json:"application_mcp_endpoints,omitempty"`
-	unknownFields           protoimpl.UnknownFields
-	sizeCache               protoimpl.SizeCache
+	// Work Labels: key=value pairs the starter defines, fixed for the Work's
+	// life and used only to filter Works, break usage down and attribute
+	// traces, never to grant or limit access. At most 16 pairs; a key is 1 to
+	// 64 characters of letters, digits, '.', '_', '-' and '/', starting with a
+	// letter or digit; a value is 1 to 256 characters on one line, without
+	// surrounding whitespace. A malformed label is InvalidArgument.
+	Labels        map[string]string `protobuf:"bytes,10,rep,name=labels,proto3" json:"labels,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *StartWorkRequest) Reset() {
@@ -308,6 +315,13 @@ func (x *StartWorkRequest) GetHarness() *v1.HarnessChoice {
 func (x *StartWorkRequest) GetApplicationMcpEndpoints() []*ApplicationMcpEndpoint {
 	if x != nil {
 		return x.ApplicationMcpEndpoints
+	}
+	return nil
+}
+
+func (x *StartWorkRequest) GetLabels() map[string]string {
+	if x != nil {
+		return x.Labels
 	}
 	return nil
 }
@@ -433,7 +447,14 @@ func (x *StartWorkResponse) GetWorkId() string {
 type ListWorksRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// At most this many, 1 to 100; zero means 50.
-	Limit         uint32 `protobuf:"varint,1,opt,name=limit,proto3" json:"limit,omitempty"`
+	Limit uint32 `protobuf:"varint,1,opt,name=limit,proto3" json:"limit,omitempty"`
+	// Only Works carrying every one of these Work Labels; empty lists them
+	// regardless of labels.
+	Labels map[string]string `protobuf:"bytes,2,rep,name=labels,proto3" json:"labels,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	// Only Works in one of these Work States, as WorkSummary.state names them
+	// ("starting", "working", "stopping", "stopped", "failed", "closing",
+	// "closed"); empty lists every state. An unknown state is InvalidArgument.
+	States        []string `protobuf:"bytes,3,rep,name=states,proto3" json:"states,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -475,6 +496,20 @@ func (x *ListWorksRequest) GetLimit() uint32 {
 	return 0
 }
 
+func (x *ListWorksRequest) GetLabels() map[string]string {
+	if x != nil {
+		return x.Labels
+	}
+	return nil
+}
+
+func (x *ListWorksRequest) GetStates() []string {
+	if x != nil {
+		return x.States
+	}
+	return nil
+}
+
 // WorkSummary is one Standalone Work as its owner's list shows it.
 type WorkSummary struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -494,7 +529,9 @@ type WorkSummary struct {
 	DisconnectedSince *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=disconnected_since,json=disconnectedSince,proto3" json:"disconnected_since,omitempty"`
 	// Why it stopped, when it is Stopped: "disconnected" after its Computer
 	// stayed unreachable past the Disconnection timeout.
-	StateReason   string `protobuf:"bytes,8,opt,name=state_reason,json=stateReason,proto3" json:"state_reason,omitempty"`
+	StateReason string `protobuf:"bytes,8,opt,name=state_reason,json=stateReason,proto3" json:"state_reason,omitempty"`
+	// Its Work Labels, fixed when it was started.
+	Labels        map[string]string `protobuf:"bytes,9,rep,name=labels,proto3" json:"labels,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -583,6 +620,13 @@ func (x *WorkSummary) GetStateReason() string {
 		return x.StateReason
 	}
 	return ""
+}
+
+func (x *WorkSummary) GetLabels() map[string]string {
+	if x != nil {
+		return x.Labels
+	}
+	return nil
 }
 
 // ListWorksResponse lists the Standalone Works, most recently updated first.
@@ -1403,7 +1447,7 @@ const file_agent_public_v2_work_proto_rawDesc = "" +
 	"\aoptions\x18\x01 \x01(\v2,.agent.public.v1.GetWorkStartOptionsResponseR\aoptions\"\"\n" +
 	" ListWorkStartRepositoriesRequest\"o\n" +
 	"!ListWorkStartRepositoriesResponse\x12J\n" +
-	"\frepositories\x18\x01 \x01(\v2&.agent.public.v1.WorkStartRepositoriesR\frepositories\"\xb3\x04\n" +
+	"\frepositories\x18\x01 \x01(\v2&.agent.public.v1.WorkStartRepositoriesR\frepositories\"\xb5\x05\n" +
 	"\x10StartWorkRequest\x12\x1d\n" +
 	"\n" +
 	"request_id\x18\x01 \x01(\tR\trequestId\x12'\n" +
@@ -1415,7 +1459,12 @@ const file_agent_public_v2_work_proto_rawDesc = "" +
 	"\vcomputer_id\x18\a \x01(\tR\n" +
 	"computerId\x128\n" +
 	"\aharness\x18\b \x01(\v2\x1e.agent.public.v1.HarnessChoiceR\aharness\x12c\n" +
-	"\x19application_mcp_endpoints\x18\t \x03(\v2'.agent.public.v2.ApplicationMcpEndpointR\x17applicationMcpEndpoints\"\xca\x01\n" +
+	"\x19application_mcp_endpoints\x18\t \x03(\v2'.agent.public.v2.ApplicationMcpEndpointR\x17applicationMcpEndpoints\x12E\n" +
+	"\x06labels\x18\n" +
+	" \x03(\v2-.agent.public.v2.StartWorkRequest.LabelsEntryR\x06labels\x1a9\n" +
+	"\vLabelsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xca\x01\n" +
 	"\x16ApplicationMcpEndpoint\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x10\n" +
 	"\x03url\x18\x02 \x01(\tR\x03url\x12N\n" +
@@ -1424,9 +1473,14 @@ const file_agent_public_v2_work_proto_rawDesc = "" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\",\n" +
 	"\x11StartWorkResponse\x12\x17\n" +
-	"\awork_id\x18\x01 \x01(\tR\x06workId\"(\n" +
+	"\awork_id\x18\x01 \x01(\tR\x06workId\"\xc2\x01\n" +
 	"\x10ListWorksRequest\x12\x14\n" +
-	"\x05limit\x18\x01 \x01(\rR\x05limit\"\xd0\x02\n" +
+	"\x05limit\x18\x01 \x01(\rR\x05limit\x12E\n" +
+	"\x06labels\x18\x02 \x03(\v2-.agent.public.v2.ListWorksRequest.LabelsEntryR\x06labels\x12\x16\n" +
+	"\x06states\x18\x03 \x03(\tR\x06states\x1a9\n" +
+	"\vLabelsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xcd\x03\n" +
 	"\vWorkSummary\x12\x17\n" +
 	"\awork_id\x18\x01 \x01(\tR\x06workId\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12\x14\n" +
@@ -1437,7 +1491,11 @@ const file_agent_public_v2_work_proto_rawDesc = "" +
 	"\n" +
 	"updated_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12I\n" +
 	"\x12disconnected_since\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\x11disconnectedSince\x12!\n" +
-	"\fstate_reason\x18\b \x01(\tR\vstateReason\"G\n" +
+	"\fstate_reason\x18\b \x01(\tR\vstateReason\x12@\n" +
+	"\x06labels\x18\t \x03(\v2(.agent.public.v2.WorkSummary.LabelsEntryR\x06labels\x1a9\n" +
+	"\vLabelsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"G\n" +
 	"\x11ListWorksResponse\x122\n" +
 	"\x05works\x18\x01 \x03(\v2\x1c.agent.public.v2.WorkSummaryR\x05works\"G\n" +
 	"\x16ChangeWorkTitleRequest\x12\x17\n" +
@@ -1523,7 +1581,7 @@ func file_agent_public_v2_work_proto_rawDescGZIP() []byte {
 	return file_agent_public_v2_work_proto_rawDescData
 }
 
-var file_agent_public_v2_work_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
+var file_agent_public_v2_work_proto_msgTypes = make([]protoimpl.MessageInfo, 27)
 var file_agent_public_v2_work_proto_goTypes = []any{
 	(*GetWorkStartOptionsRequest)(nil),        // 0: agent.public.v2.GetWorkStartOptionsRequest
 	(*GetWorkStartOptionsResponse)(nil),       // 1: agent.public.v2.GetWorkStartOptionsResponse
@@ -1548,58 +1606,64 @@ var file_agent_public_v2_work_proto_goTypes = []any{
 	(*LibraryFile)(nil),                       // 20: agent.public.v2.LibraryFile
 	(*LibraryWork)(nil),                       // 21: agent.public.v2.LibraryWork
 	(*ListLibraryFilesResponse)(nil),          // 22: agent.public.v2.ListLibraryFilesResponse
-	nil,                                       // 23: agent.public.v2.ApplicationMcpEndpoint.HeadersEntry
-	(*v1.GetWorkStartOptionsResponse)(nil),    // 24: agent.public.v1.GetWorkStartOptionsResponse
-	(*v1.WorkStartRepositories)(nil),          // 25: agent.public.v1.WorkStartRepositories
-	(*v1.RepositorySelection)(nil),            // 26: agent.public.v1.RepositorySelection
-	(*v1.CreationCapabilities)(nil),           // 27: agent.public.v1.CreationCapabilities
-	(*v1.WorkModelSelection)(nil),             // 28: agent.public.v1.WorkModelSelection
-	(*v1.HarnessChoice)(nil),                  // 29: agent.public.v1.HarnessChoice
-	(*timestamppb.Timestamp)(nil),             // 30: google.protobuf.Timestamp
+	nil,                                       // 23: agent.public.v2.StartWorkRequest.LabelsEntry
+	nil,                                       // 24: agent.public.v2.ApplicationMcpEndpoint.HeadersEntry
+	nil,                                       // 25: agent.public.v2.ListWorksRequest.LabelsEntry
+	nil,                                       // 26: agent.public.v2.WorkSummary.LabelsEntry
+	(*v1.GetWorkStartOptionsResponse)(nil),    // 27: agent.public.v1.GetWorkStartOptionsResponse
+	(*v1.WorkStartRepositories)(nil),          // 28: agent.public.v1.WorkStartRepositories
+	(*v1.RepositorySelection)(nil),            // 29: agent.public.v1.RepositorySelection
+	(*v1.CreationCapabilities)(nil),           // 30: agent.public.v1.CreationCapabilities
+	(*v1.WorkModelSelection)(nil),             // 31: agent.public.v1.WorkModelSelection
+	(*v1.HarnessChoice)(nil),                  // 32: agent.public.v1.HarnessChoice
+	(*timestamppb.Timestamp)(nil),             // 33: google.protobuf.Timestamp
 }
 var file_agent_public_v2_work_proto_depIdxs = []int32{
-	24, // 0: agent.public.v2.GetWorkStartOptionsResponse.options:type_name -> agent.public.v1.GetWorkStartOptionsResponse
-	25, // 1: agent.public.v2.ListWorkStartRepositoriesResponse.repositories:type_name -> agent.public.v1.WorkStartRepositories
-	26, // 2: agent.public.v2.StartWorkRequest.repository_selections:type_name -> agent.public.v1.RepositorySelection
-	27, // 3: agent.public.v2.StartWorkRequest.creation_capabilities:type_name -> agent.public.v1.CreationCapabilities
-	28, // 4: agent.public.v2.StartWorkRequest.model:type_name -> agent.public.v1.WorkModelSelection
-	29, // 5: agent.public.v2.StartWorkRequest.harness:type_name -> agent.public.v1.HarnessChoice
+	27, // 0: agent.public.v2.GetWorkStartOptionsResponse.options:type_name -> agent.public.v1.GetWorkStartOptionsResponse
+	28, // 1: agent.public.v2.ListWorkStartRepositoriesResponse.repositories:type_name -> agent.public.v1.WorkStartRepositories
+	29, // 2: agent.public.v2.StartWorkRequest.repository_selections:type_name -> agent.public.v1.RepositorySelection
+	30, // 3: agent.public.v2.StartWorkRequest.creation_capabilities:type_name -> agent.public.v1.CreationCapabilities
+	31, // 4: agent.public.v2.StartWorkRequest.model:type_name -> agent.public.v1.WorkModelSelection
+	32, // 5: agent.public.v2.StartWorkRequest.harness:type_name -> agent.public.v1.HarnessChoice
 	5,  // 6: agent.public.v2.StartWorkRequest.application_mcp_endpoints:type_name -> agent.public.v2.ApplicationMcpEndpoint
-	23, // 7: agent.public.v2.ApplicationMcpEndpoint.headers:type_name -> agent.public.v2.ApplicationMcpEndpoint.HeadersEntry
-	30, // 8: agent.public.v2.WorkSummary.created_at:type_name -> google.protobuf.Timestamp
-	30, // 9: agent.public.v2.WorkSummary.updated_at:type_name -> google.protobuf.Timestamp
-	30, // 10: agent.public.v2.WorkSummary.disconnected_since:type_name -> google.protobuf.Timestamp
-	8,  // 11: agent.public.v2.ListWorksResponse.works:type_name -> agent.public.v2.WorkSummary
-	12, // 12: agent.public.v2.SearchShareReadersResponse.users:type_name -> agent.public.v2.DirectoryUser
-	12, // 13: agent.public.v2.GetShareReadersResponse.users:type_name -> agent.public.v2.DirectoryUser
-	30, // 14: agent.public.v2.ListLibraryFilesRequest.added_after:type_name -> google.protobuf.Timestamp
-	30, // 15: agent.public.v2.ListLibraryFilesRequest.added_before:type_name -> google.protobuf.Timestamp
-	30, // 16: agent.public.v2.LibraryFile.added_at:type_name -> google.protobuf.Timestamp
-	20, // 17: agent.public.v2.ListLibraryFilesResponse.files:type_name -> agent.public.v2.LibraryFile
-	21, // 18: agent.public.v2.ListLibraryFilesResponse.works:type_name -> agent.public.v2.LibraryWork
-	0,  // 19: agent.public.v2.WorkService.GetWorkStartOptions:input_type -> agent.public.v2.GetWorkStartOptionsRequest
-	2,  // 20: agent.public.v2.WorkService.ListWorkStartRepositories:input_type -> agent.public.v2.ListWorkStartRepositoriesRequest
-	4,  // 21: agent.public.v2.WorkService.StartWork:input_type -> agent.public.v2.StartWorkRequest
-	7,  // 22: agent.public.v2.WorkService.ListWorks:input_type -> agent.public.v2.ListWorksRequest
-	10, // 23: agent.public.v2.WorkService.ChangeWorkTitle:input_type -> agent.public.v2.ChangeWorkTitleRequest
-	13, // 24: agent.public.v2.WorkService.SearchShareReaders:input_type -> agent.public.v2.SearchShareReadersRequest
-	15, // 25: agent.public.v2.WorkService.GetShareReaders:input_type -> agent.public.v2.GetShareReadersRequest
-	17, // 26: agent.public.v2.WorkService.GrantWorkShare:input_type -> agent.public.v2.GrantWorkShareRequest
-	19, // 27: agent.public.v2.WorkService.ListLibraryFiles:input_type -> agent.public.v2.ListLibraryFilesRequest
-	1,  // 28: agent.public.v2.WorkService.GetWorkStartOptions:output_type -> agent.public.v2.GetWorkStartOptionsResponse
-	3,  // 29: agent.public.v2.WorkService.ListWorkStartRepositories:output_type -> agent.public.v2.ListWorkStartRepositoriesResponse
-	6,  // 30: agent.public.v2.WorkService.StartWork:output_type -> agent.public.v2.StartWorkResponse
-	9,  // 31: agent.public.v2.WorkService.ListWorks:output_type -> agent.public.v2.ListWorksResponse
-	11, // 32: agent.public.v2.WorkService.ChangeWorkTitle:output_type -> agent.public.v2.ChangeWorkTitleResponse
-	14, // 33: agent.public.v2.WorkService.SearchShareReaders:output_type -> agent.public.v2.SearchShareReadersResponse
-	16, // 34: agent.public.v2.WorkService.GetShareReaders:output_type -> agent.public.v2.GetShareReadersResponse
-	18, // 35: agent.public.v2.WorkService.GrantWorkShare:output_type -> agent.public.v2.GrantWorkShareResponse
-	22, // 36: agent.public.v2.WorkService.ListLibraryFiles:output_type -> agent.public.v2.ListLibraryFilesResponse
-	28, // [28:37] is the sub-list for method output_type
-	19, // [19:28] is the sub-list for method input_type
-	19, // [19:19] is the sub-list for extension type_name
-	19, // [19:19] is the sub-list for extension extendee
-	0,  // [0:19] is the sub-list for field type_name
+	23, // 7: agent.public.v2.StartWorkRequest.labels:type_name -> agent.public.v2.StartWorkRequest.LabelsEntry
+	24, // 8: agent.public.v2.ApplicationMcpEndpoint.headers:type_name -> agent.public.v2.ApplicationMcpEndpoint.HeadersEntry
+	25, // 9: agent.public.v2.ListWorksRequest.labels:type_name -> agent.public.v2.ListWorksRequest.LabelsEntry
+	33, // 10: agent.public.v2.WorkSummary.created_at:type_name -> google.protobuf.Timestamp
+	33, // 11: agent.public.v2.WorkSummary.updated_at:type_name -> google.protobuf.Timestamp
+	33, // 12: agent.public.v2.WorkSummary.disconnected_since:type_name -> google.protobuf.Timestamp
+	26, // 13: agent.public.v2.WorkSummary.labels:type_name -> agent.public.v2.WorkSummary.LabelsEntry
+	8,  // 14: agent.public.v2.ListWorksResponse.works:type_name -> agent.public.v2.WorkSummary
+	12, // 15: agent.public.v2.SearchShareReadersResponse.users:type_name -> agent.public.v2.DirectoryUser
+	12, // 16: agent.public.v2.GetShareReadersResponse.users:type_name -> agent.public.v2.DirectoryUser
+	33, // 17: agent.public.v2.ListLibraryFilesRequest.added_after:type_name -> google.protobuf.Timestamp
+	33, // 18: agent.public.v2.ListLibraryFilesRequest.added_before:type_name -> google.protobuf.Timestamp
+	33, // 19: agent.public.v2.LibraryFile.added_at:type_name -> google.protobuf.Timestamp
+	20, // 20: agent.public.v2.ListLibraryFilesResponse.files:type_name -> agent.public.v2.LibraryFile
+	21, // 21: agent.public.v2.ListLibraryFilesResponse.works:type_name -> agent.public.v2.LibraryWork
+	0,  // 22: agent.public.v2.WorkService.GetWorkStartOptions:input_type -> agent.public.v2.GetWorkStartOptionsRequest
+	2,  // 23: agent.public.v2.WorkService.ListWorkStartRepositories:input_type -> agent.public.v2.ListWorkStartRepositoriesRequest
+	4,  // 24: agent.public.v2.WorkService.StartWork:input_type -> agent.public.v2.StartWorkRequest
+	7,  // 25: agent.public.v2.WorkService.ListWorks:input_type -> agent.public.v2.ListWorksRequest
+	10, // 26: agent.public.v2.WorkService.ChangeWorkTitle:input_type -> agent.public.v2.ChangeWorkTitleRequest
+	13, // 27: agent.public.v2.WorkService.SearchShareReaders:input_type -> agent.public.v2.SearchShareReadersRequest
+	15, // 28: agent.public.v2.WorkService.GetShareReaders:input_type -> agent.public.v2.GetShareReadersRequest
+	17, // 29: agent.public.v2.WorkService.GrantWorkShare:input_type -> agent.public.v2.GrantWorkShareRequest
+	19, // 30: agent.public.v2.WorkService.ListLibraryFiles:input_type -> agent.public.v2.ListLibraryFilesRequest
+	1,  // 31: agent.public.v2.WorkService.GetWorkStartOptions:output_type -> agent.public.v2.GetWorkStartOptionsResponse
+	3,  // 32: agent.public.v2.WorkService.ListWorkStartRepositories:output_type -> agent.public.v2.ListWorkStartRepositoriesResponse
+	6,  // 33: agent.public.v2.WorkService.StartWork:output_type -> agent.public.v2.StartWorkResponse
+	9,  // 34: agent.public.v2.WorkService.ListWorks:output_type -> agent.public.v2.ListWorksResponse
+	11, // 35: agent.public.v2.WorkService.ChangeWorkTitle:output_type -> agent.public.v2.ChangeWorkTitleResponse
+	14, // 36: agent.public.v2.WorkService.SearchShareReaders:output_type -> agent.public.v2.SearchShareReadersResponse
+	16, // 37: agent.public.v2.WorkService.GetShareReaders:output_type -> agent.public.v2.GetShareReadersResponse
+	18, // 38: agent.public.v2.WorkService.GrantWorkShare:output_type -> agent.public.v2.GrantWorkShareResponse
+	22, // 39: agent.public.v2.WorkService.ListLibraryFiles:output_type -> agent.public.v2.ListLibraryFilesResponse
+	31, // [31:40] is the sub-list for method output_type
+	22, // [22:31] is the sub-list for method input_type
+	22, // [22:22] is the sub-list for extension type_name
+	22, // [22:22] is the sub-list for extension extendee
+	0,  // [0:22] is the sub-list for field type_name
 }
 
 func init() { file_agent_public_v2_work_proto_init() }
@@ -1613,7 +1677,7 @@ func file_agent_public_v2_work_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_agent_public_v2_work_proto_rawDesc), len(file_agent_public_v2_work_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   24,
+			NumMessages:   27,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

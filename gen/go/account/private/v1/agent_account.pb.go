@@ -45,6 +45,9 @@ type IssueWorkIdentityTokenRequest struct {
 	// The Application that owns the Work, a canonical lowercase UUID; empty for
 	// a Work no Application owns. Such a Work represents no person.
 	ApplicationId string `protobuf:"bytes,8,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
+	// The Work's Work Labels, which its starter defined: at most 16 pairs, keys
+	// of at most 64 characters and values of at most 256.
+	WorkLabels    map[string]string `protobuf:"bytes,9,rep,name=work_labels,json=workLabels,proto3" json:"work_labels,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -135,6 +138,13 @@ func (x *IssueWorkIdentityTokenRequest) GetApplicationId() string {
 	return ""
 }
 
+func (x *IssueWorkIdentityTokenRequest) GetWorkLabels() map[string]string {
+	if x != nil {
+		return x.WorkLabels
+	}
+	return nil
+}
+
 // IssueWorkIdentityTokenResponse is the signed token and its expiry.
 type IssueWorkIdentityTokenResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -194,7 +204,7 @@ var File_account_private_v1_agent_account_proto protoreflect.FileDescriptor
 
 const file_account_private_v1_agent_account_proto_rawDesc = "" +
 	"\n" +
-	"&account/private/v1/agent_account.proto\x12\x12account.private.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xb7\x02\n" +
+	"&account/private/v1/agent_account.proto\x12\x12account.private.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xda\x03\n" +
 	"\x1dIssueWorkIdentityTokenRequest\x12\x17\n" +
 	"\awork_id\x18\x01 \x01(\tR\x06workId\x12\x1d\n" +
 	"\n" +
@@ -204,7 +214,12 @@ const file_account_private_v1_agent_account_proto_rawDesc = "" +
 	"\x11work_subject_kind\x18\x05 \x01(\tR\x0fworkSubjectKind\x12&\n" +
 	"\x0fwork_subject_id\x18\x06 \x01(\tR\rworkSubjectId\x12.\n" +
 	"\x13represented_user_id\x18\a \x01(\tR\x11representedUserId\x12%\n" +
-	"\x0eapplication_id\x18\b \x01(\tR\rapplicationId\"q\n" +
+	"\x0eapplication_id\x18\b \x01(\tR\rapplicationId\x12b\n" +
+	"\vwork_labels\x18\t \x03(\v2A.account.private.v1.IssueWorkIdentityTokenRequest.WorkLabelsEntryR\n" +
+	"workLabels\x1a=\n" +
+	"\x0fWorkLabelsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"q\n" +
 	"\x1eIssueWorkIdentityTokenResponse\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\x129\n" +
 	"\n" +
@@ -224,21 +239,23 @@ func file_account_private_v1_agent_account_proto_rawDescGZIP() []byte {
 	return file_account_private_v1_agent_account_proto_rawDescData
 }
 
-var file_account_private_v1_agent_account_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_account_private_v1_agent_account_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_account_private_v1_agent_account_proto_goTypes = []any{
 	(*IssueWorkIdentityTokenRequest)(nil),  // 0: account.private.v1.IssueWorkIdentityTokenRequest
 	(*IssueWorkIdentityTokenResponse)(nil), // 1: account.private.v1.IssueWorkIdentityTokenResponse
-	(*timestamppb.Timestamp)(nil),          // 2: google.protobuf.Timestamp
+	nil,                                    // 2: account.private.v1.IssueWorkIdentityTokenRequest.WorkLabelsEntry
+	(*timestamppb.Timestamp)(nil),          // 3: google.protobuf.Timestamp
 }
 var file_account_private_v1_agent_account_proto_depIdxs = []int32{
-	2, // 0: account.private.v1.IssueWorkIdentityTokenResponse.expires_at:type_name -> google.protobuf.Timestamp
-	0, // 1: account.private.v1.AgentAccountService.IssueWorkIdentityToken:input_type -> account.private.v1.IssueWorkIdentityTokenRequest
-	1, // 2: account.private.v1.AgentAccountService.IssueWorkIdentityToken:output_type -> account.private.v1.IssueWorkIdentityTokenResponse
-	2, // [2:3] is the sub-list for method output_type
-	1, // [1:2] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	2, // 0: account.private.v1.IssueWorkIdentityTokenRequest.work_labels:type_name -> account.private.v1.IssueWorkIdentityTokenRequest.WorkLabelsEntry
+	3, // 1: account.private.v1.IssueWorkIdentityTokenResponse.expires_at:type_name -> google.protobuf.Timestamp
+	0, // 2: account.private.v1.AgentAccountService.IssueWorkIdentityToken:input_type -> account.private.v1.IssueWorkIdentityTokenRequest
+	1, // 3: account.private.v1.AgentAccountService.IssueWorkIdentityToken:output_type -> account.private.v1.IssueWorkIdentityTokenResponse
+	3, // [3:4] is the sub-list for method output_type
+	2, // [2:3] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_account_private_v1_agent_account_proto_init() }
@@ -252,7 +269,7 @@ func file_account_private_v1_agent_account_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_account_private_v1_agent_account_proto_rawDesc), len(file_account_private_v1_agent_account_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

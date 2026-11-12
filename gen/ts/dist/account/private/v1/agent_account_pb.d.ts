@@ -76,6 +76,14 @@ export declare type IssueWorkIdentityTokenRequest = Message<"account.private.v1.
    * @generated from field: string application_id = 8;
    */
   applicationId: string;
+
+  /**
+   * The Work's Work Labels, which its starter defined: at most 16 pairs, keys
+   * of at most 64 characters and values of at most 256.
+   *
+   * @generated from field: map<string, string> work_labels = 9;
+   */
+  workLabels: { [key: string]: string };
 };
 
 /**

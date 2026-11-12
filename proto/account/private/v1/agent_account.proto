@@ -40,6 +40,9 @@ message IssueWorkIdentityTokenRequest {
   // The Application that owns the Work, a canonical lowercase UUID; empty for
   // a Work no Application owns. Such a Work represents no person.
   string application_id = 8;
+  // The Work's Work Labels, which its starter defined: at most 16 pairs, keys
+  // of at most 64 characters and values of at most 256.
+  map<string, string> work_labels = 9;
 }
 
 // IssueWorkIdentityTokenResponse is the signed token and its expiry.

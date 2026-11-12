@@ -155,6 +155,18 @@ export declare type StartWorkRequest = Message<"agent.public.v2.StartWorkRequest
    * @generated from field: repeated agent.public.v2.ApplicationMcpEndpoint application_mcp_endpoints = 9;
    */
   applicationMcpEndpoints: ApplicationMcpEndpoint[];
+
+  /**
+   * Work Labels: key=value pairs the starter defines, fixed for the Work's
+   * life and used only to filter Works, break usage down and attribute
+   * traces, never to grant or limit access. At most 16 pairs; a key is 1 to
+   * 64 characters of letters, digits, '.', '_', '-' and '/', starting with a
+   * letter or digit; a value is 1 to 256 characters on one line, without
+   * surrounding whitespace. A malformed label is InvalidArgument.
+   *
+   * @generated from field: map<string, string> labels = 10;
+   */
+  labels: { [key: string]: string };
 };
 
 /**
@@ -236,6 +248,23 @@ export declare type ListWorksRequest = Message<"agent.public.v2.ListWorksRequest
    * @generated from field: uint32 limit = 1;
    */
   limit: number;
+
+  /**
+   * Only Works carrying every one of these Work Labels; empty lists them
+   * regardless of labels.
+   *
+   * @generated from field: map<string, string> labels = 2;
+   */
+  labels: { [key: string]: string };
+
+  /**
+   * Only Works in one of these Work States, as WorkSummary.state names them
+   * ("starting", "working", "stopping", "stopped", "failed", "closing",
+   * "closed"); empty lists every state. An unknown state is InvalidArgument.
+   *
+   * @generated from field: repeated string states = 3;
+   */
+  states: string[];
 };
 
 /**
@@ -306,6 +335,13 @@ export declare type WorkSummary = Message<"agent.public.v2.WorkSummary"> & {
    * @generated from field: string state_reason = 8;
    */
   stateReason: string;
+
+  /**
+   * Its Work Labels, fixed when it was started.
+   *
+   * @generated from field: map<string, string> labels = 9;
+   */
+  labels: { [key: string]: string };
 };
 
 /**

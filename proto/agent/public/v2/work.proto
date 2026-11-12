@@ -130,6 +130,13 @@ message StartWorkRequest {
   // when an Application starts the Work; at most 16, with names unique among
   // them and the Work's Connectors.
   repeated ApplicationMcpEndpoint application_mcp_endpoints = 9;
+  // Work Labels: key=value pairs the starter defines, fixed for the Work's
+  // life and used only to filter Works, break usage down and attribute
+  // traces, never to grant or limit access. At most 16 pairs; a key is 1 to
+  // 64 characters of letters, digits, '.', '_', '-' and '/', starting with a
+  // letter or digit; a value is 1 to 256 characters on one line, without
+  // surrounding whitespace. A malformed label is InvalidArgument.
+  map<string, string> labels = 10;
 }
 
 // ApplicationMcpEndpoint is one of the Application's own MCP servers that a
@@ -159,6 +166,13 @@ message StartWorkResponse {
 message ListWorksRequest {
   // At most this many, 1 to 100; zero means 50.
   uint32 limit = 1;
+  // Only Works carrying every one of these Work Labels; empty lists them
+  // regardless of labels.
+  map<string, string> labels = 2;
+  // Only Works in one of these Work States, as WorkSummary.state names them
+  // ("starting", "working", "stopping", "stopped", "failed", "closing",
+  // "closed"); empty lists every state. An unknown state is InvalidArgument.
+  repeated string states = 3;
 }
 
 // WorkSummary is one Standalone Work as its owner's list shows it.
@@ -180,6 +194,8 @@ message WorkSummary {
   // Why it stopped, when it is Stopped: "disconnected" after its Computer
   // stayed unreachable past the Disconnection timeout.
   string state_reason = 8;
+  // Its Work Labels, fixed when it was started.
+  map<string, string> labels = 9;
 }
 
 // ListWorksResponse lists the Standalone Works, most recently updated first.

@@ -51,6 +51,9 @@ An `agent` token's claims, its Work's facts fixed when the Work was created:
 | `x-talgent-represented-user-id` | Claim `for`: the Account id of the person the Agent represents, a canonical lowercase UUID |
 | `x-talgent-application-id` | Claim `application_id`: the Application that owns the Work, a canonical lowercase UUID |
 
+An `agent` token also carries claim `work_labels`, a JSON object of the Work's Work Labels, when
+it has any. The gateway writes no header for it: labels attribute a Work, they never authorize.
+
 An `application` token carries no further claims.
 
 A service admits such a request only when `x-talgent-authenticated-by` is `envoy`,

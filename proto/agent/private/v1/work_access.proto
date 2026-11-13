@@ -2,34 +2,39 @@ syntax = "proto3";
 
 package agent.private.v1;
 
+import "agent/public/v1/work_caller.proto";
 import "streamgateway/public/v1/streamgateway.proto";
 
 option go_package = "github.com/talgent-work/contracts/gen/go/agent/private/v1;agentprivatev1";
 
 // WorkAccessService decides who reads a Work's message stream from Agent's own
-// facts: its owner, Work Visibility and Work Shares. A trusted caller supplies
-// only what Agent cannot know, such as a reader's membership of the scope the
-// visibility names.
+// facts: its owner, Work Caller, Work Visibility and Work Shares. A trusted
+// service supplies only what Agent cannot know: a reader's membership of an
+// Extension Work's Work Caller.
 service WorkAccessService {
   // AdmitWorkReader admits the owner; a Work Share holder of a private Work; or,
-  // while public, a reader the trusted caller admits within the Work's scope.
+  // while public, a reader the trusted service admits as a member of the
+  // Work's Work Caller.
   // A reader that is not admitted is refused with PermissionDenied.
   rpc AdmitWorkReader(AdmitWorkReaderRequest) returns (AdmitWorkReaderResponse);
-  // GrantWorkShare lets the owner of a human's Work share it with a reader the
-  // trusted caller admits within the Work's scope. Granting again changes nothing.
+  // GrantWorkShare lets the owner of a human's Work share it: a Standalone
+  // Work with anyone in the User Directory, an Extension Work with a reader the
+  // trusted service admits as a member of its Work Caller. Granting again
+  // changes nothing.
   rpc GrantWorkShare(GrantWorkShareRequest) returns (GrantWorkShareResponse);
-  // RevokeDepartedReader ends a reader's Work Shares on every Work within the
-  // scope the trusted caller reports the reader has left.
+  // RevokeDepartedReader ends a reader's Work Shares on every Work of the Work
+  // Caller the trusted service reports the reader has left.
   rpc RevokeDepartedReader(RevokeDepartedReaderRequest) returns (RevokeDepartedReaderResponse);
 }
 
-// ReaderAdmission is a trusted caller's statement that a reader is a member of
-// a Project; it admits a reader only to Works of that Project.
+// ReaderAdmission is a trusted service's statement that a reader is a member
+// of a Work Caller of an extension-defined kind; it admits a reader only to
+// Works of that Work Caller.
 message ReaderAdmission {
-  // Always "project"; any other value admits nothing.
-  string reference = 1;
-  // Its value the reader is within.
-  string value = 2;
+  reserved 1, 2;
+  reserved "reference", "value";
+  // The Work Caller the reader is a member of.
+  agent.public.v1.WorkCaller work_caller = 3;
 }
 
 // WorkReadBasis is why a reader is admitted.
@@ -40,7 +45,7 @@ enum WorkReadBasis {
   WORK_READ_BASIS_OWNER = 1;
   // A Work Share holder of a private Work.
   WORK_READ_BASIS_SHARE = 2;
-  // A reader the trusted caller admitted within a public Work's scope.
+  // A member of a public Work's Work Caller, as the trusted service admitted.
   WORK_READ_BASIS_PUBLIC = 3;
   // The Application Owner of the Application whose Work it is, reading only,
   // also after the Application's removal.
@@ -77,20 +82,22 @@ message GrantWorkShareRequest {
   string requester_id = 2;
   // Reader receiving the Work Share.
   string reader_id = 3;
-  // Trusted statement that the reader is within the Work's visibility scope.
+  // Trusted statement that the reader is a member of the Work's Work Caller;
+  // absent for a Standalone Work.
   ReaderAdmission admission = 4;
 }
 
 // GrantWorkShareResponse confirms the reader holds a Work Share.
 message GrantWorkShareResponse {}
 
-// RevokeDepartedReaderRequest names the reader and the scope it left.
+// RevokeDepartedReaderRequest names the reader and the Work Caller it left.
 message RevokeDepartedReaderRequest {
-  // Reader that left the scope.
+  // Reader that left the Work Caller.
   string reader_id = 1;
-  // The scope left, such as the Project it no longer belongs to.
-  ReaderAdmission scope = 2;
+  // The Work Caller left, such as the Project it no longer belongs to.
+  ReaderAdmission departed = 2;
 }
 
-// RevokeDepartedReaderResponse confirms no Work in that scope shares with the reader.
+// RevokeDepartedReaderResponse confirms no Work of that Work Caller shares
+// with the reader.
 message RevokeDepartedReaderResponse {}

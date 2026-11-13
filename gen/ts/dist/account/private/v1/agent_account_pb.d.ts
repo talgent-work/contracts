@@ -26,13 +26,6 @@ export declare type IssueWorkIdentityTokenRequest = Message<"account.private.v1.
   workId: string;
 
   /**
-   * The Work's Project; empty for a Work without one.
-   *
-   * @generated from field: string project_id = 2;
-   */
-  projectId: string;
-
-  /**
    * The Work's AgentDefinition.
    *
    * @generated from field: string agent_id = 3;
@@ -45,21 +38,6 @@ export declare type IssueWorkIdentityTokenRequest = Message<"account.private.v1.
    * @generated from field: string purpose = 4;
    */
   purpose: string;
-
-  /**
-   * The kind of the Work's Subject; empty, with work_subject_id, for a Work
-   * without one.
-   *
-   * @generated from field: string work_subject_kind = 5;
-   */
-  workSubjectKind: string;
-
-  /**
-   * The identity of the Work's Subject.
-   *
-   * @generated from field: string work_subject_id = 6;
-   */
-  workSubjectId: string;
 
   /**
    * The Account id of the person the Agent represents; empty for an Agent
@@ -84,6 +62,51 @@ export declare type IssueWorkIdentityTokenRequest = Message<"account.private.v1.
    * @generated from field: map<string, string> work_labels = 9;
    */
   workLabels: { [key: string]: string };
+
+  /**
+   * The kind of the Work's Work Caller, in whose name it was started, such as
+   * "person", "application" or "project"; required.
+   *
+   * @generated from field: string work_caller_kind = 10;
+   */
+  workCallerKind: string;
+
+  /**
+   * The identity of the Work's Work Caller; required.
+   *
+   * @generated from field: string work_caller_id = 11;
+   */
+  workCallerId: string;
+
+  /**
+   * The kind of the Work's Work Key; empty, with work_key_id, for a Work
+   * without one.
+   *
+   * @generated from field: string work_key_kind = 12;
+   */
+  workKeyKind: string;
+
+  /**
+   * The identity of the Work's Work Key.
+   *
+   * @generated from field: string work_key_id = 13;
+   */
+  workKeyId: string;
+
+  /**
+   * The kind of the Work's File Home; empty, with file_home_id, for a Work
+   * without one.
+   *
+   * @generated from field: string file_home_kind = 14;
+   */
+  fileHomeKind: string;
+
+  /**
+   * The identity of the Work's File Home.
+   *
+   * @generated from field: string file_home_id = 15;
+   */
+  fileHomeId: string;
 };
 
 /**

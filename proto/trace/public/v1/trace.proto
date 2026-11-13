@@ -3,17 +3,21 @@ syntax = "proto3";
 package trace.public.v1;
 
 import "admission/v1/admission.proto";
+import "agent/public/v1/work_caller.proto";
 import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/talgent-work/contracts/gen/go/trace/public/v1;tracepublicv1";
 
-// TraceQueryService reads observations by Work, Project, person or
-// Application. A Work's observations are scoped by its Project when it has
-// one: the reader is admitted by the Project access decision; a Work without a
-// Project is named without one, and its owner, a person or an Application, and
-// its Work Share holders read it. An Application reads only its own Works.
+// TraceQueryService reads observations by Work, Work Caller, Work Key, person
+// or Application. An Extension Work's observations are scoped by its Work
+// Caller: the extension that defines the Work Caller's kind admits the reader
+// through its Work Caller access decision. A Standalone Work is named without
+// a Work Caller, and Agent's Work access admits its readers: its owner, a
+// person or an Application, and its Work Share holders. An Application reads
+// only its own Works.
 service TraceQueryService {
-  // List retained structured native events of an authorized Project or Work.
+  // List retained structured native events of an authorized Work Caller or
+  // Work.
   rpc ListEvents(ListEventsRequest) returns (ListEventsResponse) {
     option (admission.v1.admits) = {
       principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
@@ -25,8 +29,8 @@ service TraceQueryService {
       principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
-  // ListSpansByOwner lists a Project's spans carrying the caller attributes
-  // owner_context and owner_id.
+  // ListSpansByOwner lists a Work Caller's spans carrying the trace
+  // attributes owner_context and owner_id.
   rpc ListSpansByOwner(ListSpansByOwnerRequest) returns (ListSpansByOwnerResponse) {
     option (admission.v1.admits) = {
       principals: [PRINCIPAL_USER]
@@ -44,15 +48,16 @@ service TraceQueryService {
       principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
-  // GetProjectTraceMetrics reads a Project's measurements.
-  rpc GetProjectTraceMetrics(GetProjectTraceMetricsRequest) returns (GetProjectTraceMetricsResponse) {
+  // GetWorkCallerTraceMetrics reads the measurements of the Works of a Work
+  // Caller of an extension-defined kind, optionally narrowed to one Work Key.
+  rpc GetWorkCallerTraceMetrics(GetWorkCallerTraceMetricsRequest) returns (GetWorkCallerTraceMetricsResponse) {
     option (admission.v1.admits) = {
       principals: [PRINCIPAL_USER]
     };
   }
   // GetPersonalTraceMetrics reads the authenticated person's own measurements
-  // across every Work of their Agent, with or without a Project; only that
-  // person reads them.
+  // across every Work they own, whatever its Work Caller; only that person
+  // reads them.
   rpc GetPersonalTraceMetrics(GetPersonalTraceMetricsRequest) returns (GetPersonalTraceMetricsResponse) {
     option (admission.v1.admits) = {
       principals: [PRINCIPAL_USER]
@@ -113,20 +118,26 @@ message Span {
   string parent_native_agent_id = 16;
   // AgentSession identity.
   string agent_work_id = 17;
-  // project id field.
-  string project_id = 18;
+  reserved 18;
+  reserved "project_id";
   // runtime purpose field.
   string runtime_purpose = 19;
   // owner context field.
   string owner_context = 20;
   // owner id field.
   string owner_id = 21;
+  // The Work Caller of the span's Work.
+  agent.public.v1.WorkCaller work_caller = 22;
+  // The Work Key of the span's Work; absent for a Work without one.
+  agent.public.v1.WorkKey work_key = 23;
 }
 
 // ListSpansByOwnerRequest message.
 message ListSpansByOwnerRequest {
-  // project id field.
-  string project_id = 1;
+  reserved 1;
+  reserved "project_id";
+  // The Work Caller, of an extension-defined kind, whose spans are listed.
+  agent.public.v1.WorkCaller work_caller = 7;
   // owner context field.
   string owner_context = 2;
   // owner id field.
@@ -149,8 +160,14 @@ message ListSpansByOwnerResponse {
 
 // ListSpansBySessionRequest message.
 message ListSpansBySessionRequest {
-  // The Work's Project; empty for a Work without one.
-  string project_id = 1;
+  reserved 1;
+  reserved "project_id";
+  // The Work's Work Caller when it is of an extension-defined kind, which
+  // scopes the read and whose extension admits the reader; absent for a
+  // Standalone Work, which Agent's Work access admits. A Work Caller other than
+  // the Work's own, or an Extension Work named without its Work Caller, is
+  // NotFound.
+  agent.public.v1.WorkCaller work_caller = 6;
   // AgentSession identity.
   string agent_work_id = 2;
   // Opaque cursor returned by the previous page.
@@ -172,15 +189,18 @@ message ListSpansBySessionResponse {
 
 // GetSpanRequest message.
 message GetSpanRequest {
-  // Native span identity is scoped by Trace ID and trusted Project attribution.
+  // Native span identity is scoped by Trace ID and trusted Work attribution.
   string span_id = 1;
-  // The Project scope, authorized before looking up evidence; empty for a
-  // span of a Work without a Project.
-  string project_id = 2;
+  reserved 2;
+  reserved "project_id";
   // Required native Trace ID; Span ID alone is not globally unique.
   string trace_id = 3;
-  // The Work the span belongs to; required without a Project.
+  // The Work the span belongs to; required without a Work Caller.
   string agent_work_id = 4;
+  // The Work Caller scope, authorized before looking up evidence, when the
+  // span's Work is an Extension Work; absent for a Standalone Work. A Work
+  // Caller other than the Work's own is NotFound.
+  agent.public.v1.WorkCaller work_caller = 5;
 }
 
 // GetSpanResponse message.
@@ -201,14 +221,20 @@ message GetSessionTraceMetricsRequest {
   int32 step_seconds = 4;
   // metric kinds field.
   repeated string metric_kinds = 5;
-  // The Work's Project; empty for a Work without one.
-  string project_id = 6;
+  reserved 6;
+  reserved "project_id";
+  // The Work's Work Caller when it is of an extension-defined kind, which
+  // scopes the read and whose extension admits the reader; absent for a
+  // Standalone Work, which Agent's Work access admits. A Work Caller other than
+  // the Work's own, or an Extension Work named without its Work Caller, is
+  // NotFound.
+  agent.public.v1.WorkCaller work_caller = 7;
 }
 
-// GetProjectTraceMetricsRequest message.
-message GetProjectTraceMetricsRequest {
-  // project id field.
-  string project_id = 1;
+// GetWorkCallerTraceMetricsRequest names a window of a Work Caller's usage.
+message GetWorkCallerTraceMetricsRequest {
+  // The Work Caller, of an extension-defined kind, whose Works' usage is read.
+  agent.public.v1.WorkCaller work_caller = 1;
   // start time field.
   google.protobuf.Timestamp start_time = 2;
   // end time field.
@@ -217,6 +243,8 @@ message GetProjectTraceMetricsRequest {
   int32 step_seconds = 4;
   // metric kinds field.
   repeated string metric_kinds = 5;
+  // Narrows to the Works with this Work Key, such as the Works of one Intent.
+  agent.public.v1.WorkKey work_key = 6;
 }
 
 // GetPersonalTraceMetricsRequest names a window of the authenticated person's
@@ -250,8 +278,8 @@ message GetSessionTraceMetricsResponse {
   repeated TraceMetricTotal totals = 2;
 }
 
-// GetProjectTraceMetricsResponse message.
-message GetProjectTraceMetricsResponse {
+// GetWorkCallerTraceMetricsResponse message.
+message GetWorkCallerTraceMetricsResponse {
   // buckets field.
   repeated TraceMetricBucket buckets = 1;
   // totals field.
@@ -264,8 +292,8 @@ message TraceMetricBucket {
   google.protobuf.Timestamp bucket_start = 1;
   // bucket seconds field.
   int32 bucket_seconds = 2;
-  // project id field.
-  string project_id = 3;
+  reserved 3, 14;
+  reserved "project_id", "application_id";
   // AgentSession identity.
   string agent_work_id = 4;
   // metric kind field.
@@ -287,8 +315,11 @@ message TraceMetricBucket {
   string owner_context = 12;
   // Caller attribute naming that business object.
   string owner_id = 13;
-  // The Application that owns the Work, empty for a Work no Application owns.
-  string application_id = 14;
+  // The Work Caller of the measured Work: a person, an Application or an
+  // object of an extension-defined kind.
+  agent.public.v1.WorkCaller work_caller = 15;
+  // The Work Key of the measured Work; absent for a Work without one.
+  agent.public.v1.WorkKey work_key = 16;
 }
 
 // TraceMetricTotal message.
@@ -305,9 +336,13 @@ message TraceMetricTotal {
 
 // Bounded query of retained native OTLP log evidence.
 message ListEventsRequest {
-  // The authorized Project scope; empty for a Work without a Project.
-  string project_id = 1;
-  // The Work filter; required without a Project.
+  reserved 1;
+  reserved "project_id";
+  // The authorized Work Caller scope, of an extension-defined kind; absent for
+  // a Standalone Work. An Extension Work named without its Work Caller is
+  // NotFound.
+  agent.public.v1.WorkCaller work_caller = 9;
+  // The Work filter; required without a Work Caller.
   string agent_work_id = 2;
   // Optional native Trace ID filter.
   string trace_id = 3;
@@ -341,10 +376,14 @@ message NativeEvent {
   map<string, string> attributes = 7;
   // Native resource attributes, excluding retired internal platform identities.
   map<string, string> resource_attributes = 8;
-  // Trusted platform Project attribution.
-  string project_id = 9;
+  reserved 9;
+  reserved "project_id";
   // Trusted platform Session attribution.
   string agent_work_id = 10;
+  // Trusted platform Work Caller attribution.
+  agent.public.v1.WorkCaller work_caller = 11;
+  // Trusted platform Work Key attribution; absent for a Work without one.
+  agent.public.v1.WorkKey work_key = 12;
 }
 
 // One page of authorized retained native event evidence.

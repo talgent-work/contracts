@@ -135,8 +135,9 @@ export const WorkspacePreviewRefusal = /*@__PURE__*/
 /**
  * WorkspaceReadingService serves a Work's Session Workspace to the readers of
  * the Work: its owner, its Work Share holders, and, while public, the readers
- * a trusted caller admits within the Work's scope. A Closed Work is refused
- * as WORKSPACE_STATE_CLOSED, whether or not its workspace was reclaimed;
+ * a trusted service admits as members of the Work's Work Caller. A Closed
+ * Work is refused as WORKSPACE_STATE_CLOSED, whether or not its workspace was
+ * reclaimed;
  * anyone else is refused with PermissionDenied.
  *
  * @generated from service agent.private.v1.WorkspaceReadingService

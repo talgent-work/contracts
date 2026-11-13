@@ -3,6 +3,7 @@ syntax = "proto3";
 package agent.public.v1;
 
 import "admission/v1/admission.proto";
+import "agent/public/v1/work_caller.proto";
 
 option go_package = "github.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1";
 
@@ -24,14 +25,16 @@ message WhoAmIRequest {}
 message WhoAmIResponse {
   // The Work.
   string work_id = 1;
-  // The Work's Project; empty for a Work without one.
-  string project_id = 2;
-  // The kind of the Work's Subject; empty for a Work without one.
-  string subject_kind = 3;
-  // The identity of the Work's Subject.
-  string subject_id = 4;
+  reserved 2, 3, 4;
+  reserved "project_id", "subject_kind", "subject_id";
   // The purpose of the Work's AgentDefinition.
   string purpose = 5;
   // The Work's AgentDefinition.
   string agent_id = 6;
+  // The Work Caller the Work was started in the name of.
+  WorkCaller work_caller = 7;
+  // The Work's Work Key; absent for a Work without one.
+  WorkKey work_key = 8;
+  // The Work's File Home; absent for a Work without one.
+  FileHome file_home = 9;
 }

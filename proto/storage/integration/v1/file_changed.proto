@@ -8,7 +8,7 @@ option go_package = "github.com/talgent-work/contracts/gen/go/storage/integratio
 
 // OwnerFact is one condition of the Directory's owner with its value.
 message OwnerFact {
-  // The condition's name, such as "subject".
+  // The condition's name, such as "file_home".
   string condition = 1;
   // The value the locating caller supplied.
   string value = 2;

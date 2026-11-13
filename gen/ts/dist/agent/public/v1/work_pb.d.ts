@@ -264,7 +264,8 @@ export declare type WorkInfo = Message<"agent.public.v1.WorkInfo"> & {
   version: bigint;
 
   /**
-   * The message stream is public within the Work's Project; otherwise private.
+   * The message stream is public to the members of the Work's Work Caller;
+   * otherwise private.
    *
    * @generated from field: bool visibility_public = 16;
    */
@@ -354,7 +355,8 @@ export declare type ChangeWorkVisibilityRequest = Message<"agent.public.v1.Chang
   workId: string;
 
   /**
-   * True makes it public within its Project; false makes it private.
+   * True makes it public to the members of its Work Caller; false makes it
+   * private.
    *
    * @generated from field: bool public = 2;
    */
@@ -1555,8 +1557,8 @@ export declare const AgentWorkService: GenService<{
   },
   /**
    * ChangeWorkVisibility switches the caller's own Work between private and
-   * public within its Project. A project-scoped definition's Work keeps its
-   * visibility.
+   * public to the members of its Work Caller, an Extension Work's only. A
+   * project-scoped definition's Work keeps its visibility.
    *
    * @generated from rpc agent.public.v1.AgentWorkService.ChangeWorkVisibility
    */
@@ -1567,8 +1569,8 @@ export declare const AgentWorkService: GenService<{
   },
   /**
    * RevokeWorkShare stops one reader from reading the caller's own Work; that
-   * reader's open message streams end at once. Granting goes through the
-   * caller that knows the Work's Project members.
+   * reader's open message streams end at once. Granting an Extension Work
+   * goes through the extension that knows its Work Caller's members.
    *
    * @generated from rpc agent.public.v1.AgentWorkService.RevokeWorkShare
    */

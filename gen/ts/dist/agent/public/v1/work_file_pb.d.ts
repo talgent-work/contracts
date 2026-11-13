@@ -919,8 +919,8 @@ export declare const WorkFilePreviewRefusalSchema: GenEnum<WorkFilePreviewRefusa
  * owner, a person or an Application, uploads, renames and deletes its
  * Attachments and deletes its Artifacts until the Work is Closed, and manages
  * Share Links at any time. The owner and its Work Share
- * holders read. Of a Work with a Subject or a
- * Project, whose files its caller governs, only the Artifacts are read here,
+ * holders read. Of an Extension Work, whose files its extension governs, only
+ * the Artifacts it published are read here,
  * by its owner and Work Share holders, as the Personal Library shows them.
  *
  * @generated from service agent.public.v1.WorkFileService

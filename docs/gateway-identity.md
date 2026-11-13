@@ -43,15 +43,16 @@ An `agent` token's claims, its Work's facts fixed when the Work was created:
 
 | Header | Value |
 |---|---|
-| `x-talgent-project-id` | Claim `project_id`: the Work's Project |
+| `x-talgent-work-caller` | Claim `work_caller`: the Work's Work Caller as `<kind>:<id>`, such as `person:<account id>` or `project:<project id>`; required |
+| `x-talgent-work-key` | Claim `work_key`: the Work's Work Key as `<kind>:<id>` |
+| `x-talgent-file-home` | Claim `file_home`: the Work's File Home as `<kind>:<id>` |
 | `x-talgent-agent-id` | Claim `agent_id`: the Work's AgentDefinition; required |
 | `x-talgent-purpose` | Claim `purpose`: the AgentDefinition's purpose; required |
-| `x-talgent-work-subject-kind` | Claim `work_subject_kind` |
-| `x-talgent-work-subject-id` | Claim `work_subject_id` |
 | `x-talgent-represented-user-id` | Claim `for`: the Account id of the person the Agent represents, a canonical lowercase UUID |
 | `x-talgent-application-id` | Claim `application_id`: the Application that owns the Work, a canonical lowercase UUID |
 
-An `agent` token also carries claim `work_labels`, a JSON object of the Work's Work Labels, when
+A `<kind>:<id>` value splits at its first `:`; a kind is at most 32 characters and never contains
+`:`. An `agent` token also carries claim `work_labels`, a JSON object of the Work's Work Labels, when
 it has any. The gateway writes no header for it: labels attribute a Work, they never authorize.
 
 An `application` token carries no further claims.
@@ -92,6 +93,6 @@ A delegated call may add one statement the callee cannot know itself:
 
 | Header | Value |
 |---|---|
-| `x-talgent-reader-admission` | `<reference>=<value>`, such as `project=<project id>`: the delegated user is a member of what the reference names |
+| `x-talgent-reader-admission` | `<kind>:<id>`, a Work Caller of an extension-defined kind, such as `project:<project id>`: the delegated user is a member of that Work Caller |
 
 It is honored only together with both delegation headers; on any other request it is ignored.

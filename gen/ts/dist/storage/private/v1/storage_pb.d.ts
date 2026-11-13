@@ -21,7 +21,7 @@ export declare const file_storage_private_v1_storage: GenFile;
  */
 export declare type DirectoryLocator = Message<"storage.private.v1.DirectoryLocator"> & {
   /**
-   * Names of the facts the Directory follows, each once, such as "subject"
+   * Names of the facts the Directory follows, each once, such as "file_home"
    * or "work". Storage recognizes only "work"; every other name is the
    * callers' shared vocabulary.
    *
@@ -87,7 +87,7 @@ export declare const OwnerFactSchema: GenMessage<OwnerFact>;
 
 /**
  * DirectoryOwner is a Locator's conditions with the caller's fact values,
- * such as {subject: intent:123}. Storage keeps it as supplied, in condition
+ * such as {file_home: intent:123}. Storage keeps it as supplied, in condition
  * order, and interprets only whether it names a Work.
  *
  * @generated from message storage.private.v1.DirectoryOwner

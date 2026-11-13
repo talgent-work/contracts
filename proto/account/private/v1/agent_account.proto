@@ -23,17 +23,12 @@ service AgentAccountService {
 message IssueWorkIdentityTokenRequest {
   // The Work, a canonical lowercase UUID; the token's subject.
   string work_id = 1;
-  // The Work's Project; empty for a Work without one.
-  string project_id = 2;
+  reserved 2, 5, 6;
+  reserved "project_id", "work_subject_kind", "work_subject_id";
   // The Work's AgentDefinition.
   string agent_id = 3;
   // The purpose of the Work's AgentDefinition.
   string purpose = 4;
-  // The kind of the Work's Subject; empty, with work_subject_id, for a Work
-  // without one.
-  string work_subject_kind = 5;
-  // The identity of the Work's Subject.
-  string work_subject_id = 6;
   // The Account id of the person the Agent represents; empty for an Agent
   // that represents no one, such as the PM Coordinator.
   string represented_user_id = 7;
@@ -43,6 +38,21 @@ message IssueWorkIdentityTokenRequest {
   // The Work's Work Labels, which its starter defined: at most 16 pairs, keys
   // of at most 64 characters and values of at most 256.
   map<string, string> work_labels = 9;
+  // The kind of the Work's Work Caller, in whose name it was started, such as
+  // "person", "application" or "project"; required.
+  string work_caller_kind = 10;
+  // The identity of the Work's Work Caller; required.
+  string work_caller_id = 11;
+  // The kind of the Work's Work Key; empty, with work_key_id, for a Work
+  // without one.
+  string work_key_kind = 12;
+  // The identity of the Work's Work Key.
+  string work_key_id = 13;
+  // The kind of the Work's File Home; empty, with file_home_id, for a Work
+  // without one.
+  string file_home_kind = 14;
+  // The identity of the Work's File Home.
+  string file_home_id = 15;
 }
 
 // IssueWorkIdentityTokenResponse is the signed token and its expiry.

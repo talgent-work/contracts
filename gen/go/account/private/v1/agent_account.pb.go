@@ -28,17 +28,10 @@ type IssueWorkIdentityTokenRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The Work, a canonical lowercase UUID; the token's subject.
 	WorkId string `protobuf:"bytes,1,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
-	// The Work's Project; empty for a Work without one.
-	ProjectId string `protobuf:"bytes,2,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
 	// The Work's AgentDefinition.
 	AgentId string `protobuf:"bytes,3,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
 	// The purpose of the Work's AgentDefinition.
 	Purpose string `protobuf:"bytes,4,opt,name=purpose,proto3" json:"purpose,omitempty"`
-	// The kind of the Work's Subject; empty, with work_subject_id, for a Work
-	// without one.
-	WorkSubjectKind string `protobuf:"bytes,5,opt,name=work_subject_kind,json=workSubjectKind,proto3" json:"work_subject_kind,omitempty"`
-	// The identity of the Work's Subject.
-	WorkSubjectId string `protobuf:"bytes,6,opt,name=work_subject_id,json=workSubjectId,proto3" json:"work_subject_id,omitempty"`
 	// The Account id of the person the Agent represents; empty for an Agent
 	// that represents no one, such as the PM Coordinator.
 	RepresentedUserId string `protobuf:"bytes,7,opt,name=represented_user_id,json=representedUserId,proto3" json:"represented_user_id,omitempty"`
@@ -47,7 +40,22 @@ type IssueWorkIdentityTokenRequest struct {
 	ApplicationId string `protobuf:"bytes,8,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	// The Work's Work Labels, which its starter defined: at most 16 pairs, keys
 	// of at most 64 characters and values of at most 256.
-	WorkLabels    map[string]string `protobuf:"bytes,9,rep,name=work_labels,json=workLabels,proto3" json:"work_labels,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	WorkLabels map[string]string `protobuf:"bytes,9,rep,name=work_labels,json=workLabels,proto3" json:"work_labels,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	// The kind of the Work's Work Caller, in whose name it was started, such as
+	// "person", "application" or "project"; required.
+	WorkCallerKind string `protobuf:"bytes,10,opt,name=work_caller_kind,json=workCallerKind,proto3" json:"work_caller_kind,omitempty"`
+	// The identity of the Work's Work Caller; required.
+	WorkCallerId string `protobuf:"bytes,11,opt,name=work_caller_id,json=workCallerId,proto3" json:"work_caller_id,omitempty"`
+	// The kind of the Work's Work Key; empty, with work_key_id, for a Work
+	// without one.
+	WorkKeyKind string `protobuf:"bytes,12,opt,name=work_key_kind,json=workKeyKind,proto3" json:"work_key_kind,omitempty"`
+	// The identity of the Work's Work Key.
+	WorkKeyId string `protobuf:"bytes,13,opt,name=work_key_id,json=workKeyId,proto3" json:"work_key_id,omitempty"`
+	// The kind of the Work's File Home; empty, with file_home_id, for a Work
+	// without one.
+	FileHomeKind string `protobuf:"bytes,14,opt,name=file_home_kind,json=fileHomeKind,proto3" json:"file_home_kind,omitempty"`
+	// The identity of the Work's File Home.
+	FileHomeId    string `protobuf:"bytes,15,opt,name=file_home_id,json=fileHomeId,proto3" json:"file_home_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -89,13 +97,6 @@ func (x *IssueWorkIdentityTokenRequest) GetWorkId() string {
 	return ""
 }
 
-func (x *IssueWorkIdentityTokenRequest) GetProjectId() string {
-	if x != nil {
-		return x.ProjectId
-	}
-	return ""
-}
-
 func (x *IssueWorkIdentityTokenRequest) GetAgentId() string {
 	if x != nil {
 		return x.AgentId
@@ -106,20 +107,6 @@ func (x *IssueWorkIdentityTokenRequest) GetAgentId() string {
 func (x *IssueWorkIdentityTokenRequest) GetPurpose() string {
 	if x != nil {
 		return x.Purpose
-	}
-	return ""
-}
-
-func (x *IssueWorkIdentityTokenRequest) GetWorkSubjectKind() string {
-	if x != nil {
-		return x.WorkSubjectKind
-	}
-	return ""
-}
-
-func (x *IssueWorkIdentityTokenRequest) GetWorkSubjectId() string {
-	if x != nil {
-		return x.WorkSubjectId
 	}
 	return ""
 }
@@ -143,6 +130,48 @@ func (x *IssueWorkIdentityTokenRequest) GetWorkLabels() map[string]string {
 		return x.WorkLabels
 	}
 	return nil
+}
+
+func (x *IssueWorkIdentityTokenRequest) GetWorkCallerKind() string {
+	if x != nil {
+		return x.WorkCallerKind
+	}
+	return ""
+}
+
+func (x *IssueWorkIdentityTokenRequest) GetWorkCallerId() string {
+	if x != nil {
+		return x.WorkCallerId
+	}
+	return ""
+}
+
+func (x *IssueWorkIdentityTokenRequest) GetWorkKeyKind() string {
+	if x != nil {
+		return x.WorkKeyKind
+	}
+	return ""
+}
+
+func (x *IssueWorkIdentityTokenRequest) GetWorkKeyId() string {
+	if x != nil {
+		return x.WorkKeyId
+	}
+	return ""
+}
+
+func (x *IssueWorkIdentityTokenRequest) GetFileHomeKind() string {
+	if x != nil {
+		return x.FileHomeKind
+	}
+	return ""
+}
+
+func (x *IssueWorkIdentityTokenRequest) GetFileHomeId() string {
+	if x != nil {
+		return x.FileHomeId
+	}
+	return ""
 }
 
 // IssueWorkIdentityTokenResponse is the signed token and its expiry.
@@ -204,22 +233,27 @@ var File_account_private_v1_agent_account_proto protoreflect.FileDescriptor
 
 const file_account_private_v1_agent_account_proto_rawDesc = "" +
 	"\n" +
-	"&account/private/v1/agent_account.proto\x12\x12account.private.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xda\x03\n" +
+	"&account/private/v1/agent_account.proto\x12\x12account.private.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x85\x05\n" +
 	"\x1dIssueWorkIdentityTokenRequest\x12\x17\n" +
-	"\awork_id\x18\x01 \x01(\tR\x06workId\x12\x1d\n" +
-	"\n" +
-	"project_id\x18\x02 \x01(\tR\tprojectId\x12\x19\n" +
+	"\awork_id\x18\x01 \x01(\tR\x06workId\x12\x19\n" +
 	"\bagent_id\x18\x03 \x01(\tR\aagentId\x12\x18\n" +
-	"\apurpose\x18\x04 \x01(\tR\apurpose\x12*\n" +
-	"\x11work_subject_kind\x18\x05 \x01(\tR\x0fworkSubjectKind\x12&\n" +
-	"\x0fwork_subject_id\x18\x06 \x01(\tR\rworkSubjectId\x12.\n" +
+	"\apurpose\x18\x04 \x01(\tR\apurpose\x12.\n" +
 	"\x13represented_user_id\x18\a \x01(\tR\x11representedUserId\x12%\n" +
 	"\x0eapplication_id\x18\b \x01(\tR\rapplicationId\x12b\n" +
 	"\vwork_labels\x18\t \x03(\v2A.account.private.v1.IssueWorkIdentityTokenRequest.WorkLabelsEntryR\n" +
-	"workLabels\x1a=\n" +
+	"workLabels\x12(\n" +
+	"\x10work_caller_kind\x18\n" +
+	" \x01(\tR\x0eworkCallerKind\x12$\n" +
+	"\x0ework_caller_id\x18\v \x01(\tR\fworkCallerId\x12\"\n" +
+	"\rwork_key_kind\x18\f \x01(\tR\vworkKeyKind\x12\x1e\n" +
+	"\vwork_key_id\x18\r \x01(\tR\tworkKeyId\x12$\n" +
+	"\x0efile_home_kind\x18\x0e \x01(\tR\ffileHomeKind\x12 \n" +
+	"\ffile_home_id\x18\x0f \x01(\tR\n" +
+	"fileHomeId\x1a=\n" +
 	"\x0fWorkLabelsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"q\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01J\x04\b\x02\x10\x03J\x04\b\x05\x10\x06J\x04\b\x06\x10\aR\n" +
+	"project_idR\x11work_subject_kindR\x0fwork_subject_id\"q\n" +
 	"\x1eIssueWorkIdentityTokenResponse\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\x129\n" +
 	"\n" +

@@ -13,3 +13,18 @@ breaking:
     - FILE
   # Only stable packages (vN) promise to only grow; vNalphaM and vNbetaM may change.
   ignore_unstable_packages: true
+  # A Work now fixes its Work Caller, Work Key and File Home at creation in
+  # place of its Project and Work Subject (orchestra#137). The development
+  # environments are reset and every consumer adopts the change in step, so
+  # this release removes the old fields as a minor tagged by hand. The commit
+  # after that release removes this exemption, once the check compares
+  # against it.
+  ignore:
+    - proto/account/private/v1/agent_account.proto
+    - proto/agent/private/v1/work.proto
+    - proto/agent/private/v1/work_access.proto
+    - proto/agent/private/v1/work_facts.proto
+    - proto/agent/private/v1/work_subject.proto
+    - proto/agent/public/v1/identity.proto
+    - proto/trace/private/v1/project_access.proto
+    - proto/trace/public/v1/trace.proto

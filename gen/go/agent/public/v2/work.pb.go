@@ -1226,7 +1226,7 @@ type LibraryFile struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The Work that published it.
 	WorkId string `protobuf:"bytes,1,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
-	// That Work's display title; empty for a Work with a Project.
+	// That Work's display title; empty for an Extension Work.
 	WorkTitle string `protobuf:"bytes,2,opt,name=work_title,json=workTitle,proto3" json:"work_title,omitempty"`
 	// File name, unique within its Work's Artifacts.
 	Name string `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
@@ -1326,12 +1326,12 @@ type LibraryWork struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The Work.
 	WorkId string `protobuf:"bytes,1,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
-	// Its display title; empty for a Work with a Project.
+	// Its display title; empty for an Extension Work.
 	Title string `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
 	// Who shared it with the person; empty for the person's own Work.
 	SharedByUserId string `protobuf:"bytes,3,opt,name=shared_by_user_id,json=sharedByUserId,proto3" json:"shared_by_user_id,omitempty"`
-	// Whether it is a Standalone Work, whose page lists its files; a Work with
-	// a Project keeps its files in the Project's spaces.
+	// Whether it is a Standalone Work, whose page lists its files; an Extension
+	// Work's files are governed by its extension.
 	Standalone    bool `protobuf:"varint,4,opt,name=standalone,proto3" json:"standalone,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache

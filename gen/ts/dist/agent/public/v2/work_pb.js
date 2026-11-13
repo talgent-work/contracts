@@ -179,7 +179,7 @@ export const ListLibraryFilesResponseSchema = /*@__PURE__*/
 
 /**
  * WorkService is an owner's use of their own Agent: the Standalone Works they
- * start for themselves, which have no Subject and no Project, their sharing,
+ * start for themselves, whose Work Caller is their owner, their sharing,
  * and the person's Personal Library. The owner is a person or an
  * Application; sharing, repository choices and the Personal Library are a
  * person's alone. Every operation acts for the authenticated caller under the

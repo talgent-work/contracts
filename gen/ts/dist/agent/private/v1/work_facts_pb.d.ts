@@ -4,7 +4,7 @@
 
 import type { GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
-import type { WorkSubject } from "./work_subject_pb.js";
+import type { FileHome, WorkCaller, WorkKey } from "../../public/v1/work_caller_pb.js";
 import type { WorkProgress } from "../../public/v1/progress_pb.js";
 import type { StartupProgress } from "../../public/v1/startup_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
@@ -29,18 +29,25 @@ export declare type WorkFacts = Message<"agent.private.v1.WorkFacts"> & {
   workId: string;
 
   /**
-   * The one business object the Work is about.
+   * The Work Caller the Work was started in the name of.
    *
-   * @generated from field: agent.private.v1.WorkSubject subject = 2;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 18;
    */
-  subject?: WorkSubject;
+  workCaller?: WorkCaller;
 
   /**
-   * The Work's Project.
+   * The Work's Work Key; absent for a Work without one.
    *
-   * @generated from field: string project_id = 3;
+   * @generated from field: agent.public.v1.WorkKey work_key = 19;
    */
-  projectId: string;
+  workKey?: WorkKey;
+
+  /**
+   * The Work's File Home; absent for a Work without one.
+   *
+   * @generated from field: agent.public.v1.FileHome file_home = 20;
+   */
+  fileHome?: FileHome;
 
   /**
    * The Work's Agent Owner: its definition's Owner.
@@ -121,7 +128,8 @@ export declare type WorkFacts = Message<"agent.private.v1.WorkFacts"> & {
   archivePending: boolean;
 
   /**
-   * The message stream is public within the Work's scope; otherwise private.
+   * The message stream is public to the members of the Work's Work Caller;
+   * otherwise private.
    *
    * @generated from field: bool visibility_public = 15;
    */
@@ -151,17 +159,26 @@ export declare type WorkFacts = Message<"agent.private.v1.WorkFacts"> & {
 export declare const WorkFactsSchema: GenMessage<WorkFacts>;
 
 /**
- * ListWorksRequest selects Works; at least a Project, an owner or identities.
+ * ListWorksRequest selects Works; at least a Work Caller, an owner or
+ * identities.
  *
  * @generated from message agent.private.v1.ListWorksRequest
  */
 export declare type ListWorksRequest = Message<"agent.private.v1.ListWorksRequest"> & {
   /**
-   * The Project of every listed Work.
+   * The Work Caller of every listed Work.
    *
-   * @generated from field: string project_id = 1;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 9;
    */
-  projectId: string;
+  workCaller?: WorkCaller;
+
+  /**
+   * The Work Key of every listed Work, across definitions; requires a Work
+   * Caller.
+   *
+   * @generated from field: agent.public.v1.WorkKey work_key = 10;
+   */
+  workKey?: WorkKey;
 
   /**
    * Opaque definition purpose.
@@ -286,11 +303,11 @@ export declare const GetWorkFactsResponseSchema: GenMessage<GetWorkFactsResponse
  */
 export declare type GetWorkReportRequest = Message<"agent.private.v1.GetWorkReportRequest"> & {
   /**
-   * The Project of every reported Work; required.
+   * The Work Caller of every reported Work; required.
    *
-   * @generated from field: string project_id = 1;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 5;
    */
-  projectId: string;
+  workCaller?: WorkCaller;
 
   /**
    * Opaque definition purpose.
@@ -376,10 +393,11 @@ export declare type GetWorkReportResponse = Message<"agent.private.v1.GetWorkRep
 export declare const GetWorkReportResponseSchema: GenMessage<GetWorkReportResponse>;
 
 /**
- * WorkFactsService supplies Works' collaboration facts to trusted callers, which
- * authorize their own scope and compose the facts with their own. Selection is
- * by Project; Agent interprets no Subject. No message stream content is
- * supplied.
+ * WorkFactsService supplies Works' collaboration facts to trusted services,
+ * which authorize their own scope and compose the facts with their own.
+ * Selection is by Work Caller and Work Key; Agent interprets neither an
+ * extension-defined Work Caller kind nor a Work Key. No message stream content
+ * is supplied.
  *
  * @generated from service agent.private.v1.WorkFactsService
  */

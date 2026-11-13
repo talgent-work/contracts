@@ -64,16 +64,16 @@ type WhoAmIResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The Work.
 	WorkId string `protobuf:"bytes,1,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
-	// The Work's Project; empty for a Work without one.
-	ProjectId string `protobuf:"bytes,2,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
-	// The kind of the Work's Subject; empty for a Work without one.
-	SubjectKind string `protobuf:"bytes,3,opt,name=subject_kind,json=subjectKind,proto3" json:"subject_kind,omitempty"`
-	// The identity of the Work's Subject.
-	SubjectId string `protobuf:"bytes,4,opt,name=subject_id,json=subjectId,proto3" json:"subject_id,omitempty"`
 	// The purpose of the Work's AgentDefinition.
 	Purpose string `protobuf:"bytes,5,opt,name=purpose,proto3" json:"purpose,omitempty"`
 	// The Work's AgentDefinition.
-	AgentId       string `protobuf:"bytes,6,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
+	AgentId string `protobuf:"bytes,6,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
+	// The Work Caller the Work was started in the name of.
+	WorkCaller *WorkCaller `protobuf:"bytes,7,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
+	// The Work's Work Key; absent for a Work without one.
+	WorkKey *WorkKey `protobuf:"bytes,8,opt,name=work_key,json=workKey,proto3" json:"work_key,omitempty"`
+	// The Work's File Home; absent for a Work without one.
+	FileHome      *FileHome `protobuf:"bytes,9,opt,name=file_home,json=fileHome,proto3" json:"file_home,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -115,27 +115,6 @@ func (x *WhoAmIResponse) GetWorkId() string {
 	return ""
 }
 
-func (x *WhoAmIResponse) GetProjectId() string {
-	if x != nil {
-		return x.ProjectId
-	}
-	return ""
-}
-
-func (x *WhoAmIResponse) GetSubjectKind() string {
-	if x != nil {
-		return x.SubjectKind
-	}
-	return ""
-}
-
-func (x *WhoAmIResponse) GetSubjectId() string {
-	if x != nil {
-		return x.SubjectId
-	}
-	return ""
-}
-
 func (x *WhoAmIResponse) GetPurpose() string {
 	if x != nil {
 		return x.Purpose
@@ -150,21 +129,43 @@ func (x *WhoAmIResponse) GetAgentId() string {
 	return ""
 }
 
+func (x *WhoAmIResponse) GetWorkCaller() *WorkCaller {
+	if x != nil {
+		return x.WorkCaller
+	}
+	return nil
+}
+
+func (x *WhoAmIResponse) GetWorkKey() *WorkKey {
+	if x != nil {
+		return x.WorkKey
+	}
+	return nil
+}
+
+func (x *WhoAmIResponse) GetFileHome() *FileHome {
+	if x != nil {
+		return x.FileHome
+	}
+	return nil
+}
+
 var File_agent_public_v1_identity_proto protoreflect.FileDescriptor
 
 const file_agent_public_v1_identity_proto_rawDesc = "" +
 	"\n" +
-	"\x1eagent/public/v1/identity.proto\x12\x0fagent.public.v1\x1a\x1cadmission/v1/admission.proto\"\x0f\n" +
-	"\rWhoAmIRequest\"\xbf\x01\n" +
+	"\x1eagent/public/v1/identity.proto\x12\x0fagent.public.v1\x1a\x1cadmission/v1/admission.proto\x1a!agent/public/v1/work_caller.proto\"\x0f\n" +
+	"\rWhoAmIRequest\"\xc1\x02\n" +
 	"\x0eWhoAmIResponse\x12\x17\n" +
-	"\awork_id\x18\x01 \x01(\tR\x06workId\x12\x1d\n" +
-	"\n" +
-	"project_id\x18\x02 \x01(\tR\tprojectId\x12!\n" +
-	"\fsubject_kind\x18\x03 \x01(\tR\vsubjectKind\x12\x1d\n" +
-	"\n" +
-	"subject_id\x18\x04 \x01(\tR\tsubjectId\x12\x18\n" +
+	"\awork_id\x18\x01 \x01(\tR\x06workId\x12\x18\n" +
 	"\apurpose\x18\x05 \x01(\tR\apurpose\x12\x19\n" +
-	"\bagent_id\x18\x06 \x01(\tR\aagentId2e\n" +
+	"\bagent_id\x18\x06 \x01(\tR\aagentId\x12<\n" +
+	"\vwork_caller\x18\a \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"workCaller\x123\n" +
+	"\bwork_key\x18\b \x01(\v2\x18.agent.public.v1.WorkKeyR\aworkKey\x126\n" +
+	"\tfile_home\x18\t \x01(\v2\x19.agent.public.v1.FileHomeR\bfileHomeJ\x04\b\x02\x10\x03J\x04\b\x03\x10\x04J\x04\b\x04\x10\x05R\n" +
+	"project_idR\fsubject_kindR\n" +
+	"subject_id2e\n" +
 	"\x0fIdentityService\x12R\n" +
 	"\x06WhoAmI\x12\x1e.agent.public.v1.WhoAmIRequest\x1a\x1f.agent.public.v1.WhoAmIResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x02BHZFgithub.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1b\x06proto3"
@@ -185,15 +186,21 @@ var file_agent_public_v1_identity_proto_msgTypes = make([]protoimpl.MessageInfo,
 var file_agent_public_v1_identity_proto_goTypes = []any{
 	(*WhoAmIRequest)(nil),  // 0: agent.public.v1.WhoAmIRequest
 	(*WhoAmIResponse)(nil), // 1: agent.public.v1.WhoAmIResponse
+	(*WorkCaller)(nil),     // 2: agent.public.v1.WorkCaller
+	(*WorkKey)(nil),        // 3: agent.public.v1.WorkKey
+	(*FileHome)(nil),       // 4: agent.public.v1.FileHome
 }
 var file_agent_public_v1_identity_proto_depIdxs = []int32{
-	0, // 0: agent.public.v1.IdentityService.WhoAmI:input_type -> agent.public.v1.WhoAmIRequest
-	1, // 1: agent.public.v1.IdentityService.WhoAmI:output_type -> agent.public.v1.WhoAmIResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	2, // 0: agent.public.v1.WhoAmIResponse.work_caller:type_name -> agent.public.v1.WorkCaller
+	3, // 1: agent.public.v1.WhoAmIResponse.work_key:type_name -> agent.public.v1.WorkKey
+	4, // 2: agent.public.v1.WhoAmIResponse.file_home:type_name -> agent.public.v1.FileHome
+	0, // 3: agent.public.v1.IdentityService.WhoAmI:input_type -> agent.public.v1.WhoAmIRequest
+	1, // 4: agent.public.v1.IdentityService.WhoAmI:output_type -> agent.public.v1.WhoAmIResponse
+	4, // [4:5] is the sub-list for method output_type
+	3, // [3:4] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_agent_public_v1_identity_proto_init() }
@@ -201,6 +208,7 @@ func file_agent_public_v1_identity_proto_init() {
 	if File_agent_public_v1_identity_proto != nil {
 		return
 	}
+	file_agent_public_v1_work_caller_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

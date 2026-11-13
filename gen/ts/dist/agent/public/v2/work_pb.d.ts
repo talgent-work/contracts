@@ -653,7 +653,7 @@ export declare type LibraryFile = Message<"agent.public.v2.LibraryFile"> & {
   workId: string;
 
   /**
-   * That Work's display title; empty for a Work with a Project.
+   * That Work's display title; empty for an Extension Work.
    *
    * @generated from field: string work_title = 2;
    */
@@ -715,7 +715,7 @@ export declare type LibraryWork = Message<"agent.public.v2.LibraryWork"> & {
   workId: string;
 
   /**
-   * Its display title; empty for a Work with a Project.
+   * Its display title; empty for an Extension Work.
    *
    * @generated from field: string title = 2;
    */
@@ -729,8 +729,8 @@ export declare type LibraryWork = Message<"agent.public.v2.LibraryWork"> & {
   sharedByUserId: string;
 
   /**
-   * Whether it is a Standalone Work, whose page lists its files; a Work with
-   * a Project keeps its files in the Project's spaces.
+   * Whether it is a Standalone Work, whose page lists its files; an Extension
+   * Work's files are governed by its extension.
    *
    * @generated from field: bool standalone = 4;
    */
@@ -773,7 +773,7 @@ export declare const ListLibraryFilesResponseSchema: GenMessage<ListLibraryFiles
 
 /**
  * WorkService is an owner's use of their own Agent: the Standalone Works they
- * start for themselves, which have no Subject and no Project, their sharing,
+ * start for themselves, whose Work Caller is their owner, their sharing,
  * and the person's Personal Library. The owner is a person or an
  * Application; sharing, repository choices and the Personal Library are a
  * person's alone. Every operation acts for the authenticated caller under the

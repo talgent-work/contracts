@@ -12,7 +12,7 @@ import "google/protobuf/timestamp.proto";
 option go_package = "github.com/talgent-work/contracts/gen/go/agent/public/v2;agentpublicv2";
 
 // WorkService is an owner's use of their own Agent: the Standalone Works they
-// start for themselves, which have no Subject and no Project, their sharing,
+// start for themselves, whose Work Caller is their owner, their sharing,
 // and the person's Personal Library. The owner is a person or an
 // Application; sharing, repository choices and the Personal Library are a
 // person's alone. Every operation acts for the authenticated caller under the
@@ -291,7 +291,7 @@ message ListLibraryFilesRequest {
 message LibraryFile {
   // The Work that published it.
   string work_id = 1;
-  // That Work's display title; empty for a Work with a Project.
+  // That Work's display title; empty for an Extension Work.
   string work_title = 2;
   // File name, unique within its Work's Artifacts.
   string name = 3;
@@ -309,12 +309,12 @@ message LibraryFile {
 message LibraryWork {
   // The Work.
   string work_id = 1;
-  // Its display title; empty for a Work with a Project.
+  // Its display title; empty for an Extension Work.
   string title = 2;
   // Who shared it with the person; empty for the person's own Work.
   string shared_by_user_id = 3;
-  // Whether it is a Standalone Work, whose page lists its files; a Work with
-  // a Project keeps its files in the Project's spaces.
+  // Whether it is a Standalone Work, whose page lists its files; an Extension
+  // Work's files are governed by its extension.
   bool standalone = 4;
 }
 

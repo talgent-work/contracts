@@ -349,12 +349,12 @@ type AgentWorkServiceClient interface {
 	// GetWork reads the caller's own Work without changing the record.
 	GetWork(context.Context, *v1.GetWorkRequest) (*v1.GetWorkResponse, error)
 	// ChangeWorkVisibility switches the caller's own Work between private and
-	// public within its Project. A project-scoped definition's Work keeps its
-	// visibility.
+	// public to the members of its Work Caller, an Extension Work's only. A
+	// project-scoped definition's Work keeps its visibility.
 	ChangeWorkVisibility(context.Context, *v1.ChangeWorkVisibilityRequest) (*v1.ChangeWorkVisibilityResponse, error)
 	// RevokeWorkShare stops one reader from reading the caller's own Work; that
-	// reader's open message streams end at once. Granting goes through the
-	// caller that knows the Work's Project members.
+	// reader's open message streams end at once. Granting an Extension Work
+	// goes through the extension that knows its Work Caller's members.
 	RevokeWorkShare(context.Context, *v1.RevokeWorkShareRequest) (*v1.RevokeWorkShareResponse, error)
 	// ListWorkLifecycleEvents reads the Work's lifecycle transitions for its continuous timeline.
 	ListWorkLifecycleEvents(context.Context, *v1.ListWorkLifecycleEventsRequest) (*v1.ListWorkLifecycleEventsResponse, error)
@@ -438,12 +438,12 @@ type AgentWorkServiceHandler interface {
 	// GetWork reads the caller's own Work without changing the record.
 	GetWork(context.Context, *v1.GetWorkRequest) (*v1.GetWorkResponse, error)
 	// ChangeWorkVisibility switches the caller's own Work between private and
-	// public within its Project. A project-scoped definition's Work keeps its
-	// visibility.
+	// public to the members of its Work Caller, an Extension Work's only. A
+	// project-scoped definition's Work keeps its visibility.
 	ChangeWorkVisibility(context.Context, *v1.ChangeWorkVisibilityRequest) (*v1.ChangeWorkVisibilityResponse, error)
 	// RevokeWorkShare stops one reader from reading the caller's own Work; that
-	// reader's open message streams end at once. Granting goes through the
-	// caller that knows the Work's Project members.
+	// reader's open message streams end at once. Granting an Extension Work
+	// goes through the extension that knows its Work Caller's members.
 	RevokeWorkShare(context.Context, *v1.RevokeWorkShareRequest) (*v1.RevokeWorkShareResponse, error)
 	// ListWorkLifecycleEvents reads the Work's lifecycle transitions for its continuous timeline.
 	ListWorkLifecycleEvents(context.Context, *v1.ListWorkLifecycleEventsRequest) (*v1.ListWorkLifecycleEventsResponse, error)

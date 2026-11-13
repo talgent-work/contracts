@@ -8,6 +8,7 @@ package tracepublicv1
 
 import (
 	_ "github.com/talgent-work/contracts/gen/go/admission/v1"
+	v1 "github.com/talgent-work/contracts/gen/go/agent/public/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -60,14 +61,16 @@ type Span struct {
 	ParentNativeAgentId string `protobuf:"bytes,16,opt,name=parent_native_agent_id,json=parentNativeAgentId,proto3" json:"parent_native_agent_id,omitempty"`
 	// AgentSession identity.
 	AgentWorkId string `protobuf:"bytes,17,opt,name=agent_work_id,json=agentWorkId,proto3" json:"agent_work_id,omitempty"`
-	// project id field.
-	ProjectId string `protobuf:"bytes,18,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
 	// runtime purpose field.
 	RuntimePurpose string `protobuf:"bytes,19,opt,name=runtime_purpose,json=runtimePurpose,proto3" json:"runtime_purpose,omitempty"`
 	// owner context field.
 	OwnerContext string `protobuf:"bytes,20,opt,name=owner_context,json=ownerContext,proto3" json:"owner_context,omitempty"`
 	// owner id field.
-	OwnerId       string `protobuf:"bytes,21,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
+	OwnerId string `protobuf:"bytes,21,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
+	// The Work Caller of the span's Work.
+	WorkCaller *v1.WorkCaller `protobuf:"bytes,22,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
+	// The Work Key of the span's Work; absent for a Work without one.
+	WorkKey       *v1.WorkKey `protobuf:"bytes,23,opt,name=work_key,json=workKey,proto3" json:"work_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -221,13 +224,6 @@ func (x *Span) GetAgentWorkId() string {
 	return ""
 }
 
-func (x *Span) GetProjectId() string {
-	if x != nil {
-		return x.ProjectId
-	}
-	return ""
-}
-
 func (x *Span) GetRuntimePurpose() string {
 	if x != nil {
 		return x.RuntimePurpose
@@ -249,11 +245,25 @@ func (x *Span) GetOwnerId() string {
 	return ""
 }
 
+func (x *Span) GetWorkCaller() *v1.WorkCaller {
+	if x != nil {
+		return x.WorkCaller
+	}
+	return nil
+}
+
+func (x *Span) GetWorkKey() *v1.WorkKey {
+	if x != nil {
+		return x.WorkKey
+	}
+	return nil
+}
+
 // ListSpansByOwnerRequest message.
 type ListSpansByOwnerRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// project id field.
-	ProjectId string `protobuf:"bytes,1,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
+	// The Work Caller, of an extension-defined kind, whose spans are listed.
+	WorkCaller *v1.WorkCaller `protobuf:"bytes,7,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
 	// owner context field.
 	OwnerContext string `protobuf:"bytes,2,opt,name=owner_context,json=ownerContext,proto3" json:"owner_context,omitempty"`
 	// owner id field.
@@ -298,11 +308,11 @@ func (*ListSpansByOwnerRequest) Descriptor() ([]byte, []int) {
 	return file_trace_public_v1_trace_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *ListSpansByOwnerRequest) GetProjectId() string {
+func (x *ListSpansByOwnerRequest) GetWorkCaller() *v1.WorkCaller {
 	if x != nil {
-		return x.ProjectId
+		return x.WorkCaller
 	}
-	return ""
+	return nil
 }
 
 func (x *ListSpansByOwnerRequest) GetOwnerContext() string {
@@ -398,8 +408,12 @@ func (x *ListSpansByOwnerResponse) GetNextCursor() string {
 // ListSpansBySessionRequest message.
 type ListSpansBySessionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The Work's Project; empty for a Work without one.
-	ProjectId string `protobuf:"bytes,1,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
+	// The Work's Work Caller when it is of an extension-defined kind, which
+	// scopes the read and whose extension admits the reader; absent for a
+	// Standalone Work, which Agent's Work access admits. A Work Caller other than
+	// the Work's own, or an Extension Work named without its Work Caller, is
+	// NotFound.
+	WorkCaller *v1.WorkCaller `protobuf:"bytes,6,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
 	// AgentSession identity.
 	AgentWorkId string `protobuf:"bytes,2,opt,name=agent_work_id,json=agentWorkId,proto3" json:"agent_work_id,omitempty"`
 	// Opaque cursor returned by the previous page.
@@ -443,11 +457,11 @@ func (*ListSpansBySessionRequest) Descriptor() ([]byte, []int) {
 	return file_trace_public_v1_trace_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *ListSpansBySessionRequest) GetProjectId() string {
+func (x *ListSpansBySessionRequest) GetWorkCaller() *v1.WorkCaller {
 	if x != nil {
-		return x.ProjectId
+		return x.WorkCaller
 	}
-	return ""
+	return nil
 }
 
 func (x *ListSpansBySessionRequest) GetAgentWorkId() string {
@@ -536,15 +550,16 @@ func (x *ListSpansBySessionResponse) GetNextCursor() string {
 // GetSpanRequest message.
 type GetSpanRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Native span identity is scoped by Trace ID and trusted Project attribution.
+	// Native span identity is scoped by Trace ID and trusted Work attribution.
 	SpanId string `protobuf:"bytes,1,opt,name=span_id,json=spanId,proto3" json:"span_id,omitempty"`
-	// The Project scope, authorized before looking up evidence; empty for a
-	// span of a Work without a Project.
-	ProjectId string `protobuf:"bytes,2,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
 	// Required native Trace ID; Span ID alone is not globally unique.
 	TraceId string `protobuf:"bytes,3,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	// The Work the span belongs to; required without a Project.
-	AgentWorkId   string `protobuf:"bytes,4,opt,name=agent_work_id,json=agentWorkId,proto3" json:"agent_work_id,omitempty"`
+	// The Work the span belongs to; required without a Work Caller.
+	AgentWorkId string `protobuf:"bytes,4,opt,name=agent_work_id,json=agentWorkId,proto3" json:"agent_work_id,omitempty"`
+	// The Work Caller scope, authorized before looking up evidence, when the
+	// span's Work is an Extension Work; absent for a Standalone Work. A Work
+	// Caller other than the Work's own is NotFound.
+	WorkCaller    *v1.WorkCaller `protobuf:"bytes,5,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -586,13 +601,6 @@ func (x *GetSpanRequest) GetSpanId() string {
 	return ""
 }
 
-func (x *GetSpanRequest) GetProjectId() string {
-	if x != nil {
-		return x.ProjectId
-	}
-	return ""
-}
-
 func (x *GetSpanRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -605,6 +613,13 @@ func (x *GetSpanRequest) GetAgentWorkId() string {
 		return x.AgentWorkId
 	}
 	return ""
+}
+
+func (x *GetSpanRequest) GetWorkCaller() *v1.WorkCaller {
+	if x != nil {
+		return x.WorkCaller
+	}
+	return nil
 }
 
 // GetSpanResponse message.
@@ -666,8 +681,12 @@ type GetSessionTraceMetricsRequest struct {
 	StepSeconds int32 `protobuf:"varint,4,opt,name=step_seconds,json=stepSeconds,proto3" json:"step_seconds,omitempty"`
 	// metric kinds field.
 	MetricKinds []string `protobuf:"bytes,5,rep,name=metric_kinds,json=metricKinds,proto3" json:"metric_kinds,omitempty"`
-	// The Work's Project; empty for a Work without one.
-	ProjectId     string `protobuf:"bytes,6,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
+	// The Work's Work Caller when it is of an extension-defined kind, which
+	// scopes the read and whose extension admits the reader; absent for a
+	// Standalone Work, which Agent's Work access admits. A Work Caller other than
+	// the Work's own, or an Extension Work named without its Work Caller, is
+	// NotFound.
+	WorkCaller    *v1.WorkCaller `protobuf:"bytes,7,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -737,18 +756,18 @@ func (x *GetSessionTraceMetricsRequest) GetMetricKinds() []string {
 	return nil
 }
 
-func (x *GetSessionTraceMetricsRequest) GetProjectId() string {
+func (x *GetSessionTraceMetricsRequest) GetWorkCaller() *v1.WorkCaller {
 	if x != nil {
-		return x.ProjectId
+		return x.WorkCaller
 	}
-	return ""
+	return nil
 }
 
-// GetProjectTraceMetricsRequest message.
-type GetProjectTraceMetricsRequest struct {
+// GetWorkCallerTraceMetricsRequest names a window of a Work Caller's usage.
+type GetWorkCallerTraceMetricsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// project id field.
-	ProjectId string `protobuf:"bytes,1,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
+	// The Work Caller, of an extension-defined kind, whose Works' usage is read.
+	WorkCaller *v1.WorkCaller `protobuf:"bytes,1,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
 	// start time field.
 	StartTime *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
 	// end time field.
@@ -756,25 +775,27 @@ type GetProjectTraceMetricsRequest struct {
 	// step seconds field.
 	StepSeconds int32 `protobuf:"varint,4,opt,name=step_seconds,json=stepSeconds,proto3" json:"step_seconds,omitempty"`
 	// metric kinds field.
-	MetricKinds   []string `protobuf:"bytes,5,rep,name=metric_kinds,json=metricKinds,proto3" json:"metric_kinds,omitempty"`
+	MetricKinds []string `protobuf:"bytes,5,rep,name=metric_kinds,json=metricKinds,proto3" json:"metric_kinds,omitempty"`
+	// Narrows to the Works with this Work Key, such as the Works of one Intent.
+	WorkKey       *v1.WorkKey `protobuf:"bytes,6,opt,name=work_key,json=workKey,proto3" json:"work_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetProjectTraceMetricsRequest) Reset() {
-	*x = GetProjectTraceMetricsRequest{}
+func (x *GetWorkCallerTraceMetricsRequest) Reset() {
+	*x = GetWorkCallerTraceMetricsRequest{}
 	mi := &file_trace_public_v1_trace_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetProjectTraceMetricsRequest) String() string {
+func (x *GetWorkCallerTraceMetricsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetProjectTraceMetricsRequest) ProtoMessage() {}
+func (*GetWorkCallerTraceMetricsRequest) ProtoMessage() {}
 
-func (x *GetProjectTraceMetricsRequest) ProtoReflect() protoreflect.Message {
+func (x *GetWorkCallerTraceMetricsRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_trace_public_v1_trace_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -786,42 +807,49 @@ func (x *GetProjectTraceMetricsRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetProjectTraceMetricsRequest.ProtoReflect.Descriptor instead.
-func (*GetProjectTraceMetricsRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetWorkCallerTraceMetricsRequest.ProtoReflect.Descriptor instead.
+func (*GetWorkCallerTraceMetricsRequest) Descriptor() ([]byte, []int) {
 	return file_trace_public_v1_trace_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *GetProjectTraceMetricsRequest) GetProjectId() string {
+func (x *GetWorkCallerTraceMetricsRequest) GetWorkCaller() *v1.WorkCaller {
 	if x != nil {
-		return x.ProjectId
+		return x.WorkCaller
 	}
-	return ""
+	return nil
 }
 
-func (x *GetProjectTraceMetricsRequest) GetStartTime() *timestamppb.Timestamp {
+func (x *GetWorkCallerTraceMetricsRequest) GetStartTime() *timestamppb.Timestamp {
 	if x != nil {
 		return x.StartTime
 	}
 	return nil
 }
 
-func (x *GetProjectTraceMetricsRequest) GetEndTime() *timestamppb.Timestamp {
+func (x *GetWorkCallerTraceMetricsRequest) GetEndTime() *timestamppb.Timestamp {
 	if x != nil {
 		return x.EndTime
 	}
 	return nil
 }
 
-func (x *GetProjectTraceMetricsRequest) GetStepSeconds() int32 {
+func (x *GetWorkCallerTraceMetricsRequest) GetStepSeconds() int32 {
 	if x != nil {
 		return x.StepSeconds
 	}
 	return 0
 }
 
-func (x *GetProjectTraceMetricsRequest) GetMetricKinds() []string {
+func (x *GetWorkCallerTraceMetricsRequest) GetMetricKinds() []string {
 	if x != nil {
 		return x.MetricKinds
+	}
+	return nil
+}
+
+func (x *GetWorkCallerTraceMetricsRequest) GetWorkKey() *v1.WorkKey {
+	if x != nil {
+		return x.WorkKey
 	}
 	return nil
 }
@@ -1019,8 +1047,8 @@ func (x *GetSessionTraceMetricsResponse) GetTotals() []*TraceMetricTotal {
 	return nil
 }
 
-// GetProjectTraceMetricsResponse message.
-type GetProjectTraceMetricsResponse struct {
+// GetWorkCallerTraceMetricsResponse message.
+type GetWorkCallerTraceMetricsResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// buckets field.
 	Buckets []*TraceMetricBucket `protobuf:"bytes,1,rep,name=buckets,proto3" json:"buckets,omitempty"`
@@ -1030,20 +1058,20 @@ type GetProjectTraceMetricsResponse struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetProjectTraceMetricsResponse) Reset() {
-	*x = GetProjectTraceMetricsResponse{}
+func (x *GetWorkCallerTraceMetricsResponse) Reset() {
+	*x = GetWorkCallerTraceMetricsResponse{}
 	mi := &file_trace_public_v1_trace_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetProjectTraceMetricsResponse) String() string {
+func (x *GetWorkCallerTraceMetricsResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetProjectTraceMetricsResponse) ProtoMessage() {}
+func (*GetWorkCallerTraceMetricsResponse) ProtoMessage() {}
 
-func (x *GetProjectTraceMetricsResponse) ProtoReflect() protoreflect.Message {
+func (x *GetWorkCallerTraceMetricsResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_trace_public_v1_trace_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1055,19 +1083,19 @@ func (x *GetProjectTraceMetricsResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetProjectTraceMetricsResponse.ProtoReflect.Descriptor instead.
-func (*GetProjectTraceMetricsResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetWorkCallerTraceMetricsResponse.ProtoReflect.Descriptor instead.
+func (*GetWorkCallerTraceMetricsResponse) Descriptor() ([]byte, []int) {
 	return file_trace_public_v1_trace_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *GetProjectTraceMetricsResponse) GetBuckets() []*TraceMetricBucket {
+func (x *GetWorkCallerTraceMetricsResponse) GetBuckets() []*TraceMetricBucket {
 	if x != nil {
 		return x.Buckets
 	}
 	return nil
 }
 
-func (x *GetProjectTraceMetricsResponse) GetTotals() []*TraceMetricTotal {
+func (x *GetWorkCallerTraceMetricsResponse) GetTotals() []*TraceMetricTotal {
 	if x != nil {
 		return x.Totals
 	}
@@ -1081,8 +1109,6 @@ type TraceMetricBucket struct {
 	BucketStart *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=bucket_start,json=bucketStart,proto3" json:"bucket_start,omitempty"`
 	// bucket seconds field.
 	BucketSeconds int32 `protobuf:"varint,2,opt,name=bucket_seconds,json=bucketSeconds,proto3" json:"bucket_seconds,omitempty"`
-	// project id field.
-	ProjectId string `protobuf:"bytes,3,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
 	// AgentSession identity.
 	AgentWorkId string `protobuf:"bytes,4,opt,name=agent_work_id,json=agentWorkId,proto3" json:"agent_work_id,omitempty"`
 	// metric kind field.
@@ -1104,8 +1130,11 @@ type TraceMetricBucket struct {
 	OwnerContext string `protobuf:"bytes,12,opt,name=owner_context,json=ownerContext,proto3" json:"owner_context,omitempty"`
 	// Caller attribute naming that business object.
 	OwnerId string `protobuf:"bytes,13,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
-	// The Application that owns the Work, empty for a Work no Application owns.
-	ApplicationId string `protobuf:"bytes,14,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
+	// The Work Caller of the measured Work: a person, an Application or an
+	// object of an extension-defined kind.
+	WorkCaller *v1.WorkCaller `protobuf:"bytes,15,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
+	// The Work Key of the measured Work; absent for a Work without one.
+	WorkKey       *v1.WorkKey `protobuf:"bytes,16,opt,name=work_key,json=workKey,proto3" json:"work_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1152,13 +1181,6 @@ func (x *TraceMetricBucket) GetBucketSeconds() int32 {
 		return x.BucketSeconds
 	}
 	return 0
-}
-
-func (x *TraceMetricBucket) GetProjectId() string {
-	if x != nil {
-		return x.ProjectId
-	}
-	return ""
 }
 
 func (x *TraceMetricBucket) GetAgentWorkId() string {
@@ -1231,11 +1253,18 @@ func (x *TraceMetricBucket) GetOwnerId() string {
 	return ""
 }
 
-func (x *TraceMetricBucket) GetApplicationId() string {
+func (x *TraceMetricBucket) GetWorkCaller() *v1.WorkCaller {
 	if x != nil {
-		return x.ApplicationId
+		return x.WorkCaller
 	}
-	return ""
+	return nil
+}
+
+func (x *TraceMetricBucket) GetWorkKey() *v1.WorkKey {
+	if x != nil {
+		return x.WorkKey
+	}
+	return nil
 }
 
 // TraceMetricTotal message.
@@ -1314,9 +1343,11 @@ func (x *TraceMetricTotal) GetUnknownCount() uint64 {
 // Bounded query of retained native OTLP log evidence.
 type ListEventsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The authorized Project scope; empty for a Work without a Project.
-	ProjectId string `protobuf:"bytes,1,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
-	// The Work filter; required without a Project.
+	// The authorized Work Caller scope, of an extension-defined kind; absent for
+	// a Standalone Work. An Extension Work named without its Work Caller is
+	// NotFound.
+	WorkCaller *v1.WorkCaller `protobuf:"bytes,9,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
+	// The Work filter; required without a Work Caller.
 	AgentWorkId string `protobuf:"bytes,2,opt,name=agent_work_id,json=agentWorkId,proto3" json:"agent_work_id,omitempty"`
 	// Optional native Trace ID filter.
 	TraceId string `protobuf:"bytes,3,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
@@ -1364,11 +1395,11 @@ func (*ListEventsRequest) Descriptor() ([]byte, []int) {
 	return file_trace_public_v1_trace_proto_rawDescGZIP(), []int{15}
 }
 
-func (x *ListEventsRequest) GetProjectId() string {
+func (x *ListEventsRequest) GetWorkCaller() *v1.WorkCaller {
 	if x != nil {
-		return x.ProjectId
+		return x.WorkCaller
 	}
-	return ""
+	return nil
 }
 
 func (x *ListEventsRequest) GetAgentWorkId() string {
@@ -1439,10 +1470,12 @@ type NativeEvent struct {
 	Attributes map[string]string `protobuf:"bytes,7,rep,name=attributes,proto3" json:"attributes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	// Native resource attributes, excluding retired internal platform identities.
 	ResourceAttributes map[string]string `protobuf:"bytes,8,rep,name=resource_attributes,json=resourceAttributes,proto3" json:"resource_attributes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	// Trusted platform Project attribution.
-	ProjectId string `protobuf:"bytes,9,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
 	// Trusted platform Session attribution.
-	AgentWorkId   string `protobuf:"bytes,10,opt,name=agent_work_id,json=agentWorkId,proto3" json:"agent_work_id,omitempty"`
+	AgentWorkId string `protobuf:"bytes,10,opt,name=agent_work_id,json=agentWorkId,proto3" json:"agent_work_id,omitempty"`
+	// Trusted platform Work Caller attribution.
+	WorkCaller *v1.WorkCaller `protobuf:"bytes,11,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
+	// Trusted platform Work Key attribution; absent for a Work without one.
+	WorkKey       *v1.WorkKey `protobuf:"bytes,12,opt,name=work_key,json=workKey,proto3" json:"work_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1533,18 +1566,25 @@ func (x *NativeEvent) GetResourceAttributes() map[string]string {
 	return nil
 }
 
-func (x *NativeEvent) GetProjectId() string {
-	if x != nil {
-		return x.ProjectId
-	}
-	return ""
-}
-
 func (x *NativeEvent) GetAgentWorkId() string {
 	if x != nil {
 		return x.AgentWorkId
 	}
 	return ""
+}
+
+func (x *NativeEvent) GetWorkCaller() *v1.WorkCaller {
+	if x != nil {
+		return x.WorkCaller
+	}
+	return nil
+}
+
+func (x *NativeEvent) GetWorkKey() *v1.WorkKey {
+	if x != nil {
+		return x.WorkKey
+	}
+	return nil
 }
 
 // One page of authorized retained native event evidence.
@@ -1994,7 +2034,7 @@ var File_trace_public_v1_trace_proto protoreflect.FileDescriptor
 
 const file_trace_public_v1_trace_proto_rawDesc = "" +
 	"\n" +
-	"\x1btrace/public/v1/trace.proto\x12\x0ftrace.public.v1\x1a\x1cadmission/v1/admission.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xd4\a\n" +
+	"\x1btrace/public/v1/trace.proto\x12\x0ftrace.public.v1\x1a\x1cadmission/v1/admission.proto\x1a!agent/public/v1/work_caller.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xba\b\n" +
 	"\x04Span\x12\x17\n" +
 	"\aspan_id\x18\x01 \x01(\tR\x06spanId\x12\x19\n" +
 	"\btrace_id\x18\x02 \x01(\tR\atraceId\x12$\n" +
@@ -2017,66 +2057,73 @@ const file_trace_public_v1_trace_proto_rawDesc = "" +
 	"\acall_id\x18\x0e \x01(\tR\x06callId\x12&\n" +
 	"\x0fnative_agent_id\x18\x0f \x01(\tR\rnativeAgentId\x123\n" +
 	"\x16parent_native_agent_id\x18\x10 \x01(\tR\x13parentNativeAgentId\x12\"\n" +
-	"\ragent_work_id\x18\x11 \x01(\tR\vagentWorkId\x12\x1d\n" +
-	"\n" +
-	"project_id\x18\x12 \x01(\tR\tprojectId\x12'\n" +
+	"\ragent_work_id\x18\x11 \x01(\tR\vagentWorkId\x12'\n" +
 	"\x0fruntime_purpose\x18\x13 \x01(\tR\x0eruntimePurpose\x12#\n" +
 	"\rowner_context\x18\x14 \x01(\tR\fownerContext\x12\x19\n" +
-	"\bowner_id\x18\x15 \x01(\tR\aownerId\x1a=\n" +
+	"\bowner_id\x18\x15 \x01(\tR\aownerId\x12<\n" +
+	"\vwork_caller\x18\x16 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"workCaller\x123\n" +
+	"\bwork_key\x18\x17 \x01(\v2\x18.agent.public.v1.WorkKeyR\aworkKey\x1a=\n" +
 	"\x0fAttributesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\x1aE\n" +
 	"\x17ResourceAttributesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xda\x01\n" +
-	"\x17ListSpansByOwnerRequest\x12\x1d\n" +
-	"\n" +
-	"project_id\x18\x01 \x01(\tR\tprojectId\x12#\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01J\x04\b\x12\x10\x13R\n" +
+	"project_id\"\x8b\x02\n" +
+	"\x17ListSpansByOwnerRequest\x12<\n" +
+	"\vwork_caller\x18\a \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"workCaller\x12#\n" +
 	"\rowner_context\x18\x02 \x01(\tR\fownerContext\x12\x19\n" +
 	"\bowner_id\x18\x03 \x01(\tR\aownerId\x12'\n" +
 	"\x0fruntime_purpose\x18\x04 \x01(\tR\x0eruntimePurpose\x12\x14\n" +
 	"\x05limit\x18\x05 \x01(\x05R\x05limit\x12!\n" +
-	"\fafter_cursor\x18\x06 \x01(\tR\vafterCursor\"h\n" +
+	"\fafter_cursor\x18\x06 \x01(\tR\vafterCursorJ\x04\b\x01\x10\x02R\n" +
+	"project_id\"h\n" +
 	"\x18ListSpansByOwnerResponse\x12+\n" +
 	"\x05spans\x18\x01 \x03(\v2\x15.trace.public.v1.SpanR\x05spans\x12\x1f\n" +
 	"\vnext_cursor\x18\x02 \x01(\tR\n" +
-	"nextCursor\"\xba\x01\n" +
-	"\x19ListSpansBySessionRequest\x12\x1d\n" +
-	"\n" +
-	"project_id\x18\x01 \x01(\tR\tprojectId\x12\"\n" +
+	"nextCursor\"\xeb\x01\n" +
+	"\x19ListSpansBySessionRequest\x12<\n" +
+	"\vwork_caller\x18\x06 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"workCaller\x12\"\n" +
 	"\ragent_work_id\x18\x02 \x01(\tR\vagentWorkId\x12!\n" +
 	"\fafter_cursor\x18\x03 \x01(\tR\vafterCursor\x12\x14\n" +
 	"\x05limit\x18\x04 \x01(\x05R\x05limit\x12!\n" +
-	"\fnewest_first\x18\x05 \x01(\bR\vnewestFirst\"j\n" +
+	"\fnewest_first\x18\x05 \x01(\bR\vnewestFirstJ\x04\b\x01\x10\x02R\n" +
+	"project_id\"j\n" +
 	"\x1aListSpansBySessionResponse\x12+\n" +
 	"\x05spans\x18\x01 \x03(\v2\x15.trace.public.v1.SpanR\x05spans\x12\x1f\n" +
 	"\vnext_cursor\x18\x02 \x01(\tR\n" +
-	"nextCursor\"\x87\x01\n" +
+	"nextCursor\"\xb8\x01\n" +
 	"\x0eGetSpanRequest\x12\x17\n" +
-	"\aspan_id\x18\x01 \x01(\tR\x06spanId\x12\x1d\n" +
-	"\n" +
-	"project_id\x18\x02 \x01(\tR\tprojectId\x12\x19\n" +
+	"\aspan_id\x18\x01 \x01(\tR\x06spanId\x12\x19\n" +
 	"\btrace_id\x18\x03 \x01(\tR\atraceId\x12\"\n" +
-	"\ragent_work_id\x18\x04 \x01(\tR\vagentWorkId\"<\n" +
+	"\ragent_work_id\x18\x04 \x01(\tR\vagentWorkId\x12<\n" +
+	"\vwork_caller\x18\x05 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"workCallerJ\x04\b\x02\x10\x03R\n" +
+	"project_id\"<\n" +
 	"\x0fGetSpanResponse\x12)\n" +
-	"\x04span\x18\x01 \x01(\v2\x15.trace.public.v1.SpanR\x04span\"\x9a\x02\n" +
+	"\x04span\x18\x01 \x01(\v2\x15.trace.public.v1.SpanR\x04span\"\xcb\x02\n" +
 	"\x1dGetSessionTraceMetricsRequest\x12\"\n" +
 	"\ragent_work_id\x18\x01 \x01(\tR\vagentWorkId\x129\n" +
 	"\n" +
 	"start_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\tstartTime\x125\n" +
 	"\bend_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\aendTime\x12!\n" +
 	"\fstep_seconds\x18\x04 \x01(\x05R\vstepSeconds\x12!\n" +
-	"\fmetric_kinds\x18\x05 \x03(\tR\vmetricKinds\x12\x1d\n" +
-	"\n" +
-	"project_id\x18\x06 \x01(\tR\tprojectId\"\xf6\x01\n" +
-	"\x1dGetProjectTraceMetricsRequest\x12\x1d\n" +
-	"\n" +
-	"project_id\x18\x01 \x01(\tR\tprojectId\x129\n" +
+	"\fmetric_kinds\x18\x05 \x03(\tR\vmetricKinds\x12<\n" +
+	"\vwork_caller\x18\a \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"workCallerJ\x04\b\x06\x10\aR\n" +
+	"project_id\"\xcd\x02\n" +
+	" GetWorkCallerTraceMetricsRequest\x12<\n" +
+	"\vwork_caller\x18\x01 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"workCaller\x129\n" +
 	"\n" +
 	"start_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\tstartTime\x125\n" +
 	"\bend_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\aendTime\x12!\n" +
 	"\fstep_seconds\x18\x04 \x01(\x05R\vstepSeconds\x12!\n" +
-	"\fmetric_kinds\x18\x05 \x03(\tR\vmetricKinds\"\xfc\x01\n" +
+	"\fmetric_kinds\x18\x05 \x03(\tR\vmetricKinds\x123\n" +
+	"\bwork_key\x18\x06 \x01(\v2\x18.agent.public.v1.WorkKeyR\aworkKey\"\xfc\x01\n" +
 	"\x1eGetPersonalTraceMetricsRequest\x129\n" +
 	"\n" +
 	"start_time\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\tstartTime\x125\n" +
@@ -2089,15 +2136,13 @@ const file_trace_public_v1_trace_proto_rawDesc = "" +
 	"\x06totals\x18\x02 \x03(\v2!.trace.public.v1.TraceMetricTotalR\x06totals\"\x99\x01\n" +
 	"\x1eGetSessionTraceMetricsResponse\x12<\n" +
 	"\abuckets\x18\x01 \x03(\v2\".trace.public.v1.TraceMetricBucketR\abuckets\x129\n" +
-	"\x06totals\x18\x02 \x03(\v2!.trace.public.v1.TraceMetricTotalR\x06totals\"\x99\x01\n" +
-	"\x1eGetProjectTraceMetricsResponse\x12<\n" +
+	"\x06totals\x18\x02 \x03(\v2!.trace.public.v1.TraceMetricTotalR\x06totals\"\x9c\x01\n" +
+	"!GetWorkCallerTraceMetricsResponse\x12<\n" +
 	"\abuckets\x18\x01 \x03(\v2\".trace.public.v1.TraceMetricBucketR\abuckets\x129\n" +
-	"\x06totals\x18\x02 \x03(\v2!.trace.public.v1.TraceMetricTotalR\x06totals\"\xf3\x03\n" +
+	"\x06totals\x18\x02 \x03(\v2!.trace.public.v1.TraceMetricTotalR\x06totals\"\xc8\x04\n" +
 	"\x11TraceMetricBucket\x12=\n" +
 	"\fbucket_start\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\vbucketStart\x12%\n" +
-	"\x0ebucket_seconds\x18\x02 \x01(\x05R\rbucketSeconds\x12\x1d\n" +
-	"\n" +
-	"project_id\x18\x03 \x01(\tR\tprojectId\x12\"\n" +
+	"\x0ebucket_seconds\x18\x02 \x01(\x05R\rbucketSeconds\x12\"\n" +
 	"\ragent_work_id\x18\x04 \x01(\tR\vagentWorkId\x12\x1f\n" +
 	"\vmetric_kind\x18\x05 \x01(\tR\n" +
 	"metricKind\x12\x1c\n" +
@@ -2109,17 +2154,20 @@ const file_trace_public_v1_trace_proto_rawDesc = "" +
 	" \x01(\tR\x06userId\x12'\n" +
 	"\x0fruntime_purpose\x18\v \x01(\tR\x0eruntimePurpose\x12#\n" +
 	"\rowner_context\x18\f \x01(\tR\fownerContext\x12\x19\n" +
-	"\bowner_id\x18\r \x01(\tR\aownerId\x12%\n" +
-	"\x0eapplication_id\x18\x0e \x01(\tR\rapplicationId\"\x8c\x01\n" +
+	"\bowner_id\x18\r \x01(\tR\aownerId\x12<\n" +
+	"\vwork_caller\x18\x0f \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"workCaller\x123\n" +
+	"\bwork_key\x18\x10 \x01(\v2\x18.agent.public.v1.WorkKeyR\aworkKeyJ\x04\b\x03\x10\x04J\x04\b\x0e\x10\x0fR\n" +
+	"project_idR\x0eapplication_id\"\x8c\x01\n" +
 	"\x10TraceMetricTotal\x12\x1f\n" +
 	"\vmetric_kind\x18\x01 \x01(\tR\n" +
 	"metricKind\x12\x1c\n" +
 	"\tdimension\x18\x02 \x01(\tR\tdimension\x12\x14\n" +
 	"\x05value\x18\x03 \x01(\x01R\x05value\x12#\n" +
-	"\runknown_count\x18\x04 \x01(\x04R\funknownCount\"\xb5\x02\n" +
-	"\x11ListEventsRequest\x12\x1d\n" +
-	"\n" +
-	"project_id\x18\x01 \x01(\tR\tprojectId\x12\"\n" +
+	"\runknown_count\x18\x04 \x01(\x04R\funknownCount\"\xe6\x02\n" +
+	"\x11ListEventsRequest\x12<\n" +
+	"\vwork_caller\x18\t \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"workCaller\x12\"\n" +
 	"\ragent_work_id\x18\x02 \x01(\tR\vagentWorkId\x12\x19\n" +
 	"\btrace_id\x18\x03 \x01(\tR\atraceId\x12\x17\n" +
 	"\acall_id\x18\x04 \x01(\tR\x06callId\x129\n" +
@@ -2127,7 +2175,8 @@ const file_trace_public_v1_trace_proto_rawDesc = "" +
 	"start_time\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tstartTime\x125\n" +
 	"\bend_time\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\aendTime\x12\x14\n" +
 	"\x05limit\x18\a \x01(\x05R\x05limit\x12!\n" +
-	"\fafter_cursor\x18\b \x01(\tR\vafterCursor\"\xb1\x04\n" +
+	"\fafter_cursor\x18\b \x01(\tR\vafterCursorJ\x04\b\x01\x10\x02R\n" +
+	"project_id\"\x97\x05\n" +
 	"\vNativeEvent\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x128\n" +
 	"\ttimestamp\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12\x19\n" +
@@ -2138,17 +2187,20 @@ const file_trace_public_v1_trace_proto_rawDesc = "" +
 	"\n" +
 	"attributes\x18\a \x03(\v2,.trace.public.v1.NativeEvent.AttributesEntryR\n" +
 	"attributes\x12e\n" +
-	"\x13resource_attributes\x18\b \x03(\v24.trace.public.v1.NativeEvent.ResourceAttributesEntryR\x12resourceAttributes\x12\x1d\n" +
-	"\n" +
-	"project_id\x18\t \x01(\tR\tprojectId\x12\"\n" +
+	"\x13resource_attributes\x18\b \x03(\v24.trace.public.v1.NativeEvent.ResourceAttributesEntryR\x12resourceAttributes\x12\"\n" +
 	"\ragent_work_id\x18\n" +
-	" \x01(\tR\vagentWorkId\x1a=\n" +
+	" \x01(\tR\vagentWorkId\x12<\n" +
+	"\vwork_caller\x18\v \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"workCaller\x123\n" +
+	"\bwork_key\x18\f \x01(\v2\x18.agent.public.v1.WorkKeyR\aworkKey\x1a=\n" +
 	"\x0fAttributesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\x1aE\n" +
 	"\x17ResourceAttributesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"k\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01J\x04\b\t\x10\n" +
+	"R\n" +
+	"project_id\"k\n" +
 	"\x12ListEventsResponse\x124\n" +
 	"\x06events\x18\x01 \x03(\v2\x1c.trace.public.v1.NativeEventR\x06events\x12\x1f\n" +
 	"\vnext_cursor\x18\x02 \x01(\tR\n" +
@@ -2190,7 +2242,7 @@ const file_trace_public_v1_trace_proto_rawDesc = "" +
 	"\x1eListSpansByApplicationResponse\x12+\n" +
 	"\x05spans\x18\x01 \x03(\v2\x15.trace.public.v1.SpanR\x05spans\x12\x1f\n" +
 	"\vnext_cursor\x18\x02 \x01(\tR\n" +
-	"nextCursor2\xe2\b\n" +
+	"nextCursor2\xeb\b\n" +
 	"\x11TraceQueryService\x12_\n" +
 	"\n" +
 	"ListEvents\x12\".trace.public.v1.ListEventsRequest\x1a#.trace.public.v1.ListEventsResponse\"\b\xc2\xf3\x18\x04\n" +
@@ -2202,8 +2254,8 @@ const file_trace_public_v1_trace_proto_rawDesc = "" +
 	"\aGetSpan\x12\x1f.trace.public.v1.GetSpanRequest\x1a .trace.public.v1.GetSpanResponse\"\b\xc2\xf3\x18\x04\n" +
 	"\x02\x01\x03\x12\x83\x01\n" +
 	"\x16GetSessionTraceMetrics\x12..trace.public.v1.GetSessionTraceMetricsRequest\x1a/.trace.public.v1.GetSessionTraceMetricsResponse\"\b\xc2\xf3\x18\x04\n" +
-	"\x02\x01\x03\x12\x82\x01\n" +
-	"\x16GetProjectTraceMetrics\x12..trace.public.v1.GetProjectTraceMetricsRequest\x1a/.trace.public.v1.GetProjectTraceMetricsResponse\"\a\xc2\xf3\x18\x03\n" +
+	"\x02\x01\x03\x12\x8b\x01\n" +
+	"\x19GetWorkCallerTraceMetrics\x121.trace.public.v1.GetWorkCallerTraceMetricsRequest\x1a2.trace.public.v1.GetWorkCallerTraceMetricsResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x01\x12\x85\x01\n" +
 	"\x17GetPersonalTraceMetrics\x12/.trace.public.v1.GetPersonalTraceMetricsRequest\x1a0.trace.public.v1.GetPersonalTraceMetricsResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x01\x12\x8f\x01\n" +
@@ -2234,11 +2286,11 @@ var file_trace_public_v1_trace_proto_goTypes = []any{
 	(*GetSpanRequest)(nil),                     // 5: trace.public.v1.GetSpanRequest
 	(*GetSpanResponse)(nil),                    // 6: trace.public.v1.GetSpanResponse
 	(*GetSessionTraceMetricsRequest)(nil),      // 7: trace.public.v1.GetSessionTraceMetricsRequest
-	(*GetProjectTraceMetricsRequest)(nil),      // 8: trace.public.v1.GetProjectTraceMetricsRequest
+	(*GetWorkCallerTraceMetricsRequest)(nil),   // 8: trace.public.v1.GetWorkCallerTraceMetricsRequest
 	(*GetPersonalTraceMetricsRequest)(nil),     // 9: trace.public.v1.GetPersonalTraceMetricsRequest
 	(*GetPersonalTraceMetricsResponse)(nil),    // 10: trace.public.v1.GetPersonalTraceMetricsResponse
 	(*GetSessionTraceMetricsResponse)(nil),     // 11: trace.public.v1.GetSessionTraceMetricsResponse
-	(*GetProjectTraceMetricsResponse)(nil),     // 12: trace.public.v1.GetProjectTraceMetricsResponse
+	(*GetWorkCallerTraceMetricsResponse)(nil),  // 12: trace.public.v1.GetWorkCallerTraceMetricsResponse
 	(*TraceMetricBucket)(nil),                  // 13: trace.public.v1.TraceMetricBucket
 	(*TraceMetricTotal)(nil),                   // 14: trace.public.v1.TraceMetricTotal
 	(*ListEventsRequest)(nil),                  // 15: trace.public.v1.ListEventsRequest
@@ -2256,66 +2308,81 @@ var file_trace_public_v1_trace_proto_goTypes = []any{
 	nil,                                        // 27: trace.public.v1.GetApplicationTraceMetricsRequest.LabelsEntry
 	nil,                                        // 28: trace.public.v1.ListSpansByApplicationRequest.LabelsEntry
 	(*timestamppb.Timestamp)(nil),              // 29: google.protobuf.Timestamp
+	(*v1.WorkCaller)(nil),                      // 30: agent.public.v1.WorkCaller
+	(*v1.WorkKey)(nil),                         // 31: agent.public.v1.WorkKey
 }
 var file_trace_public_v1_trace_proto_depIdxs = []int32{
 	29, // 0: trace.public.v1.Span.start_time:type_name -> google.protobuf.Timestamp
 	29, // 1: trace.public.v1.Span.end_time:type_name -> google.protobuf.Timestamp
 	23, // 2: trace.public.v1.Span.attributes:type_name -> trace.public.v1.Span.AttributesEntry
 	24, // 3: trace.public.v1.Span.resource_attributes:type_name -> trace.public.v1.Span.ResourceAttributesEntry
-	0,  // 4: trace.public.v1.ListSpansByOwnerResponse.spans:type_name -> trace.public.v1.Span
-	0,  // 5: trace.public.v1.ListSpansBySessionResponse.spans:type_name -> trace.public.v1.Span
-	0,  // 6: trace.public.v1.GetSpanResponse.span:type_name -> trace.public.v1.Span
-	29, // 7: trace.public.v1.GetSessionTraceMetricsRequest.start_time:type_name -> google.protobuf.Timestamp
-	29, // 8: trace.public.v1.GetSessionTraceMetricsRequest.end_time:type_name -> google.protobuf.Timestamp
-	29, // 9: trace.public.v1.GetProjectTraceMetricsRequest.start_time:type_name -> google.protobuf.Timestamp
-	29, // 10: trace.public.v1.GetProjectTraceMetricsRequest.end_time:type_name -> google.protobuf.Timestamp
-	29, // 11: trace.public.v1.GetPersonalTraceMetricsRequest.start_time:type_name -> google.protobuf.Timestamp
-	29, // 12: trace.public.v1.GetPersonalTraceMetricsRequest.end_time:type_name -> google.protobuf.Timestamp
-	13, // 13: trace.public.v1.GetPersonalTraceMetricsResponse.buckets:type_name -> trace.public.v1.TraceMetricBucket
-	14, // 14: trace.public.v1.GetPersonalTraceMetricsResponse.totals:type_name -> trace.public.v1.TraceMetricTotal
-	13, // 15: trace.public.v1.GetSessionTraceMetricsResponse.buckets:type_name -> trace.public.v1.TraceMetricBucket
-	14, // 16: trace.public.v1.GetSessionTraceMetricsResponse.totals:type_name -> trace.public.v1.TraceMetricTotal
-	13, // 17: trace.public.v1.GetProjectTraceMetricsResponse.buckets:type_name -> trace.public.v1.TraceMetricBucket
-	14, // 18: trace.public.v1.GetProjectTraceMetricsResponse.totals:type_name -> trace.public.v1.TraceMetricTotal
-	29, // 19: trace.public.v1.TraceMetricBucket.bucket_start:type_name -> google.protobuf.Timestamp
-	29, // 20: trace.public.v1.ListEventsRequest.start_time:type_name -> google.protobuf.Timestamp
-	29, // 21: trace.public.v1.ListEventsRequest.end_time:type_name -> google.protobuf.Timestamp
-	29, // 22: trace.public.v1.NativeEvent.timestamp:type_name -> google.protobuf.Timestamp
-	25, // 23: trace.public.v1.NativeEvent.attributes:type_name -> trace.public.v1.NativeEvent.AttributesEntry
-	26, // 24: trace.public.v1.NativeEvent.resource_attributes:type_name -> trace.public.v1.NativeEvent.ResourceAttributesEntry
-	16, // 25: trace.public.v1.ListEventsResponse.events:type_name -> trace.public.v1.NativeEvent
-	29, // 26: trace.public.v1.GetApplicationTraceMetricsRequest.start_time:type_name -> google.protobuf.Timestamp
-	29, // 27: trace.public.v1.GetApplicationTraceMetricsRequest.end_time:type_name -> google.protobuf.Timestamp
-	27, // 28: trace.public.v1.GetApplicationTraceMetricsRequest.labels:type_name -> trace.public.v1.GetApplicationTraceMetricsRequest.LabelsEntry
-	13, // 29: trace.public.v1.GetApplicationTraceMetricsResponse.buckets:type_name -> trace.public.v1.TraceMetricBucket
-	14, // 30: trace.public.v1.GetApplicationTraceMetricsResponse.totals:type_name -> trace.public.v1.TraceMetricTotal
-	20, // 31: trace.public.v1.GetApplicationTraceMetricsResponse.breakdown:type_name -> trace.public.v1.LabelUsage
-	14, // 32: trace.public.v1.LabelUsage.totals:type_name -> trace.public.v1.TraceMetricTotal
-	28, // 33: trace.public.v1.ListSpansByApplicationRequest.labels:type_name -> trace.public.v1.ListSpansByApplicationRequest.LabelsEntry
-	0,  // 34: trace.public.v1.ListSpansByApplicationResponse.spans:type_name -> trace.public.v1.Span
-	15, // 35: trace.public.v1.TraceQueryService.ListEvents:input_type -> trace.public.v1.ListEventsRequest
-	3,  // 36: trace.public.v1.TraceQueryService.ListSpansBySession:input_type -> trace.public.v1.ListSpansBySessionRequest
-	1,  // 37: trace.public.v1.TraceQueryService.ListSpansByOwner:input_type -> trace.public.v1.ListSpansByOwnerRequest
-	5,  // 38: trace.public.v1.TraceQueryService.GetSpan:input_type -> trace.public.v1.GetSpanRequest
-	7,  // 39: trace.public.v1.TraceQueryService.GetSessionTraceMetrics:input_type -> trace.public.v1.GetSessionTraceMetricsRequest
-	8,  // 40: trace.public.v1.TraceQueryService.GetProjectTraceMetrics:input_type -> trace.public.v1.GetProjectTraceMetricsRequest
-	9,  // 41: trace.public.v1.TraceQueryService.GetPersonalTraceMetrics:input_type -> trace.public.v1.GetPersonalTraceMetricsRequest
-	18, // 42: trace.public.v1.TraceQueryService.GetApplicationTraceMetrics:input_type -> trace.public.v1.GetApplicationTraceMetricsRequest
-	21, // 43: trace.public.v1.TraceQueryService.ListSpansByApplication:input_type -> trace.public.v1.ListSpansByApplicationRequest
-	17, // 44: trace.public.v1.TraceQueryService.ListEvents:output_type -> trace.public.v1.ListEventsResponse
-	4,  // 45: trace.public.v1.TraceQueryService.ListSpansBySession:output_type -> trace.public.v1.ListSpansBySessionResponse
-	2,  // 46: trace.public.v1.TraceQueryService.ListSpansByOwner:output_type -> trace.public.v1.ListSpansByOwnerResponse
-	6,  // 47: trace.public.v1.TraceQueryService.GetSpan:output_type -> trace.public.v1.GetSpanResponse
-	11, // 48: trace.public.v1.TraceQueryService.GetSessionTraceMetrics:output_type -> trace.public.v1.GetSessionTraceMetricsResponse
-	12, // 49: trace.public.v1.TraceQueryService.GetProjectTraceMetrics:output_type -> trace.public.v1.GetProjectTraceMetricsResponse
-	10, // 50: trace.public.v1.TraceQueryService.GetPersonalTraceMetrics:output_type -> trace.public.v1.GetPersonalTraceMetricsResponse
-	19, // 51: trace.public.v1.TraceQueryService.GetApplicationTraceMetrics:output_type -> trace.public.v1.GetApplicationTraceMetricsResponse
-	22, // 52: trace.public.v1.TraceQueryService.ListSpansByApplication:output_type -> trace.public.v1.ListSpansByApplicationResponse
-	44, // [44:53] is the sub-list for method output_type
-	35, // [35:44] is the sub-list for method input_type
-	35, // [35:35] is the sub-list for extension type_name
-	35, // [35:35] is the sub-list for extension extendee
-	0,  // [0:35] is the sub-list for field type_name
+	30, // 4: trace.public.v1.Span.work_caller:type_name -> agent.public.v1.WorkCaller
+	31, // 5: trace.public.v1.Span.work_key:type_name -> agent.public.v1.WorkKey
+	30, // 6: trace.public.v1.ListSpansByOwnerRequest.work_caller:type_name -> agent.public.v1.WorkCaller
+	0,  // 7: trace.public.v1.ListSpansByOwnerResponse.spans:type_name -> trace.public.v1.Span
+	30, // 8: trace.public.v1.ListSpansBySessionRequest.work_caller:type_name -> agent.public.v1.WorkCaller
+	0,  // 9: trace.public.v1.ListSpansBySessionResponse.spans:type_name -> trace.public.v1.Span
+	30, // 10: trace.public.v1.GetSpanRequest.work_caller:type_name -> agent.public.v1.WorkCaller
+	0,  // 11: trace.public.v1.GetSpanResponse.span:type_name -> trace.public.v1.Span
+	29, // 12: trace.public.v1.GetSessionTraceMetricsRequest.start_time:type_name -> google.protobuf.Timestamp
+	29, // 13: trace.public.v1.GetSessionTraceMetricsRequest.end_time:type_name -> google.protobuf.Timestamp
+	30, // 14: trace.public.v1.GetSessionTraceMetricsRequest.work_caller:type_name -> agent.public.v1.WorkCaller
+	30, // 15: trace.public.v1.GetWorkCallerTraceMetricsRequest.work_caller:type_name -> agent.public.v1.WorkCaller
+	29, // 16: trace.public.v1.GetWorkCallerTraceMetricsRequest.start_time:type_name -> google.protobuf.Timestamp
+	29, // 17: trace.public.v1.GetWorkCallerTraceMetricsRequest.end_time:type_name -> google.protobuf.Timestamp
+	31, // 18: trace.public.v1.GetWorkCallerTraceMetricsRequest.work_key:type_name -> agent.public.v1.WorkKey
+	29, // 19: trace.public.v1.GetPersonalTraceMetricsRequest.start_time:type_name -> google.protobuf.Timestamp
+	29, // 20: trace.public.v1.GetPersonalTraceMetricsRequest.end_time:type_name -> google.protobuf.Timestamp
+	13, // 21: trace.public.v1.GetPersonalTraceMetricsResponse.buckets:type_name -> trace.public.v1.TraceMetricBucket
+	14, // 22: trace.public.v1.GetPersonalTraceMetricsResponse.totals:type_name -> trace.public.v1.TraceMetricTotal
+	13, // 23: trace.public.v1.GetSessionTraceMetricsResponse.buckets:type_name -> trace.public.v1.TraceMetricBucket
+	14, // 24: trace.public.v1.GetSessionTraceMetricsResponse.totals:type_name -> trace.public.v1.TraceMetricTotal
+	13, // 25: trace.public.v1.GetWorkCallerTraceMetricsResponse.buckets:type_name -> trace.public.v1.TraceMetricBucket
+	14, // 26: trace.public.v1.GetWorkCallerTraceMetricsResponse.totals:type_name -> trace.public.v1.TraceMetricTotal
+	29, // 27: trace.public.v1.TraceMetricBucket.bucket_start:type_name -> google.protobuf.Timestamp
+	30, // 28: trace.public.v1.TraceMetricBucket.work_caller:type_name -> agent.public.v1.WorkCaller
+	31, // 29: trace.public.v1.TraceMetricBucket.work_key:type_name -> agent.public.v1.WorkKey
+	30, // 30: trace.public.v1.ListEventsRequest.work_caller:type_name -> agent.public.v1.WorkCaller
+	29, // 31: trace.public.v1.ListEventsRequest.start_time:type_name -> google.protobuf.Timestamp
+	29, // 32: trace.public.v1.ListEventsRequest.end_time:type_name -> google.protobuf.Timestamp
+	29, // 33: trace.public.v1.NativeEvent.timestamp:type_name -> google.protobuf.Timestamp
+	25, // 34: trace.public.v1.NativeEvent.attributes:type_name -> trace.public.v1.NativeEvent.AttributesEntry
+	26, // 35: trace.public.v1.NativeEvent.resource_attributes:type_name -> trace.public.v1.NativeEvent.ResourceAttributesEntry
+	30, // 36: trace.public.v1.NativeEvent.work_caller:type_name -> agent.public.v1.WorkCaller
+	31, // 37: trace.public.v1.NativeEvent.work_key:type_name -> agent.public.v1.WorkKey
+	16, // 38: trace.public.v1.ListEventsResponse.events:type_name -> trace.public.v1.NativeEvent
+	29, // 39: trace.public.v1.GetApplicationTraceMetricsRequest.start_time:type_name -> google.protobuf.Timestamp
+	29, // 40: trace.public.v1.GetApplicationTraceMetricsRequest.end_time:type_name -> google.protobuf.Timestamp
+	27, // 41: trace.public.v1.GetApplicationTraceMetricsRequest.labels:type_name -> trace.public.v1.GetApplicationTraceMetricsRequest.LabelsEntry
+	13, // 42: trace.public.v1.GetApplicationTraceMetricsResponse.buckets:type_name -> trace.public.v1.TraceMetricBucket
+	14, // 43: trace.public.v1.GetApplicationTraceMetricsResponse.totals:type_name -> trace.public.v1.TraceMetricTotal
+	20, // 44: trace.public.v1.GetApplicationTraceMetricsResponse.breakdown:type_name -> trace.public.v1.LabelUsage
+	14, // 45: trace.public.v1.LabelUsage.totals:type_name -> trace.public.v1.TraceMetricTotal
+	28, // 46: trace.public.v1.ListSpansByApplicationRequest.labels:type_name -> trace.public.v1.ListSpansByApplicationRequest.LabelsEntry
+	0,  // 47: trace.public.v1.ListSpansByApplicationResponse.spans:type_name -> trace.public.v1.Span
+	15, // 48: trace.public.v1.TraceQueryService.ListEvents:input_type -> trace.public.v1.ListEventsRequest
+	3,  // 49: trace.public.v1.TraceQueryService.ListSpansBySession:input_type -> trace.public.v1.ListSpansBySessionRequest
+	1,  // 50: trace.public.v1.TraceQueryService.ListSpansByOwner:input_type -> trace.public.v1.ListSpansByOwnerRequest
+	5,  // 51: trace.public.v1.TraceQueryService.GetSpan:input_type -> trace.public.v1.GetSpanRequest
+	7,  // 52: trace.public.v1.TraceQueryService.GetSessionTraceMetrics:input_type -> trace.public.v1.GetSessionTraceMetricsRequest
+	8,  // 53: trace.public.v1.TraceQueryService.GetWorkCallerTraceMetrics:input_type -> trace.public.v1.GetWorkCallerTraceMetricsRequest
+	9,  // 54: trace.public.v1.TraceQueryService.GetPersonalTraceMetrics:input_type -> trace.public.v1.GetPersonalTraceMetricsRequest
+	18, // 55: trace.public.v1.TraceQueryService.GetApplicationTraceMetrics:input_type -> trace.public.v1.GetApplicationTraceMetricsRequest
+	21, // 56: trace.public.v1.TraceQueryService.ListSpansByApplication:input_type -> trace.public.v1.ListSpansByApplicationRequest
+	17, // 57: trace.public.v1.TraceQueryService.ListEvents:output_type -> trace.public.v1.ListEventsResponse
+	4,  // 58: trace.public.v1.TraceQueryService.ListSpansBySession:output_type -> trace.public.v1.ListSpansBySessionResponse
+	2,  // 59: trace.public.v1.TraceQueryService.ListSpansByOwner:output_type -> trace.public.v1.ListSpansByOwnerResponse
+	6,  // 60: trace.public.v1.TraceQueryService.GetSpan:output_type -> trace.public.v1.GetSpanResponse
+	11, // 61: trace.public.v1.TraceQueryService.GetSessionTraceMetrics:output_type -> trace.public.v1.GetSessionTraceMetricsResponse
+	12, // 62: trace.public.v1.TraceQueryService.GetWorkCallerTraceMetrics:output_type -> trace.public.v1.GetWorkCallerTraceMetricsResponse
+	10, // 63: trace.public.v1.TraceQueryService.GetPersonalTraceMetrics:output_type -> trace.public.v1.GetPersonalTraceMetricsResponse
+	19, // 64: trace.public.v1.TraceQueryService.GetApplicationTraceMetrics:output_type -> trace.public.v1.GetApplicationTraceMetricsResponse
+	22, // 65: trace.public.v1.TraceQueryService.ListSpansByApplication:output_type -> trace.public.v1.ListSpansByApplicationResponse
+	57, // [57:66] is the sub-list for method output_type
+	48, // [48:57] is the sub-list for method input_type
+	48, // [48:48] is the sub-list for extension type_name
+	48, // [48:48] is the sub-list for extension extendee
+	0,  // [0:48] is the sub-list for field type_name
 }
 
 func init() { file_trace_public_v1_trace_proto_init() }

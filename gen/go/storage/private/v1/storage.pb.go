@@ -504,7 +504,7 @@ func (PreviewRefusal) EnumDescriptor() ([]byte, []int) {
 // condition locates nothing and requests nothing.
 type DirectoryLocator struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Names of the facts the Directory follows, each once, such as "subject"
+	// Names of the facts the Directory follows, each once, such as "file_home"
 	// or "work". Storage recognizes only "work"; every other name is the
 	// callers' shared vocabulary.
 	Conditions []string `protobuf:"bytes,1,rep,name=conditions,proto3" json:"conditions,omitempty"`
@@ -633,7 +633,7 @@ func (x *OwnerFact) GetValue() string {
 }
 
 // DirectoryOwner is a Locator's conditions with the caller's fact values,
-// such as {subject: intent:123}. Storage keeps it as supplied, in condition
+// such as {file_home: intent:123}. Storage keeps it as supplied, in condition
 // order, and interprets only whether it names a Work.
 type DirectoryOwner struct {
 	state protoimpl.MessageState `protogen:"open.v1"`

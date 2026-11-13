@@ -7,7 +7,8 @@
 package agentprivatev1
 
 import (
-	v1 "github.com/talgent-work/contracts/gen/go/streamgateway/public/v1"
+	v1 "github.com/talgent-work/contracts/gen/go/agent/public/v1"
+	v11 "github.com/talgent-work/contracts/gen/go/streamgateway/public/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -32,7 +33,7 @@ const (
 	WorkReadBasis_WORK_READ_BASIS_OWNER WorkReadBasis = 1
 	// A Work Share holder of a private Work.
 	WorkReadBasis_WORK_READ_BASIS_SHARE WorkReadBasis = 2
-	// A reader the trusted caller admitted within a public Work's scope.
+	// A member of a public Work's Work Caller, as the trusted service admitted.
 	WorkReadBasis_WORK_READ_BASIS_PUBLIC WorkReadBasis = 3
 	// The Application Owner of the Application whose Work it is, reading only,
 	// also after the Application's removal.
@@ -84,14 +85,13 @@ func (WorkReadBasis) EnumDescriptor() ([]byte, []int) {
 	return file_agent_private_v1_work_access_proto_rawDescGZIP(), []int{0}
 }
 
-// ReaderAdmission is a trusted caller's statement that a reader is a member of
-// a Project; it admits a reader only to Works of that Project.
+// ReaderAdmission is a trusted service's statement that a reader is a member
+// of a Work Caller of an extension-defined kind; it admits a reader only to
+// Works of that Work Caller.
 type ReaderAdmission struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Always "project"; any other value admits nothing.
-	Reference string `protobuf:"bytes,1,opt,name=reference,proto3" json:"reference,omitempty"`
-	// Its value the reader is within.
-	Value         string `protobuf:"bytes,2,opt,name=value,proto3" json:"value,omitempty"`
+	// The Work Caller the reader is a member of.
+	WorkCaller    *v1.WorkCaller `protobuf:"bytes,3,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -126,18 +126,11 @@ func (*ReaderAdmission) Descriptor() ([]byte, []int) {
 	return file_agent_private_v1_work_access_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ReaderAdmission) GetReference() string {
+func (x *ReaderAdmission) GetWorkCaller() *v1.WorkCaller {
 	if x != nil {
-		return x.Reference
+		return x.WorkCaller
 	}
-	return ""
-}
-
-func (x *ReaderAdmission) GetValue() string {
-	if x != nil {
-		return x.Value
-	}
-	return ""
+	return nil
 }
 
 // AdmitWorkReaderRequest names the Work and the reader.
@@ -221,7 +214,7 @@ type AdmitWorkReaderResponse struct {
 	Basis WorkReadBasis `protobuf:"varint,1,opt,name=basis,proto3,enum=agent.private.v1.WorkReadBasis" json:"basis,omitempty"`
 	// When asked for: the Work's current state, the frame the admitted reader's
 	// stream starts from.
-	WorkState     *v1.WorkStateFrame `protobuf:"bytes,2,opt,name=work_state,json=workState,proto3" json:"work_state,omitempty"`
+	WorkState     *v11.WorkStateFrame `protobuf:"bytes,2,opt,name=work_state,json=workState,proto3" json:"work_state,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -263,7 +256,7 @@ func (x *AdmitWorkReaderResponse) GetBasis() WorkReadBasis {
 	return WorkReadBasis_WORK_READ_BASIS_UNSPECIFIED
 }
 
-func (x *AdmitWorkReaderResponse) GetWorkState() *v1.WorkStateFrame {
+func (x *AdmitWorkReaderResponse) GetWorkState() *v11.WorkStateFrame {
 	if x != nil {
 		return x.WorkState
 	}
@@ -279,7 +272,8 @@ type GrantWorkShareRequest struct {
 	RequesterId string `protobuf:"bytes,2,opt,name=requester_id,json=requesterId,proto3" json:"requester_id,omitempty"`
 	// Reader receiving the Work Share.
 	ReaderId string `protobuf:"bytes,3,opt,name=reader_id,json=readerId,proto3" json:"reader_id,omitempty"`
-	// Trusted statement that the reader is within the Work's visibility scope.
+	// Trusted statement that the reader is a member of the Work's Work Caller;
+	// absent for a Standalone Work.
 	Admission     *ReaderAdmission `protobuf:"bytes,4,opt,name=admission,proto3" json:"admission,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -380,13 +374,13 @@ func (*GrantWorkShareResponse) Descriptor() ([]byte, []int) {
 	return file_agent_private_v1_work_access_proto_rawDescGZIP(), []int{4}
 }
 
-// RevokeDepartedReaderRequest names the reader and the scope it left.
+// RevokeDepartedReaderRequest names the reader and the Work Caller it left.
 type RevokeDepartedReaderRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Reader that left the scope.
+	// Reader that left the Work Caller.
 	ReaderId string `protobuf:"bytes,1,opt,name=reader_id,json=readerId,proto3" json:"reader_id,omitempty"`
-	// The scope left, such as the Project it no longer belongs to.
-	Scope         *ReaderAdmission `protobuf:"bytes,2,opt,name=scope,proto3" json:"scope,omitempty"`
+	// The Work Caller left, such as the Project it no longer belongs to.
+	Departed      *ReaderAdmission `protobuf:"bytes,2,opt,name=departed,proto3" json:"departed,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -428,14 +422,15 @@ func (x *RevokeDepartedReaderRequest) GetReaderId() string {
 	return ""
 }
 
-func (x *RevokeDepartedReaderRequest) GetScope() *ReaderAdmission {
+func (x *RevokeDepartedReaderRequest) GetDeparted() *ReaderAdmission {
 	if x != nil {
-		return x.Scope
+		return x.Departed
 	}
 	return nil
 }
 
-// RevokeDepartedReaderResponse confirms no Work in that scope shares with the reader.
+// RevokeDepartedReaderResponse confirms no Work of that Work Caller shares
+// with the reader.
 type RevokeDepartedReaderResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -476,10 +471,10 @@ var File_agent_private_v1_work_access_proto protoreflect.FileDescriptor
 
 const file_agent_private_v1_work_access_proto_rawDesc = "" +
 	"\n" +
-	"\"agent/private/v1/work_access.proto\x12\x10agent.private.v1\x1a+streamgateway/public/v1/streamgateway.proto\"E\n" +
-	"\x0fReaderAdmission\x12\x1c\n" +
-	"\treference\x18\x01 \x01(\tR\treference\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value\"\xbd\x01\n" +
+	"\"agent/private/v1/work_access.proto\x12\x10agent.private.v1\x1a!agent/public/v1/work_caller.proto\x1a+streamgateway/public/v1/streamgateway.proto\"m\n" +
+	"\x0fReaderAdmission\x12<\n" +
+	"\vwork_caller\x18\x03 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"workCallerJ\x04\b\x01\x10\x02J\x04\b\x02\x10\x03R\treferenceR\x05value\"\xbd\x01\n" +
 	"\x16AdmitWorkReaderRequest\x12\x17\n" +
 	"\awork_id\x18\x01 \x01(\tR\x06workId\x12\x1b\n" +
 	"\treader_id\x18\x02 \x01(\tR\breaderId\x12?\n" +
@@ -494,10 +489,10 @@ const file_agent_private_v1_work_access_proto_rawDesc = "" +
 	"\frequester_id\x18\x02 \x01(\tR\vrequesterId\x12\x1b\n" +
 	"\treader_id\x18\x03 \x01(\tR\breaderId\x12?\n" +
 	"\tadmission\x18\x04 \x01(\v2!.agent.private.v1.ReaderAdmissionR\tadmission\"\x18\n" +
-	"\x16GrantWorkShareResponse\"s\n" +
+	"\x16GrantWorkShareResponse\"y\n" +
 	"\x1bRevokeDepartedReaderRequest\x12\x1b\n" +
-	"\treader_id\x18\x01 \x01(\tR\breaderId\x127\n" +
-	"\x05scope\x18\x02 \x01(\v2!.agent.private.v1.ReaderAdmissionR\x05scope\"\x1e\n" +
+	"\treader_id\x18\x01 \x01(\tR\breaderId\x12=\n" +
+	"\bdeparted\x18\x02 \x01(\v2!.agent.private.v1.ReaderAdmissionR\bdeparted\"\x1e\n" +
 	"\x1cRevokeDepartedReaderResponse*\xa9\x01\n" +
 	"\rWorkReadBasis\x12\x1f\n" +
 	"\x1bWORK_READ_BASIS_UNSPECIFIED\x10\x00\x12\x19\n" +
@@ -533,25 +528,27 @@ var file_agent_private_v1_work_access_proto_goTypes = []any{
 	(*GrantWorkShareResponse)(nil),       // 5: agent.private.v1.GrantWorkShareResponse
 	(*RevokeDepartedReaderRequest)(nil),  // 6: agent.private.v1.RevokeDepartedReaderRequest
 	(*RevokeDepartedReaderResponse)(nil), // 7: agent.private.v1.RevokeDepartedReaderResponse
-	(*v1.WorkStateFrame)(nil),            // 8: streamgateway.public.v1.WorkStateFrame
+	(*v1.WorkCaller)(nil),                // 8: agent.public.v1.WorkCaller
+	(*v11.WorkStateFrame)(nil),           // 9: streamgateway.public.v1.WorkStateFrame
 }
 var file_agent_private_v1_work_access_proto_depIdxs = []int32{
-	1, // 0: agent.private.v1.AdmitWorkReaderRequest.admission:type_name -> agent.private.v1.ReaderAdmission
-	0, // 1: agent.private.v1.AdmitWorkReaderResponse.basis:type_name -> agent.private.v1.WorkReadBasis
-	8, // 2: agent.private.v1.AdmitWorkReaderResponse.work_state:type_name -> streamgateway.public.v1.WorkStateFrame
-	1, // 3: agent.private.v1.GrantWorkShareRequest.admission:type_name -> agent.private.v1.ReaderAdmission
-	1, // 4: agent.private.v1.RevokeDepartedReaderRequest.scope:type_name -> agent.private.v1.ReaderAdmission
-	2, // 5: agent.private.v1.WorkAccessService.AdmitWorkReader:input_type -> agent.private.v1.AdmitWorkReaderRequest
-	4, // 6: agent.private.v1.WorkAccessService.GrantWorkShare:input_type -> agent.private.v1.GrantWorkShareRequest
-	6, // 7: agent.private.v1.WorkAccessService.RevokeDepartedReader:input_type -> agent.private.v1.RevokeDepartedReaderRequest
-	3, // 8: agent.private.v1.WorkAccessService.AdmitWorkReader:output_type -> agent.private.v1.AdmitWorkReaderResponse
-	5, // 9: agent.private.v1.WorkAccessService.GrantWorkShare:output_type -> agent.private.v1.GrantWorkShareResponse
-	7, // 10: agent.private.v1.WorkAccessService.RevokeDepartedReader:output_type -> agent.private.v1.RevokeDepartedReaderResponse
-	8, // [8:11] is the sub-list for method output_type
-	5, // [5:8] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	8, // 0: agent.private.v1.ReaderAdmission.work_caller:type_name -> agent.public.v1.WorkCaller
+	1, // 1: agent.private.v1.AdmitWorkReaderRequest.admission:type_name -> agent.private.v1.ReaderAdmission
+	0, // 2: agent.private.v1.AdmitWorkReaderResponse.basis:type_name -> agent.private.v1.WorkReadBasis
+	9, // 3: agent.private.v1.AdmitWorkReaderResponse.work_state:type_name -> streamgateway.public.v1.WorkStateFrame
+	1, // 4: agent.private.v1.GrantWorkShareRequest.admission:type_name -> agent.private.v1.ReaderAdmission
+	1, // 5: agent.private.v1.RevokeDepartedReaderRequest.departed:type_name -> agent.private.v1.ReaderAdmission
+	2, // 6: agent.private.v1.WorkAccessService.AdmitWorkReader:input_type -> agent.private.v1.AdmitWorkReaderRequest
+	4, // 7: agent.private.v1.WorkAccessService.GrantWorkShare:input_type -> agent.private.v1.GrantWorkShareRequest
+	6, // 8: agent.private.v1.WorkAccessService.RevokeDepartedReader:input_type -> agent.private.v1.RevokeDepartedReaderRequest
+	3, // 9: agent.private.v1.WorkAccessService.AdmitWorkReader:output_type -> agent.private.v1.AdmitWorkReaderResponse
+	5, // 10: agent.private.v1.WorkAccessService.GrantWorkShare:output_type -> agent.private.v1.GrantWorkShareResponse
+	7, // 11: agent.private.v1.WorkAccessService.RevokeDepartedReader:output_type -> agent.private.v1.RevokeDepartedReaderResponse
+	9, // [9:12] is the sub-list for method output_type
+	6, // [6:9] is the sub-list for method input_type
+	6, // [6:6] is the sub-list for extension type_name
+	6, // [6:6] is the sub-list for extension extendee
+	0, // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_agent_private_v1_work_access_proto_init() }

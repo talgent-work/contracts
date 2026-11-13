@@ -313,7 +313,7 @@ type AgentServiceClient interface {
 	// position in a Work's context where one of its calls returned, from which a
 	// new Work of the same definition may start.
 	ResolveWorkContextPosition(context.Context, *v1.ResolveWorkContextPositionRequest) (*v1.ResolveWorkContextPositionResponse, error)
-	// ResolveWorkStarts reports who started each Work of one Project and when, for a Causal Chain.
+	// ResolveWorkStarts reports who started each Work of one Work Caller and when, for a Causal Chain.
 	ResolveWorkStarts(context.Context, *v1.ResolveWorkStartsRequest) (*v1.ResolveWorkStartsResponse, error)
 	// GetWorkPreparation reads the application-owned initial input and progress.
 	GetWorkPreparation(context.Context, *v1.GetWorkPreparationRequest) (*v1.GetWorkPreparationResponse, error)
@@ -345,7 +345,7 @@ type AgentServiceClient interface {
 	// TransferAgentDefinitionOwners replaces a definition's Owners; every one of
 	// its Works answers to them from then on.
 	TransferAgentDefinitionOwners(context.Context, *v1.TransferAgentDefinitionOwnersRequest) (*v1.TransferAgentDefinitionOwnersResponse, error)
-	// CreateWork returns the definition's Work for the Subject, creating it when none exists.
+	// CreateWork returns the definition's Work for the Work Key, creating it when none exists.
 	CreateWork(context.Context, *v1.CreateWorkRequest) (*v1.CreateWorkResponse, error)
 	// LocateWork resolves an existing business binding without creating or starting execution.
 	LocateWork(context.Context, *v1.LocateWorkRequest) (*v1.LocateWorkResponse, error)
@@ -388,7 +388,7 @@ type AgentServiceHandler interface {
 	// position in a Work's context where one of its calls returned, from which a
 	// new Work of the same definition may start.
 	ResolveWorkContextPosition(context.Context, *v1.ResolveWorkContextPositionRequest) (*v1.ResolveWorkContextPositionResponse, error)
-	// ResolveWorkStarts reports who started each Work of one Project and when, for a Causal Chain.
+	// ResolveWorkStarts reports who started each Work of one Work Caller and when, for a Causal Chain.
 	ResolveWorkStarts(context.Context, *v1.ResolveWorkStartsRequest) (*v1.ResolveWorkStartsResponse, error)
 	// GetWorkPreparation reads the application-owned initial input and progress.
 	GetWorkPreparation(context.Context, *v1.GetWorkPreparationRequest) (*v1.GetWorkPreparationResponse, error)
@@ -420,7 +420,7 @@ type AgentServiceHandler interface {
 	// TransferAgentDefinitionOwners replaces a definition's Owners; every one of
 	// its Works answers to them from then on.
 	TransferAgentDefinitionOwners(context.Context, *v1.TransferAgentDefinitionOwnersRequest) (*v1.TransferAgentDefinitionOwnersResponse, error)
-	// CreateWork returns the definition's Work for the Subject, creating it when none exists.
+	// CreateWork returns the definition's Work for the Work Key, creating it when none exists.
 	CreateWork(context.Context, *v1.CreateWorkRequest) (*v1.CreateWorkResponse, error)
 	// LocateWork resolves an existing business binding without creating or starting execution.
 	LocateWork(context.Context, *v1.LocateWorkRequest) (*v1.LocateWorkResponse, error)

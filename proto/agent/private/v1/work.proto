@@ -2,11 +2,11 @@ syntax = "proto3";
 
 package agent.private.v1;
 
-import "agent/private/v1/work_subject.proto";
 import "agent/public/v1/appearance.proto";
 import "agent/public/v1/harness.proto";
 import "agent/public/v1/model.proto";
 import "agent/public/v1/progress.proto";
+import "agent/public/v1/work_caller.proto";
 import "agent/public/v1/work_start_options.proto";
 import "google/protobuf/struct.proto";
 import "marketplace/public/v1/marketplace.proto";
@@ -25,7 +25,7 @@ service AgentService {
   // position in a Work's context where one of its calls returned, from which a
   // new Work of the same definition may start.
   rpc ResolveWorkContextPosition(ResolveWorkContextPositionRequest) returns (ResolveWorkContextPositionResponse);
-  // ResolveWorkStarts reports who started each Work of one Project and when, for a Causal Chain.
+  // ResolveWorkStarts reports who started each Work of one Work Caller and when, for a Causal Chain.
   rpc ResolveWorkStarts(ResolveWorkStartsRequest) returns (ResolveWorkStartsResponse);
   // GetWorkPreparation reads the application-owned initial input and progress.
   rpc GetWorkPreparation(GetWorkPreparationRequest) returns (GetWorkPreparationResponse);
@@ -57,7 +57,7 @@ service AgentService {
   // TransferAgentDefinitionOwners replaces a definition's Owners; every one of
   // its Works answers to them from then on.
   rpc TransferAgentDefinitionOwners(TransferAgentDefinitionOwnersRequest) returns (TransferAgentDefinitionOwnersResponse);
-  // CreateWork returns the definition's Work for the Subject, creating it when none exists.
+  // CreateWork returns the definition's Work for the Work Key, creating it when none exists.
   rpc CreateWork(CreateWorkRequest) returns (CreateWorkResponse);
   // LocateWork resolves an existing business binding without creating or starting execution.
   rpc LocateWork(LocateWorkRequest) returns (LocateWorkResponse);
@@ -210,7 +210,7 @@ message CreateAgentDefinitionRequest {
 
 // VisibilityRule declares the visibility of a definition's new Works.
 message VisibilityRule {
-  // New Works start public within their Project; otherwise private.
+  // New Works start public to the members of their Work Caller; otherwise private.
   bool public = 1;
 }
 
@@ -235,17 +235,12 @@ message CreateWorkRequest {
   string subject_id = 3;
   // AgentDefinition whose capabilities are captured.
   string agent_id = 4;
-  // Immutable attribution supplied by the trusted caller; not an authorization credential.
+  // Immutable attribution supplied by the extension; not an authorization credential.
   map<string, string> trace_attributes = 6;
   // Used only when establishing the Session capability snapshot.
   CapabilityDifferences capability_differences = 7;
-  // The optional business object the Work is about; an existing Work of the
-  // definition for it is returned instead of a new one. Absent, every
-  // request identity creates its own Work.
-  WorkSubject subject = 8;
-  // The Work's optional Project, for visibility and authorization; empty
-  // means none.
-  string project_id = 9;
+  reserved 8, 9;
+  reserved "subject", "project_id";
   // Optional Model Configuration; absence selects the first provided one.
   agent.public.v1.WorkModelSelection model = 10;
   // Optional context a new Work starts from: another Work of the same
@@ -264,10 +259,24 @@ message CreateWorkRequest {
   // life; an unknown one is refused. Reuse of an existing Work neither
   // compares nor replaces it.
   string agent_harness = 17;
+  // The Work Caller the Work is started in the name of; required. Only the
+  // extension that defines its kind starts Works under it, so the core kinds
+  // "person" and "application" are refused here: a Standalone Work records
+  // its owner as its Work Caller through the public Work API.
+  agent.public.v1.WorkCaller work_caller = 18;
+  // The optional name the extension finds the Work by again; an existing Work
+  // of the definition for it is returned instead of a new one, and one of
+  // another Work Caller or File Home is refused with FailedPrecondition.
+  // Absent, every request identity creates its own Work, which has no Work
+  // Key for good.
+  agent.public.v1.WorkKey work_key = 19;
+  // The optional owner of the shared File Spaces the Work reads its inputs
+  // from and publishes into; absent, the Work's own File Spaces.
+  agent.public.v1.FileHome file_home = 20;
 }
 
-// WorkStartingContext names another Work of the same definition and a
-// position in its context, named by ResolveWorkContextPosition.
+// WorkStartingContext names another Work of the same definition and Work
+// Caller and a position in its context, named by ResolveWorkContextPosition.
 message WorkStartingContext {
   // The Work whose context the new Work starts from.
   string source_work_id = 1;
@@ -277,8 +286,10 @@ message WorkStartingContext {
 
 // ResolveWorkContextPositionRequest names one call of one Work.
 message ResolveWorkContextPositionRequest {
-  // Project the Work belongs to; a Work of another Project is unknown.
-  string project_id = 1;
+  reserved 1;
+  reserved "project_id";
+  // The Work's Work Caller; a Work of another Work Caller is unknown.
+  agent.public.v1.WorkCaller work_caller = 4;
   // The Work that made the call.
   string work_id = 2;
   // Harness identity of the call.
@@ -513,12 +524,17 @@ message RespondToInteractionResponse {}
 
 // LocateWorkRequest selects an existing association under its retained rules.
 message LocateWorkRequest {
-  // Principal delegated by the authenticated business caller.
+  // Principal delegated by the authenticated trusted service.
   string subject_id = 1;
   // Definition within which to locate the Work.
   string agent_id = 2;
-  // The Subject; capabilities are not lookup keys.
-  WorkSubject subject = 3;
+  reserved 3;
+  reserved "subject";
+  // The Work Key; capabilities are not lookup keys.
+  agent.public.v1.WorkKey work_key = 4;
+  // The Work Caller of the located Work; a Work of another Work Caller is not
+  // found.
+  agent.public.v1.WorkCaller work_caller = 5;
 }
 
 // LocateWorkResponse reports an existing conversation without execution admission.
@@ -702,10 +718,13 @@ message PreparedCheckout {
   string credential_grant_id = 10;
 }
 
-// ResolveWorkStartsRequest asks for the start of Works within one Project.
+// ResolveWorkStartsRequest asks for the start of Works of one Work Caller.
 message ResolveWorkStartsRequest {
-  // Project whose Works may be resolved; Works of other Projects are unknown.
-  string project_id = 1;
+  reserved 1;
+  reserved "project_id";
+  // The Work Caller whose Works may be resolved; Works of another Work Caller
+  // are unknown.
+  agent.public.v1.WorkCaller work_caller = 3;
   // Works to resolve, at most 200.
   repeated string work_ids = 2;
 }
@@ -714,7 +733,7 @@ message ResolveWorkStartsRequest {
 message ResolvedWorkStart {
   // Work echoes the requested Work.
   string work_id = 1;
-  // Known is false when no Work of the Project exists under the ID.
+  // Known is false when no Work of the Work Caller exists under the ID.
   bool known = 2;
   // Started by is who started the Work, a fact; its Agent Owners are its
   // definition's Owners.
@@ -743,10 +762,14 @@ message GetWorkOriginResponse {
   string agent_id = 2;
   // Definition purpose.
   string purpose = 3;
-  // The one business object the Work is about.
-  WorkSubject subject = 4;
-  // The Work's Project.
-  string project_id = 5;
+  reserved 4, 5;
+  reserved "subject", "project_id";
+  // The Work Caller the Work was started in the name of.
+  agent.public.v1.WorkCaller work_caller = 6;
+  // The Work's Work Key; absent for a Work without one.
+  agent.public.v1.WorkKey work_key = 7;
+  // The Work's File Home; absent for a Work without one.
+  agent.public.v1.FileHome file_home = 8;
 }
 
 // EnsureAgentDefinitionRequest is accepted only from authenticated internal callers.
@@ -814,12 +837,15 @@ message GetWorkStartOptionsRequest {
   // Plugins a new Work of the caller requires beside the definition's,
   // offered as required; ignored for an existing Work.
   repeated string required_plugins = 4;
-  // The Project a new Work of the caller belongs to; its Built-in Plugins are
-  // offered as required. Empty means none; ignored for an existing Work.
-  string project_id = 5;
+  reserved 5;
+  reserved "project_id";
+  // The Work Caller a new Work is started in the name of; the Built-in
+  // Plugins of its kind are offered as required. Absent means the person's
+  // own Standalone Work; ignored for an existing Work.
+  agent.public.v1.WorkCaller work_caller = 6;
 }
 
-// ListWorkStartRepositoriesRequest names the owner the trusted business caller
+// ListWorkStartRepositoriesRequest names the owner the trusted service
 // admitted to choose repositories for a new Work.
 message ListWorkStartRepositoriesRequest {
   // The person whose personal Provider authorization is discovered.

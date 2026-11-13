@@ -151,7 +151,7 @@ enum Lifetime {
 // it gives one DirectoryOwner and name; a caller lacking a value for a
 // condition locates nothing and requests nothing.
 message DirectoryLocator {
-  // Names of the facts the Directory follows, each once, such as "subject"
+  // Names of the facts the Directory follows, each once, such as "file_home"
   // or "work". Storage recognizes only "work"; every other name is the
   // callers' shared vocabulary.
   repeated string conditions = 1;
@@ -173,7 +173,7 @@ message OwnerFact {
 }
 
 // DirectoryOwner is a Locator's conditions with the caller's fact values,
-// such as {subject: intent:123}. Storage keeps it as supplied, in condition
+// such as {file_home: intent:123}. Storage keeps it as supplied, in condition
 // order, and interprets only whether it names a Work.
 message DirectoryOwner {
   // Facts ordered by condition name, each condition once.

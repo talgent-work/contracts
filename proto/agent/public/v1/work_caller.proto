@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package agent.public.v1;
+
+option go_package = "github.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1";
+
+// WorkCaller is the party in whose name a Work is started, fixed at creation:
+// a person (kind "person", an Account id), an Application (kind
+// "application", its id) or an object of a kind an extension defines, such as
+// a Project. Agent interprets only the kinds "person" and "application"; the
+// extension that defines any other kind owns its meaning, membership and
+// access decision.
+message WorkCaller {
+  // Kind of the caller, at most 32 characters, never containing ":".
+  string kind = 1;
+  // Identity of the caller within its kind.
+  string id = 2;
+}
+
+// WorkKey is the optional name an extension gives a Work to find it again,
+// fixed at creation, by a kind the extension defines and an identity, such as
+// intent:42. Within one AgentDefinition a Work Key has at most one Work for
+// good, a closed Work included; Agent interprets no Work Key.
+message WorkKey {
+  // Kind of the key, as the extension defines it, at most 32 characters,
+  // never containing ":".
+  string kind = 1;
+  // Identity within its kind.
+  string id = 2;
+}
+
+// FileHome is the optional owner of the shared File Spaces a Work reads its
+// inputs from and publishes its Artifacts into, fixed at creation, by a kind
+// the extension defines and an identity, such as intent:42. A Work without
+// one reads and publishes in its own File Spaces.
+message FileHome {
+  // Kind of the owner, as the extension defines it, at most 32 characters,
+  // never containing ":".
+  string kind = 1;
+  // Identity within its kind.
+  string id = 2;
+}

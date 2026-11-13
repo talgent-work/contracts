@@ -4,6 +4,7 @@
 
 import type { GenEnum, GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
+import type { WorkCaller } from "../../public/v1/work_caller_pb.js";
 import type { WorkStateFrame } from "../../../streamgateway/public/v1/streamgateway_pb.js";
 
 /**
@@ -12,25 +13,19 @@ import type { WorkStateFrame } from "../../../streamgateway/public/v1/streamgate
 export declare const file_agent_private_v1_work_access: GenFile;
 
 /**
- * ReaderAdmission is a trusted caller's statement that a reader is a member of
- * a Project; it admits a reader only to Works of that Project.
+ * ReaderAdmission is a trusted service's statement that a reader is a member
+ * of a Work Caller of an extension-defined kind; it admits a reader only to
+ * Works of that Work Caller.
  *
  * @generated from message agent.private.v1.ReaderAdmission
  */
 export declare type ReaderAdmission = Message<"agent.private.v1.ReaderAdmission"> & {
   /**
-   * Always "project"; any other value admits nothing.
+   * The Work Caller the reader is a member of.
    *
-   * @generated from field: string reference = 1;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 3;
    */
-  reference: string;
-
-  /**
-   * Its value the reader is within.
-   *
-   * @generated from field: string value = 2;
-   */
-  value: string;
+  workCaller?: WorkCaller;
 };
 
 /**
@@ -137,7 +132,8 @@ export declare type GrantWorkShareRequest = Message<"agent.private.v1.GrantWorkS
   readerId: string;
 
   /**
-   * Trusted statement that the reader is within the Work's visibility scope.
+   * Trusted statement that the reader is a member of the Work's Work Caller;
+   * absent for a Standalone Work.
    *
    * @generated from field: agent.private.v1.ReaderAdmission admission = 4;
    */
@@ -165,24 +161,24 @@ export declare type GrantWorkShareResponse = Message<"agent.private.v1.GrantWork
 export declare const GrantWorkShareResponseSchema: GenMessage<GrantWorkShareResponse>;
 
 /**
- * RevokeDepartedReaderRequest names the reader and the scope it left.
+ * RevokeDepartedReaderRequest names the reader and the Work Caller it left.
  *
  * @generated from message agent.private.v1.RevokeDepartedReaderRequest
  */
 export declare type RevokeDepartedReaderRequest = Message<"agent.private.v1.RevokeDepartedReaderRequest"> & {
   /**
-   * Reader that left the scope.
+   * Reader that left the Work Caller.
    *
    * @generated from field: string reader_id = 1;
    */
   readerId: string;
 
   /**
-   * The scope left, such as the Project it no longer belongs to.
+   * The Work Caller left, such as the Project it no longer belongs to.
    *
-   * @generated from field: agent.private.v1.ReaderAdmission scope = 2;
+   * @generated from field: agent.private.v1.ReaderAdmission departed = 2;
    */
-  scope?: ReaderAdmission;
+  departed?: ReaderAdmission;
 };
 
 /**
@@ -192,7 +188,8 @@ export declare type RevokeDepartedReaderRequest = Message<"agent.private.v1.Revo
 export declare const RevokeDepartedReaderRequestSchema: GenMessage<RevokeDepartedReaderRequest>;
 
 /**
- * RevokeDepartedReaderResponse confirms no Work in that scope shares with the reader.
+ * RevokeDepartedReaderResponse confirms no Work of that Work Caller shares
+ * with the reader.
  *
  * @generated from message agent.private.v1.RevokeDepartedReaderResponse
  */
@@ -233,7 +230,7 @@ export enum WorkReadBasis {
   SHARE = 2,
 
   /**
-   * A reader the trusted caller admitted within a public Work's scope.
+   * A member of a public Work's Work Caller, as the trusted service admitted.
    *
    * @generated from enum value: WORK_READ_BASIS_PUBLIC = 3;
    */
@@ -255,16 +252,17 @@ export declare const WorkReadBasisSchema: GenEnum<WorkReadBasis>;
 
 /**
  * WorkAccessService decides who reads a Work's message stream from Agent's own
- * facts: its owner, Work Visibility and Work Shares. A trusted caller supplies
- * only what Agent cannot know, such as a reader's membership of the scope the
- * visibility names.
+ * facts: its owner, Work Caller, Work Visibility and Work Shares. A trusted
+ * service supplies only what Agent cannot know: a reader's membership of an
+ * Extension Work's Work Caller.
  *
  * @generated from service agent.private.v1.WorkAccessService
  */
 export declare const WorkAccessService: GenService<{
   /**
    * AdmitWorkReader admits the owner; a Work Share holder of a private Work; or,
-   * while public, a reader the trusted caller admits within the Work's scope.
+   * while public, a reader the trusted service admits as a member of the
+   * Work's Work Caller.
    * A reader that is not admitted is refused with PermissionDenied.
    *
    * @generated from rpc agent.private.v1.WorkAccessService.AdmitWorkReader
@@ -275,8 +273,10 @@ export declare const WorkAccessService: GenService<{
     output: typeof AdmitWorkReaderResponseSchema;
   },
   /**
-   * GrantWorkShare lets the owner of a human's Work share it with a reader the
-   * trusted caller admits within the Work's scope. Granting again changes nothing.
+   * GrantWorkShare lets the owner of a human's Work share it: a Standalone
+   * Work with anyone in the User Directory, an Extension Work with a reader the
+   * trusted service admits as a member of its Work Caller. Granting again
+   * changes nothing.
    *
    * @generated from rpc agent.private.v1.WorkAccessService.GrantWorkShare
    */
@@ -286,8 +286,8 @@ export declare const WorkAccessService: GenService<{
     output: typeof GrantWorkShareResponseSchema;
   },
   /**
-   * RevokeDepartedReader ends a reader's Work Shares on every Work within the
-   * scope the trusted caller reports the reader has left.
+   * RevokeDepartedReader ends a reader's Work Shares on every Work of the Work
+   * Caller the trusted service reports the reader has left.
    *
    * @generated from rpc agent.private.v1.WorkAccessService.RevokeDepartedReader
    */

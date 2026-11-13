@@ -345,7 +345,8 @@ type WorkInfo struct {
 	WorkProgress *WorkProgress `protobuf:"bytes,14,opt,name=work_progress,json=workProgress,proto3" json:"work_progress,omitempty"`
 	// Work revision observed by the caller, used to reject stale controls.
 	Version int64 `protobuf:"varint,15,opt,name=version,proto3" json:"version,omitempty"`
-	// The message stream is public within the Work's Project; otherwise private.
+	// The message stream is public to the members of the Work's Work Caller;
+	// otherwise private.
 	VisibilityPublic bool `protobuf:"varint,16,opt,name=visibility_public,json=visibilityPublic,proto3" json:"visibility_public,omitempty"`
 	// Readers the owner lets read the message stream while it is private.
 	ShareReaderIds []string `protobuf:"bytes,17,rep,name=share_reader_ids,json=shareReaderIds,proto3" json:"share_reader_ids,omitempty"`
@@ -577,7 +578,8 @@ type ChangeWorkVisibilityRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The owner's Work.
 	WorkId string `protobuf:"bytes,1,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
-	// True makes it public within its Project; false makes it private.
+	// True makes it public to the members of its Work Caller; false makes it
+	// private.
 	Public        bool `protobuf:"varint,2,opt,name=public,proto3" json:"public,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache

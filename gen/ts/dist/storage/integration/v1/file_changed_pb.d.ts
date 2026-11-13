@@ -18,7 +18,7 @@ export declare const file_storage_integration_v1_file_changed: GenFile;
  */
 export declare type OwnerFact = Message<"storage.integration.v1.OwnerFact"> & {
   /**
-   * The condition's name, such as "subject".
+   * The condition's name, such as "file_home".
    *
    * @generated from field: string condition = 1;
    */

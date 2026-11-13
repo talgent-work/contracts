@@ -4,6 +4,7 @@
 
 import type { GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
+import type { FileHome, WorkCaller, WorkKey } from "./work_caller_pb.js";
 
 /**
  * Describes the file agent/public/v1/identity.proto.
@@ -38,27 +39,6 @@ export declare type WhoAmIResponse = Message<"agent.public.v1.WhoAmIResponse"> &
   workId: string;
 
   /**
-   * The Work's Project; empty for a Work without one.
-   *
-   * @generated from field: string project_id = 2;
-   */
-  projectId: string;
-
-  /**
-   * The kind of the Work's Subject; empty for a Work without one.
-   *
-   * @generated from field: string subject_kind = 3;
-   */
-  subjectKind: string;
-
-  /**
-   * The identity of the Work's Subject.
-   *
-   * @generated from field: string subject_id = 4;
-   */
-  subjectId: string;
-
-  /**
    * The purpose of the Work's AgentDefinition.
    *
    * @generated from field: string purpose = 5;
@@ -71,6 +51,27 @@ export declare type WhoAmIResponse = Message<"agent.public.v1.WhoAmIResponse"> &
    * @generated from field: string agent_id = 6;
    */
   agentId: string;
+
+  /**
+   * The Work Caller the Work was started in the name of.
+   *
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 7;
+   */
+  workCaller?: WorkCaller;
+
+  /**
+   * The Work's Work Key; absent for a Work without one.
+   *
+   * @generated from field: agent.public.v1.WorkKey work_key = 8;
+   */
+  workKey?: WorkKey;
+
+  /**
+   * The Work's File Home; absent for a Work without one.
+   *
+   * @generated from field: agent.public.v1.FileHome file_home = 9;
+   */
+  fileHome?: FileHome;
 };
 
 /**

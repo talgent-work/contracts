@@ -148,7 +148,7 @@ export declare const DirectoryUserSchema: GenMessage<DirectoryUser>;
 /**
  * UserDirectoryService is the platform-wide directory of Accounts, available
  * only to trusted contexts that call with x-talgent-service-id. It is never
- * mounted through the public gateway. It applies no Project scope.
+ * mounted through the public gateway. It applies no Work Caller scope.
  *
  * @generated from service account.private.v1.UserDirectoryService
  */

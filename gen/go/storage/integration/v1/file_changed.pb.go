@@ -87,7 +87,7 @@ func (FileOperation) EnumDescriptor() ([]byte, []int) {
 // OwnerFact is one condition of the Directory's owner with its value.
 type OwnerFact struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The condition's name, such as "subject".
+	// The condition's name, such as "file_home".
 	Condition string `protobuf:"bytes,1,opt,name=condition,proto3" json:"condition,omitempty"`
 	// The value the locating caller supplied.
 	Value         string `protobuf:"bytes,2,opt,name=value,proto3" json:"value,omitempty"`

@@ -5,9 +5,9 @@
 import type { GenEnum, GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
 import type { JsonObject, Message } from "@bufbuild/protobuf";
 import type { PluginRelease } from "../../../marketplace/public/v1/marketplace_pb.js";
-import type { WorkSubject } from "./work_subject_pb.js";
 import type { WorkModelSelection } from "../../public/v1/model_pb.js";
 import type { HarnessChoice } from "../../public/v1/harness_pb.js";
+import type { FileHome, WorkCaller, WorkKey } from "../../public/v1/work_caller_pb.js";
 import type { WorkProgress } from "../../public/v1/progress_pb.js";
 import type { AgentAppearance, AgentIcon } from "../../public/v1/appearance_pb.js";
 import type { GetWorkStartOptionsResponseSchema, WorkStartRepositoriesSchema } from "../../public/v1/work_start_options_pb.js";
@@ -437,7 +437,7 @@ export declare const CreateAgentDefinitionRequestSchema: GenMessage<CreateAgentD
  */
 export declare type VisibilityRule = Message<"agent.private.v1.VisibilityRule"> & {
   /**
-   * New Works start public within their Project; otherwise private.
+   * New Works start public to the members of their Work Caller; otherwise private.
    *
    * @generated from field: bool public = 1;
    */
@@ -508,7 +508,7 @@ export declare type CreateWorkRequest = Message<"agent.private.v1.CreateWorkRequ
   agentId: string;
 
   /**
-   * Immutable attribution supplied by the trusted caller; not an authorization credential.
+   * Immutable attribution supplied by the extension; not an authorization credential.
    *
    * @generated from field: map<string, string> trace_attributes = 6;
    */
@@ -520,23 +520,6 @@ export declare type CreateWorkRequest = Message<"agent.private.v1.CreateWorkRequ
    * @generated from field: agent.private.v1.CapabilityDifferences capability_differences = 7;
    */
   capabilityDifferences?: CapabilityDifferences;
-
-  /**
-   * The optional business object the Work is about; an existing Work of the
-   * definition for it is returned instead of a new one. Absent, every
-   * request identity creates its own Work.
-   *
-   * @generated from field: agent.private.v1.WorkSubject subject = 8;
-   */
-  subject?: WorkSubject;
-
-  /**
-   * The Work's optional Project, for visibility and authorization; empty
-   * means none.
-   *
-   * @generated from field: string project_id = 9;
-   */
-  projectId: string;
 
   /**
    * Optional Model Configuration; absence selects the first provided one.
@@ -580,6 +563,35 @@ export declare type CreateWorkRequest = Message<"agent.private.v1.CreateWorkRequ
    * @generated from field: string agent_harness = 17;
    */
   agentHarness: string;
+
+  /**
+   * The Work Caller the Work is started in the name of; required. Only the
+   * extension that defines its kind starts Works under it, so the core kinds
+   * "person" and "application" are refused here: a Standalone Work records
+   * its owner as its Work Caller through the public Work API.
+   *
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 18;
+   */
+  workCaller?: WorkCaller;
+
+  /**
+   * The optional name the extension finds the Work by again; an existing Work
+   * of the definition for it is returned instead of a new one, and one of
+   * another Work Caller or File Home is refused with FailedPrecondition.
+   * Absent, every request identity creates its own Work, which has no Work
+   * Key for good.
+   *
+   * @generated from field: agent.public.v1.WorkKey work_key = 19;
+   */
+  workKey?: WorkKey;
+
+  /**
+   * The optional owner of the shared File Spaces the Work reads its inputs
+   * from and publishes into; absent, the Work's own File Spaces.
+   *
+   * @generated from field: agent.public.v1.FileHome file_home = 20;
+   */
+  fileHome?: FileHome;
 };
 
 /**
@@ -589,8 +601,8 @@ export declare type CreateWorkRequest = Message<"agent.private.v1.CreateWorkRequ
 export declare const CreateWorkRequestSchema: GenMessage<CreateWorkRequest>;
 
 /**
- * WorkStartingContext names another Work of the same definition and a
- * position in its context, named by ResolveWorkContextPosition.
+ * WorkStartingContext names another Work of the same definition and Work
+ * Caller and a position in its context, named by ResolveWorkContextPosition.
  *
  * @generated from message agent.private.v1.WorkStartingContext
  */
@@ -623,11 +635,11 @@ export declare const WorkStartingContextSchema: GenMessage<WorkStartingContext>;
  */
 export declare type ResolveWorkContextPositionRequest = Message<"agent.private.v1.ResolveWorkContextPositionRequest"> & {
   /**
-   * Project the Work belongs to; a Work of another Project is unknown.
+   * The Work's Work Caller; a Work of another Work Caller is unknown.
    *
-   * @generated from field: string project_id = 1;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 4;
    */
-  projectId: string;
+  workCaller?: WorkCaller;
 
   /**
    * The Work that made the call.
@@ -1334,7 +1346,7 @@ export declare const RespondToInteractionResponseSchema: GenMessage<RespondToInt
  */
 export declare type LocateWorkRequest = Message<"agent.private.v1.LocateWorkRequest"> & {
   /**
-   * Principal delegated by the authenticated business caller.
+   * Principal delegated by the authenticated trusted service.
    *
    * @generated from field: string subject_id = 1;
    */
@@ -1348,11 +1360,19 @@ export declare type LocateWorkRequest = Message<"agent.private.v1.LocateWorkRequ
   agentId: string;
 
   /**
-   * The Subject; capabilities are not lookup keys.
+   * The Work Key; capabilities are not lookup keys.
    *
-   * @generated from field: agent.private.v1.WorkSubject subject = 3;
+   * @generated from field: agent.public.v1.WorkKey work_key = 4;
    */
-  subject?: WorkSubject;
+  workKey?: WorkKey;
+
+  /**
+   * The Work Caller of the located Work; a Work of another Work Caller is not
+   * found.
+   *
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 5;
+   */
+  workCaller?: WorkCaller;
 };
 
 /**
@@ -1976,17 +1996,18 @@ export declare type PreparedCheckout = Message<"agent.private.v1.PreparedCheckou
 export declare const PreparedCheckoutSchema: GenMessage<PreparedCheckout>;
 
 /**
- * ResolveWorkStartsRequest asks for the start of Works within one Project.
+ * ResolveWorkStartsRequest asks for the start of Works of one Work Caller.
  *
  * @generated from message agent.private.v1.ResolveWorkStartsRequest
  */
 export declare type ResolveWorkStartsRequest = Message<"agent.private.v1.ResolveWorkStartsRequest"> & {
   /**
-   * Project whose Works may be resolved; Works of other Projects are unknown.
+   * The Work Caller whose Works may be resolved; Works of another Work Caller
+   * are unknown.
    *
-   * @generated from field: string project_id = 1;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 3;
    */
-  projectId: string;
+  workCaller?: WorkCaller;
 
   /**
    * Works to resolve, at most 200.
@@ -2016,7 +2037,7 @@ export declare type ResolvedWorkStart = Message<"agent.private.v1.ResolvedWorkSt
   workId: string;
 
   /**
-   * Known is false when no Work of the Project exists under the ID.
+   * Known is false when no Work of the Work Caller exists under the ID.
    *
    * @generated from field: bool known = 2;
    */
@@ -2112,18 +2133,25 @@ export declare type GetWorkOriginResponse = Message<"agent.private.v1.GetWorkOri
   purpose: string;
 
   /**
-   * The one business object the Work is about.
+   * The Work Caller the Work was started in the name of.
    *
-   * @generated from field: agent.private.v1.WorkSubject subject = 4;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 6;
    */
-  subject?: WorkSubject;
+  workCaller?: WorkCaller;
 
   /**
-   * The Work's Project.
+   * The Work's Work Key; absent for a Work without one.
    *
-   * @generated from field: string project_id = 5;
+   * @generated from field: agent.public.v1.WorkKey work_key = 7;
    */
-  projectId: string;
+  workKey?: WorkKey;
+
+  /**
+   * The Work's File Home; absent for a Work without one.
+   *
+   * @generated from field: agent.public.v1.FileHome file_home = 8;
+   */
+  fileHome?: FileHome;
 };
 
 /**
@@ -2336,12 +2364,13 @@ export declare type GetWorkStartOptionsRequest = Message<"agent.private.v1.GetWo
   requiredPlugins: string[];
 
   /**
-   * The Project a new Work of the caller belongs to; its Built-in Plugins are
-   * offered as required. Empty means none; ignored for an existing Work.
+   * The Work Caller a new Work is started in the name of; the Built-in
+   * Plugins of its kind are offered as required. Absent means the person's
+   * own Standalone Work; ignored for an existing Work.
    *
-   * @generated from field: string project_id = 5;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 6;
    */
-  projectId: string;
+  workCaller?: WorkCaller;
 };
 
 /**
@@ -2351,7 +2380,7 @@ export declare type GetWorkStartOptionsRequest = Message<"agent.private.v1.GetWo
 export declare const GetWorkStartOptionsRequestSchema: GenMessage<GetWorkStartOptionsRequest>;
 
 /**
- * ListWorkStartRepositoriesRequest names the owner the trusted business caller
+ * ListWorkStartRepositoriesRequest names the owner the trusted service
  * admitted to choose repositories for a new Work.
  *
  * @generated from message agent.private.v1.ListWorkStartRepositoriesRequest
@@ -2536,7 +2565,7 @@ export declare const AgentService: GenService<{
     output: typeof ResolveWorkContextPositionResponseSchema;
   },
   /**
-   * ResolveWorkStarts reports who started each Work of one Project and when, for a Causal Chain.
+   * ResolveWorkStarts reports who started each Work of one Work Caller and when, for a Causal Chain.
    *
    * @generated from rpc agent.private.v1.AgentService.ResolveWorkStarts
    */
@@ -2680,7 +2709,7 @@ export declare const AgentService: GenService<{
     output: typeof TransferAgentDefinitionOwnersResponseSchema;
   },
   /**
-   * CreateWork returns the definition's Work for the Subject, creating it when none exists.
+   * CreateWork returns the definition's Work for the Work Key, creating it when none exists.
    *
    * @generated from rpc agent.private.v1.AgentService.CreateWork
    */

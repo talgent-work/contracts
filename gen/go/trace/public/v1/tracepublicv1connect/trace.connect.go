@@ -38,9 +38,9 @@ const (
 	// TraceQueryServiceGetSessionTraceMetricsProcedure is the procedure name of the TraceQueryService's
 	// GetSessionTraceMetrics RPC.
 	TraceQueryServiceGetSessionTraceMetricsProcedure = "/trace.public.v1.TraceQueryService/GetSessionTraceMetrics"
-	// TraceQueryServiceGetProjectTraceMetricsProcedure is the procedure name of the TraceQueryService's
-	// GetProjectTraceMetrics RPC.
-	TraceQueryServiceGetProjectTraceMetricsProcedure = "/trace.public.v1.TraceQueryService/GetProjectTraceMetrics"
+	// TraceQueryServiceGetWorkCallerTraceMetricsProcedure is the procedure name of the
+	// TraceQueryService's GetWorkCallerTraceMetrics RPC.
+	TraceQueryServiceGetWorkCallerTraceMetricsProcedure = "/trace.public.v1.TraceQueryService/GetWorkCallerTraceMetrics"
 	// TraceQueryServiceGetPersonalTraceMetricsProcedure is the procedure name of the
 	// TraceQueryService's GetPersonalTraceMetrics RPC.
 	TraceQueryServiceGetPersonalTraceMetricsProcedure = "/trace.public.v1.TraceQueryService/GetPersonalTraceMetrics"
@@ -88,11 +88,11 @@ var (
 			Procedure:  TraceQueryServiceGetSessionTraceMetricsProcedure,
 		}
 	})
-	traceQueryServiceGetProjectTraceMetricsSpec = sync.OnceValue(func() connect.Spec {
+	traceQueryServiceGetWorkCallerTraceMetricsSpec = sync.OnceValue(func() connect.Spec {
 		return connect.Spec{
 			StreamType: connect.StreamTypeUnary,
-			Schema:     v1.File_trace_public_v1_trace_proto.Services().ByName("TraceQueryService").Methods().ByName("GetProjectTraceMetrics"),
-			Procedure:  TraceQueryServiceGetProjectTraceMetricsProcedure,
+			Schema:     v1.File_trace_public_v1_trace_proto.Services().ByName("TraceQueryService").Methods().ByName("GetWorkCallerTraceMetrics"),
+			Procedure:  TraceQueryServiceGetWorkCallerTraceMetricsProcedure,
 		}
 	})
 	traceQueryServiceGetPersonalTraceMetricsSpec = sync.OnceValue(func() connect.Spec {
@@ -120,22 +120,24 @@ var (
 
 // TraceQueryServiceClient is a client for the trace.public.v1.TraceQueryService service.
 type TraceQueryServiceClient interface {
-	// List retained structured native events of an authorized Project or Work.
+	// List retained structured native events of an authorized Work Caller or
+	// Work.
 	ListEvents(context.Context, *v1.ListEventsRequest) (*v1.ListEventsResponse, error)
 	// ListSpansBySession lists one Work's spans.
 	ListSpansBySession(context.Context, *v1.ListSpansBySessionRequest) (*v1.ListSpansBySessionResponse, error)
-	// ListSpansByOwner lists a Project's spans carrying the caller attributes
-	// owner_context and owner_id.
+	// ListSpansByOwner lists a Work Caller's spans carrying the trace
+	// attributes owner_context and owner_id.
 	ListSpansByOwner(context.Context, *v1.ListSpansByOwnerRequest) (*v1.ListSpansByOwnerResponse, error)
 	// GetSpan RPC.
 	GetSpan(context.Context, *v1.GetSpanRequest) (*v1.GetSpanResponse, error)
 	// GetSessionTraceMetrics reads one Work's measurements.
 	GetSessionTraceMetrics(context.Context, *v1.GetSessionTraceMetricsRequest) (*v1.GetSessionTraceMetricsResponse, error)
-	// GetProjectTraceMetrics reads a Project's measurements.
-	GetProjectTraceMetrics(context.Context, *v1.GetProjectTraceMetricsRequest) (*v1.GetProjectTraceMetricsResponse, error)
+	// GetWorkCallerTraceMetrics reads the measurements of the Works of a Work
+	// Caller of an extension-defined kind, optionally narrowed to one Work Key.
+	GetWorkCallerTraceMetrics(context.Context, *v1.GetWorkCallerTraceMetricsRequest) (*v1.GetWorkCallerTraceMetricsResponse, error)
 	// GetPersonalTraceMetrics reads the authenticated person's own measurements
-	// across every Work of their Agent, with or without a Project; only that
-	// person reads them.
+	// across every Work they own, whatever its Work Caller; only that person
+	// reads them.
 	GetPersonalTraceMetrics(context.Context, *v1.GetPersonalTraceMetricsRequest) (*v1.GetPersonalTraceMetricsResponse, error)
 	// GetApplicationTraceMetrics reads an Application's measurements across its
 	// Works, narrowed by Work Labels and broken down by one Work Label key. The
@@ -156,22 +158,24 @@ func NewTraceQueryServiceClient(client *connect.Client) TraceQueryServiceClient 
 
 // TraceQueryServiceHandler is an implementation of the trace.public.v1.TraceQueryService service.
 type TraceQueryServiceHandler interface {
-	// List retained structured native events of an authorized Project or Work.
+	// List retained structured native events of an authorized Work Caller or
+	// Work.
 	ListEvents(context.Context, *v1.ListEventsRequest) (*v1.ListEventsResponse, error)
 	// ListSpansBySession lists one Work's spans.
 	ListSpansBySession(context.Context, *v1.ListSpansBySessionRequest) (*v1.ListSpansBySessionResponse, error)
-	// ListSpansByOwner lists a Project's spans carrying the caller attributes
-	// owner_context and owner_id.
+	// ListSpansByOwner lists a Work Caller's spans carrying the trace
+	// attributes owner_context and owner_id.
 	ListSpansByOwner(context.Context, *v1.ListSpansByOwnerRequest) (*v1.ListSpansByOwnerResponse, error)
 	// GetSpan RPC.
 	GetSpan(context.Context, *v1.GetSpanRequest) (*v1.GetSpanResponse, error)
 	// GetSessionTraceMetrics reads one Work's measurements.
 	GetSessionTraceMetrics(context.Context, *v1.GetSessionTraceMetricsRequest) (*v1.GetSessionTraceMetricsResponse, error)
-	// GetProjectTraceMetrics reads a Project's measurements.
-	GetProjectTraceMetrics(context.Context, *v1.GetProjectTraceMetricsRequest) (*v1.GetProjectTraceMetricsResponse, error)
+	// GetWorkCallerTraceMetrics reads the measurements of the Works of a Work
+	// Caller of an extension-defined kind, optionally narrowed to one Work Key.
+	GetWorkCallerTraceMetrics(context.Context, *v1.GetWorkCallerTraceMetricsRequest) (*v1.GetWorkCallerTraceMetricsResponse, error)
 	// GetPersonalTraceMetrics reads the authenticated person's own measurements
-	// across every Work of their Agent, with or without a Project; only that
-	// person reads them.
+	// across every Work they own, whatever its Work Caller; only that person
+	// reads them.
 	GetPersonalTraceMetrics(context.Context, *v1.GetPersonalTraceMetricsRequest) (*v1.GetPersonalTraceMetricsResponse, error)
 	// GetApplicationTraceMetrics reads an Application's measurements across its
 	// Works, narrowed by Work Labels and broken down by one Work Label key. The
@@ -194,7 +198,7 @@ func RegisterTraceQueryServiceHandler(server *connect.Server, svc TraceQueryServ
 		connect.Method{Spec: traceQueryServiceListSpansByOwnerSpec(), Handler: adapter.listSpansByOwner},
 		connect.Method{Spec: traceQueryServiceGetSpanSpec(), Handler: adapter.getSpan},
 		connect.Method{Spec: traceQueryServiceGetSessionTraceMetricsSpec(), Handler: adapter.getSessionTraceMetrics},
-		connect.Method{Spec: traceQueryServiceGetProjectTraceMetricsSpec(), Handler: adapter.getProjectTraceMetrics},
+		connect.Method{Spec: traceQueryServiceGetWorkCallerTraceMetricsSpec(), Handler: adapter.getWorkCallerTraceMetrics},
 		connect.Method{Spec: traceQueryServiceGetPersonalTraceMetricsSpec(), Handler: adapter.getPersonalTraceMetrics},
 		connect.Method{Spec: traceQueryServiceGetApplicationTraceMetricsSpec(), Handler: adapter.getApplicationTraceMetrics},
 		connect.Method{Spec: traceQueryServiceListSpansByApplicationSpec(), Handler: adapter.listSpansByApplication},
@@ -224,8 +228,8 @@ func (UnimplementedTraceQueryServiceHandler) GetSessionTraceMetrics(context.Cont
 	return nil, connect.NewError(connect.CodeUnimplemented, "trace.public.v1.TraceQueryService.GetSessionTraceMetrics is not implemented")
 }
 
-func (UnimplementedTraceQueryServiceHandler) GetProjectTraceMetrics(context.Context, *v1.GetProjectTraceMetricsRequest) (*v1.GetProjectTraceMetricsResponse, error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, "trace.public.v1.TraceQueryService.GetProjectTraceMetrics is not implemented")
+func (UnimplementedTraceQueryServiceHandler) GetWorkCallerTraceMetrics(context.Context, *v1.GetWorkCallerTraceMetricsRequest) (*v1.GetWorkCallerTraceMetricsResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "trace.public.v1.TraceQueryService.GetWorkCallerTraceMetrics is not implemented")
 }
 
 func (UnimplementedTraceQueryServiceHandler) GetPersonalTraceMetrics(context.Context, *v1.GetPersonalTraceMetricsRequest) (*v1.GetPersonalTraceMetricsResponse, error) {
@@ -284,9 +288,9 @@ func (c *traceQueryServiceClient) GetSessionTraceMetrics(ctx context.Context, re
 	return &res, nil
 }
 
-func (c *traceQueryServiceClient) GetProjectTraceMetrics(ctx context.Context, req *v1.GetProjectTraceMetricsRequest) (*v1.GetProjectTraceMetricsResponse, error) {
-	var res v1.GetProjectTraceMetricsResponse
-	if err := c.client.CallUnary(ctx, traceQueryServiceGetProjectTraceMetricsSpec(), req, &res); err != nil {
+func (c *traceQueryServiceClient) GetWorkCallerTraceMetrics(ctx context.Context, req *v1.GetWorkCallerTraceMetricsRequest) (*v1.GetWorkCallerTraceMetricsResponse, error) {
+	var res v1.GetWorkCallerTraceMetricsResponse
+	if err := c.client.CallUnary(ctx, traceQueryServiceGetWorkCallerTraceMetricsSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
@@ -378,12 +382,12 @@ func (h traceQueryServiceHandler) getSessionTraceMetrics(ctx context.Context, _ 
 	return stream.Send(res)
 }
 
-func (h traceQueryServiceHandler) getProjectTraceMetrics(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
-	var req v1.GetProjectTraceMetricsRequest
+func (h traceQueryServiceHandler) getWorkCallerTraceMetrics(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.GetWorkCallerTraceMetricsRequest
 	if err := stream.Receive(&req); err != nil {
 		return err
 	}
-	res, err := h.svc.GetProjectTraceMetrics(ctx, &req)
+	res, err := h.svc.GetWorkCallerTraceMetrics(ctx, &req)
 	if err != nil {
 		return err
 	}

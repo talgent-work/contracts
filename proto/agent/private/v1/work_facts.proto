@@ -2,18 +2,19 @@ syntax = "proto3";
 
 package agent.private.v1;
 
-import "agent/private/v1/work_subject.proto";
 import "agent/public/v1/progress.proto";
 import "agent/public/v1/startup.proto";
 import "agent/public/v1/work.proto";
+import "agent/public/v1/work_caller.proto";
 import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/talgent-work/contracts/gen/go/agent/private/v1;agentprivatev1";
 
-// WorkFactsService supplies Works' collaboration facts to trusted callers, which
-// authorize their own scope and compose the facts with their own. Selection is
-// by Project; Agent interprets no Subject. No message stream content is
-// supplied.
+// WorkFactsService supplies Works' collaboration facts to trusted services,
+// which authorize their own scope and compose the facts with their own.
+// Selection is by Work Caller and Work Key; Agent interprets neither an
+// extension-defined Work Caller kind nor a Work Key. No message stream content
+// is supplied.
 service WorkFactsService {
   // ListWorks lists Works matching every supplied condition.
   rpc ListWorks(ListWorksRequest) returns (ListWorksResponse);
@@ -27,10 +28,14 @@ service WorkFactsService {
 message WorkFacts {
   // Stable Work identity.
   string work_id = 1;
-  // The one business object the Work is about.
-  WorkSubject subject = 2;
-  // The Work's Project.
-  string project_id = 3;
+  reserved 2, 3;
+  reserved "subject", "project_id";
+  // The Work Caller the Work was started in the name of.
+  agent.public.v1.WorkCaller work_caller = 18;
+  // The Work's Work Key; absent for a Work without one.
+  agent.public.v1.WorkKey work_key = 19;
+  // The Work's File Home; absent for a Work without one.
+  agent.public.v1.FileHome file_home = 20;
   // The Work's Agent Owner: its definition's Owner.
   string agent_owner = 4;
   // Who started the Work, a fact.
@@ -54,7 +59,8 @@ message WorkFacts {
   bool waiting = 13;
   // Permanent closure has been accepted and is awaiting completion.
   bool archive_pending = 14;
-  // The message stream is public within the Work's scope; otherwise private.
+  // The message stream is public to the members of the Work's Work Caller;
+  // otherwise private.
   bool visibility_public = 15;
   // The Work's start waits in its Computer's line for room; set only by
   // GetWorkFacts.
@@ -64,10 +70,16 @@ message WorkFacts {
   google.protobuf.Timestamp disconnected_since = 17;
 }
 
-// ListWorksRequest selects Works; at least a Project, an owner or identities.
+// ListWorksRequest selects Works; at least a Work Caller, an owner or
+// identities.
 message ListWorksRequest {
-  // The Project of every listed Work.
-  string project_id = 1;
+  reserved 1;
+  reserved "project_id";
+  // The Work Caller of every listed Work.
+  agent.public.v1.WorkCaller work_caller = 9;
+  // The Work Key of every listed Work, across definitions; requires a Work
+  // Caller.
+  agent.public.v1.WorkKey work_key = 10;
   // Opaque definition purpose.
   string purpose = 2;
   // Works whose definition this person owns.
@@ -104,8 +116,10 @@ message GetWorkFactsResponse {
 
 // GetWorkReportRequest selects reported Works and fixed UTC buckets.
 message GetWorkReportRequest {
-  // The Project of every reported Work; required.
-  string project_id = 1;
+  reserved 1;
+  reserved "project_id";
+  // The Work Caller of every reported Work; required.
+  agent.public.v1.WorkCaller work_caller = 5;
   // Opaque definition purpose.
   string purpose = 2;
   // One of 24h, 7d or 30d.

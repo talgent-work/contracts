@@ -28,10 +28,12 @@ type WorkFacts struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Stable Work identity.
 	WorkId string `protobuf:"bytes,1,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
-	// The one business object the Work is about.
-	Subject *WorkSubject `protobuf:"bytes,2,opt,name=subject,proto3" json:"subject,omitempty"`
-	// The Work's Project.
-	ProjectId string `protobuf:"bytes,3,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
+	// The Work Caller the Work was started in the name of.
+	WorkCaller *v1.WorkCaller `protobuf:"bytes,18,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
+	// The Work's Work Key; absent for a Work without one.
+	WorkKey *v1.WorkKey `protobuf:"bytes,19,opt,name=work_key,json=workKey,proto3" json:"work_key,omitempty"`
+	// The Work's File Home; absent for a Work without one.
+	FileHome *v1.FileHome `protobuf:"bytes,20,opt,name=file_home,json=fileHome,proto3" json:"file_home,omitempty"`
 	// The Work's Agent Owner: its definition's Owner.
 	AgentOwner string `protobuf:"bytes,4,opt,name=agent_owner,json=agentOwner,proto3" json:"agent_owner,omitempty"`
 	// Who started the Work, a fact.
@@ -55,7 +57,8 @@ type WorkFacts struct {
 	Waiting bool `protobuf:"varint,13,opt,name=waiting,proto3" json:"waiting,omitempty"`
 	// Permanent closure has been accepted and is awaiting completion.
 	ArchivePending bool `protobuf:"varint,14,opt,name=archive_pending,json=archivePending,proto3" json:"archive_pending,omitempty"`
-	// The message stream is public within the Work's scope; otherwise private.
+	// The message stream is public to the members of the Work's Work Caller;
+	// otherwise private.
 	VisibilityPublic bool `protobuf:"varint,15,opt,name=visibility_public,json=visibilityPublic,proto3" json:"visibility_public,omitempty"`
 	// The Work's start waits in its Computer's line for room; set only by
 	// GetWorkFacts.
@@ -104,18 +107,25 @@ func (x *WorkFacts) GetWorkId() string {
 	return ""
 }
 
-func (x *WorkFacts) GetSubject() *WorkSubject {
+func (x *WorkFacts) GetWorkCaller() *v1.WorkCaller {
 	if x != nil {
-		return x.Subject
+		return x.WorkCaller
 	}
 	return nil
 }
 
-func (x *WorkFacts) GetProjectId() string {
+func (x *WorkFacts) GetWorkKey() *v1.WorkKey {
 	if x != nil {
-		return x.ProjectId
+		return x.WorkKey
 	}
-	return ""
+	return nil
+}
+
+func (x *WorkFacts) GetFileHome() *v1.FileHome {
+	if x != nil {
+		return x.FileHome
+	}
+	return nil
 }
 
 func (x *WorkFacts) GetAgentOwner() string {
@@ -216,11 +226,15 @@ func (x *WorkFacts) GetDisconnectedSince() *timestamppb.Timestamp {
 	return nil
 }
 
-// ListWorksRequest selects Works; at least a Project, an owner or identities.
+// ListWorksRequest selects Works; at least a Work Caller, an owner or
+// identities.
 type ListWorksRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The Project of every listed Work.
-	ProjectId string `protobuf:"bytes,1,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
+	// The Work Caller of every listed Work.
+	WorkCaller *v1.WorkCaller `protobuf:"bytes,9,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
+	// The Work Key of every listed Work, across definitions; requires a Work
+	// Caller.
+	WorkKey *v1.WorkKey `protobuf:"bytes,10,opt,name=work_key,json=workKey,proto3" json:"work_key,omitempty"`
 	// Opaque definition purpose.
 	Purpose string `protobuf:"bytes,2,opt,name=purpose,proto3" json:"purpose,omitempty"`
 	// Works whose definition this person owns.
@@ -269,11 +283,18 @@ func (*ListWorksRequest) Descriptor() ([]byte, []int) {
 	return file_agent_private_v1_work_facts_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *ListWorksRequest) GetProjectId() string {
+func (x *ListWorksRequest) GetWorkCaller() *v1.WorkCaller {
 	if x != nil {
-		return x.ProjectId
+		return x.WorkCaller
 	}
-	return ""
+	return nil
+}
+
+func (x *ListWorksRequest) GetWorkKey() *v1.WorkKey {
+	if x != nil {
+		return x.WorkKey
+	}
+	return nil
 }
 
 func (x *ListWorksRequest) GetPurpose() string {
@@ -466,8 +487,8 @@ func (x *GetWorkFactsResponse) GetWork() *WorkFacts {
 // GetWorkReportRequest selects reported Works and fixed UTC buckets.
 type GetWorkReportRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The Project of every reported Work; required.
-	ProjectId string `protobuf:"bytes,1,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
+	// The Work Caller of every reported Work; required.
+	WorkCaller *v1.WorkCaller `protobuf:"bytes,5,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
 	// Opaque definition purpose.
 	Purpose string `protobuf:"bytes,2,opt,name=purpose,proto3" json:"purpose,omitempty"`
 	// One of 24h, 7d or 30d.
@@ -508,11 +529,11 @@ func (*GetWorkReportRequest) Descriptor() ([]byte, []int) {
 	return file_agent_private_v1_work_facts_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *GetWorkReportRequest) GetProjectId() string {
+func (x *GetWorkReportRequest) GetWorkCaller() *v1.WorkCaller {
 	if x != nil {
-		return x.ProjectId
+		return x.WorkCaller
 	}
-	return ""
+	return nil
 }
 
 func (x *GetWorkReportRequest) GetPurpose() string {
@@ -631,12 +652,13 @@ var File_agent_private_v1_work_facts_proto protoreflect.FileDescriptor
 
 const file_agent_private_v1_work_facts_proto_rawDesc = "" +
 	"\n" +
-	"!agent/private/v1/work_facts.proto\x12\x10agent.private.v1\x1a#agent/private/v1/work_subject.proto\x1a\x1eagent/public/v1/progress.proto\x1a\x1dagent/public/v1/startup.proto\x1a\x1aagent/public/v1/work.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x87\x06\n" +
+	"!agent/private/v1/work_facts.proto\x12\x10agent.private.v1\x1a\x1eagent/public/v1/progress.proto\x1a\x1dagent/public/v1/startup.proto\x1a\x1aagent/public/v1/work.proto\x1a!agent/public/v1/work_caller.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xfb\x06\n" +
 	"\tWorkFacts\x12\x17\n" +
-	"\awork_id\x18\x01 \x01(\tR\x06workId\x127\n" +
-	"\asubject\x18\x02 \x01(\v2\x1d.agent.private.v1.WorkSubjectR\asubject\x12\x1d\n" +
-	"\n" +
-	"project_id\x18\x03 \x01(\tR\tprojectId\x12\x1f\n" +
+	"\awork_id\x18\x01 \x01(\tR\x06workId\x12<\n" +
+	"\vwork_caller\x18\x12 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"workCaller\x123\n" +
+	"\bwork_key\x18\x13 \x01(\v2\x18.agent.public.v1.WorkKeyR\aworkKey\x126\n" +
+	"\tfile_home\x18\x14 \x01(\v2\x19.agent.public.v1.FileHomeR\bfileHome\x12\x1f\n" +
 	"\vagent_owner\x18\x04 \x01(\tR\n" +
 	"agentOwner\x12\x1d\n" +
 	"\n" +
@@ -655,10 +677,13 @@ const file_agent_private_v1_work_facts_proto_rawDesc = "" +
 	"\x0farchive_pending\x18\x0e \x01(\bR\x0earchivePending\x12+\n" +
 	"\x11visibility_public\x18\x0f \x01(\bR\x10visibilityPublic\x12!\n" +
 	"\fdesk_waiting\x18\x10 \x01(\bR\vdeskWaiting\x12I\n" +
-	"\x12disconnected_since\x18\x11 \x01(\v2\x1a.google.protobuf.TimestampR\x11disconnectedSince\"\xf9\x01\n" +
-	"\x10ListWorksRequest\x12\x1d\n" +
-	"\n" +
-	"project_id\x18\x01 \x01(\tR\tprojectId\x12\x18\n" +
+	"\x12disconnected_since\x18\x11 \x01(\v2\x1a.google.protobuf.TimestampR\x11disconnectedSinceJ\x04\b\x02\x10\x03J\x04\b\x03\x10\x04R\asubjectR\n" +
+	"project_id\"\xdf\x02\n" +
+	"\x10ListWorksRequest\x12<\n" +
+	"\vwork_caller\x18\t \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"workCaller\x123\n" +
+	"\bwork_key\x18\n" +
+	" \x01(\v2\x18.agent.public.v1.WorkKeyR\aworkKey\x12\x18\n" +
 	"\apurpose\x18\x02 \x01(\tR\apurpose\x12\x1f\n" +
 	"\vagent_owner\x18\x03 \x01(\tR\n" +
 	"agentOwner\x12\x19\n" +
@@ -667,19 +692,21 @@ const file_agent_private_v1_work_facts_proto_rawDesc = "" +
 	"\barchived\x18\x06 \x01(\bH\x00R\barchived\x88\x01\x01\x12\x14\n" +
 	"\x05limit\x18\a \x01(\x05R\x05limit\x12\x14\n" +
 	"\x05after\x18\b \x01(\tR\x05afterB\v\n" +
-	"\t_archived\"F\n" +
+	"\t_archivedJ\x04\b\x01\x10\x02R\n" +
+	"project_id\"F\n" +
 	"\x11ListWorksResponse\x121\n" +
 	"\x05works\x18\x01 \x03(\v2\x1b.agent.private.v1.WorkFactsR\x05works\".\n" +
 	"\x13GetWorkFactsRequest\x12\x17\n" +
 	"\awork_id\x18\x01 \x01(\tR\x06workId\"G\n" +
 	"\x14GetWorkFactsResponse\x12/\n" +
-	"\x04work\x18\x01 \x01(\v2\x1b.agent.private.v1.WorkFactsR\x04work\"\x95\x01\n" +
-	"\x14GetWorkReportRequest\x12\x1d\n" +
-	"\n" +
-	"project_id\x18\x01 \x01(\tR\tprojectId\x12\x18\n" +
+	"\x04work\x18\x01 \x01(\v2\x1b.agent.private.v1.WorkFactsR\x04work\"\xc6\x01\n" +
+	"\x14GetWorkReportRequest\x12<\n" +
+	"\vwork_caller\x18\x05 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"workCaller\x12\x18\n" +
 	"\apurpose\x18\x02 \x01(\tR\apurpose\x12\x16\n" +
 	"\x06window\x18\x03 \x01(\tR\x06window\x12,\n" +
-	"\x03end\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\x03end\"\xd3\x02\n" +
+	"\x03end\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\x03endJ\x04\b\x01\x10\x02R\n" +
+	"project_id\"\xd3\x02\n" +
 	"\x15GetWorkReportResponse\x120\n" +
 	"\x05start\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x05start\x12,\n" +
 	"\x03end\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x03end\x12;\n" +
@@ -714,38 +741,45 @@ var file_agent_private_v1_work_facts_proto_goTypes = []any{
 	(*GetWorkFactsResponse)(nil),  // 4: agent.private.v1.GetWorkFactsResponse
 	(*GetWorkReportRequest)(nil),  // 5: agent.private.v1.GetWorkReportRequest
 	(*GetWorkReportResponse)(nil), // 6: agent.private.v1.GetWorkReportResponse
-	(*WorkSubject)(nil),           // 7: agent.private.v1.WorkSubject
-	(*v1.WorkProgress)(nil),       // 8: agent.public.v1.WorkProgress
-	(*v1.StartupProgress)(nil),    // 9: agent.public.v1.StartupProgress
-	(*timestamppb.Timestamp)(nil), // 10: google.protobuf.Timestamp
-	(*v1.WorkPeriodReport)(nil),   // 11: agent.public.v1.WorkPeriodReport
+	(*v1.WorkCaller)(nil),         // 7: agent.public.v1.WorkCaller
+	(*v1.WorkKey)(nil),            // 8: agent.public.v1.WorkKey
+	(*v1.FileHome)(nil),           // 9: agent.public.v1.FileHome
+	(*v1.WorkProgress)(nil),       // 10: agent.public.v1.WorkProgress
+	(*v1.StartupProgress)(nil),    // 11: agent.public.v1.StartupProgress
+	(*timestamppb.Timestamp)(nil), // 12: google.protobuf.Timestamp
+	(*v1.WorkPeriodReport)(nil),   // 13: agent.public.v1.WorkPeriodReport
 }
 var file_agent_private_v1_work_facts_proto_depIdxs = []int32{
-	7,  // 0: agent.private.v1.WorkFacts.subject:type_name -> agent.private.v1.WorkSubject
-	8,  // 1: agent.private.v1.WorkFacts.work_progress:type_name -> agent.public.v1.WorkProgress
-	9,  // 2: agent.private.v1.WorkFacts.startup_progress:type_name -> agent.public.v1.StartupProgress
-	10, // 3: agent.private.v1.WorkFacts.created_at:type_name -> google.protobuf.Timestamp
-	10, // 4: agent.private.v1.WorkFacts.updated_at:type_name -> google.protobuf.Timestamp
-	10, // 5: agent.private.v1.WorkFacts.disconnected_since:type_name -> google.protobuf.Timestamp
-	0,  // 6: agent.private.v1.ListWorksResponse.works:type_name -> agent.private.v1.WorkFacts
-	0,  // 7: agent.private.v1.GetWorkFactsResponse.work:type_name -> agent.private.v1.WorkFacts
-	10, // 8: agent.private.v1.GetWorkReportRequest.end:type_name -> google.protobuf.Timestamp
-	10, // 9: agent.private.v1.GetWorkReportResponse.start:type_name -> google.protobuf.Timestamp
-	10, // 10: agent.private.v1.GetWorkReportResponse.end:type_name -> google.protobuf.Timestamp
-	10, // 11: agent.private.v1.GetWorkReportResponse.observed_at:type_name -> google.protobuf.Timestamp
-	11, // 12: agent.private.v1.GetWorkReportResponse.current:type_name -> agent.public.v1.WorkPeriodReport
-	11, // 13: agent.private.v1.GetWorkReportResponse.previous:type_name -> agent.public.v1.WorkPeriodReport
-	1,  // 14: agent.private.v1.WorkFactsService.ListWorks:input_type -> agent.private.v1.ListWorksRequest
-	3,  // 15: agent.private.v1.WorkFactsService.GetWorkFacts:input_type -> agent.private.v1.GetWorkFactsRequest
-	5,  // 16: agent.private.v1.WorkFactsService.GetWorkReport:input_type -> agent.private.v1.GetWorkReportRequest
-	2,  // 17: agent.private.v1.WorkFactsService.ListWorks:output_type -> agent.private.v1.ListWorksResponse
-	4,  // 18: agent.private.v1.WorkFactsService.GetWorkFacts:output_type -> agent.private.v1.GetWorkFactsResponse
-	6,  // 19: agent.private.v1.WorkFactsService.GetWorkReport:output_type -> agent.private.v1.GetWorkReportResponse
-	17, // [17:20] is the sub-list for method output_type
-	14, // [14:17] is the sub-list for method input_type
-	14, // [14:14] is the sub-list for extension type_name
-	14, // [14:14] is the sub-list for extension extendee
-	0,  // [0:14] is the sub-list for field type_name
+	7,  // 0: agent.private.v1.WorkFacts.work_caller:type_name -> agent.public.v1.WorkCaller
+	8,  // 1: agent.private.v1.WorkFacts.work_key:type_name -> agent.public.v1.WorkKey
+	9,  // 2: agent.private.v1.WorkFacts.file_home:type_name -> agent.public.v1.FileHome
+	10, // 3: agent.private.v1.WorkFacts.work_progress:type_name -> agent.public.v1.WorkProgress
+	11, // 4: agent.private.v1.WorkFacts.startup_progress:type_name -> agent.public.v1.StartupProgress
+	12, // 5: agent.private.v1.WorkFacts.created_at:type_name -> google.protobuf.Timestamp
+	12, // 6: agent.private.v1.WorkFacts.updated_at:type_name -> google.protobuf.Timestamp
+	12, // 7: agent.private.v1.WorkFacts.disconnected_since:type_name -> google.protobuf.Timestamp
+	7,  // 8: agent.private.v1.ListWorksRequest.work_caller:type_name -> agent.public.v1.WorkCaller
+	8,  // 9: agent.private.v1.ListWorksRequest.work_key:type_name -> agent.public.v1.WorkKey
+	0,  // 10: agent.private.v1.ListWorksResponse.works:type_name -> agent.private.v1.WorkFacts
+	0,  // 11: agent.private.v1.GetWorkFactsResponse.work:type_name -> agent.private.v1.WorkFacts
+	7,  // 12: agent.private.v1.GetWorkReportRequest.work_caller:type_name -> agent.public.v1.WorkCaller
+	12, // 13: agent.private.v1.GetWorkReportRequest.end:type_name -> google.protobuf.Timestamp
+	12, // 14: agent.private.v1.GetWorkReportResponse.start:type_name -> google.protobuf.Timestamp
+	12, // 15: agent.private.v1.GetWorkReportResponse.end:type_name -> google.protobuf.Timestamp
+	12, // 16: agent.private.v1.GetWorkReportResponse.observed_at:type_name -> google.protobuf.Timestamp
+	13, // 17: agent.private.v1.GetWorkReportResponse.current:type_name -> agent.public.v1.WorkPeriodReport
+	13, // 18: agent.private.v1.GetWorkReportResponse.previous:type_name -> agent.public.v1.WorkPeriodReport
+	1,  // 19: agent.private.v1.WorkFactsService.ListWorks:input_type -> agent.private.v1.ListWorksRequest
+	3,  // 20: agent.private.v1.WorkFactsService.GetWorkFacts:input_type -> agent.private.v1.GetWorkFactsRequest
+	5,  // 21: agent.private.v1.WorkFactsService.GetWorkReport:input_type -> agent.private.v1.GetWorkReportRequest
+	2,  // 22: agent.private.v1.WorkFactsService.ListWorks:output_type -> agent.private.v1.ListWorksResponse
+	4,  // 23: agent.private.v1.WorkFactsService.GetWorkFacts:output_type -> agent.private.v1.GetWorkFactsResponse
+	6,  // 24: agent.private.v1.WorkFactsService.GetWorkReport:output_type -> agent.private.v1.GetWorkReportResponse
+	22, // [22:25] is the sub-list for method output_type
+	19, // [19:22] is the sub-list for method input_type
+	19, // [19:19] is the sub-list for extension type_name
+	19, // [19:19] is the sub-list for extension extendee
+	0,  // [0:19] is the sub-list for field type_name
 }
 
 func init() { file_agent_private_v1_work_facts_proto_init() }
@@ -753,7 +787,6 @@ func file_agent_private_v1_work_facts_proto_init() {
 	if File_agent_private_v1_work_facts_proto != nil {
 		return
 	}
-	file_agent_private_v1_work_subject_proto_init()
 	file_agent_private_v1_work_facts_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

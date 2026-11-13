@@ -5,6 +5,7 @@
 import type { GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
+import type { WorkCaller, WorkKey } from "../../../agent/public/v1/work_caller_pb.js";
 
 /**
  * Describes the file trace/public/v1/trace.proto.
@@ -137,13 +138,6 @@ export declare type Span = Message<"trace.public.v1.Span"> & {
   agentWorkId: string;
 
   /**
-   * project id field.
-   *
-   * @generated from field: string project_id = 18;
-   */
-  projectId: string;
-
-  /**
    * runtime purpose field.
    *
    * @generated from field: string runtime_purpose = 19;
@@ -163,6 +157,20 @@ export declare type Span = Message<"trace.public.v1.Span"> & {
    * @generated from field: string owner_id = 21;
    */
   ownerId: string;
+
+  /**
+   * The Work Caller of the span's Work.
+   *
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 22;
+   */
+  workCaller?: WorkCaller;
+
+  /**
+   * The Work Key of the span's Work; absent for a Work without one.
+   *
+   * @generated from field: agent.public.v1.WorkKey work_key = 23;
+   */
+  workKey?: WorkKey;
 };
 
 /**
@@ -178,11 +186,11 @@ export declare const SpanSchema: GenMessage<Span>;
  */
 export declare type ListSpansByOwnerRequest = Message<"trace.public.v1.ListSpansByOwnerRequest"> & {
   /**
-   * project id field.
+   * The Work Caller, of an extension-defined kind, whose spans are listed.
    *
-   * @generated from field: string project_id = 1;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 7;
    */
-  projectId: string;
+  workCaller?: WorkCaller;
 
   /**
    * owner context field.
@@ -260,11 +268,15 @@ export declare const ListSpansByOwnerResponseSchema: GenMessage<ListSpansByOwner
  */
 export declare type ListSpansBySessionRequest = Message<"trace.public.v1.ListSpansBySessionRequest"> & {
   /**
-   * The Work's Project; empty for a Work without one.
+   * The Work's Work Caller when it is of an extension-defined kind, which
+   * scopes the read and whose extension admits the reader; absent for a
+   * Standalone Work, which Agent's Work access admits. A Work Caller other than
+   * the Work's own, or an Extension Work named without its Work Caller, is
+   * NotFound.
    *
-   * @generated from field: string project_id = 1;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 6;
    */
-  projectId: string;
+  workCaller?: WorkCaller;
 
   /**
    * AgentSession identity.
@@ -336,19 +348,11 @@ export declare const ListSpansBySessionResponseSchema: GenMessage<ListSpansBySes
  */
 export declare type GetSpanRequest = Message<"trace.public.v1.GetSpanRequest"> & {
   /**
-   * Native span identity is scoped by Trace ID and trusted Project attribution.
+   * Native span identity is scoped by Trace ID and trusted Work attribution.
    *
    * @generated from field: string span_id = 1;
    */
   spanId: string;
-
-  /**
-   * The Project scope, authorized before looking up evidence; empty for a
-   * span of a Work without a Project.
-   *
-   * @generated from field: string project_id = 2;
-   */
-  projectId: string;
 
   /**
    * Required native Trace ID; Span ID alone is not globally unique.
@@ -358,11 +362,20 @@ export declare type GetSpanRequest = Message<"trace.public.v1.GetSpanRequest"> &
   traceId: string;
 
   /**
-   * The Work the span belongs to; required without a Project.
+   * The Work the span belongs to; required without a Work Caller.
    *
    * @generated from field: string agent_work_id = 4;
    */
   agentWorkId: string;
+
+  /**
+   * The Work Caller scope, authorized before looking up evidence, when the
+   * span's Work is an Extension Work; absent for a Standalone Work. A Work
+   * Caller other than the Work's own is NotFound.
+   *
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 5;
+   */
+  workCaller?: WorkCaller;
 };
 
 /**
@@ -433,11 +446,15 @@ export declare type GetSessionTraceMetricsRequest = Message<"trace.public.v1.Get
   metricKinds: string[];
 
   /**
-   * The Work's Project; empty for a Work without one.
+   * The Work's Work Caller when it is of an extension-defined kind, which
+   * scopes the read and whose extension admits the reader; absent for a
+   * Standalone Work, which Agent's Work access admits. A Work Caller other than
+   * the Work's own, or an Extension Work named without its Work Caller, is
+   * NotFound.
    *
-   * @generated from field: string project_id = 6;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 7;
    */
-  projectId: string;
+  workCaller?: WorkCaller;
 };
 
 /**
@@ -447,17 +464,17 @@ export declare type GetSessionTraceMetricsRequest = Message<"trace.public.v1.Get
 export declare const GetSessionTraceMetricsRequestSchema: GenMessage<GetSessionTraceMetricsRequest>;
 
 /**
- * GetProjectTraceMetricsRequest message.
+ * GetWorkCallerTraceMetricsRequest names a window of a Work Caller's usage.
  *
- * @generated from message trace.public.v1.GetProjectTraceMetricsRequest
+ * @generated from message trace.public.v1.GetWorkCallerTraceMetricsRequest
  */
-export declare type GetProjectTraceMetricsRequest = Message<"trace.public.v1.GetProjectTraceMetricsRequest"> & {
+export declare type GetWorkCallerTraceMetricsRequest = Message<"trace.public.v1.GetWorkCallerTraceMetricsRequest"> & {
   /**
-   * project id field.
+   * The Work Caller, of an extension-defined kind, whose Works' usage is read.
    *
-   * @generated from field: string project_id = 1;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 1;
    */
-  projectId: string;
+  workCaller?: WorkCaller;
 
   /**
    * start time field.
@@ -486,13 +503,20 @@ export declare type GetProjectTraceMetricsRequest = Message<"trace.public.v1.Get
    * @generated from field: repeated string metric_kinds = 5;
    */
   metricKinds: string[];
+
+  /**
+   * Narrows to the Works with this Work Key, such as the Works of one Intent.
+   *
+   * @generated from field: agent.public.v1.WorkKey work_key = 6;
+   */
+  workKey?: WorkKey;
 };
 
 /**
- * Describes the message trace.public.v1.GetProjectTraceMetricsRequest.
- * Use `create(GetProjectTraceMetricsRequestSchema)` to create a new message.
+ * Describes the message trace.public.v1.GetWorkCallerTraceMetricsRequest.
+ * Use `create(GetWorkCallerTraceMetricsRequestSchema)` to create a new message.
  */
-export declare const GetProjectTraceMetricsRequestSchema: GenMessage<GetProjectTraceMetricsRequest>;
+export declare const GetWorkCallerTraceMetricsRequestSchema: GenMessage<GetWorkCallerTraceMetricsRequest>;
 
 /**
  * GetPersonalTraceMetricsRequest names a window of the authenticated person's
@@ -598,11 +622,11 @@ export declare type GetSessionTraceMetricsResponse = Message<"trace.public.v1.Ge
 export declare const GetSessionTraceMetricsResponseSchema: GenMessage<GetSessionTraceMetricsResponse>;
 
 /**
- * GetProjectTraceMetricsResponse message.
+ * GetWorkCallerTraceMetricsResponse message.
  *
- * @generated from message trace.public.v1.GetProjectTraceMetricsResponse
+ * @generated from message trace.public.v1.GetWorkCallerTraceMetricsResponse
  */
-export declare type GetProjectTraceMetricsResponse = Message<"trace.public.v1.GetProjectTraceMetricsResponse"> & {
+export declare type GetWorkCallerTraceMetricsResponse = Message<"trace.public.v1.GetWorkCallerTraceMetricsResponse"> & {
   /**
    * buckets field.
    *
@@ -619,10 +643,10 @@ export declare type GetProjectTraceMetricsResponse = Message<"trace.public.v1.Ge
 };
 
 /**
- * Describes the message trace.public.v1.GetProjectTraceMetricsResponse.
- * Use `create(GetProjectTraceMetricsResponseSchema)` to create a new message.
+ * Describes the message trace.public.v1.GetWorkCallerTraceMetricsResponse.
+ * Use `create(GetWorkCallerTraceMetricsResponseSchema)` to create a new message.
  */
-export declare const GetProjectTraceMetricsResponseSchema: GenMessage<GetProjectTraceMetricsResponse>;
+export declare const GetWorkCallerTraceMetricsResponseSchema: GenMessage<GetWorkCallerTraceMetricsResponse>;
 
 /**
  * TraceMetricBucket message.
@@ -643,13 +667,6 @@ export declare type TraceMetricBucket = Message<"trace.public.v1.TraceMetricBuck
    * @generated from field: int32 bucket_seconds = 2;
    */
   bucketSeconds: number;
-
-  /**
-   * project id field.
-   *
-   * @generated from field: string project_id = 3;
-   */
-  projectId: string;
 
   /**
    * AgentSession identity.
@@ -723,11 +740,19 @@ export declare type TraceMetricBucket = Message<"trace.public.v1.TraceMetricBuck
   ownerId: string;
 
   /**
-   * The Application that owns the Work, empty for a Work no Application owns.
+   * The Work Caller of the measured Work: a person, an Application or an
+   * object of an extension-defined kind.
    *
-   * @generated from field: string application_id = 14;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 15;
    */
-  applicationId: string;
+  workCaller?: WorkCaller;
+
+  /**
+   * The Work Key of the measured Work; absent for a Work without one.
+   *
+   * @generated from field: agent.public.v1.WorkKey work_key = 16;
+   */
+  workKey?: WorkKey;
 };
 
 /**
@@ -784,14 +809,16 @@ export declare const TraceMetricTotalSchema: GenMessage<TraceMetricTotal>;
  */
 export declare type ListEventsRequest = Message<"trace.public.v1.ListEventsRequest"> & {
   /**
-   * The authorized Project scope; empty for a Work without a Project.
+   * The authorized Work Caller scope, of an extension-defined kind; absent for
+   * a Standalone Work. An Extension Work named without its Work Caller is
+   * NotFound.
    *
-   * @generated from field: string project_id = 1;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 9;
    */
-  projectId: string;
+  workCaller?: WorkCaller;
 
   /**
-   * The Work filter; required without a Project.
+   * The Work filter; required without a Work Caller.
    *
    * @generated from field: string agent_work_id = 2;
    */
@@ -909,18 +936,25 @@ export declare type NativeEvent = Message<"trace.public.v1.NativeEvent"> & {
   resourceAttributes: { [key: string]: string };
 
   /**
-   * Trusted platform Project attribution.
-   *
-   * @generated from field: string project_id = 9;
-   */
-  projectId: string;
-
-  /**
    * Trusted platform Session attribution.
    *
    * @generated from field: string agent_work_id = 10;
    */
   agentWorkId: string;
+
+  /**
+   * Trusted platform Work Caller attribution.
+   *
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 11;
+   */
+  workCaller?: WorkCaller;
+
+  /**
+   * Trusted platform Work Key attribution; absent for a Work without one.
+   *
+   * @generated from field: agent.public.v1.WorkKey work_key = 12;
+   */
+  workKey?: WorkKey;
 };
 
 /**
@@ -1181,17 +1215,20 @@ export declare type ListSpansByApplicationResponse = Message<"trace.public.v1.Li
 export declare const ListSpansByApplicationResponseSchema: GenMessage<ListSpansByApplicationResponse>;
 
 /**
- * TraceQueryService reads observations by Work, Project, person or
- * Application. A Work's observations are scoped by its Project when it has
- * one: the reader is admitted by the Project access decision; a Work without a
- * Project is named without one, and its owner, a person or an Application, and
- * its Work Share holders read it. An Application reads only its own Works.
+ * TraceQueryService reads observations by Work, Work Caller, Work Key, person
+ * or Application. An Extension Work's observations are scoped by its Work
+ * Caller: the extension that defines the Work Caller's kind admits the reader
+ * through its Work Caller access decision. A Standalone Work is named without
+ * a Work Caller, and Agent's Work access admits its readers: its owner, a
+ * person or an Application, and its Work Share holders. An Application reads
+ * only its own Works.
  *
  * @generated from service trace.public.v1.TraceQueryService
  */
 export declare const TraceQueryService: GenService<{
   /**
-   * List retained structured native events of an authorized Project or Work.
+   * List retained structured native events of an authorized Work Caller or
+   * Work.
    *
    * @generated from rpc trace.public.v1.TraceQueryService.ListEvents
    */
@@ -1211,8 +1248,8 @@ export declare const TraceQueryService: GenService<{
     output: typeof ListSpansBySessionResponseSchema;
   },
   /**
-   * ListSpansByOwner lists a Project's spans carrying the caller attributes
-   * owner_context and owner_id.
+   * ListSpansByOwner lists a Work Caller's spans carrying the trace
+   * attributes owner_context and owner_id.
    *
    * @generated from rpc trace.public.v1.TraceQueryService.ListSpansByOwner
    */
@@ -1242,19 +1279,20 @@ export declare const TraceQueryService: GenService<{
     output: typeof GetSessionTraceMetricsResponseSchema;
   },
   /**
-   * GetProjectTraceMetrics reads a Project's measurements.
+   * GetWorkCallerTraceMetrics reads the measurements of the Works of a Work
+   * Caller of an extension-defined kind, optionally narrowed to one Work Key.
    *
-   * @generated from rpc trace.public.v1.TraceQueryService.GetProjectTraceMetrics
+   * @generated from rpc trace.public.v1.TraceQueryService.GetWorkCallerTraceMetrics
    */
-  getProjectTraceMetrics: {
+  getWorkCallerTraceMetrics: {
     methodKind: "unary";
-    input: typeof GetProjectTraceMetricsRequestSchema;
-    output: typeof GetProjectTraceMetricsResponseSchema;
+    input: typeof GetWorkCallerTraceMetricsRequestSchema;
+    output: typeof GetWorkCallerTraceMetricsResponseSchema;
   },
   /**
    * GetPersonalTraceMetrics reads the authenticated person's own measurements
-   * across every Work of their Agent, with or without a Project; only that
-   * person reads them.
+   * across every Work they own, whatever its Work Caller; only that person
+   * reads them.
    *
    * @generated from rpc trace.public.v1.TraceQueryService.GetPersonalTraceMetrics
    */

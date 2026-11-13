@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package trace.private.v1;
+
+import "agent/public/v1/work_caller.proto";
+
+option go_package = "github.com/talgent-work/contracts/gen/go/trace/private/v1;traceprivatev1";
+
+// WorkCallerAccessService is the Work Caller access decision Observability
+// asks of the extension that defines a Work Caller's kind, such as Intent for
+// a Project. Observability defines it, each such extension implements it, and
+// the Work Caller's kind selects which one is asked; the delegated reader
+// travels in the trusted service-delegation headers, never in the request.
+service WorkCallerAccessService {
+  // DecideWorkCallerAccess admits the delegated reader to the observations of
+  // a Work Caller's Works. PERMISSION_DENIED and NOT_FOUND are refusals;
+  // UNAUTHENTICATED means the calling identity was not accepted; any other
+  // code is an outage to retry.
+  rpc DecideWorkCallerAccess(DecideWorkCallerAccessRequest) returns (DecideWorkCallerAccessResponse);
+}
+
+// DecideWorkCallerAccessRequest names the Work Caller.
+message DecideWorkCallerAccessRequest {
+  // The Work Caller whose Works' observations are read, of a kind the
+  // answering extension defines.
+  agent.public.v1.WorkCaller work_caller = 1;
+}
+
+// DecideWorkCallerAccessResponse confirms the reader is admitted.
+message DecideWorkCallerAccessResponse {}

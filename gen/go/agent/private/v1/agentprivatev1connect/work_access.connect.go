@@ -62,14 +62,17 @@ var (
 // WorkAccessServiceClient is a client for the agent.private.v1.WorkAccessService service.
 type WorkAccessServiceClient interface {
 	// AdmitWorkReader admits the owner; a Work Share holder of a private Work; or,
-	// while public, a reader the trusted caller admits within the Work's scope.
+	// while public, a reader the trusted service admits as a member of the
+	// Work's Work Caller.
 	// A reader that is not admitted is refused with PermissionDenied.
 	AdmitWorkReader(context.Context, *v1.AdmitWorkReaderRequest) (*v1.AdmitWorkReaderResponse, error)
-	// GrantWorkShare lets the owner of a human's Work share it with a reader the
-	// trusted caller admits within the Work's scope. Granting again changes nothing.
+	// GrantWorkShare lets the owner of a human's Work share it: a Standalone
+	// Work with anyone in the User Directory, an Extension Work with a reader the
+	// trusted service admits as a member of its Work Caller. Granting again
+	// changes nothing.
 	GrantWorkShare(context.Context, *v1.GrantWorkShareRequest) (*v1.GrantWorkShareResponse, error)
-	// RevokeDepartedReader ends a reader's Work Shares on every Work within the
-	// scope the trusted caller reports the reader has left.
+	// RevokeDepartedReader ends a reader's Work Shares on every Work of the Work
+	// Caller the trusted service reports the reader has left.
 	RevokeDepartedReader(context.Context, *v1.RevokeDepartedReaderRequest) (*v1.RevokeDepartedReaderResponse, error)
 }
 
@@ -82,14 +85,17 @@ func NewWorkAccessServiceClient(client *connect.Client) WorkAccessServiceClient 
 // WorkAccessServiceHandler is an implementation of the agent.private.v1.WorkAccessService service.
 type WorkAccessServiceHandler interface {
 	// AdmitWorkReader admits the owner; a Work Share holder of a private Work; or,
-	// while public, a reader the trusted caller admits within the Work's scope.
+	// while public, a reader the trusted service admits as a member of the
+	// Work's Work Caller.
 	// A reader that is not admitted is refused with PermissionDenied.
 	AdmitWorkReader(context.Context, *v1.AdmitWorkReaderRequest) (*v1.AdmitWorkReaderResponse, error)
-	// GrantWorkShare lets the owner of a human's Work share it with a reader the
-	// trusted caller admits within the Work's scope. Granting again changes nothing.
+	// GrantWorkShare lets the owner of a human's Work share it: a Standalone
+	// Work with anyone in the User Directory, an Extension Work with a reader the
+	// trusted service admits as a member of its Work Caller. Granting again
+	// changes nothing.
 	GrantWorkShare(context.Context, *v1.GrantWorkShareRequest) (*v1.GrantWorkShareResponse, error)
-	// RevokeDepartedReader ends a reader's Work Shares on every Work within the
-	// scope the trusted caller reports the reader has left.
+	// RevokeDepartedReader ends a reader's Work Shares on every Work of the Work
+	// Caller the trusted service reports the reader has left.
 	RevokeDepartedReader(context.Context, *v1.RevokeDepartedReaderRequest) (*v1.RevokeDepartedReaderResponse, error)
 }
 

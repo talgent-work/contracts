@@ -184,7 +184,7 @@ func (x *WorkStartRepositories) GetRecentRepositoryIds() []string {
 // WorkStartConnector is one selectable catalog Connector for this startup.
 type WorkStartConnector struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Catalog name used in creation Connector choices.
+	// Native MCP server name; two selectable Connectors may share one.
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// Always included and cannot be removed for this Work.
 	Required bool `protobuf:"varint,2,opt,name=required,proto3" json:"required,omitempty"`
@@ -194,8 +194,13 @@ type WorkStartConnector struct {
 	// even when required or chosen: its Provider credential stays with the
 	// platform.
 	UnavailableOnManaged bool `protobuf:"varint,4,opt,name=unavailable_on_managed,json=unavailableOnManaged,proto3" json:"unavailable_on_managed,omitempty"`
-	unknownFields        protoimpl.UnknownFields
-	sizeCache            protoimpl.SizeCache
+	// Connector identity used in creation Connector choices.
+	ConnectorId string `protobuf:"bytes,5,opt,name=connector_id,json=connectorId,proto3" json:"connector_id,omitempty"`
+	// Display name of the person or Application that published it; empty for
+	// a Platform Connector.
+	Publisher     string `protobuf:"bytes,6,opt,name=publisher,proto3" json:"publisher,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *WorkStartConnector) Reset() {
@@ -254,6 +259,20 @@ func (x *WorkStartConnector) GetUnavailableOnManaged() bool {
 		return x.UnavailableOnManaged
 	}
 	return false
+}
+
+func (x *WorkStartConnector) GetConnectorId() string {
+	if x != nil {
+		return x.ConnectorId
+	}
+	return ""
+}
+
+func (x *WorkStartConnector) GetPublisher() string {
+	if x != nil {
+		return x.Publisher
+	}
+	return ""
 }
 
 // WorkStartRepository is a repository reachable for this startup context.
@@ -510,12 +529,14 @@ const file_agent_public_v1_work_start_options_proto_rawDesc = "" +
 	"\x15WorkStartRepositories\x12H\n" +
 	"\frepositories\x18\x01 \x03(\v2$.agent.public.v1.WorkStartRepositoryR\frepositories\x129\n" +
 	"\x18repositories_unavailable\x18\x02 \x01(\bR\x17repositoriesUnavailable\x122\n" +
-	"\x15recent_repository_ids\x18\x03 \x03(\tR\x13recentRepositoryIds\"\xaa\x01\n" +
+	"\x15recent_repository_ids\x18\x03 \x03(\tR\x13recentRepositoryIds\"\xeb\x01\n" +
 	"\x12WorkStartConnector\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1a\n" +
 	"\brequired\x18\x02 \x01(\bR\brequired\x12.\n" +
 	"\x13included_by_default\x18\x03 \x01(\bR\x11includedByDefault\x124\n" +
-	"\x16unavailable_on_managed\x18\x04 \x01(\bR\x14unavailableOnManaged\"\x85\x01\n" +
+	"\x16unavailable_on_managed\x18\x04 \x01(\bR\x14unavailableOnManaged\x12!\n" +
+	"\fconnector_id\x18\x05 \x01(\tR\vconnectorId\x12\x1c\n" +
+	"\tpublisher\x18\x06 \x01(\tR\tpublisher\"\x85\x01\n" +
 	"\x13WorkStartRepository\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\bprovider\x18\x02 \x01(\tR\bprovider\x12\x1b\n" +

@@ -956,18 +956,18 @@ export declare const CreationCapabilitiesSchema: GenMessage<CreationCapabilities
  */
 export declare type CreationConnector = Message<"agent.public.v1.CreationConnector"> & {
   /**
-   * Catalog Connector name.
-   *
-   * @generated from field: string name = 1;
-   */
-  name: string;
-
-  /**
    * True adds the Connector; false removes a default. Required entries stay.
    *
    * @generated from field: bool include = 2;
    */
   include: boolean;
+
+  /**
+   * Connector identity. A Work refuses two selected Connectors of one name.
+   *
+   * @generated from field: string connector_id = 3;
+   */
+  connectorId: string;
 };
 
 /**

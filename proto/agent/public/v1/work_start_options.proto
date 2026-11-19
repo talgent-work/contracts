@@ -39,7 +39,7 @@ message WorkStartRepositories {
 
 // WorkStartConnector is one selectable catalog Connector for this startup.
 message WorkStartConnector {
-  // Catalog name used in creation Connector choices.
+  // Native MCP server name; two selectable Connectors may share one.
   string name = 1;
   // Always included and cannot be removed for this Work.
   bool required = 2;
@@ -49,6 +49,11 @@ message WorkStartConnector {
   // even when required or chosen: its Provider credential stays with the
   // platform.
   bool unavailable_on_managed = 4;
+  // Connector identity used in creation Connector choices.
+  string connector_id = 5;
+  // Display name of the person or Application that published it; empty for
+  // a Platform Connector.
+  string publisher = 6;
 }
 
 // WorkStartRepository is a repository reachable for this startup context.

@@ -1,0 +1,223 @@
+syntax = "proto3";
+
+package marketplace.public.v1;
+
+option go_package = "github.com/talgent-work/contracts/gen/go/marketplace/public/v1;marketplacepublicv1";
+
+// Connector is one Connector of the owner's Connector catalog, or one the
+// owner made or installed, with the owner's personal status.
+message Connector {
+  // Native MCP server name, unique per owner.
+  string name = 1;
+  // Catalog description.
+  string description = 2;
+  // Catalog browsing category.
+  string category = 3;
+  // Platform-required entries are always enabled and cannot be installed.
+  bool required = 4;
+  // always_enabled, enabled, disabled or not_installed.
+  string status = 5;
+  // Concurrency token for installation changes; zero without an installation.
+  uint32 installation_version = 6;
+  // Declared Provider; empty when no personal authorization is used.
+  string provider = 7;
+  // connected, not_connected or reconnect_required; empty without a Provider.
+  string provider_connection = 8;
+  // False for a withdrawn entry that remains installed or that the owner made.
+  bool offered = 9;
+  // Stable Connector identity that every Connector request names.
+  string connector_id = 10;
+  // private, published or withdrawn.
+  string state = 11;
+  // Who provides the Connector.
+  ConnectorPublisher publisher = 12;
+  // How a Work reaches it: http for a remote server, stdio for a local command.
+  string transport = 13;
+  // Identifies the current icon image, read with GetConnectorIcon; empty
+  // without one.
+  string icon_digest = 14;
+  // Concurrency token for changing the Connector itself.
+  uint32 connector_version = 15;
+  // When it was published, in Unix milliseconds; zero while Private.
+  int64 published_at_unix_ms = 16;
+  // The changeable connection settings, present only for the owner's own
+  // Connector.
+  ConnectorSettings settings = 17;
+}
+
+// ConnectorPublisher names who provides a Connector.
+message ConnectorPublisher {
+  // platform, person or application.
+  string kind = 1;
+  // Display name of the person or Application; empty for the platform.
+  string display_name = 2;
+  // Whether the request's owner made the Connector.
+  bool own = 3;
+}
+
+// ConnectorSettings is an owner's Connector connection, without credentials.
+message ConnectorSettings {
+  // Remote server address for an http Connector.
+  string url = 1;
+  // Process command for a stdio Connector.
+  string command = 2;
+  // Process arguments for a stdio Connector.
+  repeated string arguments = 3;
+}
+
+// ConnectorIcon is a Connector's icon image: a PNG, SVG, JPEG or WebP image
+// of at most 512 KiB.
+message ConnectorIcon {
+  // image/png, image/svg+xml, image/jpeg or image/webp.
+  string media_type = 1;
+  // The image.
+  bytes data = 2;
+}
+
+// ListOwnedConnectorsRequest selects the owner.
+message ListOwnedConnectorsRequest {
+  // An Application the caller owns, whose Connectors the request reaches;
+  // empty for the caller's own. An Application leaves it empty or names
+  // itself.
+  string application_id = 1;
+}
+
+// ListOwnedConnectorsResponse lists every Connector the owner made.
+message ListOwnedConnectorsResponse {
+  // The owner's Connectors ordered by name, each with its settings.
+  repeated Connector connectors = 1;
+}
+
+// AddConnectorRequest adds a Private Connector. A Connector that signs in
+// with a Provider is a remote http server at an address within that
+// Provider's targets; one without a Provider receives no credential.
+message AddConnectorRequest {
+  // An Application the caller owns, which then owns the Connector; empty for
+  // the caller's own.
+  string application_id = 1;
+  // Native MCP server name: lowercase letters, digits and hyphens, unique
+  // among the owner's Connectors, not a Platform Connector's name and fixed
+  // for life.
+  string name = 2;
+  // http for a remote server or stdio for a local command.
+  string transport = 3;
+  // The connection: an address for http, a command for stdio.
+  ConnectorSettings settings = 4;
+  // Declared Provider whose authorization signs its calls in; empty for none.
+  // Fixed for life.
+  string provider = 5;
+  // Catalog description.
+  string description = 6;
+  // Catalog browsing category.
+  string category = 7;
+  // Optional icon image.
+  ConnectorIcon icon = 8;
+}
+
+// AddConnectorResponse returns the added Connector.
+message AddConnectorResponse {
+  // The Private Connector, not installed.
+  Connector connector = 1;
+}
+
+// ChangeConnectorRequest replaces an owned Connector's changeable facts; its
+// name, transport and Provider stay.
+message ChangeConnectorRequest {
+  // An Application the caller owns; empty for the caller's own.
+  string application_id = 1;
+  // Connector identity.
+  string connector_id = 2;
+  // Connector version read before this change; stale values are rejected.
+  uint32 version = 3;
+  // The new connection.
+  ConnectorSettings settings = 4;
+  // Catalog description.
+  string description = 5;
+  // Catalog browsing category.
+  string category = 6;
+}
+
+// ChangeConnectorResponse returns the changed Connector.
+message ChangeConnectorResponse {
+  // Current Connector.
+  Connector connector = 1;
+}
+
+// ChangeConnectorIconRequest replaces or removes an owned Connector's icon.
+message ChangeConnectorIconRequest {
+  // An Application the caller owns; empty for the caller's own.
+  string application_id = 1;
+  // Connector identity.
+  string connector_id = 2;
+  // Connector version read before this change; stale values are rejected.
+  uint32 version = 3;
+  // The new icon; absent removes the icon.
+  ConnectorIcon icon = 4;
+}
+
+// ChangeConnectorIconResponse returns the changed Connector.
+message ChangeConnectorIconResponse {
+  // Current Connector.
+  Connector connector = 1;
+}
+
+// GetConnectorIconRequest selects a Connector the owner may see.
+message GetConnectorIconRequest {
+  // An Application the caller owns; empty for the caller's own.
+  string application_id = 1;
+  // Connector identity.
+  string connector_id = 2;
+}
+
+// GetConnectorIconResponse carries the icon image.
+message GetConnectorIconResponse {
+  // The icon; absent when the Connector has none.
+  ConnectorIcon icon = 1;
+  // Identifies this image, as Connector.icon_digest does.
+  string digest = 2;
+}
+
+// PublishConnectorRequest publishes an owned Private Connector.
+message PublishConnectorRequest {
+  // An Application the caller owns; empty for the caller's own.
+  string application_id = 1;
+  // Connector identity.
+  string connector_id = 2;
+  // Connector version read before this change; stale values are rejected.
+  uint32 version = 3;
+}
+
+// PublishConnectorResponse returns the Published Connector.
+message PublishConnectorResponse {
+  // Current Connector.
+  Connector connector = 1;
+}
+
+// WithdrawConnectorRequest withdraws a Connector its publisher published.
+message WithdrawConnectorRequest {
+  // An Application the caller owns; empty for the caller's own.
+  string application_id = 1;
+  // Connector identity.
+  string connector_id = 2;
+  // Connector version read before this change; stale values are rejected.
+  uint32 version = 3;
+}
+
+// WithdrawConnectorResponse returns the Withdrawn Connector.
+message WithdrawConnectorResponse {
+  // Current Connector.
+  Connector connector = 1;
+}
+
+// DeleteConnectorRequest deletes an owned Private Connector.
+message DeleteConnectorRequest {
+  // An Application the caller owns; empty for the caller's own.
+  string application_id = 1;
+  // Connector identity.
+  string connector_id = 2;
+  // Connector version read before this change; stale values are rejected.
+  uint32 version = 3;
+}
+
+// DeleteConnectorResponse confirms deletion.
+message DeleteConnectorResponse {}

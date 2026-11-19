@@ -136,7 +136,9 @@ export declare const ReadConnectorSelectionRequestSchema: GenMessage<ReadConnect
  */
 export declare type ReadConnectorSelectionResponse = Message<"marketplace.private.v1.ReadConnectorSelectionResponse"> & {
   /**
-   * Every catalog entry with its offer status and non-secret configuration.
+   * The owner's Connector catalog with non-secret configuration, and each
+   * Withdrawn Connector the owner installed by identity only, which no new
+   * Work selects.
    *
    * @generated from field: repeated marketplace.private.v1.CatalogConnector connectors = 1;
    */
@@ -170,7 +172,7 @@ export declare type CatalogConnector = Message<"marketplace.private.v1.CatalogCo
   id: string;
 
   /**
-   * Native MCP server name.
+   * Native MCP server name, unique per owner but not across owners.
    *
    * @generated from field: string name = 2;
    */
@@ -191,7 +193,8 @@ export declare type CatalogConnector = Message<"marketplace.private.v1.CatalogCo
   offered: boolean;
 
   /**
-   * work_identity or provider_authorization.
+   * work_identity, provider_authorization, or none for a credential-free
+   * Connector, which receives no credential.
    *
    * @generated from field: string authentication = 5;
    */
@@ -267,6 +270,14 @@ export declare type CatalogConnector = Message<"marketplace.private.v1.CatalogCo
    * @generated from field: bool provider_target_credentials_expire = 15;
    */
   providerTargetCredentialsExpire: boolean;
+
+  /**
+   * Display name of the person or Application that published it; empty for
+   * a Platform Connector.
+   *
+   * @generated from field: string publisher = 16;
+   */
+  publisher: string;
 };
 
 /**

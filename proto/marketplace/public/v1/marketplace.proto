@@ -5,6 +5,7 @@ package marketplace.public.v1;
 import "admission/v1/admission.proto";
 import "google/protobuf/struct.proto";
 import "marketplace/public/v1/connections.proto";
+import "marketplace/public/v1/connectors.proto";
 
 option go_package = "github.com/talgent-work/contracts/gen/go/marketplace/public/v1;marketplacepublicv1";
 
@@ -133,13 +134,13 @@ service MarketplaceService {
       principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
-  // Browse the platform Connector catalog with the user's personal status.
+  // Browse the owner's Connector catalog with the owner's personal status.
   rpc ListConnectors(ListConnectorsRequest) returns (ListConnectorsResponse) {
     option (admission.v1.admits) = {
       principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
   }
-  // Read one catalog Connector with the Plugins that use it.
+  // Read one Connector by identity with the Plugins that use it.
   rpc GetConnector(GetConnectorRequest) returns (GetConnectorResponse) {
     option (admission.v1.admits) = {
       principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
@@ -171,6 +172,54 @@ service MarketplaceService {
   }
   // Remove a personal Connector installation; authorization is unaffected.
   rpc UninstallConnector(UninstallConnectorRequest) returns (UninstallConnectorResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
+    };
+  }
+  // List every Connector the owner made, Withdrawn ones included.
+  rpc ListOwnedConnectors(ListOwnedConnectorsRequest) returns (ListOwnedConnectorsResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
+    };
+  }
+  // Add a Private Connector; adding never installs it.
+  rpc AddConnector(AddConnectorRequest) returns (AddConnectorResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
+    };
+  }
+  // Change an owned Connector's connection, description and category.
+  rpc ChangeConnector(ChangeConnectorRequest) returns (ChangeConnectorResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
+    };
+  }
+  // Replace or remove an owned Connector's icon image.
+  rpc ChangeConnectorIcon(ChangeConnectorIconRequest) returns (ChangeConnectorIconResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
+    };
+  }
+  // Read the icon image of a Connector the owner may see.
+  rpc GetConnectorIcon(GetConnectorIconRequest) returns (GetConnectorIconResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
+    };
+  }
+  // Publish an owned Private Connector to every owner.
+  rpc PublishConnector(PublishConnectorRequest) returns (PublishConnectorResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
+    };
+  }
+  // Withdraw a Connector the owner published, for good.
+  rpc WithdrawConnector(WithdrawConnectorRequest) returns (WithdrawConnectorResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
+    };
+  }
+  // Delete an owned Private Connector and the owner's installation of it.
+  rpc DeleteConnector(DeleteConnectorRequest) returns (DeleteConnectorResponse) {
     option (admission.v1.admits) = {
       principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
     };
@@ -533,28 +582,6 @@ message ConnectorProviderRelationship {
   bool target_credentials_expire = 8;
 }
 
-// Connector is one platform catalog entry with the user's personal status.
-message Connector {
-  // Stable public catalog reference.
-  string name = 1;
-  // Catalog description.
-  string description = 2;
-  // Catalog browsing category.
-  string category = 3;
-  // Platform-required entries are always enabled and cannot be installed.
-  bool required = 4;
-  // always_enabled, enabled, disabled or not_installed.
-  string status = 5;
-  // Concurrency token for personal changes; zero without an installation.
-  uint32 installation_version = 6;
-  // Declared Provider; empty when no personal authorization is used.
-  string provider = 7;
-  // connected, not_connected or reconnect_required; empty without a Provider.
-  string provider_connection = 8;
-  // False for a withdrawn entry that remains installed.
-  bool offered = 9;
-}
-
 // ConnectorPlugin is a catalog Plugin whose MCP declaration addresses a Connector.
 message ConnectorPlugin {
   // Plugin slug.
@@ -571,20 +598,25 @@ message ListConnectorsRequest {
   string application_id = 1;
 }
 
-// ListConnectorsResponse contains every offered catalog entry.
+// ListConnectorsResponse contains the owner's Connector catalog: the
+// Platform Connectors, the Published Connectors and the owner's own Private
+// Connectors.
 message ListConnectorsResponse {
   // Catalog entries ordered by name.
   repeated Connector connectors = 1;
 }
 
-// GetConnectorRequest selects one catalog entry.
+// GetConnectorRequest selects one Connector of the owner's catalog, one the
+// owner installed or one the owner made.
 message GetConnectorRequest {
-  // Catalog Connector name.
-  string name = 1;
+  reserved 1;
+  reserved "name";
   // An Application the caller owns, whose installations the request
   // reaches; empty for the caller's own. An Application leaves it empty or
   // names itself.
   string application_id = 2;
+  // Connector identity.
+  string connector_id = 3;
 }
 
 // GetConnectorResponse describes one catalog entry and its related Plugins.
@@ -611,12 +643,14 @@ message ListInstalledConnectorsResponse {
 
 // InstallConnectorRequest installs one catalog entry; repeating keeps it.
 message InstallConnectorRequest {
-  // Catalog Connector name.
-  string name = 1;
+  reserved 1;
+  reserved "name";
   // An Application the caller owns, whose installations the request
   // reaches; empty for the caller's own. An Application leaves it empty or
   // names itself.
   string application_id = 2;
+  // Connector identity.
+  string connector_id = 3;
 }
 
 // InstallConnectorResponse returns the entry after installation.
@@ -627,14 +661,16 @@ message InstallConnectorResponse {
 
 // EnableConnectorRequest changes a personal installation.
 message EnableConnectorRequest {
-  // Catalog Connector name.
-  string name = 1;
+  reserved 1;
+  reserved "name";
   // Installation version read before this mutation; stale values are rejected.
   uint32 version = 2;
   // An Application the caller owns, whose installations the request
   // reaches; empty for the caller's own. An Application leaves it empty or
   // names itself.
   string application_id = 3;
+  // Connector identity.
+  string connector_id = 4;
 }
 
 // EnableConnectorResponse returns the entry after the change.
@@ -645,14 +681,16 @@ message EnableConnectorResponse {
 
 // DisableConnectorRequest changes a personal installation.
 message DisableConnectorRequest {
-  // Catalog Connector name.
-  string name = 1;
+  reserved 1;
+  reserved "name";
   // Installation version read before this mutation; stale values are rejected.
   uint32 version = 2;
   // An Application the caller owns, whose installations the request
   // reaches; empty for the caller's own. An Application leaves it empty or
   // names itself.
   string application_id = 3;
+  // Connector identity.
+  string connector_id = 4;
 }
 
 // DisableConnectorResponse returns the entry after the change.
@@ -663,14 +701,16 @@ message DisableConnectorResponse {
 
 // UninstallConnectorRequest removes a personal installation.
 message UninstallConnectorRequest {
-  // Catalog Connector name.
-  string name = 1;
+  reserved 1;
+  reserved "name";
   // Installation version read before this mutation; stale values are rejected.
   uint32 version = 2;
   // An Application the caller owns, whose installations the request
   // reaches; empty for the caller's own. An Application leaves it empty or
   // names itself.
   string application_id = 3;
+  // Connector identity.
+  string connector_id = 4;
 }
 
 // UninstallConnectorResponse confirms removal.

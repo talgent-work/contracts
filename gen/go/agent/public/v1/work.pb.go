@@ -1800,10 +1800,10 @@ func (x *CreationCapabilities) GetConnectors() []*CreationConnector {
 // CreationConnector adds or removes one catalog Connector for this Work only.
 type CreationConnector struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Catalog Connector name.
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// True adds the Connector; false removes a default. Required entries stay.
-	Include       bool `protobuf:"varint,2,opt,name=include,proto3" json:"include,omitempty"`
+	Include bool `protobuf:"varint,2,opt,name=include,proto3" json:"include,omitempty"`
+	// Connector identity. A Work refuses two selected Connectors of one name.
+	ConnectorId   string `protobuf:"bytes,3,opt,name=connector_id,json=connectorId,proto3" json:"connector_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1838,18 +1838,18 @@ func (*CreationConnector) Descriptor() ([]byte, []int) {
 	return file_agent_public_v1_work_proto_rawDescGZIP(), []int{29}
 }
 
-func (x *CreationConnector) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
 func (x *CreationConnector) GetInclude() bool {
 	if x != nil {
 		return x.Include
 	}
 	return false
+}
+
+func (x *CreationConnector) GetConnectorId() string {
+	if x != nil {
+		return x.ConnectorId
+	}
+	return ""
 }
 
 // CreationPlugin requests a plugin under existing Agent composition rules.
@@ -2746,10 +2746,10 @@ const file_agent_public_v1_work_proto_rawDesc = "" +
 	"connectors\x18\x04 \x03(\v2\".agent.public.v1.CreationConnectorR\n" +
 	"connectorsB\t\n" +
 	"\a_promptB\x10\n" +
-	"\x0e_startup_agent\"A\n" +
-	"\x11CreationConnector\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
-	"\ainclude\x18\x02 \x01(\bR\ainclude\"\x8e\x01\n" +
+	"\x0e_startup_agent\"\\\n" +
+	"\x11CreationConnector\x12\x18\n" +
+	"\ainclude\x18\x02 \x01(\bR\ainclude\x12!\n" +
+	"\fconnector_id\x18\x03 \x01(\tR\vconnectorIdJ\x04\b\x01\x10\x02R\x04name\"\x8e\x01\n" +
 	"\x0eCreationPlugin\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12=\n" +
 	"\rconfiguration\x18\x02 \x01(\v2\x17.google.protobuf.StructR\rconfiguration\x12\x1d\n" +

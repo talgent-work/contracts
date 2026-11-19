@@ -102,6 +102,30 @@ const (
 	// MarketplaceServiceUninstallConnectorProcedure is the procedure name of the MarketplaceService's
 	// UninstallConnector RPC.
 	MarketplaceServiceUninstallConnectorProcedure = "/marketplace.public.v1.MarketplaceService/UninstallConnector"
+	// MarketplaceServiceListOwnedConnectorsProcedure is the procedure name of the MarketplaceService's
+	// ListOwnedConnectors RPC.
+	MarketplaceServiceListOwnedConnectorsProcedure = "/marketplace.public.v1.MarketplaceService/ListOwnedConnectors"
+	// MarketplaceServiceAddConnectorProcedure is the procedure name of the MarketplaceService's
+	// AddConnector RPC.
+	MarketplaceServiceAddConnectorProcedure = "/marketplace.public.v1.MarketplaceService/AddConnector"
+	// MarketplaceServiceChangeConnectorProcedure is the procedure name of the MarketplaceService's
+	// ChangeConnector RPC.
+	MarketplaceServiceChangeConnectorProcedure = "/marketplace.public.v1.MarketplaceService/ChangeConnector"
+	// MarketplaceServiceChangeConnectorIconProcedure is the procedure name of the MarketplaceService's
+	// ChangeConnectorIcon RPC.
+	MarketplaceServiceChangeConnectorIconProcedure = "/marketplace.public.v1.MarketplaceService/ChangeConnectorIcon"
+	// MarketplaceServiceGetConnectorIconProcedure is the procedure name of the MarketplaceService's
+	// GetConnectorIcon RPC.
+	MarketplaceServiceGetConnectorIconProcedure = "/marketplace.public.v1.MarketplaceService/GetConnectorIcon"
+	// MarketplaceServicePublishConnectorProcedure is the procedure name of the MarketplaceService's
+	// PublishConnector RPC.
+	MarketplaceServicePublishConnectorProcedure = "/marketplace.public.v1.MarketplaceService/PublishConnector"
+	// MarketplaceServiceWithdrawConnectorProcedure is the procedure name of the MarketplaceService's
+	// WithdrawConnector RPC.
+	MarketplaceServiceWithdrawConnectorProcedure = "/marketplace.public.v1.MarketplaceService/WithdrawConnector"
+	// MarketplaceServiceDeleteConnectorProcedure is the procedure name of the MarketplaceService's
+	// DeleteConnector RPC.
+	MarketplaceServiceDeleteConnectorProcedure = "/marketplace.public.v1.MarketplaceService/DeleteConnector"
 )
 
 var (
@@ -287,6 +311,62 @@ var (
 			Procedure:  MarketplaceServiceUninstallConnectorProcedure,
 		}
 	})
+	marketplaceServiceListOwnedConnectorsSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_marketplace_public_v1_marketplace_proto.Services().ByName("MarketplaceService").Methods().ByName("ListOwnedConnectors"),
+			Procedure:  MarketplaceServiceListOwnedConnectorsProcedure,
+		}
+	})
+	marketplaceServiceAddConnectorSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_marketplace_public_v1_marketplace_proto.Services().ByName("MarketplaceService").Methods().ByName("AddConnector"),
+			Procedure:  MarketplaceServiceAddConnectorProcedure,
+		}
+	})
+	marketplaceServiceChangeConnectorSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_marketplace_public_v1_marketplace_proto.Services().ByName("MarketplaceService").Methods().ByName("ChangeConnector"),
+			Procedure:  MarketplaceServiceChangeConnectorProcedure,
+		}
+	})
+	marketplaceServiceChangeConnectorIconSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_marketplace_public_v1_marketplace_proto.Services().ByName("MarketplaceService").Methods().ByName("ChangeConnectorIcon"),
+			Procedure:  MarketplaceServiceChangeConnectorIconProcedure,
+		}
+	})
+	marketplaceServiceGetConnectorIconSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_marketplace_public_v1_marketplace_proto.Services().ByName("MarketplaceService").Methods().ByName("GetConnectorIcon"),
+			Procedure:  MarketplaceServiceGetConnectorIconProcedure,
+		}
+	})
+	marketplaceServicePublishConnectorSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_marketplace_public_v1_marketplace_proto.Services().ByName("MarketplaceService").Methods().ByName("PublishConnector"),
+			Procedure:  MarketplaceServicePublishConnectorProcedure,
+		}
+	})
+	marketplaceServiceWithdrawConnectorSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_marketplace_public_v1_marketplace_proto.Services().ByName("MarketplaceService").Methods().ByName("WithdrawConnector"),
+			Procedure:  MarketplaceServiceWithdrawConnectorProcedure,
+		}
+	})
+	marketplaceServiceDeleteConnectorSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_marketplace_public_v1_marketplace_proto.Services().ByName("MarketplaceService").Methods().ByName("DeleteConnector"),
+			Procedure:  MarketplaceServiceDeleteConnectorProcedure,
+		}
+	})
 )
 
 // MarketplaceServiceClient is a client for the marketplace.public.v1.MarketplaceService service.
@@ -333,9 +413,9 @@ type MarketplaceServiceClient interface {
 	DeletePluginConfiguration(context.Context, *v1.DeletePluginConfigurationRequest) (*v1.DeletePluginConfigurationResponse, error)
 	// Remove a personal installation and its manual configuration.
 	UninstallPlugin(context.Context, *v1.UninstallPluginRequest) (*v1.UninstallPluginResponse, error)
-	// Browse the platform Connector catalog with the user's personal status.
+	// Browse the owner's Connector catalog with the owner's personal status.
 	ListConnectors(context.Context, *v1.ListConnectorsRequest) (*v1.ListConnectorsResponse, error)
-	// Read one catalog Connector with the Plugins that use it.
+	// Read one Connector by identity with the Plugins that use it.
 	GetConnector(context.Context, *v1.GetConnectorRequest) (*v1.GetConnectorResponse, error)
 	// List required Connectors and the user's personal installations.
 	ListInstalledConnectors(context.Context, *v1.ListInstalledConnectorsRequest) (*v1.ListInstalledConnectorsResponse, error)
@@ -347,6 +427,22 @@ type MarketplaceServiceClient interface {
 	DisableConnector(context.Context, *v1.DisableConnectorRequest) (*v1.DisableConnectorResponse, error)
 	// Remove a personal Connector installation; authorization is unaffected.
 	UninstallConnector(context.Context, *v1.UninstallConnectorRequest) (*v1.UninstallConnectorResponse, error)
+	// List every Connector the owner made, Withdrawn ones included.
+	ListOwnedConnectors(context.Context, *v1.ListOwnedConnectorsRequest) (*v1.ListOwnedConnectorsResponse, error)
+	// Add a Private Connector; adding never installs it.
+	AddConnector(context.Context, *v1.AddConnectorRequest) (*v1.AddConnectorResponse, error)
+	// Change an owned Connector's connection, description and category.
+	ChangeConnector(context.Context, *v1.ChangeConnectorRequest) (*v1.ChangeConnectorResponse, error)
+	// Replace or remove an owned Connector's icon image.
+	ChangeConnectorIcon(context.Context, *v1.ChangeConnectorIconRequest) (*v1.ChangeConnectorIconResponse, error)
+	// Read the icon image of a Connector the owner may see.
+	GetConnectorIcon(context.Context, *v1.GetConnectorIconRequest) (*v1.GetConnectorIconResponse, error)
+	// Publish an owned Private Connector to every owner.
+	PublishConnector(context.Context, *v1.PublishConnectorRequest) (*v1.PublishConnectorResponse, error)
+	// Withdraw a Connector the owner published, for good.
+	WithdrawConnector(context.Context, *v1.WithdrawConnectorRequest) (*v1.WithdrawConnectorResponse, error)
+	// Delete an owned Private Connector and the owner's installation of it.
+	DeleteConnector(context.Context, *v1.DeleteConnectorRequest) (*v1.DeleteConnectorResponse, error)
 }
 
 // NewMarketplaceServiceClient constructs a client for the marketplace.public.v1.MarketplaceService
@@ -400,9 +496,9 @@ type MarketplaceServiceHandler interface {
 	DeletePluginConfiguration(context.Context, *v1.DeletePluginConfigurationRequest) (*v1.DeletePluginConfigurationResponse, error)
 	// Remove a personal installation and its manual configuration.
 	UninstallPlugin(context.Context, *v1.UninstallPluginRequest) (*v1.UninstallPluginResponse, error)
-	// Browse the platform Connector catalog with the user's personal status.
+	// Browse the owner's Connector catalog with the owner's personal status.
 	ListConnectors(context.Context, *v1.ListConnectorsRequest) (*v1.ListConnectorsResponse, error)
-	// Read one catalog Connector with the Plugins that use it.
+	// Read one Connector by identity with the Plugins that use it.
 	GetConnector(context.Context, *v1.GetConnectorRequest) (*v1.GetConnectorResponse, error)
 	// List required Connectors and the user's personal installations.
 	ListInstalledConnectors(context.Context, *v1.ListInstalledConnectorsRequest) (*v1.ListInstalledConnectorsResponse, error)
@@ -414,6 +510,22 @@ type MarketplaceServiceHandler interface {
 	DisableConnector(context.Context, *v1.DisableConnectorRequest) (*v1.DisableConnectorResponse, error)
 	// Remove a personal Connector installation; authorization is unaffected.
 	UninstallConnector(context.Context, *v1.UninstallConnectorRequest) (*v1.UninstallConnectorResponse, error)
+	// List every Connector the owner made, Withdrawn ones included.
+	ListOwnedConnectors(context.Context, *v1.ListOwnedConnectorsRequest) (*v1.ListOwnedConnectorsResponse, error)
+	// Add a Private Connector; adding never installs it.
+	AddConnector(context.Context, *v1.AddConnectorRequest) (*v1.AddConnectorResponse, error)
+	// Change an owned Connector's connection, description and category.
+	ChangeConnector(context.Context, *v1.ChangeConnectorRequest) (*v1.ChangeConnectorResponse, error)
+	// Replace or remove an owned Connector's icon image.
+	ChangeConnectorIcon(context.Context, *v1.ChangeConnectorIconRequest) (*v1.ChangeConnectorIconResponse, error)
+	// Read the icon image of a Connector the owner may see.
+	GetConnectorIcon(context.Context, *v1.GetConnectorIconRequest) (*v1.GetConnectorIconResponse, error)
+	// Publish an owned Private Connector to every owner.
+	PublishConnector(context.Context, *v1.PublishConnectorRequest) (*v1.PublishConnectorResponse, error)
+	// Withdraw a Connector the owner published, for good.
+	WithdrawConnector(context.Context, *v1.WithdrawConnectorRequest) (*v1.WithdrawConnectorResponse, error)
+	// Delete an owned Private Connector and the owner's installation of it.
+	DeleteConnector(context.Context, *v1.DeleteConnectorRequest) (*v1.DeleteConnectorResponse, error)
 }
 
 // RegisterMarketplaceServiceHandler registers svc as the marketplace.public.v1.MarketplaceService
@@ -447,6 +559,14 @@ func RegisterMarketplaceServiceHandler(server *connect.Server, svc MarketplaceSe
 		connect.Method{Spec: marketplaceServiceEnableConnectorSpec(), Handler: adapter.enableConnector},
 		connect.Method{Spec: marketplaceServiceDisableConnectorSpec(), Handler: adapter.disableConnector},
 		connect.Method{Spec: marketplaceServiceUninstallConnectorSpec(), Handler: adapter.uninstallConnector},
+		connect.Method{Spec: marketplaceServiceListOwnedConnectorsSpec(), Handler: adapter.listOwnedConnectors},
+		connect.Method{Spec: marketplaceServiceAddConnectorSpec(), Handler: adapter.addConnector},
+		connect.Method{Spec: marketplaceServiceChangeConnectorSpec(), Handler: adapter.changeConnector},
+		connect.Method{Spec: marketplaceServiceChangeConnectorIconSpec(), Handler: adapter.changeConnectorIcon},
+		connect.Method{Spec: marketplaceServiceGetConnectorIconSpec(), Handler: adapter.getConnectorIcon},
+		connect.Method{Spec: marketplaceServicePublishConnectorSpec(), Handler: adapter.publishConnector},
+		connect.Method{Spec: marketplaceServiceWithdrawConnectorSpec(), Handler: adapter.withdrawConnector},
+		connect.Method{Spec: marketplaceServiceDeleteConnectorSpec(), Handler: adapter.deleteConnector},
 	)
 }
 
@@ -555,6 +675,38 @@ func (UnimplementedMarketplaceServiceHandler) DisableConnector(context.Context, 
 
 func (UnimplementedMarketplaceServiceHandler) UninstallConnector(context.Context, *v1.UninstallConnectorRequest) (*v1.UninstallConnectorResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, "marketplace.public.v1.MarketplaceService.UninstallConnector is not implemented")
+}
+
+func (UnimplementedMarketplaceServiceHandler) ListOwnedConnectors(context.Context, *v1.ListOwnedConnectorsRequest) (*v1.ListOwnedConnectorsResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "marketplace.public.v1.MarketplaceService.ListOwnedConnectors is not implemented")
+}
+
+func (UnimplementedMarketplaceServiceHandler) AddConnector(context.Context, *v1.AddConnectorRequest) (*v1.AddConnectorResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "marketplace.public.v1.MarketplaceService.AddConnector is not implemented")
+}
+
+func (UnimplementedMarketplaceServiceHandler) ChangeConnector(context.Context, *v1.ChangeConnectorRequest) (*v1.ChangeConnectorResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "marketplace.public.v1.MarketplaceService.ChangeConnector is not implemented")
+}
+
+func (UnimplementedMarketplaceServiceHandler) ChangeConnectorIcon(context.Context, *v1.ChangeConnectorIconRequest) (*v1.ChangeConnectorIconResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "marketplace.public.v1.MarketplaceService.ChangeConnectorIcon is not implemented")
+}
+
+func (UnimplementedMarketplaceServiceHandler) GetConnectorIcon(context.Context, *v1.GetConnectorIconRequest) (*v1.GetConnectorIconResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "marketplace.public.v1.MarketplaceService.GetConnectorIcon is not implemented")
+}
+
+func (UnimplementedMarketplaceServiceHandler) PublishConnector(context.Context, *v1.PublishConnectorRequest) (*v1.PublishConnectorResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "marketplace.public.v1.MarketplaceService.PublishConnector is not implemented")
+}
+
+func (UnimplementedMarketplaceServiceHandler) WithdrawConnector(context.Context, *v1.WithdrawConnectorRequest) (*v1.WithdrawConnectorResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "marketplace.public.v1.MarketplaceService.WithdrawConnector is not implemented")
+}
+
+func (UnimplementedMarketplaceServiceHandler) DeleteConnector(context.Context, *v1.DeleteConnectorRequest) (*v1.DeleteConnectorResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "marketplace.public.v1.MarketplaceService.DeleteConnector is not implemented")
 }
 
 type marketplaceServiceClient struct {
@@ -764,6 +916,70 @@ func (c *marketplaceServiceClient) DisableConnector(ctx context.Context, req *v1
 func (c *marketplaceServiceClient) UninstallConnector(ctx context.Context, req *v1.UninstallConnectorRequest) (*v1.UninstallConnectorResponse, error) {
 	var res v1.UninstallConnectorResponse
 	if err := c.client.CallUnary(ctx, marketplaceServiceUninstallConnectorSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *marketplaceServiceClient) ListOwnedConnectors(ctx context.Context, req *v1.ListOwnedConnectorsRequest) (*v1.ListOwnedConnectorsResponse, error) {
+	var res v1.ListOwnedConnectorsResponse
+	if err := c.client.CallUnary(ctx, marketplaceServiceListOwnedConnectorsSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *marketplaceServiceClient) AddConnector(ctx context.Context, req *v1.AddConnectorRequest) (*v1.AddConnectorResponse, error) {
+	var res v1.AddConnectorResponse
+	if err := c.client.CallUnary(ctx, marketplaceServiceAddConnectorSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *marketplaceServiceClient) ChangeConnector(ctx context.Context, req *v1.ChangeConnectorRequest) (*v1.ChangeConnectorResponse, error) {
+	var res v1.ChangeConnectorResponse
+	if err := c.client.CallUnary(ctx, marketplaceServiceChangeConnectorSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *marketplaceServiceClient) ChangeConnectorIcon(ctx context.Context, req *v1.ChangeConnectorIconRequest) (*v1.ChangeConnectorIconResponse, error) {
+	var res v1.ChangeConnectorIconResponse
+	if err := c.client.CallUnary(ctx, marketplaceServiceChangeConnectorIconSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *marketplaceServiceClient) GetConnectorIcon(ctx context.Context, req *v1.GetConnectorIconRequest) (*v1.GetConnectorIconResponse, error) {
+	var res v1.GetConnectorIconResponse
+	if err := c.client.CallUnary(ctx, marketplaceServiceGetConnectorIconSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *marketplaceServiceClient) PublishConnector(ctx context.Context, req *v1.PublishConnectorRequest) (*v1.PublishConnectorResponse, error) {
+	var res v1.PublishConnectorResponse
+	if err := c.client.CallUnary(ctx, marketplaceServicePublishConnectorSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *marketplaceServiceClient) WithdrawConnector(ctx context.Context, req *v1.WithdrawConnectorRequest) (*v1.WithdrawConnectorResponse, error) {
+	var res v1.WithdrawConnectorResponse
+	if err := c.client.CallUnary(ctx, marketplaceServiceWithdrawConnectorSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *marketplaceServiceClient) DeleteConnector(ctx context.Context, req *v1.DeleteConnectorRequest) (*v1.DeleteConnectorResponse, error) {
+	var res v1.DeleteConnectorResponse
+	if err := c.client.CallUnary(ctx, marketplaceServiceDeleteConnectorSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
@@ -1077,6 +1293,102 @@ func (h marketplaceServiceHandler) uninstallConnector(ctx context.Context, _ con
 		return err
 	}
 	res, err := h.svc.UninstallConnector(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h marketplaceServiceHandler) listOwnedConnectors(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.ListOwnedConnectorsRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.ListOwnedConnectors(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h marketplaceServiceHandler) addConnector(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.AddConnectorRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.AddConnector(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h marketplaceServiceHandler) changeConnector(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.ChangeConnectorRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.ChangeConnector(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h marketplaceServiceHandler) changeConnectorIcon(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.ChangeConnectorIconRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.ChangeConnectorIcon(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h marketplaceServiceHandler) getConnectorIcon(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.GetConnectorIconRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.GetConnectorIcon(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h marketplaceServiceHandler) publishConnector(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.PublishConnectorRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.PublishConnector(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h marketplaceServiceHandler) withdrawConnector(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.WithdrawConnectorRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.WithdrawConnector(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h marketplaceServiceHandler) deleteConnector(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.DeleteConnectorRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.DeleteConnector(ctx, &req)
 	if err != nil {
 		return err
 	}

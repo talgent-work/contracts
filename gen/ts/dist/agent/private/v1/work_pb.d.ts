@@ -328,18 +328,18 @@ export declare const CapabilityDifferencesSchema: GenMessage<CapabilityDifferenc
  */
 export declare type ConnectorChoice = Message<"agent.private.v1.ConnectorChoice"> & {
   /**
-   * Catalog Connector name.
-   *
-   * @generated from field: string name = 1;
-   */
-  name: string;
-
-  /**
    * True adds the Connector; false removes a default. Required entries stay.
    *
    * @generated from field: bool include = 2;
    */
   include: boolean;
+
+  /**
+   * Connector identity. A Work refuses two selected Connectors of one name.
+   *
+   * @generated from field: string connector_id = 3;
+   */
+  connectorId: string;
 };
 
 /**

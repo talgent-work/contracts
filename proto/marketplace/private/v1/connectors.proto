@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package marketplace.private.v1;
+
+option go_package = "github.com/talgent-work/contracts/gen/go/marketplace/private/v1;marketplaceprivatev1";
+
+// ConnectorOperationService is available only to authenticated platform
+// operations, never through the public gateway.
+service ConnectorOperationService {
+  // WithdrawConnector withdraws any Published Connector an owner published,
+  // for good. Repeating it for a Withdrawn Connector succeeds.
+  rpc WithdrawConnector(WithdrawConnectorRequest) returns (WithdrawConnectorResponse);
+}
+
+// WithdrawConnectorRequest names the Connector.
+message WithdrawConnectorRequest {
+  // Connector identity, as its Marketplace page addresses it.
+  string connector_id = 1;
+}
+
+// WithdrawConnectorResponse confirms the withdrawal.
+message WithdrawConnectorResponse {
+  // Native MCP server name of the withdrawn Connector.
+  string name = 1;
+}

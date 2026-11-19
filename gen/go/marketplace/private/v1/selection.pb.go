@@ -276,7 +276,9 @@ func (*ReadConnectorSelectionRequest) Descriptor() ([]byte, []int) {
 // ReadConnectorSelectionResponse is trusted startup input, never a UI response.
 type ReadConnectorSelectionResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Every catalog entry with its offer status and non-secret configuration.
+	// The owner's Connector catalog with non-secret configuration, and each
+	// Withdrawn Connector the owner installed by identity only, which no new
+	// Work selects.
 	Connectors []*CatalogConnector `protobuf:"bytes,1,rep,name=connectors,proto3" json:"connectors,omitempty"`
 	// Identities of the owner's enabled installations.
 	EnabledConnectorIds []string `protobuf:"bytes,2,rep,name=enabled_connector_ids,json=enabledConnectorIds,proto3" json:"enabled_connector_ids,omitempty"`
@@ -333,13 +335,14 @@ type CatalogConnector struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Stable catalog identity.
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// Native MCP server name.
+	// Native MCP server name, unique per owner but not across owners.
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	// Included in every Work; cannot be removed.
 	Required bool `protobuf:"varint,3,opt,name=required,proto3" json:"required,omitempty"`
 	// Only offered entries may be selected for a new Work.
 	Offered bool `protobuf:"varint,4,opt,name=offered,proto3" json:"offered,omitempty"`
-	// work_identity or provider_authorization.
+	// work_identity, provider_authorization, or none for a credential-free
+	// Connector, which receives no credential.
 	Authentication string `protobuf:"bytes,5,opt,name=authentication,proto3" json:"authentication,omitempty"`
 	// Native transport: empty or stdio for processes, http for remote servers.
 	Type string `protobuf:"bytes,6,opt,name=type,proto3" json:"type,omitempty"`
@@ -362,8 +365,11 @@ type CatalogConnector struct {
 	// Whether the declared Provider's target credentials expire; false
 	// without a Provider.
 	ProviderTargetCredentialsExpire bool `protobuf:"varint,15,opt,name=provider_target_credentials_expire,json=providerTargetCredentialsExpire,proto3" json:"provider_target_credentials_expire,omitempty"`
-	unknownFields                   protoimpl.UnknownFields
-	sizeCache                       protoimpl.SizeCache
+	// Display name of the person or Application that published it; empty for
+	// a Platform Connector.
+	Publisher     string `protobuf:"bytes,16,opt,name=publisher,proto3" json:"publisher,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CatalogConnector) Reset() {
@@ -501,6 +507,13 @@ func (x *CatalogConnector) GetProviderTargetCredentialsExpire() bool {
 	return false
 }
 
+func (x *CatalogConnector) GetPublisher() string {
+	if x != nil {
+		return x.Publisher
+	}
+	return ""
+}
+
 var File_marketplace_private_v1_selection_proto protoreflect.FileDescriptor
 
 const file_marketplace_private_v1_selection_proto_rawDesc = "" +
@@ -523,7 +536,7 @@ const file_marketplace_private_v1_selection_proto_rawDesc = "" +
 	"\n" +
 	"connectors\x18\x01 \x03(\v2(.marketplace.private.v1.CatalogConnectorR\n" +
 	"connectors\x122\n" +
-	"\x15enabled_connector_ids\x18\x02 \x03(\tR\x13enabledConnectorIds\"\xd6\x05\n" +
+	"\x15enabled_connector_ids\x18\x02 \x03(\tR\x13enabledConnectorIds\"\xf4\x05\n" +
 	"\x10CatalogConnector\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1a\n" +
@@ -540,7 +553,8 @@ const file_marketplace_private_v1_selection_proto_rawDesc = "" +
 	"\bprovider\x18\f \x01(\tR\bprovider\x12\x16\n" +
 	"\x06target\x18\r \x01(\tR\x06target\x127\n" +
 	"\x17provider_authentication\x18\x0e \x01(\tR\x16providerAuthentication\x12K\n" +
-	"\"provider_target_credentials_expire\x18\x0f \x01(\bR\x1fproviderTargetCredentialsExpire\x1a>\n" +
+	"\"provider_target_credentials_expire\x18\x0f \x01(\bR\x1fproviderTargetCredentialsExpire\x12\x1c\n" +
+	"\tpublisher\x18\x10 \x01(\tR\tpublisher\x1a>\n" +
 	"\x10EnvironmentEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\x1a:\n" +

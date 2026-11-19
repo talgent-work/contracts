@@ -112,7 +112,7 @@ export declare const WorkStartRepositoriesSchema: GenMessage<WorkStartRepositori
  */
 export declare type WorkStartConnector = Message<"agent.public.v1.WorkStartConnector"> & {
   /**
-   * Catalog name used in creation Connector choices.
+   * Native MCP server name; two selectable Connectors may share one.
    *
    * @generated from field: string name = 1;
    */
@@ -140,6 +140,21 @@ export declare type WorkStartConnector = Message<"agent.public.v1.WorkStartConne
    * @generated from field: bool unavailable_on_managed = 4;
    */
   unavailableOnManaged: boolean;
+
+  /**
+   * Connector identity used in creation Connector choices.
+   *
+   * @generated from field: string connector_id = 5;
+   */
+  connectorId: string;
+
+  /**
+   * Display name of the person or Application that published it; empty for
+   * a Platform Connector.
+   *
+   * @generated from field: string publisher = 6;
+   */
+  publisher: string;
 };
 
 /**

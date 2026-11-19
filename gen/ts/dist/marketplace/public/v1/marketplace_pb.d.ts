@@ -5,6 +5,7 @@
 import type { GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
 import type { JsonObject, Message } from "@bufbuild/protobuf";
 import type { Value } from "@bufbuild/protobuf/wkt";
+import type { AddConnectorRequestSchema, AddConnectorResponseSchema, ChangeConnectorIconRequestSchema, ChangeConnectorIconResponseSchema, ChangeConnectorRequestSchema, ChangeConnectorResponseSchema, Connector, DeleteConnectorRequestSchema, DeleteConnectorResponseSchema, GetConnectorIconRequestSchema, GetConnectorIconResponseSchema, ListOwnedConnectorsRequestSchema, ListOwnedConnectorsResponseSchema, PublishConnectorRequestSchema, PublishConnectorResponseSchema, WithdrawConnectorRequestSchema, WithdrawConnectorResponseSchema } from "./connectors_pb.js";
 import type { BeginProviderAuthorizationRequestSchema, BeginProviderAuthorizationResponseSchema, CompleteProviderAuthorizationRequestSchema, CompleteProviderAuthorizationResponseSchema, GetProviderAccessRequestSchema, GetProviderAccessResponseSchema, GetProviderConnectionStateRequestSchema, GetProviderConnectionStateResponseSchema, ListAccessibleRepositoriesRequestSchema, ListAccessibleRepositoriesResponseSchema, ListProvidersRequestSchema, ListProvidersResponseSchema, RefreshProviderAccessRequestSchema, RefreshProviderAccessResponseSchema } from "./connections_pb.js";
 
 /**
@@ -1168,82 +1169,6 @@ export declare type ConnectorProviderRelationship = Message<"marketplace.public.
 export declare const ConnectorProviderRelationshipSchema: GenMessage<ConnectorProviderRelationship>;
 
 /**
- * Connector is one platform catalog entry with the user's personal status.
- *
- * @generated from message marketplace.public.v1.Connector
- */
-export declare type Connector = Message<"marketplace.public.v1.Connector"> & {
-  /**
-   * Stable public catalog reference.
-   *
-   * @generated from field: string name = 1;
-   */
-  name: string;
-
-  /**
-   * Catalog description.
-   *
-   * @generated from field: string description = 2;
-   */
-  description: string;
-
-  /**
-   * Catalog browsing category.
-   *
-   * @generated from field: string category = 3;
-   */
-  category: string;
-
-  /**
-   * Platform-required entries are always enabled and cannot be installed.
-   *
-   * @generated from field: bool required = 4;
-   */
-  required: boolean;
-
-  /**
-   * always_enabled, enabled, disabled or not_installed.
-   *
-   * @generated from field: string status = 5;
-   */
-  status: string;
-
-  /**
-   * Concurrency token for personal changes; zero without an installation.
-   *
-   * @generated from field: uint32 installation_version = 6;
-   */
-  installationVersion: number;
-
-  /**
-   * Declared Provider; empty when no personal authorization is used.
-   *
-   * @generated from field: string provider = 7;
-   */
-  provider: string;
-
-  /**
-   * connected, not_connected or reconnect_required; empty without a Provider.
-   *
-   * @generated from field: string provider_connection = 8;
-   */
-  providerConnection: string;
-
-  /**
-   * False for a withdrawn entry that remains installed.
-   *
-   * @generated from field: bool offered = 9;
-   */
-  offered: boolean;
-};
-
-/**
- * Describes the message marketplace.public.v1.Connector.
- * Use `create(ConnectorSchema)` to create a new message.
- */
-export declare const ConnectorSchema: GenMessage<Connector>;
-
-/**
  * ConnectorPlugin is a catalog Plugin whose MCP declaration addresses a Connector.
  *
  * @generated from message marketplace.public.v1.ConnectorPlugin
@@ -1293,7 +1218,9 @@ export declare type ListConnectorsRequest = Message<"marketplace.public.v1.ListC
 export declare const ListConnectorsRequestSchema: GenMessage<ListConnectorsRequest>;
 
 /**
- * ListConnectorsResponse contains every offered catalog entry.
+ * ListConnectorsResponse contains the owner's Connector catalog: the
+ * Platform Connectors, the Published Connectors and the owner's own Private
+ * Connectors.
  *
  * @generated from message marketplace.public.v1.ListConnectorsResponse
  */
@@ -1313,18 +1240,12 @@ export declare type ListConnectorsResponse = Message<"marketplace.public.v1.List
 export declare const ListConnectorsResponseSchema: GenMessage<ListConnectorsResponse>;
 
 /**
- * GetConnectorRequest selects one catalog entry.
+ * GetConnectorRequest selects one Connector of the owner's catalog, one the
+ * owner installed or one the owner made.
  *
  * @generated from message marketplace.public.v1.GetConnectorRequest
  */
 export declare type GetConnectorRequest = Message<"marketplace.public.v1.GetConnectorRequest"> & {
-  /**
-   * Catalog Connector name.
-   *
-   * @generated from field: string name = 1;
-   */
-  name: string;
-
   /**
    * An Application the caller owns, whose installations the request
    * reaches; empty for the caller's own. An Application leaves it empty or
@@ -1333,6 +1254,13 @@ export declare type GetConnectorRequest = Message<"marketplace.public.v1.GetConn
    * @generated from field: string application_id = 2;
    */
   applicationId: string;
+
+  /**
+   * Connector identity.
+   *
+   * @generated from field: string connector_id = 3;
+   */
+  connectorId: string;
 };
 
 /**
@@ -1417,13 +1345,6 @@ export declare const ListInstalledConnectorsResponseSchema: GenMessage<ListInsta
  */
 export declare type InstallConnectorRequest = Message<"marketplace.public.v1.InstallConnectorRequest"> & {
   /**
-   * Catalog Connector name.
-   *
-   * @generated from field: string name = 1;
-   */
-  name: string;
-
-  /**
    * An Application the caller owns, whose installations the request
    * reaches; empty for the caller's own. An Application leaves it empty or
    * names itself.
@@ -1431,6 +1352,13 @@ export declare type InstallConnectorRequest = Message<"marketplace.public.v1.Ins
    * @generated from field: string application_id = 2;
    */
   applicationId: string;
+
+  /**
+   * Connector identity.
+   *
+   * @generated from field: string connector_id = 3;
+   */
+  connectorId: string;
 };
 
 /**
@@ -1466,13 +1394,6 @@ export declare const InstallConnectorResponseSchema: GenMessage<InstallConnector
  */
 export declare type EnableConnectorRequest = Message<"marketplace.public.v1.EnableConnectorRequest"> & {
   /**
-   * Catalog Connector name.
-   *
-   * @generated from field: string name = 1;
-   */
-  name: string;
-
-  /**
    * Installation version read before this mutation; stale values are rejected.
    *
    * @generated from field: uint32 version = 2;
@@ -1487,6 +1408,13 @@ export declare type EnableConnectorRequest = Message<"marketplace.public.v1.Enab
    * @generated from field: string application_id = 3;
    */
   applicationId: string;
+
+  /**
+   * Connector identity.
+   *
+   * @generated from field: string connector_id = 4;
+   */
+  connectorId: string;
 };
 
 /**
@@ -1522,13 +1450,6 @@ export declare const EnableConnectorResponseSchema: GenMessage<EnableConnectorRe
  */
 export declare type DisableConnectorRequest = Message<"marketplace.public.v1.DisableConnectorRequest"> & {
   /**
-   * Catalog Connector name.
-   *
-   * @generated from field: string name = 1;
-   */
-  name: string;
-
-  /**
    * Installation version read before this mutation; stale values are rejected.
    *
    * @generated from field: uint32 version = 2;
@@ -1543,6 +1464,13 @@ export declare type DisableConnectorRequest = Message<"marketplace.public.v1.Dis
    * @generated from field: string application_id = 3;
    */
   applicationId: string;
+
+  /**
+   * Connector identity.
+   *
+   * @generated from field: string connector_id = 4;
+   */
+  connectorId: string;
 };
 
 /**
@@ -1578,13 +1506,6 @@ export declare const DisableConnectorResponseSchema: GenMessage<DisableConnector
  */
 export declare type UninstallConnectorRequest = Message<"marketplace.public.v1.UninstallConnectorRequest"> & {
   /**
-   * Catalog Connector name.
-   *
-   * @generated from field: string name = 1;
-   */
-  name: string;
-
-  /**
    * Installation version read before this mutation; stale values are rejected.
    *
    * @generated from field: uint32 version = 2;
@@ -1599,6 +1520,13 @@ export declare type UninstallConnectorRequest = Message<"marketplace.public.v1.U
    * @generated from field: string application_id = 3;
    */
   applicationId: string;
+
+  /**
+   * Connector identity.
+   *
+   * @generated from field: string connector_id = 4;
+   */
+  connectorId: string;
 };
 
 /**
@@ -1826,7 +1754,7 @@ export declare const MarketplaceService: GenService<{
     output: typeof UninstallPluginResponseSchema;
   },
   /**
-   * Browse the platform Connector catalog with the user's personal status.
+   * Browse the owner's Connector catalog with the owner's personal status.
    *
    * @generated from rpc marketplace.public.v1.MarketplaceService.ListConnectors
    */
@@ -1836,7 +1764,7 @@ export declare const MarketplaceService: GenService<{
     output: typeof ListConnectorsResponseSchema;
   },
   /**
-   * Read one catalog Connector with the Plugins that use it.
+   * Read one Connector by identity with the Plugins that use it.
    *
    * @generated from rpc marketplace.public.v1.MarketplaceService.GetConnector
    */
@@ -1894,6 +1822,86 @@ export declare const MarketplaceService: GenService<{
     methodKind: "unary";
     input: typeof UninstallConnectorRequestSchema;
     output: typeof UninstallConnectorResponseSchema;
+  },
+  /**
+   * List every Connector the owner made, Withdrawn ones included.
+   *
+   * @generated from rpc marketplace.public.v1.MarketplaceService.ListOwnedConnectors
+   */
+  listOwnedConnectors: {
+    methodKind: "unary";
+    input: typeof ListOwnedConnectorsRequestSchema;
+    output: typeof ListOwnedConnectorsResponseSchema;
+  },
+  /**
+   * Add a Private Connector; adding never installs it.
+   *
+   * @generated from rpc marketplace.public.v1.MarketplaceService.AddConnector
+   */
+  addConnector: {
+    methodKind: "unary";
+    input: typeof AddConnectorRequestSchema;
+    output: typeof AddConnectorResponseSchema;
+  },
+  /**
+   * Change an owned Connector's connection, description and category.
+   *
+   * @generated from rpc marketplace.public.v1.MarketplaceService.ChangeConnector
+   */
+  changeConnector: {
+    methodKind: "unary";
+    input: typeof ChangeConnectorRequestSchema;
+    output: typeof ChangeConnectorResponseSchema;
+  },
+  /**
+   * Replace or remove an owned Connector's icon image.
+   *
+   * @generated from rpc marketplace.public.v1.MarketplaceService.ChangeConnectorIcon
+   */
+  changeConnectorIcon: {
+    methodKind: "unary";
+    input: typeof ChangeConnectorIconRequestSchema;
+    output: typeof ChangeConnectorIconResponseSchema;
+  },
+  /**
+   * Read the icon image of a Connector the owner may see.
+   *
+   * @generated from rpc marketplace.public.v1.MarketplaceService.GetConnectorIcon
+   */
+  getConnectorIcon: {
+    methodKind: "unary";
+    input: typeof GetConnectorIconRequestSchema;
+    output: typeof GetConnectorIconResponseSchema;
+  },
+  /**
+   * Publish an owned Private Connector to every owner.
+   *
+   * @generated from rpc marketplace.public.v1.MarketplaceService.PublishConnector
+   */
+  publishConnector: {
+    methodKind: "unary";
+    input: typeof PublishConnectorRequestSchema;
+    output: typeof PublishConnectorResponseSchema;
+  },
+  /**
+   * Withdraw a Connector the owner published, for good.
+   *
+   * @generated from rpc marketplace.public.v1.MarketplaceService.WithdrawConnector
+   */
+  withdrawConnector: {
+    methodKind: "unary";
+    input: typeof WithdrawConnectorRequestSchema;
+    output: typeof WithdrawConnectorResponseSchema;
+  },
+  /**
+   * Delete an owned Private Connector and the owner's installation of it.
+   *
+   * @generated from rpc marketplace.public.v1.MarketplaceService.DeleteConnector
+   */
+  deleteConnector: {
+    methodKind: "unary";
+    input: typeof DeleteConnectorRequestSchema;
+    output: typeof DeleteConnectorResponseSchema;
   },
 }>;
 

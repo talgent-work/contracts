@@ -2169,124 +2169,6 @@ func (x *ConnectorProviderRelationship) GetTargetCredentialsExpire() bool {
 	return false
 }
 
-// Connector is one platform catalog entry with the user's personal status.
-type Connector struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Stable public catalog reference.
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	// Catalog description.
-	Description string `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
-	// Catalog browsing category.
-	Category string `protobuf:"bytes,3,opt,name=category,proto3" json:"category,omitempty"`
-	// Platform-required entries are always enabled and cannot be installed.
-	Required bool `protobuf:"varint,4,opt,name=required,proto3" json:"required,omitempty"`
-	// always_enabled, enabled, disabled or not_installed.
-	Status string `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"`
-	// Concurrency token for personal changes; zero without an installation.
-	InstallationVersion uint32 `protobuf:"varint,6,opt,name=installation_version,json=installationVersion,proto3" json:"installation_version,omitempty"`
-	// Declared Provider; empty when no personal authorization is used.
-	Provider string `protobuf:"bytes,7,opt,name=provider,proto3" json:"provider,omitempty"`
-	// connected, not_connected or reconnect_required; empty without a Provider.
-	ProviderConnection string `protobuf:"bytes,8,opt,name=provider_connection,json=providerConnection,proto3" json:"provider_connection,omitempty"`
-	// False for a withdrawn entry that remains installed.
-	Offered       bool `protobuf:"varint,9,opt,name=offered,proto3" json:"offered,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Connector) Reset() {
-	*x = Connector{}
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[33]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Connector) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Connector) ProtoMessage() {}
-
-func (x *Connector) ProtoReflect() protoreflect.Message {
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[33]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Connector.ProtoReflect.Descriptor instead.
-func (*Connector) Descriptor() ([]byte, []int) {
-	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{33}
-}
-
-func (x *Connector) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *Connector) GetDescription() string {
-	if x != nil {
-		return x.Description
-	}
-	return ""
-}
-
-func (x *Connector) GetCategory() string {
-	if x != nil {
-		return x.Category
-	}
-	return ""
-}
-
-func (x *Connector) GetRequired() bool {
-	if x != nil {
-		return x.Required
-	}
-	return false
-}
-
-func (x *Connector) GetStatus() string {
-	if x != nil {
-		return x.Status
-	}
-	return ""
-}
-
-func (x *Connector) GetInstallationVersion() uint32 {
-	if x != nil {
-		return x.InstallationVersion
-	}
-	return 0
-}
-
-func (x *Connector) GetProvider() string {
-	if x != nil {
-		return x.Provider
-	}
-	return ""
-}
-
-func (x *Connector) GetProviderConnection() string {
-	if x != nil {
-		return x.ProviderConnection
-	}
-	return ""
-}
-
-func (x *Connector) GetOffered() bool {
-	if x != nil {
-		return x.Offered
-	}
-	return false
-}
-
 // ConnectorPlugin is a catalog Plugin whose MCP declaration addresses a Connector.
 type ConnectorPlugin struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -2300,7 +2182,7 @@ type ConnectorPlugin struct {
 
 func (x *ConnectorPlugin) Reset() {
 	*x = ConnectorPlugin{}
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[34]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2312,7 +2194,7 @@ func (x *ConnectorPlugin) String() string {
 func (*ConnectorPlugin) ProtoMessage() {}
 
 func (x *ConnectorPlugin) ProtoReflect() protoreflect.Message {
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[34]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2325,7 +2207,7 @@ func (x *ConnectorPlugin) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConnectorPlugin.ProtoReflect.Descriptor instead.
 func (*ConnectorPlugin) Descriptor() ([]byte, []int) {
-	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{34}
+	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *ConnectorPlugin) GetSlug() string {
@@ -2355,7 +2237,7 @@ type ListConnectorsRequest struct {
 
 func (x *ListConnectorsRequest) Reset() {
 	*x = ListConnectorsRequest{}
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[35]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2367,7 +2249,7 @@ func (x *ListConnectorsRequest) String() string {
 func (*ListConnectorsRequest) ProtoMessage() {}
 
 func (x *ListConnectorsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[35]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2380,7 +2262,7 @@ func (x *ListConnectorsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListConnectorsRequest.ProtoReflect.Descriptor instead.
 func (*ListConnectorsRequest) Descriptor() ([]byte, []int) {
-	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{35}
+	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *ListConnectorsRequest) GetApplicationId() string {
@@ -2390,7 +2272,9 @@ func (x *ListConnectorsRequest) GetApplicationId() string {
 	return ""
 }
 
-// ListConnectorsResponse contains every offered catalog entry.
+// ListConnectorsResponse contains the owner's Connector catalog: the
+// Platform Connectors, the Published Connectors and the owner's own Private
+// Connectors.
 type ListConnectorsResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Catalog entries ordered by name.
@@ -2401,7 +2285,7 @@ type ListConnectorsResponse struct {
 
 func (x *ListConnectorsResponse) Reset() {
 	*x = ListConnectorsResponse{}
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[36]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2413,7 +2297,7 @@ func (x *ListConnectorsResponse) String() string {
 func (*ListConnectorsResponse) ProtoMessage() {}
 
 func (x *ListConnectorsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[36]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2426,7 +2310,7 @@ func (x *ListConnectorsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListConnectorsResponse.ProtoReflect.Descriptor instead.
 func (*ListConnectorsResponse) Descriptor() ([]byte, []int) {
-	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{36}
+	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *ListConnectorsResponse) GetConnectors() []*Connector {
@@ -2436,22 +2320,23 @@ func (x *ListConnectorsResponse) GetConnectors() []*Connector {
 	return nil
 }
 
-// GetConnectorRequest selects one catalog entry.
+// GetConnectorRequest selects one Connector of the owner's catalog, one the
+// owner installed or one the owner made.
 type GetConnectorRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Catalog Connector name.
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// An Application the caller owns, whose installations the request
 	// reaches; empty for the caller's own. An Application leaves it empty or
 	// names itself.
 	ApplicationId string `protobuf:"bytes,2,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
+	// Connector identity.
+	ConnectorId   string `protobuf:"bytes,3,opt,name=connector_id,json=connectorId,proto3" json:"connector_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetConnectorRequest) Reset() {
 	*x = GetConnectorRequest{}
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[37]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2463,7 +2348,7 @@ func (x *GetConnectorRequest) String() string {
 func (*GetConnectorRequest) ProtoMessage() {}
 
 func (x *GetConnectorRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[37]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2476,19 +2361,19 @@ func (x *GetConnectorRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetConnectorRequest.ProtoReflect.Descriptor instead.
 func (*GetConnectorRequest) Descriptor() ([]byte, []int) {
-	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{37}
-}
-
-func (x *GetConnectorRequest) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
+	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *GetConnectorRequest) GetApplicationId() string {
 	if x != nil {
 		return x.ApplicationId
+	}
+	return ""
+}
+
+func (x *GetConnectorRequest) GetConnectorId() string {
+	if x != nil {
+		return x.ConnectorId
 	}
 	return ""
 }
@@ -2506,7 +2391,7 @@ type GetConnectorResponse struct {
 
 func (x *GetConnectorResponse) Reset() {
 	*x = GetConnectorResponse{}
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[38]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2518,7 +2403,7 @@ func (x *GetConnectorResponse) String() string {
 func (*GetConnectorResponse) ProtoMessage() {}
 
 func (x *GetConnectorResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[38]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2531,7 +2416,7 @@ func (x *GetConnectorResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetConnectorResponse.ProtoReflect.Descriptor instead.
 func (*GetConnectorResponse) Descriptor() ([]byte, []int) {
-	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{38}
+	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *GetConnectorResponse) GetConnector() *Connector {
@@ -2561,7 +2446,7 @@ type ListInstalledConnectorsRequest struct {
 
 func (x *ListInstalledConnectorsRequest) Reset() {
 	*x = ListInstalledConnectorsRequest{}
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[39]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2573,7 +2458,7 @@ func (x *ListInstalledConnectorsRequest) String() string {
 func (*ListInstalledConnectorsRequest) ProtoMessage() {}
 
 func (x *ListInstalledConnectorsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[39]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2586,7 +2471,7 @@ func (x *ListInstalledConnectorsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListInstalledConnectorsRequest.ProtoReflect.Descriptor instead.
 func (*ListInstalledConnectorsRequest) Descriptor() ([]byte, []int) {
-	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{39}
+	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *ListInstalledConnectorsRequest) GetApplicationId() string {
@@ -2607,7 +2492,7 @@ type ListInstalledConnectorsResponse struct {
 
 func (x *ListInstalledConnectorsResponse) Reset() {
 	*x = ListInstalledConnectorsResponse{}
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[40]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2619,7 +2504,7 @@ func (x *ListInstalledConnectorsResponse) String() string {
 func (*ListInstalledConnectorsResponse) ProtoMessage() {}
 
 func (x *ListInstalledConnectorsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[40]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2632,7 +2517,7 @@ func (x *ListInstalledConnectorsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListInstalledConnectorsResponse.ProtoReflect.Descriptor instead.
 func (*ListInstalledConnectorsResponse) Descriptor() ([]byte, []int) {
-	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{40}
+	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *ListInstalledConnectorsResponse) GetConnectors() []*Connector {
@@ -2645,19 +2530,19 @@ func (x *ListInstalledConnectorsResponse) GetConnectors() []*Connector {
 // InstallConnectorRequest installs one catalog entry; repeating keeps it.
 type InstallConnectorRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Catalog Connector name.
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// An Application the caller owns, whose installations the request
 	// reaches; empty for the caller's own. An Application leaves it empty or
 	// names itself.
 	ApplicationId string `protobuf:"bytes,2,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
+	// Connector identity.
+	ConnectorId   string `protobuf:"bytes,3,opt,name=connector_id,json=connectorId,proto3" json:"connector_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *InstallConnectorRequest) Reset() {
 	*x = InstallConnectorRequest{}
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[41]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2669,7 +2554,7 @@ func (x *InstallConnectorRequest) String() string {
 func (*InstallConnectorRequest) ProtoMessage() {}
 
 func (x *InstallConnectorRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[41]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2682,19 +2567,19 @@ func (x *InstallConnectorRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InstallConnectorRequest.ProtoReflect.Descriptor instead.
 func (*InstallConnectorRequest) Descriptor() ([]byte, []int) {
-	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{41}
-}
-
-func (x *InstallConnectorRequest) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
+	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *InstallConnectorRequest) GetApplicationId() string {
 	if x != nil {
 		return x.ApplicationId
+	}
+	return ""
+}
+
+func (x *InstallConnectorRequest) GetConnectorId() string {
+	if x != nil {
+		return x.ConnectorId
 	}
 	return ""
 }
@@ -2710,7 +2595,7 @@ type InstallConnectorResponse struct {
 
 func (x *InstallConnectorResponse) Reset() {
 	*x = InstallConnectorResponse{}
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[42]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2722,7 +2607,7 @@ func (x *InstallConnectorResponse) String() string {
 func (*InstallConnectorResponse) ProtoMessage() {}
 
 func (x *InstallConnectorResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[42]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2735,7 +2620,7 @@ func (x *InstallConnectorResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InstallConnectorResponse.ProtoReflect.Descriptor instead.
 func (*InstallConnectorResponse) Descriptor() ([]byte, []int) {
-	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{42}
+	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *InstallConnectorResponse) GetConnector() *Connector {
@@ -2748,21 +2633,21 @@ func (x *InstallConnectorResponse) GetConnector() *Connector {
 // EnableConnectorRequest changes a personal installation.
 type EnableConnectorRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Catalog Connector name.
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// Installation version read before this mutation; stale values are rejected.
 	Version uint32 `protobuf:"varint,2,opt,name=version,proto3" json:"version,omitempty"`
 	// An Application the caller owns, whose installations the request
 	// reaches; empty for the caller's own. An Application leaves it empty or
 	// names itself.
 	ApplicationId string `protobuf:"bytes,3,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
+	// Connector identity.
+	ConnectorId   string `protobuf:"bytes,4,opt,name=connector_id,json=connectorId,proto3" json:"connector_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *EnableConnectorRequest) Reset() {
 	*x = EnableConnectorRequest{}
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[43]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2774,7 +2659,7 @@ func (x *EnableConnectorRequest) String() string {
 func (*EnableConnectorRequest) ProtoMessage() {}
 
 func (x *EnableConnectorRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[43]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2787,14 +2672,7 @@ func (x *EnableConnectorRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EnableConnectorRequest.ProtoReflect.Descriptor instead.
 func (*EnableConnectorRequest) Descriptor() ([]byte, []int) {
-	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{43}
-}
-
-func (x *EnableConnectorRequest) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
+	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *EnableConnectorRequest) GetVersion() uint32 {
@@ -2811,6 +2689,13 @@ func (x *EnableConnectorRequest) GetApplicationId() string {
 	return ""
 }
 
+func (x *EnableConnectorRequest) GetConnectorId() string {
+	if x != nil {
+		return x.ConnectorId
+	}
+	return ""
+}
+
 // EnableConnectorResponse returns the entry after the change.
 type EnableConnectorResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -2822,7 +2707,7 @@ type EnableConnectorResponse struct {
 
 func (x *EnableConnectorResponse) Reset() {
 	*x = EnableConnectorResponse{}
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[44]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2834,7 +2719,7 @@ func (x *EnableConnectorResponse) String() string {
 func (*EnableConnectorResponse) ProtoMessage() {}
 
 func (x *EnableConnectorResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[44]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2847,7 +2732,7 @@ func (x *EnableConnectorResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EnableConnectorResponse.ProtoReflect.Descriptor instead.
 func (*EnableConnectorResponse) Descriptor() ([]byte, []int) {
-	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{44}
+	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *EnableConnectorResponse) GetConnector() *Connector {
@@ -2860,21 +2745,21 @@ func (x *EnableConnectorResponse) GetConnector() *Connector {
 // DisableConnectorRequest changes a personal installation.
 type DisableConnectorRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Catalog Connector name.
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// Installation version read before this mutation; stale values are rejected.
 	Version uint32 `protobuf:"varint,2,opt,name=version,proto3" json:"version,omitempty"`
 	// An Application the caller owns, whose installations the request
 	// reaches; empty for the caller's own. An Application leaves it empty or
 	// names itself.
 	ApplicationId string `protobuf:"bytes,3,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
+	// Connector identity.
+	ConnectorId   string `protobuf:"bytes,4,opt,name=connector_id,json=connectorId,proto3" json:"connector_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *DisableConnectorRequest) Reset() {
 	*x = DisableConnectorRequest{}
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[45]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2886,7 +2771,7 @@ func (x *DisableConnectorRequest) String() string {
 func (*DisableConnectorRequest) ProtoMessage() {}
 
 func (x *DisableConnectorRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[45]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2899,14 +2784,7 @@ func (x *DisableConnectorRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DisableConnectorRequest.ProtoReflect.Descriptor instead.
 func (*DisableConnectorRequest) Descriptor() ([]byte, []int) {
-	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{45}
-}
-
-func (x *DisableConnectorRequest) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
+	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *DisableConnectorRequest) GetVersion() uint32 {
@@ -2923,6 +2801,13 @@ func (x *DisableConnectorRequest) GetApplicationId() string {
 	return ""
 }
 
+func (x *DisableConnectorRequest) GetConnectorId() string {
+	if x != nil {
+		return x.ConnectorId
+	}
+	return ""
+}
+
 // DisableConnectorResponse returns the entry after the change.
 type DisableConnectorResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -2934,7 +2819,7 @@ type DisableConnectorResponse struct {
 
 func (x *DisableConnectorResponse) Reset() {
 	*x = DisableConnectorResponse{}
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[46]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2946,7 +2831,7 @@ func (x *DisableConnectorResponse) String() string {
 func (*DisableConnectorResponse) ProtoMessage() {}
 
 func (x *DisableConnectorResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[46]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2959,7 +2844,7 @@ func (x *DisableConnectorResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DisableConnectorResponse.ProtoReflect.Descriptor instead.
 func (*DisableConnectorResponse) Descriptor() ([]byte, []int) {
-	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{46}
+	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *DisableConnectorResponse) GetConnector() *Connector {
@@ -2972,21 +2857,21 @@ func (x *DisableConnectorResponse) GetConnector() *Connector {
 // UninstallConnectorRequest removes a personal installation.
 type UninstallConnectorRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Catalog Connector name.
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// Installation version read before this mutation; stale values are rejected.
 	Version uint32 `protobuf:"varint,2,opt,name=version,proto3" json:"version,omitempty"`
 	// An Application the caller owns, whose installations the request
 	// reaches; empty for the caller's own. An Application leaves it empty or
 	// names itself.
 	ApplicationId string `protobuf:"bytes,3,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
+	// Connector identity.
+	ConnectorId   string `protobuf:"bytes,4,opt,name=connector_id,json=connectorId,proto3" json:"connector_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *UninstallConnectorRequest) Reset() {
 	*x = UninstallConnectorRequest{}
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[47]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2998,7 +2883,7 @@ func (x *UninstallConnectorRequest) String() string {
 func (*UninstallConnectorRequest) ProtoMessage() {}
 
 func (x *UninstallConnectorRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[47]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3011,14 +2896,7 @@ func (x *UninstallConnectorRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UninstallConnectorRequest.ProtoReflect.Descriptor instead.
 func (*UninstallConnectorRequest) Descriptor() ([]byte, []int) {
-	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{47}
-}
-
-func (x *UninstallConnectorRequest) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
+	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *UninstallConnectorRequest) GetVersion() uint32 {
@@ -3035,6 +2913,13 @@ func (x *UninstallConnectorRequest) GetApplicationId() string {
 	return ""
 }
 
+func (x *UninstallConnectorRequest) GetConnectorId() string {
+	if x != nil {
+		return x.ConnectorId
+	}
+	return ""
+}
+
 // UninstallConnectorResponse confirms removal.
 type UninstallConnectorResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -3044,7 +2929,7 @@ type UninstallConnectorResponse struct {
 
 func (x *UninstallConnectorResponse) Reset() {
 	*x = UninstallConnectorResponse{}
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[48]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3056,7 +2941,7 @@ func (x *UninstallConnectorResponse) String() string {
 func (*UninstallConnectorResponse) ProtoMessage() {}
 
 func (x *UninstallConnectorResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[48]
+	mi := &file_marketplace_public_v1_marketplace_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3069,14 +2954,14 @@ func (x *UninstallConnectorResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UninstallConnectorResponse.ProtoReflect.Descriptor instead.
 func (*UninstallConnectorResponse) Descriptor() ([]byte, []int) {
-	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{48}
+	return file_marketplace_public_v1_marketplace_proto_rawDescGZIP(), []int{47}
 }
 
 var File_marketplace_public_v1_marketplace_proto protoreflect.FileDescriptor
 
 const file_marketplace_public_v1_marketplace_proto_rawDesc = "" +
 	"\n" +
-	"'marketplace/public/v1/marketplace.proto\x12\x15marketplace.public.v1\x1a\x1cadmission/v1/admission.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a'marketplace/public/v1/connections.proto\"J\n" +
+	"'marketplace/public/v1/marketplace.proto\x12\x15marketplace.public.v1\x1a\x1cadmission/v1/admission.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a'marketplace/public/v1/connections.proto\x1a&marketplace/public/v1/connectors.proto\"J\n" +
 	"!ListPersonalAuthorizationsRequest\x12%\n" +
 	"\x0eapplication_id\x18\x01 \x01(\tR\rapplicationId\"v\n" +
 	"\"CancelPersonalAuthorizationRequest\x12)\n" +
@@ -3231,17 +3116,7 @@ const file_marketplace_public_v1_marketplace_proto_rawDesc = "" +
 	"\x06status\x18\x05 \x01(\tR\x06status\x12\x16\n" +
 	"\x06reason\x18\x06 \x01(\tR\x06reason\x12%\n" +
 	"\x0econnector_name\x18\a \x01(\tR\rconnectorName\x12:\n" +
-	"\x19target_credentials_expire\x18\b \x01(\bR\x17targetCredentialsExpire\"\xab\x02\n" +
-	"\tConnector\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x1a\n" +
-	"\bcategory\x18\x03 \x01(\tR\bcategory\x12\x1a\n" +
-	"\brequired\x18\x04 \x01(\bR\brequired\x12\x16\n" +
-	"\x06status\x18\x05 \x01(\tR\x06status\x121\n" +
-	"\x14installation_version\x18\x06 \x01(\rR\x13installationVersion\x12\x1a\n" +
-	"\bprovider\x18\a \x01(\tR\bprovider\x12/\n" +
-	"\x13provider_connection\x18\b \x01(\tR\x12providerConnection\x12\x18\n" +
-	"\aoffered\x18\t \x01(\bR\aoffered\"G\n" +
+	"\x19target_credentials_expire\x18\b \x01(\bR\x17targetCredentialsExpire\"G\n" +
 	"\x0fConnectorPlugin\x12\x12\n" +
 	"\x04slug\x18\x01 \x01(\tR\x04slug\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\">\n" +
@@ -3250,10 +3125,10 @@ const file_marketplace_public_v1_marketplace_proto_rawDesc = "" +
 	"\x16ListConnectorsResponse\x12@\n" +
 	"\n" +
 	"connectors\x18\x01 \x03(\v2 .marketplace.public.v1.ConnectorR\n" +
-	"connectors\"P\n" +
-	"\x13GetConnectorRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12%\n" +
-	"\x0eapplication_id\x18\x02 \x01(\tR\rapplicationId\"\x98\x01\n" +
+	"connectors\"k\n" +
+	"\x13GetConnectorRequest\x12%\n" +
+	"\x0eapplication_id\x18\x02 \x01(\tR\rapplicationId\x12!\n" +
+	"\fconnector_id\x18\x03 \x01(\tR\vconnectorIdJ\x04\b\x01\x10\x02R\x04name\"\x98\x01\n" +
 	"\x14GetConnectorResponse\x12>\n" +
 	"\tconnector\x18\x01 \x01(\v2 .marketplace.public.v1.ConnectorR\tconnector\x12@\n" +
 	"\aplugins\x18\x02 \x03(\v2&.marketplace.public.v1.ConnectorPluginR\aplugins\"G\n" +
@@ -3262,29 +3137,29 @@ const file_marketplace_public_v1_marketplace_proto_rawDesc = "" +
 	"\x1fListInstalledConnectorsResponse\x12@\n" +
 	"\n" +
 	"connectors\x18\x01 \x03(\v2 .marketplace.public.v1.ConnectorR\n" +
-	"connectors\"T\n" +
-	"\x17InstallConnectorRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12%\n" +
-	"\x0eapplication_id\x18\x02 \x01(\tR\rapplicationId\"Z\n" +
+	"connectors\"o\n" +
+	"\x17InstallConnectorRequest\x12%\n" +
+	"\x0eapplication_id\x18\x02 \x01(\tR\rapplicationId\x12!\n" +
+	"\fconnector_id\x18\x03 \x01(\tR\vconnectorIdJ\x04\b\x01\x10\x02R\x04name\"Z\n" +
 	"\x18InstallConnectorResponse\x12>\n" +
-	"\tconnector\x18\x01 \x01(\v2 .marketplace.public.v1.ConnectorR\tconnector\"m\n" +
-	"\x16EnableConnectorRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
+	"\tconnector\x18\x01 \x01(\v2 .marketplace.public.v1.ConnectorR\tconnector\"\x88\x01\n" +
+	"\x16EnableConnectorRequest\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\rR\aversion\x12%\n" +
-	"\x0eapplication_id\x18\x03 \x01(\tR\rapplicationId\"Y\n" +
+	"\x0eapplication_id\x18\x03 \x01(\tR\rapplicationId\x12!\n" +
+	"\fconnector_id\x18\x04 \x01(\tR\vconnectorIdJ\x04\b\x01\x10\x02R\x04name\"Y\n" +
 	"\x17EnableConnectorResponse\x12>\n" +
-	"\tconnector\x18\x01 \x01(\v2 .marketplace.public.v1.ConnectorR\tconnector\"n\n" +
-	"\x17DisableConnectorRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
+	"\tconnector\x18\x01 \x01(\v2 .marketplace.public.v1.ConnectorR\tconnector\"\x89\x01\n" +
+	"\x17DisableConnectorRequest\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\rR\aversion\x12%\n" +
-	"\x0eapplication_id\x18\x03 \x01(\tR\rapplicationId\"Z\n" +
+	"\x0eapplication_id\x18\x03 \x01(\tR\rapplicationId\x12!\n" +
+	"\fconnector_id\x18\x04 \x01(\tR\vconnectorIdJ\x04\b\x01\x10\x02R\x04name\"Z\n" +
 	"\x18DisableConnectorResponse\x12>\n" +
-	"\tconnector\x18\x01 \x01(\v2 .marketplace.public.v1.ConnectorR\tconnector\"p\n" +
-	"\x19UninstallConnectorRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
+	"\tconnector\x18\x01 \x01(\v2 .marketplace.public.v1.ConnectorR\tconnector\"\x8b\x01\n" +
+	"\x19UninstallConnectorRequest\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\rR\aversion\x12%\n" +
-	"\x0eapplication_id\x18\x03 \x01(\tR\rapplicationId\"\x1c\n" +
-	"\x1aUninstallConnectorResponse2\xcf\x1b\n" +
+	"\x0eapplication_id\x18\x03 \x01(\tR\rapplicationId\x12!\n" +
+	"\fconnector_id\x18\x04 \x01(\tR\vconnectorIdJ\x04\b\x01\x10\x02R\x04name\"\x1c\n" +
+	"\x1aUninstallConnectorResponse2\xcd#\n" +
 	"\x12MarketplaceService\x12\x9a\x01\n" +
 	"\x1aBeginProviderAuthorization\x128.marketplace.public.v1.BeginProviderAuthorizationRequest\x1a9.marketplace.public.v1.BeginProviderAuthorizationResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x01\x12\xa3\x01\n" +
@@ -3337,6 +3212,22 @@ const file_marketplace_public_v1_marketplace_proto_rawDesc = "" +
 	"\x10DisableConnector\x12..marketplace.public.v1.DisableConnectorRequest\x1a/.marketplace.public.v1.DisableConnectorResponse\"\b\xc2\xf3\x18\x04\n" +
 	"\x02\x01\x03\x12\x83\x01\n" +
 	"\x12UninstallConnector\x120.marketplace.public.v1.UninstallConnectorRequest\x1a1.marketplace.public.v1.UninstallConnectorResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12\x86\x01\n" +
+	"\x13ListOwnedConnectors\x121.marketplace.public.v1.ListOwnedConnectorsRequest\x1a2.marketplace.public.v1.ListOwnedConnectorsResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12q\n" +
+	"\fAddConnector\x12*.marketplace.public.v1.AddConnectorRequest\x1a+.marketplace.public.v1.AddConnectorResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12z\n" +
+	"\x0fChangeConnector\x12-.marketplace.public.v1.ChangeConnectorRequest\x1a..marketplace.public.v1.ChangeConnectorResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12\x86\x01\n" +
+	"\x13ChangeConnectorIcon\x121.marketplace.public.v1.ChangeConnectorIconRequest\x1a2.marketplace.public.v1.ChangeConnectorIconResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12}\n" +
+	"\x10GetConnectorIcon\x12..marketplace.public.v1.GetConnectorIconRequest\x1a/.marketplace.public.v1.GetConnectorIconResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12}\n" +
+	"\x10PublishConnector\x12..marketplace.public.v1.PublishConnectorRequest\x1a/.marketplace.public.v1.PublishConnectorResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12\x80\x01\n" +
+	"\x11WithdrawConnector\x12/.marketplace.public.v1.WithdrawConnectorRequest\x1a0.marketplace.public.v1.WithdrawConnectorResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12z\n" +
+	"\x0fDeleteConnector\x12-.marketplace.public.v1.DeleteConnectorRequest\x1a..marketplace.public.v1.DeleteConnectorResponse\"\b\xc2\xf3\x18\x04\n" +
 	"\x02\x01\x03BTZRgithub.com/talgent-work/contracts/gen/go/marketplace/public/v1;marketplacepublicv1b\x06proto3"
 
 var (
@@ -3351,7 +3242,7 @@ func file_marketplace_public_v1_marketplace_proto_rawDescGZIP() []byte {
 	return file_marketplace_public_v1_marketplace_proto_rawDescData
 }
 
-var file_marketplace_public_v1_marketplace_proto_msgTypes = make([]protoimpl.MessageInfo, 51)
+var file_marketplace_public_v1_marketplace_proto_msgTypes = make([]protoimpl.MessageInfo, 50)
 var file_marketplace_public_v1_marketplace_proto_goTypes = []any{
 	(*ListPersonalAuthorizationsRequest)(nil),     // 0: marketplace.public.v1.ListPersonalAuthorizationsRequest
 	(*CancelPersonalAuthorizationRequest)(nil),    // 1: marketplace.public.v1.CancelPersonalAuthorizationRequest
@@ -3386,26 +3277,26 @@ var file_marketplace_public_v1_marketplace_proto_goTypes = []any{
 	(*UninstallPluginRequest)(nil),                // 30: marketplace.public.v1.UninstallPluginRequest
 	(*UninstallPluginResponse)(nil),               // 31: marketplace.public.v1.UninstallPluginResponse
 	(*ConnectorProviderRelationship)(nil),         // 32: marketplace.public.v1.ConnectorProviderRelationship
-	(*Connector)(nil),                             // 33: marketplace.public.v1.Connector
-	(*ConnectorPlugin)(nil),                       // 34: marketplace.public.v1.ConnectorPlugin
-	(*ListConnectorsRequest)(nil),                 // 35: marketplace.public.v1.ListConnectorsRequest
-	(*ListConnectorsResponse)(nil),                // 36: marketplace.public.v1.ListConnectorsResponse
-	(*GetConnectorRequest)(nil),                   // 37: marketplace.public.v1.GetConnectorRequest
-	(*GetConnectorResponse)(nil),                  // 38: marketplace.public.v1.GetConnectorResponse
-	(*ListInstalledConnectorsRequest)(nil),        // 39: marketplace.public.v1.ListInstalledConnectorsRequest
-	(*ListInstalledConnectorsResponse)(nil),       // 40: marketplace.public.v1.ListInstalledConnectorsResponse
-	(*InstallConnectorRequest)(nil),               // 41: marketplace.public.v1.InstallConnectorRequest
-	(*InstallConnectorResponse)(nil),              // 42: marketplace.public.v1.InstallConnectorResponse
-	(*EnableConnectorRequest)(nil),                // 43: marketplace.public.v1.EnableConnectorRequest
-	(*EnableConnectorResponse)(nil),               // 44: marketplace.public.v1.EnableConnectorResponse
-	(*DisableConnectorRequest)(nil),               // 45: marketplace.public.v1.DisableConnectorRequest
-	(*DisableConnectorResponse)(nil),              // 46: marketplace.public.v1.DisableConnectorResponse
-	(*UninstallConnectorRequest)(nil),             // 47: marketplace.public.v1.UninstallConnectorRequest
-	(*UninstallConnectorResponse)(nil),            // 48: marketplace.public.v1.UninstallConnectorResponse
-	nil,                                           // 49: marketplace.public.v1.PluginRelease.ParametersEntry
-	nil,                                           // 50: marketplace.public.v1.PluginSummary.ParametersEntry
-	(*structpb.Value)(nil),                        // 51: google.protobuf.Value
-	(*structpb.Struct)(nil),                       // 52: google.protobuf.Struct
+	(*ConnectorPlugin)(nil),                       // 33: marketplace.public.v1.ConnectorPlugin
+	(*ListConnectorsRequest)(nil),                 // 34: marketplace.public.v1.ListConnectorsRequest
+	(*ListConnectorsResponse)(nil),                // 35: marketplace.public.v1.ListConnectorsResponse
+	(*GetConnectorRequest)(nil),                   // 36: marketplace.public.v1.GetConnectorRequest
+	(*GetConnectorResponse)(nil),                  // 37: marketplace.public.v1.GetConnectorResponse
+	(*ListInstalledConnectorsRequest)(nil),        // 38: marketplace.public.v1.ListInstalledConnectorsRequest
+	(*ListInstalledConnectorsResponse)(nil),       // 39: marketplace.public.v1.ListInstalledConnectorsResponse
+	(*InstallConnectorRequest)(nil),               // 40: marketplace.public.v1.InstallConnectorRequest
+	(*InstallConnectorResponse)(nil),              // 41: marketplace.public.v1.InstallConnectorResponse
+	(*EnableConnectorRequest)(nil),                // 42: marketplace.public.v1.EnableConnectorRequest
+	(*EnableConnectorResponse)(nil),               // 43: marketplace.public.v1.EnableConnectorResponse
+	(*DisableConnectorRequest)(nil),               // 44: marketplace.public.v1.DisableConnectorRequest
+	(*DisableConnectorResponse)(nil),              // 45: marketplace.public.v1.DisableConnectorResponse
+	(*UninstallConnectorRequest)(nil),             // 46: marketplace.public.v1.UninstallConnectorRequest
+	(*UninstallConnectorResponse)(nil),            // 47: marketplace.public.v1.UninstallConnectorResponse
+	nil,                                           // 48: marketplace.public.v1.PluginRelease.ParametersEntry
+	nil,                                           // 49: marketplace.public.v1.PluginSummary.ParametersEntry
+	(*structpb.Value)(nil),                        // 50: google.protobuf.Value
+	(*structpb.Struct)(nil),                       // 51: google.protobuf.Struct
+	(*Connector)(nil),                             // 52: marketplace.public.v1.Connector
 	(*BeginProviderAuthorizationRequest)(nil),     // 53: marketplace.public.v1.BeginProviderAuthorizationRequest
 	(*CompleteProviderAuthorizationRequest)(nil),  // 54: marketplace.public.v1.CompleteProviderAuthorizationRequest
 	(*GetProviderConnectionStateRequest)(nil),     // 55: marketplace.public.v1.GetProviderConnectionStateRequest
@@ -3413,13 +3304,29 @@ var file_marketplace_public_v1_marketplace_proto_goTypes = []any{
 	(*GetProviderAccessRequest)(nil),              // 57: marketplace.public.v1.GetProviderAccessRequest
 	(*RefreshProviderAccessRequest)(nil),          // 58: marketplace.public.v1.RefreshProviderAccessRequest
 	(*ListProvidersRequest)(nil),                  // 59: marketplace.public.v1.ListProvidersRequest
-	(*BeginProviderAuthorizationResponse)(nil),    // 60: marketplace.public.v1.BeginProviderAuthorizationResponse
-	(*CompleteProviderAuthorizationResponse)(nil), // 61: marketplace.public.v1.CompleteProviderAuthorizationResponse
-	(*GetProviderConnectionStateResponse)(nil),    // 62: marketplace.public.v1.GetProviderConnectionStateResponse
-	(*ListAccessibleRepositoriesResponse)(nil),    // 63: marketplace.public.v1.ListAccessibleRepositoriesResponse
-	(*GetProviderAccessResponse)(nil),             // 64: marketplace.public.v1.GetProviderAccessResponse
-	(*RefreshProviderAccessResponse)(nil),         // 65: marketplace.public.v1.RefreshProviderAccessResponse
-	(*ListProvidersResponse)(nil),                 // 66: marketplace.public.v1.ListProvidersResponse
+	(*ListOwnedConnectorsRequest)(nil),            // 60: marketplace.public.v1.ListOwnedConnectorsRequest
+	(*AddConnectorRequest)(nil),                   // 61: marketplace.public.v1.AddConnectorRequest
+	(*ChangeConnectorRequest)(nil),                // 62: marketplace.public.v1.ChangeConnectorRequest
+	(*ChangeConnectorIconRequest)(nil),            // 63: marketplace.public.v1.ChangeConnectorIconRequest
+	(*GetConnectorIconRequest)(nil),               // 64: marketplace.public.v1.GetConnectorIconRequest
+	(*PublishConnectorRequest)(nil),               // 65: marketplace.public.v1.PublishConnectorRequest
+	(*WithdrawConnectorRequest)(nil),              // 66: marketplace.public.v1.WithdrawConnectorRequest
+	(*DeleteConnectorRequest)(nil),                // 67: marketplace.public.v1.DeleteConnectorRequest
+	(*BeginProviderAuthorizationResponse)(nil),    // 68: marketplace.public.v1.BeginProviderAuthorizationResponse
+	(*CompleteProviderAuthorizationResponse)(nil), // 69: marketplace.public.v1.CompleteProviderAuthorizationResponse
+	(*GetProviderConnectionStateResponse)(nil),    // 70: marketplace.public.v1.GetProviderConnectionStateResponse
+	(*ListAccessibleRepositoriesResponse)(nil),    // 71: marketplace.public.v1.ListAccessibleRepositoriesResponse
+	(*GetProviderAccessResponse)(nil),             // 72: marketplace.public.v1.GetProviderAccessResponse
+	(*RefreshProviderAccessResponse)(nil),         // 73: marketplace.public.v1.RefreshProviderAccessResponse
+	(*ListProvidersResponse)(nil),                 // 74: marketplace.public.v1.ListProvidersResponse
+	(*ListOwnedConnectorsResponse)(nil),           // 75: marketplace.public.v1.ListOwnedConnectorsResponse
+	(*AddConnectorResponse)(nil),                  // 76: marketplace.public.v1.AddConnectorResponse
+	(*ChangeConnectorResponse)(nil),               // 77: marketplace.public.v1.ChangeConnectorResponse
+	(*ChangeConnectorIconResponse)(nil),           // 78: marketplace.public.v1.ChangeConnectorIconResponse
+	(*GetConnectorIconResponse)(nil),              // 79: marketplace.public.v1.GetConnectorIconResponse
+	(*PublishConnectorResponse)(nil),              // 80: marketplace.public.v1.PublishConnectorResponse
+	(*WithdrawConnectorResponse)(nil),             // 81: marketplace.public.v1.WithdrawConnectorResponse
+	(*DeleteConnectorResponse)(nil),               // 82: marketplace.public.v1.DeleteConnectorResponse
 }
 var file_marketplace_public_v1_marketplace_proto_depIdxs = []int32{
 	3,  // 0: marketplace.public.v1.CancelPersonalAuthorizationResponse.authorization:type_name -> marketplace.public.v1.PersonalAuthorization
@@ -3427,29 +3334,29 @@ var file_marketplace_public_v1_marketplace_proto_depIdxs = []int32{
 	6,  // 2: marketplace.public.v1.PluginRelease.skills:type_name -> marketplace.public.v1.SkillComponent
 	7,  // 3: marketplace.public.v1.PluginRelease.agents:type_name -> marketplace.public.v1.AgentComponent
 	8,  // 4: marketplace.public.v1.PluginRelease.mcp_servers:type_name -> marketplace.public.v1.MCPComponent
-	49, // 5: marketplace.public.v1.PluginRelease.parameters:type_name -> marketplace.public.v1.PluginRelease.ParametersEntry
+	48, // 5: marketplace.public.v1.PluginRelease.parameters:type_name -> marketplace.public.v1.PluginRelease.ParametersEntry
 	32, // 6: marketplace.public.v1.MCPComponent.relationship:type_name -> marketplace.public.v1.ConnectorProviderRelationship
-	51, // 7: marketplace.public.v1.ParameterDeclaration.default:type_name -> google.protobuf.Value
-	52, // 8: marketplace.public.v1.InstalledPlugin.configuration:type_name -> google.protobuf.Struct
+	50, // 7: marketplace.public.v1.ParameterDeclaration.default:type_name -> google.protobuf.Value
+	51, // 8: marketplace.public.v1.InstalledPlugin.configuration:type_name -> google.protobuf.Struct
 	13, // 9: marketplace.public.v1.ListPluginsResponse.plugins:type_name -> marketplace.public.v1.PluginSummary
-	50, // 10: marketplace.public.v1.PluginSummary.parameters:type_name -> marketplace.public.v1.PluginSummary.ParametersEntry
+	49, // 10: marketplace.public.v1.PluginSummary.parameters:type_name -> marketplace.public.v1.PluginSummary.ParametersEntry
 	5,  // 11: marketplace.public.v1.GetPluginResponse.plugin:type_name -> marketplace.public.v1.PluginRelease
 	10, // 12: marketplace.public.v1.ListInstalledPluginsResponse.plugins:type_name -> marketplace.public.v1.InstalledPlugin
 	10, // 13: marketplace.public.v1.GetInstalledPluginResponse.plugin:type_name -> marketplace.public.v1.InstalledPlugin
-	52, // 14: marketplace.public.v1.InstallPluginRequest.configuration:type_name -> google.protobuf.Struct
+	51, // 14: marketplace.public.v1.InstallPluginRequest.configuration:type_name -> google.protobuf.Struct
 	10, // 15: marketplace.public.v1.InstallPluginResponse.plugin:type_name -> marketplace.public.v1.InstalledPlugin
 	10, // 16: marketplace.public.v1.EnablePluginResponse.plugin:type_name -> marketplace.public.v1.InstalledPlugin
 	10, // 17: marketplace.public.v1.DisablePluginResponse.plugin:type_name -> marketplace.public.v1.InstalledPlugin
-	52, // 18: marketplace.public.v1.SetPluginConfigurationRequest.values:type_name -> google.protobuf.Struct
+	51, // 18: marketplace.public.v1.SetPluginConfigurationRequest.values:type_name -> google.protobuf.Struct
 	10, // 19: marketplace.public.v1.SetPluginConfigurationResponse.plugin:type_name -> marketplace.public.v1.InstalledPlugin
 	10, // 20: marketplace.public.v1.DeletePluginConfigurationResponse.plugin:type_name -> marketplace.public.v1.InstalledPlugin
-	33, // 21: marketplace.public.v1.ListConnectorsResponse.connectors:type_name -> marketplace.public.v1.Connector
-	33, // 22: marketplace.public.v1.GetConnectorResponse.connector:type_name -> marketplace.public.v1.Connector
-	34, // 23: marketplace.public.v1.GetConnectorResponse.plugins:type_name -> marketplace.public.v1.ConnectorPlugin
-	33, // 24: marketplace.public.v1.ListInstalledConnectorsResponse.connectors:type_name -> marketplace.public.v1.Connector
-	33, // 25: marketplace.public.v1.InstallConnectorResponse.connector:type_name -> marketplace.public.v1.Connector
-	33, // 26: marketplace.public.v1.EnableConnectorResponse.connector:type_name -> marketplace.public.v1.Connector
-	33, // 27: marketplace.public.v1.DisableConnectorResponse.connector:type_name -> marketplace.public.v1.Connector
+	52, // 21: marketplace.public.v1.ListConnectorsResponse.connectors:type_name -> marketplace.public.v1.Connector
+	52, // 22: marketplace.public.v1.GetConnectorResponse.connector:type_name -> marketplace.public.v1.Connector
+	33, // 23: marketplace.public.v1.GetConnectorResponse.plugins:type_name -> marketplace.public.v1.ConnectorPlugin
+	52, // 24: marketplace.public.v1.ListInstalledConnectorsResponse.connectors:type_name -> marketplace.public.v1.Connector
+	52, // 25: marketplace.public.v1.InstallConnectorResponse.connector:type_name -> marketplace.public.v1.Connector
+	52, // 26: marketplace.public.v1.EnableConnectorResponse.connector:type_name -> marketplace.public.v1.Connector
+	52, // 27: marketplace.public.v1.DisableConnectorResponse.connector:type_name -> marketplace.public.v1.Connector
 	9,  // 28: marketplace.public.v1.PluginRelease.ParametersEntry.value:type_name -> marketplace.public.v1.ParameterDeclaration
 	9,  // 29: marketplace.public.v1.PluginSummary.ParametersEntry.value:type_name -> marketplace.public.v1.ParameterDeclaration
 	53, // 30: marketplace.public.v1.MarketplaceService.BeginProviderAuthorization:input_type -> marketplace.public.v1.BeginProviderAuthorizationRequest
@@ -3471,41 +3378,57 @@ var file_marketplace_public_v1_marketplace_proto_depIdxs = []int32{
 	26, // 46: marketplace.public.v1.MarketplaceService.SetPluginConfiguration:input_type -> marketplace.public.v1.SetPluginConfigurationRequest
 	28, // 47: marketplace.public.v1.MarketplaceService.DeletePluginConfiguration:input_type -> marketplace.public.v1.DeletePluginConfigurationRequest
 	30, // 48: marketplace.public.v1.MarketplaceService.UninstallPlugin:input_type -> marketplace.public.v1.UninstallPluginRequest
-	35, // 49: marketplace.public.v1.MarketplaceService.ListConnectors:input_type -> marketplace.public.v1.ListConnectorsRequest
-	37, // 50: marketplace.public.v1.MarketplaceService.GetConnector:input_type -> marketplace.public.v1.GetConnectorRequest
-	39, // 51: marketplace.public.v1.MarketplaceService.ListInstalledConnectors:input_type -> marketplace.public.v1.ListInstalledConnectorsRequest
-	41, // 52: marketplace.public.v1.MarketplaceService.InstallConnector:input_type -> marketplace.public.v1.InstallConnectorRequest
-	43, // 53: marketplace.public.v1.MarketplaceService.EnableConnector:input_type -> marketplace.public.v1.EnableConnectorRequest
-	45, // 54: marketplace.public.v1.MarketplaceService.DisableConnector:input_type -> marketplace.public.v1.DisableConnectorRequest
-	47, // 55: marketplace.public.v1.MarketplaceService.UninstallConnector:input_type -> marketplace.public.v1.UninstallConnectorRequest
-	60, // 56: marketplace.public.v1.MarketplaceService.BeginProviderAuthorization:output_type -> marketplace.public.v1.BeginProviderAuthorizationResponse
-	61, // 57: marketplace.public.v1.MarketplaceService.CompleteProviderAuthorization:output_type -> marketplace.public.v1.CompleteProviderAuthorizationResponse
-	62, // 58: marketplace.public.v1.MarketplaceService.GetProviderConnectionState:output_type -> marketplace.public.v1.GetProviderConnectionStateResponse
-	63, // 59: marketplace.public.v1.MarketplaceService.ListAccessibleRepositories:output_type -> marketplace.public.v1.ListAccessibleRepositoriesResponse
-	64, // 60: marketplace.public.v1.MarketplaceService.GetProviderAccess:output_type -> marketplace.public.v1.GetProviderAccessResponse
-	65, // 61: marketplace.public.v1.MarketplaceService.RefreshProviderAccess:output_type -> marketplace.public.v1.RefreshProviderAccessResponse
-	66, // 62: marketplace.public.v1.MarketplaceService.ListProviders:output_type -> marketplace.public.v1.ListProvidersResponse
-	4,  // 63: marketplace.public.v1.MarketplaceService.ListPersonalAuthorizations:output_type -> marketplace.public.v1.ListPersonalAuthorizationsResponse
-	2,  // 64: marketplace.public.v1.MarketplaceService.CancelPersonalAuthorization:output_type -> marketplace.public.v1.CancelPersonalAuthorizationResponse
-	12, // 65: marketplace.public.v1.MarketplaceService.ListPlugins:output_type -> marketplace.public.v1.ListPluginsResponse
-	15, // 66: marketplace.public.v1.MarketplaceService.GetPlugin:output_type -> marketplace.public.v1.GetPluginResponse
-	17, // 67: marketplace.public.v1.MarketplaceService.ListInstalledPlugins:output_type -> marketplace.public.v1.ListInstalledPluginsResponse
-	19, // 68: marketplace.public.v1.MarketplaceService.GetInstalledPlugin:output_type -> marketplace.public.v1.GetInstalledPluginResponse
-	21, // 69: marketplace.public.v1.MarketplaceService.InstallPlugin:output_type -> marketplace.public.v1.InstallPluginResponse
-	23, // 70: marketplace.public.v1.MarketplaceService.EnablePlugin:output_type -> marketplace.public.v1.EnablePluginResponse
-	25, // 71: marketplace.public.v1.MarketplaceService.DisablePlugin:output_type -> marketplace.public.v1.DisablePluginResponse
-	27, // 72: marketplace.public.v1.MarketplaceService.SetPluginConfiguration:output_type -> marketplace.public.v1.SetPluginConfigurationResponse
-	29, // 73: marketplace.public.v1.MarketplaceService.DeletePluginConfiguration:output_type -> marketplace.public.v1.DeletePluginConfigurationResponse
-	31, // 74: marketplace.public.v1.MarketplaceService.UninstallPlugin:output_type -> marketplace.public.v1.UninstallPluginResponse
-	36, // 75: marketplace.public.v1.MarketplaceService.ListConnectors:output_type -> marketplace.public.v1.ListConnectorsResponse
-	38, // 76: marketplace.public.v1.MarketplaceService.GetConnector:output_type -> marketplace.public.v1.GetConnectorResponse
-	40, // 77: marketplace.public.v1.MarketplaceService.ListInstalledConnectors:output_type -> marketplace.public.v1.ListInstalledConnectorsResponse
-	42, // 78: marketplace.public.v1.MarketplaceService.InstallConnector:output_type -> marketplace.public.v1.InstallConnectorResponse
-	44, // 79: marketplace.public.v1.MarketplaceService.EnableConnector:output_type -> marketplace.public.v1.EnableConnectorResponse
-	46, // 80: marketplace.public.v1.MarketplaceService.DisableConnector:output_type -> marketplace.public.v1.DisableConnectorResponse
-	48, // 81: marketplace.public.v1.MarketplaceService.UninstallConnector:output_type -> marketplace.public.v1.UninstallConnectorResponse
-	56, // [56:82] is the sub-list for method output_type
-	30, // [30:56] is the sub-list for method input_type
+	34, // 49: marketplace.public.v1.MarketplaceService.ListConnectors:input_type -> marketplace.public.v1.ListConnectorsRequest
+	36, // 50: marketplace.public.v1.MarketplaceService.GetConnector:input_type -> marketplace.public.v1.GetConnectorRequest
+	38, // 51: marketplace.public.v1.MarketplaceService.ListInstalledConnectors:input_type -> marketplace.public.v1.ListInstalledConnectorsRequest
+	40, // 52: marketplace.public.v1.MarketplaceService.InstallConnector:input_type -> marketplace.public.v1.InstallConnectorRequest
+	42, // 53: marketplace.public.v1.MarketplaceService.EnableConnector:input_type -> marketplace.public.v1.EnableConnectorRequest
+	44, // 54: marketplace.public.v1.MarketplaceService.DisableConnector:input_type -> marketplace.public.v1.DisableConnectorRequest
+	46, // 55: marketplace.public.v1.MarketplaceService.UninstallConnector:input_type -> marketplace.public.v1.UninstallConnectorRequest
+	60, // 56: marketplace.public.v1.MarketplaceService.ListOwnedConnectors:input_type -> marketplace.public.v1.ListOwnedConnectorsRequest
+	61, // 57: marketplace.public.v1.MarketplaceService.AddConnector:input_type -> marketplace.public.v1.AddConnectorRequest
+	62, // 58: marketplace.public.v1.MarketplaceService.ChangeConnector:input_type -> marketplace.public.v1.ChangeConnectorRequest
+	63, // 59: marketplace.public.v1.MarketplaceService.ChangeConnectorIcon:input_type -> marketplace.public.v1.ChangeConnectorIconRequest
+	64, // 60: marketplace.public.v1.MarketplaceService.GetConnectorIcon:input_type -> marketplace.public.v1.GetConnectorIconRequest
+	65, // 61: marketplace.public.v1.MarketplaceService.PublishConnector:input_type -> marketplace.public.v1.PublishConnectorRequest
+	66, // 62: marketplace.public.v1.MarketplaceService.WithdrawConnector:input_type -> marketplace.public.v1.WithdrawConnectorRequest
+	67, // 63: marketplace.public.v1.MarketplaceService.DeleteConnector:input_type -> marketplace.public.v1.DeleteConnectorRequest
+	68, // 64: marketplace.public.v1.MarketplaceService.BeginProviderAuthorization:output_type -> marketplace.public.v1.BeginProviderAuthorizationResponse
+	69, // 65: marketplace.public.v1.MarketplaceService.CompleteProviderAuthorization:output_type -> marketplace.public.v1.CompleteProviderAuthorizationResponse
+	70, // 66: marketplace.public.v1.MarketplaceService.GetProviderConnectionState:output_type -> marketplace.public.v1.GetProviderConnectionStateResponse
+	71, // 67: marketplace.public.v1.MarketplaceService.ListAccessibleRepositories:output_type -> marketplace.public.v1.ListAccessibleRepositoriesResponse
+	72, // 68: marketplace.public.v1.MarketplaceService.GetProviderAccess:output_type -> marketplace.public.v1.GetProviderAccessResponse
+	73, // 69: marketplace.public.v1.MarketplaceService.RefreshProviderAccess:output_type -> marketplace.public.v1.RefreshProviderAccessResponse
+	74, // 70: marketplace.public.v1.MarketplaceService.ListProviders:output_type -> marketplace.public.v1.ListProvidersResponse
+	4,  // 71: marketplace.public.v1.MarketplaceService.ListPersonalAuthorizations:output_type -> marketplace.public.v1.ListPersonalAuthorizationsResponse
+	2,  // 72: marketplace.public.v1.MarketplaceService.CancelPersonalAuthorization:output_type -> marketplace.public.v1.CancelPersonalAuthorizationResponse
+	12, // 73: marketplace.public.v1.MarketplaceService.ListPlugins:output_type -> marketplace.public.v1.ListPluginsResponse
+	15, // 74: marketplace.public.v1.MarketplaceService.GetPlugin:output_type -> marketplace.public.v1.GetPluginResponse
+	17, // 75: marketplace.public.v1.MarketplaceService.ListInstalledPlugins:output_type -> marketplace.public.v1.ListInstalledPluginsResponse
+	19, // 76: marketplace.public.v1.MarketplaceService.GetInstalledPlugin:output_type -> marketplace.public.v1.GetInstalledPluginResponse
+	21, // 77: marketplace.public.v1.MarketplaceService.InstallPlugin:output_type -> marketplace.public.v1.InstallPluginResponse
+	23, // 78: marketplace.public.v1.MarketplaceService.EnablePlugin:output_type -> marketplace.public.v1.EnablePluginResponse
+	25, // 79: marketplace.public.v1.MarketplaceService.DisablePlugin:output_type -> marketplace.public.v1.DisablePluginResponse
+	27, // 80: marketplace.public.v1.MarketplaceService.SetPluginConfiguration:output_type -> marketplace.public.v1.SetPluginConfigurationResponse
+	29, // 81: marketplace.public.v1.MarketplaceService.DeletePluginConfiguration:output_type -> marketplace.public.v1.DeletePluginConfigurationResponse
+	31, // 82: marketplace.public.v1.MarketplaceService.UninstallPlugin:output_type -> marketplace.public.v1.UninstallPluginResponse
+	35, // 83: marketplace.public.v1.MarketplaceService.ListConnectors:output_type -> marketplace.public.v1.ListConnectorsResponse
+	37, // 84: marketplace.public.v1.MarketplaceService.GetConnector:output_type -> marketplace.public.v1.GetConnectorResponse
+	39, // 85: marketplace.public.v1.MarketplaceService.ListInstalledConnectors:output_type -> marketplace.public.v1.ListInstalledConnectorsResponse
+	41, // 86: marketplace.public.v1.MarketplaceService.InstallConnector:output_type -> marketplace.public.v1.InstallConnectorResponse
+	43, // 87: marketplace.public.v1.MarketplaceService.EnableConnector:output_type -> marketplace.public.v1.EnableConnectorResponse
+	45, // 88: marketplace.public.v1.MarketplaceService.DisableConnector:output_type -> marketplace.public.v1.DisableConnectorResponse
+	47, // 89: marketplace.public.v1.MarketplaceService.UninstallConnector:output_type -> marketplace.public.v1.UninstallConnectorResponse
+	75, // 90: marketplace.public.v1.MarketplaceService.ListOwnedConnectors:output_type -> marketplace.public.v1.ListOwnedConnectorsResponse
+	76, // 91: marketplace.public.v1.MarketplaceService.AddConnector:output_type -> marketplace.public.v1.AddConnectorResponse
+	77, // 92: marketplace.public.v1.MarketplaceService.ChangeConnector:output_type -> marketplace.public.v1.ChangeConnectorResponse
+	78, // 93: marketplace.public.v1.MarketplaceService.ChangeConnectorIcon:output_type -> marketplace.public.v1.ChangeConnectorIconResponse
+	79, // 94: marketplace.public.v1.MarketplaceService.GetConnectorIcon:output_type -> marketplace.public.v1.GetConnectorIconResponse
+	80, // 95: marketplace.public.v1.MarketplaceService.PublishConnector:output_type -> marketplace.public.v1.PublishConnectorResponse
+	81, // 96: marketplace.public.v1.MarketplaceService.WithdrawConnector:output_type -> marketplace.public.v1.WithdrawConnectorResponse
+	82, // 97: marketplace.public.v1.MarketplaceService.DeleteConnector:output_type -> marketplace.public.v1.DeleteConnectorResponse
+	64, // [64:98] is the sub-list for method output_type
+	30, // [30:64] is the sub-list for method input_type
 	30, // [30:30] is the sub-list for extension type_name
 	30, // [30:30] is the sub-list for extension extendee
 	0,  // [0:30] is the sub-list for field type_name
@@ -3517,6 +3440,7 @@ func file_marketplace_public_v1_marketplace_proto_init() {
 		return
 	}
 	file_marketplace_public_v1_connections_proto_init()
+	file_marketplace_public_v1_connectors_proto_init()
 	file_marketplace_public_v1_marketplace_proto_msgTypes[9].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -3524,7 +3448,7 @@ func file_marketplace_public_v1_marketplace_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_marketplace_public_v1_marketplace_proto_rawDesc), len(file_marketplace_public_v1_marketplace_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   51,
+			NumMessages:   50,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

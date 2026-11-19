@@ -55,7 +55,9 @@ message ReadConnectorSelectionRequest {}
 
 // ReadConnectorSelectionResponse is trusted startup input, never a UI response.
 message ReadConnectorSelectionResponse {
-  // Every catalog entry with its offer status and non-secret configuration.
+  // The owner's Connector catalog with non-secret configuration, and each
+  // Withdrawn Connector the owner installed by identity only, which no new
+  // Work selects.
   repeated CatalogConnector connectors = 1;
   // Identities of the owner's enabled installations.
   repeated string enabled_connector_ids = 2;
@@ -65,13 +67,14 @@ message ReadConnectorSelectionResponse {
 message CatalogConnector {
   // Stable catalog identity.
   string id = 1;
-  // Native MCP server name.
+  // Native MCP server name, unique per owner but not across owners.
   string name = 2;
   // Included in every Work; cannot be removed.
   bool required = 3;
   // Only offered entries may be selected for a new Work.
   bool offered = 4;
-  // work_identity or provider_authorization.
+  // work_identity, provider_authorization, or none for a credential-free
+  // Connector, which receives no credential.
   string authentication = 5;
   // Native transport: empty or stdio for processes, http for remote servers.
   string type = 6;
@@ -94,4 +97,7 @@ message CatalogConnector {
   // Whether the declared Provider's target credentials expire; false
   // without a Provider.
   bool provider_target_credentials_expire = 15;
+  // Display name of the person or Application that published it; empty for
+  // a Platform Connector.
+  string publisher = 16;
 }

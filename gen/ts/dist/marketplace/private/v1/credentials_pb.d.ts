@@ -11,7 +11,7 @@ import type { Message } from "@bufbuild/protobuf";
 export declare const file_marketplace_private_v1_credentials: GenFile;
 
 /**
- * Target names are platform-supported authentication contracts, not arbitrary URLs.
+ * A target is one the authorization's Provider declares, named, never a URL.
  *
  * @generated from message marketplace.private.v1.SupplyServiceCredentialRequest
  */
@@ -31,7 +31,7 @@ export declare type SupplyServiceCredentialRequest = Message<"marketplace.privat
   authorizationId: string;
 
   /**
-   * Platform-supported authentication contract name.
+   * Name of a target the authorization's Provider declares.
    *
    * @generated from field: string target = 3;
    */
@@ -64,6 +64,14 @@ export declare type SupplyServiceCredentialResponse = Message<"marketplace.priva
    * @generated from field: int64 expires_at_unix_ms = 2;
    */
   expiresAtUnixMs: bigint;
+
+  /**
+   * The target's declared host patterns, the only hosts the credential may
+   * be added to: an exact host name, or `*.` and a domain for its subdomains.
+   *
+   * @generated from field: repeated string hosts = 3;
+   */
+  hosts: string[];
 };
 
 /**

@@ -259,6 +259,14 @@ export declare type CatalogConnector = Message<"marketplace.private.v1.CatalogCo
    * @generated from field: string provider_authentication = 14;
    */
   providerAuthentication: string;
+
+  /**
+   * Whether the declared Provider's target credentials expire; false
+   * without a Provider.
+   *
+   * @generated from field: bool provider_target_credentials_expire = 15;
+   */
+  providerTargetCredentialsExpire: boolean;
 };
 
 /**

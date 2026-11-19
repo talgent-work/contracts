@@ -210,3 +210,44 @@ message ProviderPermission {
   // Access level, such as read or write.
   string access = 2;
 }
+
+// ListProvidersRequest selects whose connection each Provider reports.
+message ListProvidersRequest {
+  // An Application the caller owns, whose Provider Authorizations the
+  // request reaches; empty for the caller's own. An Application leaves it
+  // empty or names itself.
+  string application_id = 1;
+}
+
+// ListProvidersResponse holds every Provider the deployment declares.
+message ListProvidersResponse {
+  // Declared Providers ordered by name.
+  repeated DeclaredProvider providers = 1;
+}
+
+// DeclaredProvider is one Provider the deployment declares: an external
+// party whose one authorization serves every target it declares.
+message DeclaredProvider {
+  // Provider identity, as the other Provider requests name it.
+  string name = 1;
+  // Name shown to people.
+  string display_name = 2;
+  // The targets its credentials reach, and no other host.
+  repeated ProviderTarget targets = 3;
+  // Whether its target credentials expire.
+  bool target_credentials_expire = 4;
+  // Whether it reports the accounts and repositories an authorization
+  // reaches, which GetProviderAccess then describes.
+  bool observes_access_scope = 5;
+  // The owner's connection to it.
+  ProviderConnectionState connection = 6;
+}
+
+// ProviderTarget is one destination of a Provider's credentials.
+message ProviderTarget {
+  // Target name, as credential supply and Connectors name it.
+  string name = 1;
+  // Host patterns: an exact host name, or `*.` and a domain for its
+  // subdomains.
+  repeated string hosts = 2;
+}

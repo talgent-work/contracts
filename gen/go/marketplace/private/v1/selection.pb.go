@@ -359,8 +359,11 @@ type CatalogConnector struct {
 	Target string `protobuf:"bytes,13,opt,name=target,proto3" json:"target,omitempty"`
 	// Provider authentication contract, such as credential_proxy.
 	ProviderAuthentication string `protobuf:"bytes,14,opt,name=provider_authentication,json=providerAuthentication,proto3" json:"provider_authentication,omitempty"`
-	unknownFields          protoimpl.UnknownFields
-	sizeCache              protoimpl.SizeCache
+	// Whether the declared Provider's target credentials expire; false
+	// without a Provider.
+	ProviderTargetCredentialsExpire bool `protobuf:"varint,15,opt,name=provider_target_credentials_expire,json=providerTargetCredentialsExpire,proto3" json:"provider_target_credentials_expire,omitempty"`
+	unknownFields                   protoimpl.UnknownFields
+	sizeCache                       protoimpl.SizeCache
 }
 
 func (x *CatalogConnector) Reset() {
@@ -491,6 +494,13 @@ func (x *CatalogConnector) GetProviderAuthentication() string {
 	return ""
 }
 
+func (x *CatalogConnector) GetProviderTargetCredentialsExpire() bool {
+	if x != nil {
+		return x.ProviderTargetCredentialsExpire
+	}
+	return false
+}
+
 var File_marketplace_private_v1_selection_proto protoreflect.FileDescriptor
 
 const file_marketplace_private_v1_selection_proto_rawDesc = "" +
@@ -513,7 +523,7 @@ const file_marketplace_private_v1_selection_proto_rawDesc = "" +
 	"\n" +
 	"connectors\x18\x01 \x03(\v2(.marketplace.private.v1.CatalogConnectorR\n" +
 	"connectors\x122\n" +
-	"\x15enabled_connector_ids\x18\x02 \x03(\tR\x13enabledConnectorIds\"\x89\x05\n" +
+	"\x15enabled_connector_ids\x18\x02 \x03(\tR\x13enabledConnectorIds\"\xd6\x05\n" +
 	"\x10CatalogConnector\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1a\n" +
@@ -529,7 +539,8 @@ const file_marketplace_private_v1_selection_proto_rawDesc = "" +
 	"\aheaders\x18\v \x03(\v25.marketplace.private.v1.CatalogConnector.HeadersEntryR\aheaders\x12\x1a\n" +
 	"\bprovider\x18\f \x01(\tR\bprovider\x12\x16\n" +
 	"\x06target\x18\r \x01(\tR\x06target\x127\n" +
-	"\x17provider_authentication\x18\x0e \x01(\tR\x16providerAuthentication\x1a>\n" +
+	"\x17provider_authentication\x18\x0e \x01(\tR\x16providerAuthentication\x12K\n" +
+	"\"provider_target_credentials_expire\x18\x0f \x01(\bR\x1fproviderTargetCredentialsExpire\x1a>\n" +
 	"\x10EnvironmentEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\x1a:\n" +

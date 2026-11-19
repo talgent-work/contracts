@@ -1209,6 +1209,249 @@ func (x *ProviderPermission) GetAccess() string {
 	return ""
 }
 
+// ListProvidersRequest selects whose connection each Provider reports.
+type ListProvidersRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// An Application the caller owns, whose Provider Authorizations the
+	// request reaches; empty for the caller's own. An Application leaves it
+	// empty or names itself.
+	ApplicationId string `protobuf:"bytes,1,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListProvidersRequest) Reset() {
+	*x = ListProvidersRequest{}
+	mi := &file_marketplace_public_v1_connections_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListProvidersRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListProvidersRequest) ProtoMessage() {}
+
+func (x *ListProvidersRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_marketplace_public_v1_connections_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListProvidersRequest.ProtoReflect.Descriptor instead.
+func (*ListProvidersRequest) Descriptor() ([]byte, []int) {
+	return file_marketplace_public_v1_connections_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *ListProvidersRequest) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
+	}
+	return ""
+}
+
+// ListProvidersResponse holds every Provider the deployment declares.
+type ListProvidersResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Declared Providers ordered by name.
+	Providers     []*DeclaredProvider `protobuf:"bytes,1,rep,name=providers,proto3" json:"providers,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListProvidersResponse) Reset() {
+	*x = ListProvidersResponse{}
+	mi := &file_marketplace_public_v1_connections_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListProvidersResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListProvidersResponse) ProtoMessage() {}
+
+func (x *ListProvidersResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_marketplace_public_v1_connections_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListProvidersResponse.ProtoReflect.Descriptor instead.
+func (*ListProvidersResponse) Descriptor() ([]byte, []int) {
+	return file_marketplace_public_v1_connections_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *ListProvidersResponse) GetProviders() []*DeclaredProvider {
+	if x != nil {
+		return x.Providers
+	}
+	return nil
+}
+
+// DeclaredProvider is one Provider the deployment declares: an external
+// party whose one authorization serves every target it declares.
+type DeclaredProvider struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Provider identity, as the other Provider requests name it.
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	// Name shown to people.
+	DisplayName string `protobuf:"bytes,2,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
+	// The targets its credentials reach, and no other host.
+	Targets []*ProviderTarget `protobuf:"bytes,3,rep,name=targets,proto3" json:"targets,omitempty"`
+	// Whether its target credentials expire.
+	TargetCredentialsExpire bool `protobuf:"varint,4,opt,name=target_credentials_expire,json=targetCredentialsExpire,proto3" json:"target_credentials_expire,omitempty"`
+	// Whether it reports the accounts and repositories an authorization
+	// reaches, which GetProviderAccess then describes.
+	ObservesAccessScope bool `protobuf:"varint,5,opt,name=observes_access_scope,json=observesAccessScope,proto3" json:"observes_access_scope,omitempty"`
+	// The owner's connection to it.
+	Connection    *ProviderConnectionState `protobuf:"bytes,6,opt,name=connection,proto3" json:"connection,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeclaredProvider) Reset() {
+	*x = DeclaredProvider{}
+	mi := &file_marketplace_public_v1_connections_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeclaredProvider) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeclaredProvider) ProtoMessage() {}
+
+func (x *DeclaredProvider) ProtoReflect() protoreflect.Message {
+	mi := &file_marketplace_public_v1_connections_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeclaredProvider.ProtoReflect.Descriptor instead.
+func (*DeclaredProvider) Descriptor() ([]byte, []int) {
+	return file_marketplace_public_v1_connections_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *DeclaredProvider) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *DeclaredProvider) GetDisplayName() string {
+	if x != nil {
+		return x.DisplayName
+	}
+	return ""
+}
+
+func (x *DeclaredProvider) GetTargets() []*ProviderTarget {
+	if x != nil {
+		return x.Targets
+	}
+	return nil
+}
+
+func (x *DeclaredProvider) GetTargetCredentialsExpire() bool {
+	if x != nil {
+		return x.TargetCredentialsExpire
+	}
+	return false
+}
+
+func (x *DeclaredProvider) GetObservesAccessScope() bool {
+	if x != nil {
+		return x.ObservesAccessScope
+	}
+	return false
+}
+
+func (x *DeclaredProvider) GetConnection() *ProviderConnectionState {
+	if x != nil {
+		return x.Connection
+	}
+	return nil
+}
+
+// ProviderTarget is one destination of a Provider's credentials.
+type ProviderTarget struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Target name, as credential supply and Connectors name it.
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	// Host patterns: an exact host name, or `*.` and a domain for its
+	// subdomains.
+	Hosts         []string `protobuf:"bytes,2,rep,name=hosts,proto3" json:"hosts,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ProviderTarget) Reset() {
+	*x = ProviderTarget{}
+	mi := &file_marketplace_public_v1_connections_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ProviderTarget) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ProviderTarget) ProtoMessage() {}
+
+func (x *ProviderTarget) ProtoReflect() protoreflect.Message {
+	mi := &file_marketplace_public_v1_connections_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ProviderTarget.ProtoReflect.Descriptor instead.
+func (*ProviderTarget) Descriptor() ([]byte, []int) {
+	return file_marketplace_public_v1_connections_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *ProviderTarget) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *ProviderTarget) GetHosts() []string {
+	if x != nil {
+		return x.Hosts
+	}
+	return nil
+}
+
 var File_marketplace_public_v1_connections_proto protoreflect.FileDescriptor
 
 const file_marketplace_public_v1_connections_proto_rawDesc = "" +
@@ -1294,7 +1537,23 @@ const file_marketplace_public_v1_connections_proto_rawDesc = "" +
 	"\fsettings_url\x18\x06 \x01(\tR\vsettingsUrl\"@\n" +
 	"\x12ProviderPermission\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x16\n" +
-	"\x06access\x18\x02 \x01(\tR\x06accessBTZRgithub.com/talgent-work/contracts/gen/go/marketplace/public/v1;marketplacepublicv1b\x06proto3"
+	"\x06access\x18\x02 \x01(\tR\x06access\"=\n" +
+	"\x14ListProvidersRequest\x12%\n" +
+	"\x0eapplication_id\x18\x01 \x01(\tR\rapplicationId\"^\n" +
+	"\x15ListProvidersResponse\x12E\n" +
+	"\tproviders\x18\x01 \x03(\v2'.marketplace.public.v1.DeclaredProviderR\tproviders\"\xca\x02\n" +
+	"\x10DeclaredProvider\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12!\n" +
+	"\fdisplay_name\x18\x02 \x01(\tR\vdisplayName\x12?\n" +
+	"\atargets\x18\x03 \x03(\v2%.marketplace.public.v1.ProviderTargetR\atargets\x12:\n" +
+	"\x19target_credentials_expire\x18\x04 \x01(\bR\x17targetCredentialsExpire\x122\n" +
+	"\x15observes_access_scope\x18\x05 \x01(\bR\x13observesAccessScope\x12N\n" +
+	"\n" +
+	"connection\x18\x06 \x01(\v2..marketplace.public.v1.ProviderConnectionStateR\n" +
+	"connection\":\n" +
+	"\x0eProviderTarget\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x14\n" +
+	"\x05hosts\x18\x02 \x03(\tR\x05hostsBTZRgithub.com/talgent-work/contracts/gen/go/marketplace/public/v1;marketplacepublicv1b\x06proto3"
 
 var (
 	file_marketplace_public_v1_connections_proto_rawDescOnce sync.Once
@@ -1308,7 +1567,7 @@ func file_marketplace_public_v1_connections_proto_rawDescGZIP() []byte {
 	return file_marketplace_public_v1_connections_proto_rawDescData
 }
 
-var file_marketplace_public_v1_connections_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_marketplace_public_v1_connections_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
 var file_marketplace_public_v1_connections_proto_goTypes = []any{
 	(*ProviderAuthorization)(nil),                 // 0: marketplace.public.v1.ProviderAuthorization
 	(*BeginProviderAuthorizationRequest)(nil),     // 1: marketplace.public.v1.BeginProviderAuthorizationRequest
@@ -1327,6 +1586,10 @@ var file_marketplace_public_v1_connections_proto_goTypes = []any{
 	(*RefreshProviderAccessResponse)(nil),         // 14: marketplace.public.v1.RefreshProviderAccessResponse
 	(*ProviderAccount)(nil),                       // 15: marketplace.public.v1.ProviderAccount
 	(*ProviderPermission)(nil),                    // 16: marketplace.public.v1.ProviderPermission
+	(*ListProvidersRequest)(nil),                  // 17: marketplace.public.v1.ListProvidersRequest
+	(*ListProvidersResponse)(nil),                 // 18: marketplace.public.v1.ListProvidersResponse
+	(*DeclaredProvider)(nil),                      // 19: marketplace.public.v1.DeclaredProvider
+	(*ProviderTarget)(nil),                        // 20: marketplace.public.v1.ProviderTarget
 }
 var file_marketplace_public_v1_connections_proto_depIdxs = []int32{
 	0,  // 0: marketplace.public.v1.CompleteProviderAuthorizationResponse.authorization:type_name -> marketplace.public.v1.ProviderAuthorization
@@ -1337,11 +1600,14 @@ var file_marketplace_public_v1_connections_proto_depIdxs = []int32{
 	16, // 5: marketplace.public.v1.GetProviderAccessResponse.permissions:type_name -> marketplace.public.v1.ProviderPermission
 	12, // 6: marketplace.public.v1.RefreshProviderAccessResponse.access:type_name -> marketplace.public.v1.GetProviderAccessResponse
 	10, // 7: marketplace.public.v1.ProviderAccount.repositories:type_name -> marketplace.public.v1.AccessibleRepository
-	8,  // [8:8] is the sub-list for method output_type
-	8,  // [8:8] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	19, // 8: marketplace.public.v1.ListProvidersResponse.providers:type_name -> marketplace.public.v1.DeclaredProvider
+	20, // 9: marketplace.public.v1.DeclaredProvider.targets:type_name -> marketplace.public.v1.ProviderTarget
+	7,  // 10: marketplace.public.v1.DeclaredProvider.connection:type_name -> marketplace.public.v1.ProviderConnectionState
+	11, // [11:11] is the sub-list for method output_type
+	11, // [11:11] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_marketplace_public_v1_connections_proto_init() }
@@ -1355,7 +1621,7 @@ func file_marketplace_public_v1_connections_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_marketplace_public_v1_connections_proto_rawDesc), len(file_marketplace_public_v1_connections_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   17,
+			NumMessages:   21,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -54,6 +54,13 @@ service MarketplaceService {
     };
   }
 
+  // ListProviders lists every Provider the deployment declares, with the
+  // owner's connection to each.
+  rpc ListProviders(ListProvidersRequest) returns (ListProvidersResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
+    };
+  }
   // List the owner's authorization references, including inactive ones.
   rpc ListPersonalAuthorizations(ListPersonalAuthorizationsRequest) returns (ListPersonalAuthorizationsResponse) {
     option (admission.v1.admits) = {
@@ -196,7 +203,8 @@ message CancelPersonalAuthorizationResponse {
 
 // PersonalAuthorization contains no credential or runtime access grant.
 message PersonalAuthorization {
-  // Supported credential-proxy targets usable independently of any CLI identity.
+  // The targets the Provider declares, each served by this one authorization
+  // independently of any CLI identity.
   repeated string supported_targets = 1;
   // Stable reference preserved across reauthorization.
   string id = 2;
@@ -520,6 +528,9 @@ message ConnectorProviderRelationship {
   string reason = 6;
   // Catalog Connector name addressing the same endpoint; empty without one.
   string connector_name = 7;
+  // Whether the declared Provider's target credentials expire; false
+  // without a Provider.
+  bool target_credentials_expire = 8;
 }
 
 // Connector is one platform catalog entry with the user's personal status.

@@ -21,14 +21,14 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// Target names are platform-supported authentication contracts, not arbitrary URLs.
+// A target is one the authorization's Provider declares, named, never a URL.
 type SupplyServiceCredentialRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Trusted Talgent owner of the selected personal authorization.
 	OwnerUserId string `protobuf:"bytes,1,opt,name=owner_user_id,json=ownerUserId,proto3" json:"owner_user_id,omitempty"`
 	// Explicit retained authorization identity, never an ambient default.
 	AuthorizationId string `protobuf:"bytes,2,opt,name=authorization_id,json=authorizationId,proto3" json:"authorization_id,omitempty"`
-	// Platform-supported authentication contract name.
+	// Name of a target the authorization's Provider declares.
 	Target        string `protobuf:"bytes,3,opt,name=target,proto3" json:"target,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -93,8 +93,11 @@ type SupplyServiceCredentialResponse struct {
 	// The token's own expiry at the Provider, in Unix milliseconds; 0 when it
 	// does not expire.
 	ExpiresAtUnixMs int64 `protobuf:"varint,2,opt,name=expires_at_unix_ms,json=expiresAtUnixMs,proto3" json:"expires_at_unix_ms,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	// The target's declared host patterns, the only hosts the credential may
+	// be added to: an exact host name, or `*.` and a domain for its subdomains.
+	Hosts         []string `protobuf:"bytes,3,rep,name=hosts,proto3" json:"hosts,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SupplyServiceCredentialResponse) Reset() {
@@ -139,6 +142,13 @@ func (x *SupplyServiceCredentialResponse) GetExpiresAtUnixMs() int64 {
 		return x.ExpiresAtUnixMs
 	}
 	return 0
+}
+
+func (x *SupplyServiceCredentialResponse) GetHosts() []string {
+	if x != nil {
+		return x.Hosts
+	}
+	return nil
 }
 
 // SupplyRepositoryCredentialRequest carries references, never ambient defaults.
@@ -288,10 +298,11 @@ const file_marketplace_private_v1_credentials_proto_rawDesc = "" +
 	"\x1eSupplyServiceCredentialRequest\x12\"\n" +
 	"\rowner_user_id\x18\x01 \x01(\tR\vownerUserId\x12)\n" +
 	"\x10authorization_id\x18\x02 \x01(\tR\x0fauthorizationId\x12\x16\n" +
-	"\x06target\x18\x03 \x01(\tR\x06target\"d\n" +
+	"\x06target\x18\x03 \x01(\tR\x06target\"z\n" +
 	"\x1fSupplyServiceCredentialResponse\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\x12+\n" +
-	"\x12expires_at_unix_ms\x18\x02 \x01(\x03R\x0fexpiresAtUnixMs\"\xb4\x01\n" +
+	"\x12expires_at_unix_ms\x18\x02 \x01(\x03R\x0fexpiresAtUnixMs\x12\x14\n" +
+	"\x05hosts\x18\x03 \x03(\tR\x05hosts\"\xb4\x01\n" +
 	"!SupplyRepositoryCredentialRequest\x12\"\n" +
 	"\rowner_user_id\x18\x01 \x01(\tR\vownerUserId\x12)\n" +
 	"\x10authorization_id\x18\x02 \x01(\tR\x0fauthorizationId\x12#\n" +

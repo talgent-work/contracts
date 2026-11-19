@@ -91,4 +91,7 @@ message CatalogConnector {
   string target = 13;
   // Provider authentication contract, such as credential_proxy.
   string provider_authentication = 14;
+  // Whether the declared Provider's target credentials expire; false
+  // without a Provider.
+  bool provider_target_credentials_expire = 15;
 }

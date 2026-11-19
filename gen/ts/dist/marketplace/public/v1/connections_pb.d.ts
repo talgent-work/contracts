@@ -670,3 +670,130 @@ export declare type ProviderPermission = Message<"marketplace.public.v1.Provider
  */
 export declare const ProviderPermissionSchema: GenMessage<ProviderPermission>;
 
+/**
+ * ListProvidersRequest selects whose connection each Provider reports.
+ *
+ * @generated from message marketplace.public.v1.ListProvidersRequest
+ */
+export declare type ListProvidersRequest = Message<"marketplace.public.v1.ListProvidersRequest"> & {
+  /**
+   * An Application the caller owns, whose Provider Authorizations the
+   * request reaches; empty for the caller's own. An Application leaves it
+   * empty or names itself.
+   *
+   * @generated from field: string application_id = 1;
+   */
+  applicationId: string;
+};
+
+/**
+ * Describes the message marketplace.public.v1.ListProvidersRequest.
+ * Use `create(ListProvidersRequestSchema)` to create a new message.
+ */
+export declare const ListProvidersRequestSchema: GenMessage<ListProvidersRequest>;
+
+/**
+ * ListProvidersResponse holds every Provider the deployment declares.
+ *
+ * @generated from message marketplace.public.v1.ListProvidersResponse
+ */
+export declare type ListProvidersResponse = Message<"marketplace.public.v1.ListProvidersResponse"> & {
+  /**
+   * Declared Providers ordered by name.
+   *
+   * @generated from field: repeated marketplace.public.v1.DeclaredProvider providers = 1;
+   */
+  providers: DeclaredProvider[];
+};
+
+/**
+ * Describes the message marketplace.public.v1.ListProvidersResponse.
+ * Use `create(ListProvidersResponseSchema)` to create a new message.
+ */
+export declare const ListProvidersResponseSchema: GenMessage<ListProvidersResponse>;
+
+/**
+ * DeclaredProvider is one Provider the deployment declares: an external
+ * party whose one authorization serves every target it declares.
+ *
+ * @generated from message marketplace.public.v1.DeclaredProvider
+ */
+export declare type DeclaredProvider = Message<"marketplace.public.v1.DeclaredProvider"> & {
+  /**
+   * Provider identity, as the other Provider requests name it.
+   *
+   * @generated from field: string name = 1;
+   */
+  name: string;
+
+  /**
+   * Name shown to people.
+   *
+   * @generated from field: string display_name = 2;
+   */
+  displayName: string;
+
+  /**
+   * The targets its credentials reach, and no other host.
+   *
+   * @generated from field: repeated marketplace.public.v1.ProviderTarget targets = 3;
+   */
+  targets: ProviderTarget[];
+
+  /**
+   * Whether its target credentials expire.
+   *
+   * @generated from field: bool target_credentials_expire = 4;
+   */
+  targetCredentialsExpire: boolean;
+
+  /**
+   * Whether it reports the accounts and repositories an authorization
+   * reaches, which GetProviderAccess then describes.
+   *
+   * @generated from field: bool observes_access_scope = 5;
+   */
+  observesAccessScope: boolean;
+
+  /**
+   * The owner's connection to it.
+   *
+   * @generated from field: marketplace.public.v1.ProviderConnectionState connection = 6;
+   */
+  connection?: ProviderConnectionState;
+};
+
+/**
+ * Describes the message marketplace.public.v1.DeclaredProvider.
+ * Use `create(DeclaredProviderSchema)` to create a new message.
+ */
+export declare const DeclaredProviderSchema: GenMessage<DeclaredProvider>;
+
+/**
+ * ProviderTarget is one destination of a Provider's credentials.
+ *
+ * @generated from message marketplace.public.v1.ProviderTarget
+ */
+export declare type ProviderTarget = Message<"marketplace.public.v1.ProviderTarget"> & {
+  /**
+   * Target name, as credential supply and Connectors name it.
+   *
+   * @generated from field: string name = 1;
+   */
+  name: string;
+
+  /**
+   * Host patterns: an exact host name, or `*.` and a domain for its
+   * subdomains.
+   *
+   * @generated from field: repeated string hosts = 2;
+   */
+  hosts: string[];
+};
+
+/**
+ * Describes the message marketplace.public.v1.ProviderTarget.
+ * Use `create(ProviderTargetSchema)` to create a new message.
+ */
+export declare const ProviderTargetSchema: GenMessage<ProviderTarget>;
+

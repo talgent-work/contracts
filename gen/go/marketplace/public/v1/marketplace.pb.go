@@ -177,7 +177,8 @@ func (x *CancelPersonalAuthorizationResponse) GetAuthorization() *PersonalAuthor
 // PersonalAuthorization contains no credential or runtime access grant.
 type PersonalAuthorization struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Supported credential-proxy targets usable independently of any CLI identity.
+	// The targets the Provider declares, each served by this one authorization
+	// independently of any CLI identity.
 	SupportedTargets []string `protobuf:"bytes,1,rep,name=supported_targets,json=supportedTargets,proto3" json:"supported_targets,omitempty"`
 	// Stable reference preserved across reauthorization.
 	Id string `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`
@@ -2075,8 +2076,11 @@ type ConnectorProviderRelationship struct {
 	Reason string `protobuf:"bytes,6,opt,name=reason,proto3" json:"reason,omitempty"`
 	// Catalog Connector name addressing the same endpoint; empty without one.
 	ConnectorName string `protobuf:"bytes,7,opt,name=connector_name,json=connectorName,proto3" json:"connector_name,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	// Whether the declared Provider's target credentials expire; false
+	// without a Provider.
+	TargetCredentialsExpire bool `protobuf:"varint,8,opt,name=target_credentials_expire,json=targetCredentialsExpire,proto3" json:"target_credentials_expire,omitempty"`
+	unknownFields           protoimpl.UnknownFields
+	sizeCache               protoimpl.SizeCache
 }
 
 func (x *ConnectorProviderRelationship) Reset() {
@@ -2156,6 +2160,13 @@ func (x *ConnectorProviderRelationship) GetConnectorName() string {
 		return x.ConnectorName
 	}
 	return ""
+}
+
+func (x *ConnectorProviderRelationship) GetTargetCredentialsExpire() bool {
+	if x != nil {
+		return x.TargetCredentialsExpire
+	}
+	return false
 }
 
 // Connector is one platform catalog entry with the user's personal status.
@@ -3211,7 +3222,7 @@ const file_marketplace_public_v1_marketplace_proto_rawDesc = "" +
 	"\x04slug\x18\x01 \x01(\tR\x04slug\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\rR\aversion\x12%\n" +
 	"\x0eapplication_id\x18\x03 \x01(\tR\rapplicationId\"\x19\n" +
-	"\x17UninstallPluginResponse\"\xf5\x01\n" +
+	"\x17UninstallPluginResponse\"\xb1\x02\n" +
 	"\x1dConnectorProviderRelationship\x12!\n" +
 	"\fconnector_id\x18\x01 \x01(\tR\vconnectorId\x12\x1a\n" +
 	"\bprovider\x18\x02 \x01(\tR\bprovider\x12\x16\n" +
@@ -3219,7 +3230,8 @@ const file_marketplace_public_v1_marketplace_proto_rawDesc = "" +
 	"\x0eauthentication\x18\x04 \x01(\tR\x0eauthentication\x12\x16\n" +
 	"\x06status\x18\x05 \x01(\tR\x06status\x12\x16\n" +
 	"\x06reason\x18\x06 \x01(\tR\x06reason\x12%\n" +
-	"\x0econnector_name\x18\a \x01(\tR\rconnectorName\"\xab\x02\n" +
+	"\x0econnector_name\x18\a \x01(\tR\rconnectorName\x12:\n" +
+	"\x19target_credentials_expire\x18\b \x01(\bR\x17targetCredentialsExpire\"\xab\x02\n" +
 	"\tConnector\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x1a\n" +
@@ -3272,7 +3284,7 @@ const file_marketplace_public_v1_marketplace_proto_rawDesc = "" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\rR\aversion\x12%\n" +
 	"\x0eapplication_id\x18\x03 \x01(\tR\rapplicationId\"\x1c\n" +
-	"\x1aUninstallConnectorResponse2\xd9\x1a\n" +
+	"\x1aUninstallConnectorResponse2\xcf\x1b\n" +
 	"\x12MarketplaceService\x12\x9a\x01\n" +
 	"\x1aBeginProviderAuthorization\x128.marketplace.public.v1.BeginProviderAuthorizationRequest\x1a9.marketplace.public.v1.BeginProviderAuthorizationResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x01\x12\xa3\x01\n" +
@@ -3285,6 +3297,8 @@ const file_marketplace_public_v1_marketplace_proto_rawDesc = "" +
 	"\x11GetProviderAccess\x12/.marketplace.public.v1.GetProviderAccessRequest\x1a0.marketplace.public.v1.GetProviderAccessResponse\"\b\xc2\xf3\x18\x04\n" +
 	"\x02\x01\x03\x12\x8c\x01\n" +
 	"\x15RefreshProviderAccess\x123.marketplace.public.v1.RefreshProviderAccessRequest\x1a4.marketplace.public.v1.RefreshProviderAccessResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12t\n" +
+	"\rListProviders\x12+.marketplace.public.v1.ListProvidersRequest\x1a,.marketplace.public.v1.ListProvidersResponse\"\b\xc2\xf3\x18\x04\n" +
 	"\x02\x01\x03\x12\x9b\x01\n" +
 	"\x1aListPersonalAuthorizations\x128.marketplace.public.v1.ListPersonalAuthorizationsRequest\x1a9.marketplace.public.v1.ListPersonalAuthorizationsResponse\"\b\xc2\xf3\x18\x04\n" +
 	"\x02\x01\x03\x12\x9e\x01\n" +
@@ -3398,12 +3412,14 @@ var file_marketplace_public_v1_marketplace_proto_goTypes = []any{
 	(*ListAccessibleRepositoriesRequest)(nil),     // 56: marketplace.public.v1.ListAccessibleRepositoriesRequest
 	(*GetProviderAccessRequest)(nil),              // 57: marketplace.public.v1.GetProviderAccessRequest
 	(*RefreshProviderAccessRequest)(nil),          // 58: marketplace.public.v1.RefreshProviderAccessRequest
-	(*BeginProviderAuthorizationResponse)(nil),    // 59: marketplace.public.v1.BeginProviderAuthorizationResponse
-	(*CompleteProviderAuthorizationResponse)(nil), // 60: marketplace.public.v1.CompleteProviderAuthorizationResponse
-	(*GetProviderConnectionStateResponse)(nil),    // 61: marketplace.public.v1.GetProviderConnectionStateResponse
-	(*ListAccessibleRepositoriesResponse)(nil),    // 62: marketplace.public.v1.ListAccessibleRepositoriesResponse
-	(*GetProviderAccessResponse)(nil),             // 63: marketplace.public.v1.GetProviderAccessResponse
-	(*RefreshProviderAccessResponse)(nil),         // 64: marketplace.public.v1.RefreshProviderAccessResponse
+	(*ListProvidersRequest)(nil),                  // 59: marketplace.public.v1.ListProvidersRequest
+	(*BeginProviderAuthorizationResponse)(nil),    // 60: marketplace.public.v1.BeginProviderAuthorizationResponse
+	(*CompleteProviderAuthorizationResponse)(nil), // 61: marketplace.public.v1.CompleteProviderAuthorizationResponse
+	(*GetProviderConnectionStateResponse)(nil),    // 62: marketplace.public.v1.GetProviderConnectionStateResponse
+	(*ListAccessibleRepositoriesResponse)(nil),    // 63: marketplace.public.v1.ListAccessibleRepositoriesResponse
+	(*GetProviderAccessResponse)(nil),             // 64: marketplace.public.v1.GetProviderAccessResponse
+	(*RefreshProviderAccessResponse)(nil),         // 65: marketplace.public.v1.RefreshProviderAccessResponse
+	(*ListProvidersResponse)(nil),                 // 66: marketplace.public.v1.ListProvidersResponse
 }
 var file_marketplace_public_v1_marketplace_proto_depIdxs = []int32{
 	3,  // 0: marketplace.public.v1.CancelPersonalAuthorizationResponse.authorization:type_name -> marketplace.public.v1.PersonalAuthorization
@@ -3442,52 +3458,54 @@ var file_marketplace_public_v1_marketplace_proto_depIdxs = []int32{
 	56, // 33: marketplace.public.v1.MarketplaceService.ListAccessibleRepositories:input_type -> marketplace.public.v1.ListAccessibleRepositoriesRequest
 	57, // 34: marketplace.public.v1.MarketplaceService.GetProviderAccess:input_type -> marketplace.public.v1.GetProviderAccessRequest
 	58, // 35: marketplace.public.v1.MarketplaceService.RefreshProviderAccess:input_type -> marketplace.public.v1.RefreshProviderAccessRequest
-	0,  // 36: marketplace.public.v1.MarketplaceService.ListPersonalAuthorizations:input_type -> marketplace.public.v1.ListPersonalAuthorizationsRequest
-	1,  // 37: marketplace.public.v1.MarketplaceService.CancelPersonalAuthorization:input_type -> marketplace.public.v1.CancelPersonalAuthorizationRequest
-	11, // 38: marketplace.public.v1.MarketplaceService.ListPlugins:input_type -> marketplace.public.v1.ListPluginsRequest
-	14, // 39: marketplace.public.v1.MarketplaceService.GetPlugin:input_type -> marketplace.public.v1.GetPluginRequest
-	16, // 40: marketplace.public.v1.MarketplaceService.ListInstalledPlugins:input_type -> marketplace.public.v1.ListInstalledPluginsRequest
-	18, // 41: marketplace.public.v1.MarketplaceService.GetInstalledPlugin:input_type -> marketplace.public.v1.GetInstalledPluginRequest
-	20, // 42: marketplace.public.v1.MarketplaceService.InstallPlugin:input_type -> marketplace.public.v1.InstallPluginRequest
-	22, // 43: marketplace.public.v1.MarketplaceService.EnablePlugin:input_type -> marketplace.public.v1.EnablePluginRequest
-	24, // 44: marketplace.public.v1.MarketplaceService.DisablePlugin:input_type -> marketplace.public.v1.DisablePluginRequest
-	26, // 45: marketplace.public.v1.MarketplaceService.SetPluginConfiguration:input_type -> marketplace.public.v1.SetPluginConfigurationRequest
-	28, // 46: marketplace.public.v1.MarketplaceService.DeletePluginConfiguration:input_type -> marketplace.public.v1.DeletePluginConfigurationRequest
-	30, // 47: marketplace.public.v1.MarketplaceService.UninstallPlugin:input_type -> marketplace.public.v1.UninstallPluginRequest
-	35, // 48: marketplace.public.v1.MarketplaceService.ListConnectors:input_type -> marketplace.public.v1.ListConnectorsRequest
-	37, // 49: marketplace.public.v1.MarketplaceService.GetConnector:input_type -> marketplace.public.v1.GetConnectorRequest
-	39, // 50: marketplace.public.v1.MarketplaceService.ListInstalledConnectors:input_type -> marketplace.public.v1.ListInstalledConnectorsRequest
-	41, // 51: marketplace.public.v1.MarketplaceService.InstallConnector:input_type -> marketplace.public.v1.InstallConnectorRequest
-	43, // 52: marketplace.public.v1.MarketplaceService.EnableConnector:input_type -> marketplace.public.v1.EnableConnectorRequest
-	45, // 53: marketplace.public.v1.MarketplaceService.DisableConnector:input_type -> marketplace.public.v1.DisableConnectorRequest
-	47, // 54: marketplace.public.v1.MarketplaceService.UninstallConnector:input_type -> marketplace.public.v1.UninstallConnectorRequest
-	59, // 55: marketplace.public.v1.MarketplaceService.BeginProviderAuthorization:output_type -> marketplace.public.v1.BeginProviderAuthorizationResponse
-	60, // 56: marketplace.public.v1.MarketplaceService.CompleteProviderAuthorization:output_type -> marketplace.public.v1.CompleteProviderAuthorizationResponse
-	61, // 57: marketplace.public.v1.MarketplaceService.GetProviderConnectionState:output_type -> marketplace.public.v1.GetProviderConnectionStateResponse
-	62, // 58: marketplace.public.v1.MarketplaceService.ListAccessibleRepositories:output_type -> marketplace.public.v1.ListAccessibleRepositoriesResponse
-	63, // 59: marketplace.public.v1.MarketplaceService.GetProviderAccess:output_type -> marketplace.public.v1.GetProviderAccessResponse
-	64, // 60: marketplace.public.v1.MarketplaceService.RefreshProviderAccess:output_type -> marketplace.public.v1.RefreshProviderAccessResponse
-	4,  // 61: marketplace.public.v1.MarketplaceService.ListPersonalAuthorizations:output_type -> marketplace.public.v1.ListPersonalAuthorizationsResponse
-	2,  // 62: marketplace.public.v1.MarketplaceService.CancelPersonalAuthorization:output_type -> marketplace.public.v1.CancelPersonalAuthorizationResponse
-	12, // 63: marketplace.public.v1.MarketplaceService.ListPlugins:output_type -> marketplace.public.v1.ListPluginsResponse
-	15, // 64: marketplace.public.v1.MarketplaceService.GetPlugin:output_type -> marketplace.public.v1.GetPluginResponse
-	17, // 65: marketplace.public.v1.MarketplaceService.ListInstalledPlugins:output_type -> marketplace.public.v1.ListInstalledPluginsResponse
-	19, // 66: marketplace.public.v1.MarketplaceService.GetInstalledPlugin:output_type -> marketplace.public.v1.GetInstalledPluginResponse
-	21, // 67: marketplace.public.v1.MarketplaceService.InstallPlugin:output_type -> marketplace.public.v1.InstallPluginResponse
-	23, // 68: marketplace.public.v1.MarketplaceService.EnablePlugin:output_type -> marketplace.public.v1.EnablePluginResponse
-	25, // 69: marketplace.public.v1.MarketplaceService.DisablePlugin:output_type -> marketplace.public.v1.DisablePluginResponse
-	27, // 70: marketplace.public.v1.MarketplaceService.SetPluginConfiguration:output_type -> marketplace.public.v1.SetPluginConfigurationResponse
-	29, // 71: marketplace.public.v1.MarketplaceService.DeletePluginConfiguration:output_type -> marketplace.public.v1.DeletePluginConfigurationResponse
-	31, // 72: marketplace.public.v1.MarketplaceService.UninstallPlugin:output_type -> marketplace.public.v1.UninstallPluginResponse
-	36, // 73: marketplace.public.v1.MarketplaceService.ListConnectors:output_type -> marketplace.public.v1.ListConnectorsResponse
-	38, // 74: marketplace.public.v1.MarketplaceService.GetConnector:output_type -> marketplace.public.v1.GetConnectorResponse
-	40, // 75: marketplace.public.v1.MarketplaceService.ListInstalledConnectors:output_type -> marketplace.public.v1.ListInstalledConnectorsResponse
-	42, // 76: marketplace.public.v1.MarketplaceService.InstallConnector:output_type -> marketplace.public.v1.InstallConnectorResponse
-	44, // 77: marketplace.public.v1.MarketplaceService.EnableConnector:output_type -> marketplace.public.v1.EnableConnectorResponse
-	46, // 78: marketplace.public.v1.MarketplaceService.DisableConnector:output_type -> marketplace.public.v1.DisableConnectorResponse
-	48, // 79: marketplace.public.v1.MarketplaceService.UninstallConnector:output_type -> marketplace.public.v1.UninstallConnectorResponse
-	55, // [55:80] is the sub-list for method output_type
-	30, // [30:55] is the sub-list for method input_type
+	59, // 36: marketplace.public.v1.MarketplaceService.ListProviders:input_type -> marketplace.public.v1.ListProvidersRequest
+	0,  // 37: marketplace.public.v1.MarketplaceService.ListPersonalAuthorizations:input_type -> marketplace.public.v1.ListPersonalAuthorizationsRequest
+	1,  // 38: marketplace.public.v1.MarketplaceService.CancelPersonalAuthorization:input_type -> marketplace.public.v1.CancelPersonalAuthorizationRequest
+	11, // 39: marketplace.public.v1.MarketplaceService.ListPlugins:input_type -> marketplace.public.v1.ListPluginsRequest
+	14, // 40: marketplace.public.v1.MarketplaceService.GetPlugin:input_type -> marketplace.public.v1.GetPluginRequest
+	16, // 41: marketplace.public.v1.MarketplaceService.ListInstalledPlugins:input_type -> marketplace.public.v1.ListInstalledPluginsRequest
+	18, // 42: marketplace.public.v1.MarketplaceService.GetInstalledPlugin:input_type -> marketplace.public.v1.GetInstalledPluginRequest
+	20, // 43: marketplace.public.v1.MarketplaceService.InstallPlugin:input_type -> marketplace.public.v1.InstallPluginRequest
+	22, // 44: marketplace.public.v1.MarketplaceService.EnablePlugin:input_type -> marketplace.public.v1.EnablePluginRequest
+	24, // 45: marketplace.public.v1.MarketplaceService.DisablePlugin:input_type -> marketplace.public.v1.DisablePluginRequest
+	26, // 46: marketplace.public.v1.MarketplaceService.SetPluginConfiguration:input_type -> marketplace.public.v1.SetPluginConfigurationRequest
+	28, // 47: marketplace.public.v1.MarketplaceService.DeletePluginConfiguration:input_type -> marketplace.public.v1.DeletePluginConfigurationRequest
+	30, // 48: marketplace.public.v1.MarketplaceService.UninstallPlugin:input_type -> marketplace.public.v1.UninstallPluginRequest
+	35, // 49: marketplace.public.v1.MarketplaceService.ListConnectors:input_type -> marketplace.public.v1.ListConnectorsRequest
+	37, // 50: marketplace.public.v1.MarketplaceService.GetConnector:input_type -> marketplace.public.v1.GetConnectorRequest
+	39, // 51: marketplace.public.v1.MarketplaceService.ListInstalledConnectors:input_type -> marketplace.public.v1.ListInstalledConnectorsRequest
+	41, // 52: marketplace.public.v1.MarketplaceService.InstallConnector:input_type -> marketplace.public.v1.InstallConnectorRequest
+	43, // 53: marketplace.public.v1.MarketplaceService.EnableConnector:input_type -> marketplace.public.v1.EnableConnectorRequest
+	45, // 54: marketplace.public.v1.MarketplaceService.DisableConnector:input_type -> marketplace.public.v1.DisableConnectorRequest
+	47, // 55: marketplace.public.v1.MarketplaceService.UninstallConnector:input_type -> marketplace.public.v1.UninstallConnectorRequest
+	60, // 56: marketplace.public.v1.MarketplaceService.BeginProviderAuthorization:output_type -> marketplace.public.v1.BeginProviderAuthorizationResponse
+	61, // 57: marketplace.public.v1.MarketplaceService.CompleteProviderAuthorization:output_type -> marketplace.public.v1.CompleteProviderAuthorizationResponse
+	62, // 58: marketplace.public.v1.MarketplaceService.GetProviderConnectionState:output_type -> marketplace.public.v1.GetProviderConnectionStateResponse
+	63, // 59: marketplace.public.v1.MarketplaceService.ListAccessibleRepositories:output_type -> marketplace.public.v1.ListAccessibleRepositoriesResponse
+	64, // 60: marketplace.public.v1.MarketplaceService.GetProviderAccess:output_type -> marketplace.public.v1.GetProviderAccessResponse
+	65, // 61: marketplace.public.v1.MarketplaceService.RefreshProviderAccess:output_type -> marketplace.public.v1.RefreshProviderAccessResponse
+	66, // 62: marketplace.public.v1.MarketplaceService.ListProviders:output_type -> marketplace.public.v1.ListProvidersResponse
+	4,  // 63: marketplace.public.v1.MarketplaceService.ListPersonalAuthorizations:output_type -> marketplace.public.v1.ListPersonalAuthorizationsResponse
+	2,  // 64: marketplace.public.v1.MarketplaceService.CancelPersonalAuthorization:output_type -> marketplace.public.v1.CancelPersonalAuthorizationResponse
+	12, // 65: marketplace.public.v1.MarketplaceService.ListPlugins:output_type -> marketplace.public.v1.ListPluginsResponse
+	15, // 66: marketplace.public.v1.MarketplaceService.GetPlugin:output_type -> marketplace.public.v1.GetPluginResponse
+	17, // 67: marketplace.public.v1.MarketplaceService.ListInstalledPlugins:output_type -> marketplace.public.v1.ListInstalledPluginsResponse
+	19, // 68: marketplace.public.v1.MarketplaceService.GetInstalledPlugin:output_type -> marketplace.public.v1.GetInstalledPluginResponse
+	21, // 69: marketplace.public.v1.MarketplaceService.InstallPlugin:output_type -> marketplace.public.v1.InstallPluginResponse
+	23, // 70: marketplace.public.v1.MarketplaceService.EnablePlugin:output_type -> marketplace.public.v1.EnablePluginResponse
+	25, // 71: marketplace.public.v1.MarketplaceService.DisablePlugin:output_type -> marketplace.public.v1.DisablePluginResponse
+	27, // 72: marketplace.public.v1.MarketplaceService.SetPluginConfiguration:output_type -> marketplace.public.v1.SetPluginConfigurationResponse
+	29, // 73: marketplace.public.v1.MarketplaceService.DeletePluginConfiguration:output_type -> marketplace.public.v1.DeletePluginConfigurationResponse
+	31, // 74: marketplace.public.v1.MarketplaceService.UninstallPlugin:output_type -> marketplace.public.v1.UninstallPluginResponse
+	36, // 75: marketplace.public.v1.MarketplaceService.ListConnectors:output_type -> marketplace.public.v1.ListConnectorsResponse
+	38, // 76: marketplace.public.v1.MarketplaceService.GetConnector:output_type -> marketplace.public.v1.GetConnectorResponse
+	40, // 77: marketplace.public.v1.MarketplaceService.ListInstalledConnectors:output_type -> marketplace.public.v1.ListInstalledConnectorsResponse
+	42, // 78: marketplace.public.v1.MarketplaceService.InstallConnector:output_type -> marketplace.public.v1.InstallConnectorResponse
+	44, // 79: marketplace.public.v1.MarketplaceService.EnableConnector:output_type -> marketplace.public.v1.EnableConnectorResponse
+	46, // 80: marketplace.public.v1.MarketplaceService.DisableConnector:output_type -> marketplace.public.v1.DisableConnectorResponse
+	48, // 81: marketplace.public.v1.MarketplaceService.UninstallConnector:output_type -> marketplace.public.v1.UninstallConnectorResponse
+	56, // [56:82] is the sub-list for method output_type
+	30, // [30:56] is the sub-list for method input_type
 	30, // [30:30] is the sub-list for extension type_name
 	30, // [30:30] is the sub-list for extension extendee
 	0,  // [0:30] is the sub-list for field type_name

@@ -5,7 +5,7 @@
 import type { GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
 import type { JsonObject, Message } from "@bufbuild/protobuf";
 import type { Value } from "@bufbuild/protobuf/wkt";
-import type { BeginProviderAuthorizationRequestSchema, BeginProviderAuthorizationResponseSchema, CompleteProviderAuthorizationRequestSchema, CompleteProviderAuthorizationResponseSchema, GetProviderAccessRequestSchema, GetProviderAccessResponseSchema, GetProviderConnectionStateRequestSchema, GetProviderConnectionStateResponseSchema, ListAccessibleRepositoriesRequestSchema, ListAccessibleRepositoriesResponseSchema, RefreshProviderAccessRequestSchema, RefreshProviderAccessResponseSchema } from "./connections_pb.js";
+import type { BeginProviderAuthorizationRequestSchema, BeginProviderAuthorizationResponseSchema, CompleteProviderAuthorizationRequestSchema, CompleteProviderAuthorizationResponseSchema, GetProviderAccessRequestSchema, GetProviderAccessResponseSchema, GetProviderConnectionStateRequestSchema, GetProviderConnectionStateResponseSchema, ListAccessibleRepositoriesRequestSchema, ListAccessibleRepositoriesResponseSchema, ListProvidersRequestSchema, ListProvidersResponseSchema, RefreshProviderAccessRequestSchema, RefreshProviderAccessResponseSchema } from "./connections_pb.js";
 
 /**
  * Describes the file marketplace/public/v1/marketplace.proto.
@@ -90,7 +90,8 @@ export declare const CancelPersonalAuthorizationResponseSchema: GenMessage<Cance
  */
 export declare type PersonalAuthorization = Message<"marketplace.public.v1.PersonalAuthorization"> & {
   /**
-   * Supported credential-proxy targets usable independently of any CLI identity.
+   * The targets the Provider declares, each served by this one authorization
+   * independently of any CLI identity.
    *
    * @generated from field: repeated string supported_targets = 1;
    */
@@ -1150,6 +1151,14 @@ export declare type ConnectorProviderRelationship = Message<"marketplace.public.
    * @generated from field: string connector_name = 7;
    */
   connectorName: string;
+
+  /**
+   * Whether the declared Provider's target credentials expire; false
+   * without a Provider.
+   *
+   * @generated from field: bool target_credentials_expire = 8;
+   */
+  targetCredentialsExpire: boolean;
 };
 
 /**
@@ -1684,6 +1693,17 @@ export declare const MarketplaceService: GenService<{
     methodKind: "unary";
     input: typeof RefreshProviderAccessRequestSchema;
     output: typeof RefreshProviderAccessResponseSchema;
+  },
+  /**
+   * ListProviders lists every Provider the deployment declares, with the
+   * owner's connection to each.
+   *
+   * @generated from rpc marketplace.public.v1.MarketplaceService.ListProviders
+   */
+  listProviders: {
+    methodKind: "unary";
+    input: typeof ListProvidersRequestSchema;
+    output: typeof ListProvidersResponseSchema;
   },
   /**
    * List the owner's authorization references, including inactive ones.

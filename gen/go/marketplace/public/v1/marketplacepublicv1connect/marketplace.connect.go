@@ -42,6 +42,9 @@ const (
 	// MarketplaceServiceRefreshProviderAccessProcedure is the procedure name of the
 	// MarketplaceService's RefreshProviderAccess RPC.
 	MarketplaceServiceRefreshProviderAccessProcedure = "/marketplace.public.v1.MarketplaceService/RefreshProviderAccess"
+	// MarketplaceServiceListProvidersProcedure is the procedure name of the MarketplaceService's
+	// ListProviders RPC.
+	MarketplaceServiceListProvidersProcedure = "/marketplace.public.v1.MarketplaceService/ListProviders"
 	// MarketplaceServiceListPersonalAuthorizationsProcedure is the procedure name of the
 	// MarketplaceService's ListPersonalAuthorizations RPC.
 	MarketplaceServiceListPersonalAuthorizationsProcedure = "/marketplace.public.v1.MarketplaceService/ListPersonalAuthorizations"
@@ -142,6 +145,13 @@ var (
 			StreamType: connect.StreamTypeUnary,
 			Schema:     v1.File_marketplace_public_v1_marketplace_proto.Services().ByName("MarketplaceService").Methods().ByName("RefreshProviderAccess"),
 			Procedure:  MarketplaceServiceRefreshProviderAccessProcedure,
+		}
+	})
+	marketplaceServiceListProvidersSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_marketplace_public_v1_marketplace_proto.Services().ByName("MarketplaceService").Methods().ByName("ListProviders"),
+			Procedure:  MarketplaceServiceListProvidersProcedure,
 		}
 	})
 	marketplaceServiceListPersonalAuthorizationsSpec = sync.OnceValue(func() connect.Spec {
@@ -296,6 +306,9 @@ type MarketplaceServiceClient interface {
 	GetProviderAccess(context.Context, *v1.GetProviderAccessRequest) (*v1.GetProviderAccessResponse, error)
 	// RefreshProviderAccess observes the authorization's reach now and returns it.
 	RefreshProviderAccess(context.Context, *v1.RefreshProviderAccessRequest) (*v1.RefreshProviderAccessResponse, error)
+	// ListProviders lists every Provider the deployment declares, with the
+	// owner's connection to each.
+	ListProviders(context.Context, *v1.ListProvidersRequest) (*v1.ListProvidersResponse, error)
 	// List the owner's authorization references, including inactive ones.
 	ListPersonalAuthorizations(context.Context, *v1.ListPersonalAuthorizationsRequest) (*v1.ListPersonalAuthorizationsResponse, error)
 	// Ask the Provider to revoke one of the owner's authorizations.
@@ -360,6 +373,9 @@ type MarketplaceServiceHandler interface {
 	GetProviderAccess(context.Context, *v1.GetProviderAccessRequest) (*v1.GetProviderAccessResponse, error)
 	// RefreshProviderAccess observes the authorization's reach now and returns it.
 	RefreshProviderAccess(context.Context, *v1.RefreshProviderAccessRequest) (*v1.RefreshProviderAccessResponse, error)
+	// ListProviders lists every Provider the deployment declares, with the
+	// owner's connection to each.
+	ListProviders(context.Context, *v1.ListProvidersRequest) (*v1.ListProvidersResponse, error)
 	// List the owner's authorization references, including inactive ones.
 	ListPersonalAuthorizations(context.Context, *v1.ListPersonalAuthorizationsRequest) (*v1.ListPersonalAuthorizationsResponse, error)
 	// Ask the Provider to revoke one of the owner's authorizations.
@@ -411,6 +427,7 @@ func RegisterMarketplaceServiceHandler(server *connect.Server, svc MarketplaceSe
 		connect.Method{Spec: marketplaceServiceListAccessibleRepositoriesSpec(), Handler: adapter.listAccessibleRepositories},
 		connect.Method{Spec: marketplaceServiceGetProviderAccessSpec(), Handler: adapter.getProviderAccess},
 		connect.Method{Spec: marketplaceServiceRefreshProviderAccessSpec(), Handler: adapter.refreshProviderAccess},
+		connect.Method{Spec: marketplaceServiceListProvidersSpec(), Handler: adapter.listProviders},
 		connect.Method{Spec: marketplaceServiceListPersonalAuthorizationsSpec(), Handler: adapter.listPersonalAuthorizations},
 		connect.Method{Spec: marketplaceServiceCancelPersonalAuthorizationSpec(), Handler: adapter.cancelPersonalAuthorization},
 		connect.Method{Spec: marketplaceServiceListPluginsSpec(), Handler: adapter.listPlugins},
@@ -458,6 +475,10 @@ func (UnimplementedMarketplaceServiceHandler) GetProviderAccess(context.Context,
 
 func (UnimplementedMarketplaceServiceHandler) RefreshProviderAccess(context.Context, *v1.RefreshProviderAccessRequest) (*v1.RefreshProviderAccessResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, "marketplace.public.v1.MarketplaceService.RefreshProviderAccess is not implemented")
+}
+
+func (UnimplementedMarketplaceServiceHandler) ListProviders(context.Context, *v1.ListProvidersRequest) (*v1.ListProvidersResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "marketplace.public.v1.MarketplaceService.ListProviders is not implemented")
 }
 
 func (UnimplementedMarketplaceServiceHandler) ListPersonalAuthorizations(context.Context, *v1.ListPersonalAuthorizationsRequest) (*v1.ListPersonalAuthorizationsResponse, error) {
@@ -583,6 +604,14 @@ func (c *marketplaceServiceClient) GetProviderAccess(ctx context.Context, req *v
 func (c *marketplaceServiceClient) RefreshProviderAccess(ctx context.Context, req *v1.RefreshProviderAccessRequest) (*v1.RefreshProviderAccessResponse, error) {
 	var res v1.RefreshProviderAccessResponse
 	if err := c.client.CallUnary(ctx, marketplaceServiceRefreshProviderAccessSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *marketplaceServiceClient) ListProviders(ctx context.Context, req *v1.ListProvidersRequest) (*v1.ListProvidersResponse, error) {
+	var res v1.ListProvidersResponse
+	if err := c.client.CallUnary(ctx, marketplaceServiceListProvidersSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
@@ -808,6 +837,18 @@ func (h marketplaceServiceHandler) refreshProviderAccess(ctx context.Context, _ 
 		return err
 	}
 	res, err := h.svc.RefreshProviderAccess(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h marketplaceServiceHandler) listProviders(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.ListProvidersRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.ListProviders(ctx, &req)
 	if err != nil {
 		return err
 	}

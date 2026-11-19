@@ -95,7 +95,12 @@ type SupplyServiceCredentialResponse struct {
 	ExpiresAtUnixMs int64 `protobuf:"varint,2,opt,name=expires_at_unix_ms,json=expiresAtUnixMs,proto3" json:"expires_at_unix_ms,omitempty"`
 	// The target's declared host patterns, the only hosts the credential may
 	// be added to: an exact host name, or `*.` and a domain for its subdomains.
-	Hosts         []string `protobuf:"bytes,3,rep,name=hosts,proto3" json:"hosts,omitempty"`
+	Hosts []string `protobuf:"bytes,3,rep,name=hosts,proto3" json:"hosts,omitempty"`
+	// The target's declared path patterns on those hosts: an exact path, or a
+	// path ending in `/*` for every path beneath it. Empty means every path.
+	Paths []string `protobuf:"bytes,4,rep,name=paths,proto3" json:"paths,omitempty"`
+	// The target's declared HTTP methods. Empty means every method.
+	Methods       []string `protobuf:"bytes,5,rep,name=methods,proto3" json:"methods,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -147,6 +152,20 @@ func (x *SupplyServiceCredentialResponse) GetExpiresAtUnixMs() int64 {
 func (x *SupplyServiceCredentialResponse) GetHosts() []string {
 	if x != nil {
 		return x.Hosts
+	}
+	return nil
+}
+
+func (x *SupplyServiceCredentialResponse) GetPaths() []string {
+	if x != nil {
+		return x.Paths
+	}
+	return nil
+}
+
+func (x *SupplyServiceCredentialResponse) GetMethods() []string {
+	if x != nil {
+		return x.Methods
 	}
 	return nil
 }
@@ -298,11 +317,13 @@ const file_marketplace_private_v1_credentials_proto_rawDesc = "" +
 	"\x1eSupplyServiceCredentialRequest\x12\"\n" +
 	"\rowner_user_id\x18\x01 \x01(\tR\vownerUserId\x12)\n" +
 	"\x10authorization_id\x18\x02 \x01(\tR\x0fauthorizationId\x12\x16\n" +
-	"\x06target\x18\x03 \x01(\tR\x06target\"z\n" +
+	"\x06target\x18\x03 \x01(\tR\x06target\"\xaa\x01\n" +
 	"\x1fSupplyServiceCredentialResponse\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\x12+\n" +
 	"\x12expires_at_unix_ms\x18\x02 \x01(\x03R\x0fexpiresAtUnixMs\x12\x14\n" +
-	"\x05hosts\x18\x03 \x03(\tR\x05hosts\"\xb4\x01\n" +
+	"\x05hosts\x18\x03 \x03(\tR\x05hosts\x12\x14\n" +
+	"\x05paths\x18\x04 \x03(\tR\x05paths\x12\x18\n" +
+	"\amethods\x18\x05 \x03(\tR\amethods\"\xb4\x01\n" +
 	"!SupplyRepositoryCredentialRequest\x12\"\n" +
 	"\rowner_user_id\x18\x01 \x01(\tR\vownerUserId\x12)\n" +
 	"\x10authorization_id\x18\x02 \x01(\tR\x0fauthorizationId\x12#\n" +

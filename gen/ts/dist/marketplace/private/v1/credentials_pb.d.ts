@@ -72,6 +72,21 @@ export declare type SupplyServiceCredentialResponse = Message<"marketplace.priva
    * @generated from field: repeated string hosts = 3;
    */
   hosts: string[];
+
+  /**
+   * The target's declared path patterns on those hosts: an exact path, or a
+   * path ending in `/*` for every path beneath it. Empty means every path.
+   *
+   * @generated from field: repeated string paths = 4;
+   */
+  paths: string[];
+
+  /**
+   * The target's declared HTTP methods. Empty means every method.
+   *
+   * @generated from field: repeated string methods = 5;
+   */
+  methods: string[];
 };
 
 /**

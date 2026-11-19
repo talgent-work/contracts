@@ -13,14 +13,3 @@ breaking:
     - FILE
   # Only stable packages (vN) promise to only grow; vNalphaM and vNbetaM may change.
   ignore_unstable_packages: true
-  # A Connector is now owned by the platform, a person or an Application, and
-  # every Connector request and Work Connector choice names it by identity
-  # in place of its name, which is unique only per owner (orchestra#152).
-  # The development environments are reset and every consumer adopts the
-  # change in step, so this release removes the name fields as a minor
-  # tagged by hand. The commit after that release removes this exemption,
-  # once the check compares against it.
-  ignore:
-    - proto/agent/private/v1/work.proto
-    - proto/agent/public/v1/work.proto
-    - proto/marketplace/public/v1/marketplace.proto

@@ -789,6 +789,14 @@ export declare type ProviderTarget = Message<"marketplace.public.v1.ProviderTarg
    * @generated from field: repeated string hosts = 2;
    */
   hosts: string[];
+
+  /**
+   * Path patterns on those hosts: an exact request path, or a path ending in
+   * `/*` for every path beneath it. None means every path.
+   *
+   * @generated from field: repeated string paths = 3;
+   */
+  paths: string[];
 };
 
 /**

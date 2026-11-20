@@ -1403,7 +1403,10 @@ type ProviderTarget struct {
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// Host patterns: an exact host name, or `*.` and a domain for its
 	// subdomains.
-	Hosts         []string `protobuf:"bytes,2,rep,name=hosts,proto3" json:"hosts,omitempty"`
+	Hosts []string `protobuf:"bytes,2,rep,name=hosts,proto3" json:"hosts,omitempty"`
+	// Path patterns on those hosts: an exact request path, or a path ending in
+	// `/*` for every path beneath it. None means every path.
+	Paths         []string `protobuf:"bytes,3,rep,name=paths,proto3" json:"paths,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1448,6 +1451,13 @@ func (x *ProviderTarget) GetName() string {
 func (x *ProviderTarget) GetHosts() []string {
 	if x != nil {
 		return x.Hosts
+	}
+	return nil
+}
+
+func (x *ProviderTarget) GetPaths() []string {
+	if x != nil {
+		return x.Paths
 	}
 	return nil
 }
@@ -1550,10 +1560,11 @@ const file_marketplace_public_v1_connections_proto_rawDesc = "" +
 	"\x15observes_access_scope\x18\x05 \x01(\bR\x13observesAccessScope\x12N\n" +
 	"\n" +
 	"connection\x18\x06 \x01(\v2..marketplace.public.v1.ProviderConnectionStateR\n" +
-	"connection\":\n" +
+	"connection\"P\n" +
 	"\x0eProviderTarget\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x14\n" +
-	"\x05hosts\x18\x02 \x03(\tR\x05hostsBTZRgithub.com/talgent-work/contracts/gen/go/marketplace/public/v1;marketplacepublicv1b\x06proto3"
+	"\x05hosts\x18\x02 \x03(\tR\x05hosts\x12\x14\n" +
+	"\x05paths\x18\x03 \x03(\tR\x05pathsBTZRgithub.com/talgent-work/contracts/gen/go/marketplace/public/v1;marketplacepublicv1b\x06proto3"
 
 var (
 	file_marketplace_public_v1_connections_proto_rawDescOnce sync.Once

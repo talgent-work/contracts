@@ -250,4 +250,7 @@ message ProviderTarget {
   // Host patterns: an exact host name, or `*.` and a domain for its
   // subdomains.
   repeated string hosts = 2;
+  // Path patterns on those hosts: an exact request path, or a path ending in
+  // `/*` for every path beneath it. None means every path.
+  repeated string paths = 3;
 }

@@ -121,7 +121,8 @@ var (
 
 // WorkFileServiceClient is a client for the agent.public.v1.WorkFileService service.
 type WorkFileServiceClient interface {
-	// ListWorkFiles lists a Standalone Work's Attachments and Artifacts.
+	// ListWorkFiles lists a Standalone Work's Attachments and Artifacts; to a
+	// Work's own Agent, the current Attachments of its inputs.
 	ListWorkFiles(context.Context, *v1.ListWorkFilesRequest) (*v1.ListWorkFilesResponse, error)
 	// CreateWorkAttachmentUpload issues the link through which one Attachment
 	// is created or replaced.
@@ -150,7 +151,8 @@ func NewWorkFileServiceClient(client *connect.Client) WorkFileServiceClient {
 
 // WorkFileServiceHandler is an implementation of the agent.public.v1.WorkFileService service.
 type WorkFileServiceHandler interface {
-	// ListWorkFiles lists a Standalone Work's Attachments and Artifacts.
+	// ListWorkFiles lists a Standalone Work's Attachments and Artifacts; to a
+	// Work's own Agent, the current Attachments of its inputs.
 	ListWorkFiles(context.Context, *v1.ListWorkFilesRequest) (*v1.ListWorkFilesResponse, error)
 	// CreateWorkAttachmentUpload issues the link through which one Attachment
 	// is created or replaced.

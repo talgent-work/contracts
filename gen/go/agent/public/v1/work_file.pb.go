@@ -527,7 +527,7 @@ func (x *WorkFile) GetUploaderApplicationId() string {
 // ListWorkFilesRequest names the Work.
 type ListWorkFilesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// A Standalone Work the caller may read.
+	// A Standalone Work the caller may read, or the calling Agent's own Work.
 	WorkId        string `protobuf:"bytes,1,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1738,10 +1738,10 @@ const file_agent_public_v1_work_file_proto_rawDesc = "" +
 	"#WORK_FILE_PREVIEW_REFUSAL_TOO_LARGE\x10\x04\x12%\n" +
 	"!WORK_FILE_PREVIEW_REFUSAL_CORRUPT\x10\x05\x12/\n" +
 	"+WORK_FILE_PREVIEW_REFUSAL_CONVERTER_REFUSED\x10\x06\x121\n" +
-	"-WORK_FILE_PREVIEW_REFUSAL_RENDERING_TOO_LARGE\x10\a2\x8a\t\n" +
-	"\x0fWorkFileService\x12h\n" +
-	"\rListWorkFiles\x12%.agent.public.v1.ListWorkFilesRequest\x1a&.agent.public.v1.ListWorkFilesResponse\"\b\xc2\xf3\x18\x04\n" +
-	"\x02\x01\x03\x12\x8f\x01\n" +
+	"-WORK_FILE_PREVIEW_REFUSAL_RENDERING_TOO_LARGE\x10\a2\x8b\t\n" +
+	"\x0fWorkFileService\x12i\n" +
+	"\rListWorkFiles\x12%.agent.public.v1.ListWorkFilesRequest\x1a&.agent.public.v1.ListWorkFilesResponse\"\t\xc2\xf3\x18\x05\n" +
+	"\x03\x01\x02\x03\x12\x8f\x01\n" +
 	"\x1aCreateWorkAttachmentUpload\x122.agent.public.v1.CreateWorkAttachmentUploadRequest\x1a3.agent.public.v1.CreateWorkAttachmentUploadResponse\"\b\xc2\xf3\x18\x04\n" +
 	"\x02\x01\x03\x12}\n" +
 	"\x14RenameWorkAttachment\x12,.agent.public.v1.RenameWorkAttachmentRequest\x1a-.agent.public.v1.RenameWorkAttachmentResponse\"\b\xc2\xf3\x18\x04\n" +

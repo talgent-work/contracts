@@ -14,11 +14,18 @@ option go_package = "github.com/talgent-work/contracts/gen/go/agent/public/v1;ag
 // holders read. Of an Extension Work, whose files its extension governs, only
 // the Artifacts it published are read here,
 // by its owner and Work Share holders, as the Personal Library shows them.
+// A Work's own Agent lists and reads the current Attachments of its inputs,
+// for any Work, including one whose inputs belong to its File Home.
 service WorkFileService {
-  // ListWorkFiles lists a Standalone Work's Attachments and Artifacts.
+  // ListWorkFiles lists a Standalone Work's Attachments and Artifacts; to a
+  // Work's own Agent, the current Attachments of its inputs.
   rpc ListWorkFiles(ListWorkFilesRequest) returns (ListWorkFilesResponse) {
     option (admission.v1.admits) = {
-      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
+      principals: [
+        PRINCIPAL_USER,
+        PRINCIPAL_AGENT,
+        PRINCIPAL_APPLICATION
+      ]
     };
   }
   // CreateWorkAttachmentUpload issues the link through which one Attachment
@@ -134,7 +141,7 @@ message WorkFile {
 
 // ListWorkFilesRequest names the Work.
 message ListWorkFilesRequest {
-  // A Standalone Work the caller may read.
+  // A Standalone Work the caller may read, or the calling Agent's own Work.
   string work_id = 1;
 }
 

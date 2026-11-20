@@ -142,7 +142,7 @@ export declare const WorkFileSchema: GenMessage<WorkFile>;
  */
 export declare type ListWorkFilesRequest = Message<"agent.public.v1.ListWorkFilesRequest"> & {
   /**
-   * A Standalone Work the caller may read.
+   * A Standalone Work the caller may read, or the calling Agent's own Work.
    *
    * @generated from field: string work_id = 1;
    */
@@ -922,12 +922,15 @@ export declare const WorkFilePreviewRefusalSchema: GenEnum<WorkFilePreviewRefusa
  * holders read. Of an Extension Work, whose files its extension governs, only
  * the Artifacts it published are read here,
  * by its owner and Work Share holders, as the Personal Library shows them.
+ * A Work's own Agent lists and reads the current Attachments of its inputs,
+ * for any Work, including one whose inputs belong to its File Home.
  *
  * @generated from service agent.public.v1.WorkFileService
  */
 export declare const WorkFileService: GenService<{
   /**
-   * ListWorkFiles lists a Standalone Work's Attachments and Artifacts.
+   * ListWorkFiles lists a Standalone Work's Attachments and Artifacts; to a
+   * Work's own Agent, the current Attachments of its inputs.
    *
    * @generated from rpc agent.public.v1.WorkFileService.ListWorkFiles
    */

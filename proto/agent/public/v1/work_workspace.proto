@@ -1,0 +1,134 @@
+syntax = "proto3";
+
+package agent.public.v1;
+
+import "admission/v1/admission.proto";
+import "agent/public/v1/work_file.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1";
+
+// WorkWorkspaceService lets a Work's readers, its owner, a person or an
+// Application, and its Work Share holders, browse the Work's Session
+// Workspace and read its files until the Work is Closed. Anyone else is
+// refused with PermissionDenied. A Managed Work's files are read through its
+// Computer while it is reachable. Under inputs/ each entry is one of the
+// Work's Attachments, read through WorkFileService.
+service WorkWorkspaceService {
+  // BrowseWorkWorkspace lists one directory of the Work's Session Workspace.
+  rpc BrowseWorkWorkspace(BrowseWorkWorkspaceRequest) returns (BrowseWorkWorkspaceResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
+    };
+  }
+  // GetWorkWorkspaceFilePreview tells how one workspace file outside inputs/
+  // is shown, with a link for one inline read when bytes are shown.
+  rpc GetWorkWorkspaceFilePreview(GetWorkWorkspaceFilePreviewRequest) returns (GetWorkWorkspaceFilePreviewResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
+    };
+  }
+  // CreateWorkWorkspaceFileDownload issues a link to download one workspace
+  // file outside inputs/ under its own name and type.
+  rpc CreateWorkWorkspaceFileDownload(CreateWorkWorkspaceFileDownloadRequest) returns (CreateWorkWorkspaceFileDownloadResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER, PRINCIPAL_APPLICATION]
+    };
+  }
+}
+
+// WorkWorkspaceState says whether the Work's workspace was read, and why not.
+enum WorkWorkspaceState {
+  // WORK_WORKSPACE_STATE_UNSPECIFIED value.
+  WORK_WORKSPACE_STATE_UNSPECIFIED = 0;
+  // The workspace was read.
+  WORK_WORKSPACE_STATE_AVAILABLE = 1;
+  // The Work never had its workspace created.
+  WORK_WORKSPACE_STATE_NOT_CREATED = 2;
+  // The Work is Closed; its Artifacts stay in its publication target.
+  WORK_WORKSPACE_STATE_CLOSED = 3;
+  // The workspace was reclaimed.
+  WORK_WORKSPACE_STATE_RECLAIMED = 4;
+  // The Work's Computer is not reachable now; its files are read again once
+  // it reconnects.
+  WORK_WORKSPACE_STATE_UNAVAILABLE = 5;
+}
+
+// WorkWorkspaceEntryKind is what a workspace entry is.
+enum WorkWorkspaceEntryKind {
+  // WORK_WORKSPACE_ENTRY_KIND_UNSPECIFIED value.
+  WORK_WORKSPACE_ENTRY_KIND_UNSPECIFIED = 0;
+  // A directory.
+  WORK_WORKSPACE_ENTRY_KIND_DIRECTORY = 1;
+  // A file.
+  WORK_WORKSPACE_ENTRY_KIND_FILE = 2;
+  // A symbolic link: listed, never followed or opened.
+  WORK_WORKSPACE_ENTRY_KIND_LINK = 3;
+}
+
+// WorkWorkspaceEntry is one entry of a workspace directory.
+message WorkWorkspaceEntry {
+  // Name within the directory.
+  string name = 1;
+  // What the entry is.
+  WorkWorkspaceEntryKind kind = 2;
+  // Size in bytes of a file.
+  int64 size_bytes = 3;
+  // Last modification.
+  google.protobuf.Timestamp modified_at = 4;
+  // Under inputs/: the name of the Work's Attachment this entry is.
+  string attachment_name = 5;
+}
+
+// BrowseWorkWorkspaceRequest names the Work and the directory.
+message BrowseWorkWorkspaceRequest {
+  // A Work the caller reads.
+  string work_id = 1;
+  // Directory relative to /workspace; empty for its root.
+  string path = 2;
+}
+
+// BrowseWorkWorkspaceResponse lists the directory's first entries by name.
+message BrowseWorkWorkspaceResponse {
+  // Whether the workspace was read.
+  WorkWorkspaceState state = 1;
+  // Entries by name.
+  repeated WorkWorkspaceEntry entries = 2;
+  // Entries the directory has in all; more than listed when it is capped.
+  uint32 total = 3;
+}
+
+// GetWorkWorkspaceFilePreviewRequest names the Work and the file.
+message GetWorkWorkspaceFilePreviewRequest {
+  // A Work the caller reads.
+  string work_id = 1;
+  // File relative to /workspace, outside inputs/.
+  string path = 2;
+}
+
+// GetWorkWorkspaceFilePreviewResponse is how the file is shown. Workspace
+// files have no Preview Copies, so the mode is refused, direct or truncated.
+message GetWorkWorkspaceFilePreviewResponse {
+  // Whether the workspace was read.
+  WorkWorkspaceState state = 1;
+  // How the file is shown, when the workspace was read.
+  WorkFilePreview preview = 2;
+}
+
+// CreateWorkWorkspaceFileDownloadRequest names the Work and the file.
+message CreateWorkWorkspaceFileDownloadRequest {
+  // A Work the caller reads.
+  string work_id = 1;
+  // File relative to /workspace, outside inputs/.
+  string path = 2;
+}
+
+// CreateWorkWorkspaceFileDownloadResponse carries the link.
+message CreateWorkWorkspaceFileDownloadResponse {
+  // Whether the workspace was read.
+  WorkWorkspaceState state = 1;
+  // URL for one download.
+  string access_url = 2;
+  // Time the link stops working.
+  google.protobuf.Timestamp expires_at = 3;
+}

@@ -13,11 +13,3 @@ breaking:
     - FILE
   # Only stable packages (vN) promise to only grow; vNalphaM and vNbetaM may change.
   ignore_unstable_packages: true
-  # A Work's live stream now carries only live frames: WatchStreamRequest
-  # drops its replay cursor and WatchStreamResponse its replay flag, since
-  # readers take stored history from ListMessagesBySession. The development
-  # environments are reset and every consumer adopts the change in step, so
-  # this release removes the fields as a minor tagged by hand. The commit after
-  # that release removes this exemption, once the check compares against it.
-  ignore:
-    - proto/streamgateway/public/v1/streamgateway.proto

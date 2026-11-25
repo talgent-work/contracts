@@ -181,7 +181,8 @@ export declare type GetMessageDetailResponse = Message<"streamgateway.public.v1.
 export declare const GetMessageDetailResponseSchema: GenMessage<GetMessageDetailResponse>;
 
 /**
- * WatchStreamRequest message.
+ * WatchStreamRequest opens a Work's live stream. The stream carries only what
+ * happens from now on; stored history is read through ListMessagesBySession.
  *
  * @generated from message streamgateway.public.v1.WatchStreamRequest
  */
@@ -192,20 +193,6 @@ export declare type WatchStreamRequest = Message<"streamgateway.public.v1.WatchS
    * @generated from field: string agent_work_id = 1;
    */
   agentWorkId: string;
-
-  /**
-   * after timestamp field.
-   *
-   * @generated from field: google.protobuf.Timestamp after_timestamp = 2;
-   */
-  afterTimestamp?: Timestamp;
-
-  /**
-   * after id field.
-   *
-   * @generated from field: string after_id = 3;
-   */
-  afterId: string;
 
   /**
    * Same Agent, turn and kind scope as history.
@@ -243,18 +230,13 @@ export declare type WatchStreamRequest = Message<"streamgateway.public.v1.WatchS
 export declare const WatchStreamRequestSchema: GenMessage<WatchStreamRequest>;
 
 /**
- * WatchStreamResponse message.
+ * WatchStreamResponse is one live frame. Live delivery is best-effort: frames
+ * may be lost, repeated or reordered, and a reader that needs the complete
+ * conversation reads it from history.
  *
  * @generated from message streamgateway.public.v1.WatchStreamResponse
  */
 export declare type WatchStreamResponse = Message<"streamgateway.public.v1.WatchStreamResponse"> & {
-  /**
-   * Stored-history replay must not trigger new-user-message scroll behavior.
-   *
-   * @generated from field: bool replay = 1;
-   */
-  replay: boolean;
-
   /**
    * payload choice.
    *
@@ -262,7 +244,7 @@ export declare type WatchStreamResponse = Message<"streamgateway.public.v1.Watch
    */
   payload: {
     /**
-     * A live or replayed message, without its detail body.
+     * A live message, without its detail body.
      *
      * @generated from field: dispatcher.public.v1.UnifiedMessage message = 2;
      */
@@ -293,6 +275,15 @@ export declare type WatchStreamResponse = Message<"streamgateway.public.v1.Watch
      */
     value: AccessWithdrawnFrame;
     case: "accessWithdrawn";
+  } | {
+    /**
+     * Sent while the stream is otherwise quiet, so idle connections stay open
+     * and a reader that hears nothing for two intervals knows the stream died.
+     *
+     * @generated from field: streamgateway.public.v1.HeartbeatFrame heartbeat = 6;
+     */
+    value: HeartbeatFrame;
+    case: "heartbeat";
   } | { case: undefined; value?: undefined };
 };
 
@@ -301,6 +292,20 @@ export declare type WatchStreamResponse = Message<"streamgateway.public.v1.Watch
  * Use `create(WatchStreamResponseSchema)` to create a new message.
  */
 export declare const WatchStreamResponseSchema: GenMessage<WatchStreamResponse>;
+
+/**
+ * HeartbeatFrame says only that the stream is alive.
+ *
+ * @generated from message streamgateway.public.v1.HeartbeatFrame
+ */
+export declare type HeartbeatFrame = Message<"streamgateway.public.v1.HeartbeatFrame"> & {
+};
+
+/**
+ * Describes the message streamgateway.public.v1.HeartbeatFrame.
+ * Use `create(HeartbeatFrameSchema)` to create a new message.
+ */
+export declare const HeartbeatFrameSchema: GenMessage<HeartbeatFrame>;
 
 /**
  * AccessWithdrawnFrame ends a reader's stream after a Work Share was revoked

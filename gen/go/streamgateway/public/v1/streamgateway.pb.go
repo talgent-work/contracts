@@ -319,15 +319,12 @@ func (x *GetMessageDetailResponse) GetNextOffset() uint32 {
 	return 0
 }
 
-// WatchStreamRequest message.
+// WatchStreamRequest opens a Work's live stream. The stream carries only what
+// happens from now on; stored history is read through ListMessagesBySession.
 type WatchStreamRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// AgentWork identity.
 	AgentWorkId string `protobuf:"bytes,1,opt,name=agent_work_id,json=agentWorkId,proto3" json:"agent_work_id,omitempty"`
-	// after timestamp field.
-	AfterTimestamp *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=after_timestamp,json=afterTimestamp,proto3" json:"after_timestamp,omitempty"`
-	// after id field.
-	AfterId string `protobuf:"bytes,3,opt,name=after_id,json=afterId,proto3" json:"after_id,omitempty"`
 	// Same Agent, turn and kind scope as history.
 	Agent *string `protobuf:"bytes,4,opt,name=agent,proto3,oneof" json:"agent,omitempty"`
 	// Match any listed turn; empty matches every turn.
@@ -377,20 +374,6 @@ func (x *WatchStreamRequest) GetAgentWorkId() string {
 	return ""
 }
 
-func (x *WatchStreamRequest) GetAfterTimestamp() *timestamppb.Timestamp {
-	if x != nil {
-		return x.AfterTimestamp
-	}
-	return nil
-}
-
-func (x *WatchStreamRequest) GetAfterId() string {
-	if x != nil {
-		return x.AfterId
-	}
-	return ""
-}
-
 func (x *WatchStreamRequest) GetAgent() string {
 	if x != nil && x.Agent != nil {
 		return *x.Agent
@@ -419,11 +402,11 @@ func (x *WatchStreamRequest) GetIncludeUnattributedErrors() bool {
 	return false
 }
 
-// WatchStreamResponse message.
+// WatchStreamResponse is one live frame. Live delivery is best-effort: frames
+// may be lost, repeated or reordered, and a reader that needs the complete
+// conversation reads it from history.
 type WatchStreamResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Stored-history replay must not trigger new-user-message scroll behavior.
-	Replay bool `protobuf:"varint,1,opt,name=replay,proto3" json:"replay,omitempty"`
 	// payload choice.
 	//
 	// Types that are valid to be assigned to Payload:
@@ -432,6 +415,7 @@ type WatchStreamResponse struct {
 	//	*WatchStreamResponse_WorkState
 	//	*WatchStreamResponse_Diagnostic
 	//	*WatchStreamResponse_AccessWithdrawn
+	//	*WatchStreamResponse_Heartbeat
 	Payload       isWatchStreamResponse_Payload `protobuf_oneof:"payload"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -465,13 +449,6 @@ func (x *WatchStreamResponse) ProtoReflect() protoreflect.Message {
 // Deprecated: Use WatchStreamResponse.ProtoReflect.Descriptor instead.
 func (*WatchStreamResponse) Descriptor() ([]byte, []int) {
 	return file_streamgateway_public_v1_streamgateway_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *WatchStreamResponse) GetReplay() bool {
-	if x != nil {
-		return x.Replay
-	}
-	return false
 }
 
 func (x *WatchStreamResponse) GetPayload() isWatchStreamResponse_Payload {
@@ -517,12 +494,21 @@ func (x *WatchStreamResponse) GetAccessWithdrawn() *AccessWithdrawnFrame {
 	return nil
 }
 
+func (x *WatchStreamResponse) GetHeartbeat() *HeartbeatFrame {
+	if x != nil {
+		if x, ok := x.Payload.(*WatchStreamResponse_Heartbeat); ok {
+			return x.Heartbeat
+		}
+	}
+	return nil
+}
+
 type isWatchStreamResponse_Payload interface {
 	isWatchStreamResponse_Payload()
 }
 
 type WatchStreamResponse_Message struct {
-	// A live or replayed message, without its detail body.
+	// A live message, without its detail body.
 	Message *v1.UnifiedMessage `protobuf:"bytes,2,opt,name=message,proto3,oneof"`
 }
 
@@ -542,6 +528,12 @@ type WatchStreamResponse_AccessWithdrawn struct {
 	AccessWithdrawn *AccessWithdrawnFrame `protobuf:"bytes,5,opt,name=access_withdrawn,json=accessWithdrawn,proto3,oneof"`
 }
 
+type WatchStreamResponse_Heartbeat struct {
+	// Sent while the stream is otherwise quiet, so idle connections stay open
+	// and a reader that hears nothing for two intervals knows the stream died.
+	Heartbeat *HeartbeatFrame `protobuf:"bytes,6,opt,name=heartbeat,proto3,oneof"`
+}
+
 func (*WatchStreamResponse_Message) isWatchStreamResponse_Payload() {}
 
 func (*WatchStreamResponse_WorkState) isWatchStreamResponse_Payload() {}
@@ -549,6 +541,45 @@ func (*WatchStreamResponse_WorkState) isWatchStreamResponse_Payload() {}
 func (*WatchStreamResponse_Diagnostic) isWatchStreamResponse_Payload() {}
 
 func (*WatchStreamResponse_AccessWithdrawn) isWatchStreamResponse_Payload() {}
+
+func (*WatchStreamResponse_Heartbeat) isWatchStreamResponse_Payload() {}
+
+// HeartbeatFrame says only that the stream is alive.
+type HeartbeatFrame struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *HeartbeatFrame) Reset() {
+	*x = HeartbeatFrame{}
+	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *HeartbeatFrame) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*HeartbeatFrame) ProtoMessage() {}
+
+func (x *HeartbeatFrame) ProtoReflect() protoreflect.Message {
+	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use HeartbeatFrame.ProtoReflect.Descriptor instead.
+func (*HeartbeatFrame) Descriptor() ([]byte, []int) {
+	return file_streamgateway_public_v1_streamgateway_proto_rawDescGZIP(), []int{6}
+}
 
 // AccessWithdrawnFrame ends a reader's stream after a Work Share was revoked
 // or the Work became private.
@@ -562,7 +593,7 @@ type AccessWithdrawnFrame struct {
 
 func (x *AccessWithdrawnFrame) Reset() {
 	*x = AccessWithdrawnFrame{}
-	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[6]
+	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -574,7 +605,7 @@ func (x *AccessWithdrawnFrame) String() string {
 func (*AccessWithdrawnFrame) ProtoMessage() {}
 
 func (x *AccessWithdrawnFrame) ProtoReflect() protoreflect.Message {
-	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[6]
+	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -587,7 +618,7 @@ func (x *AccessWithdrawnFrame) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AccessWithdrawnFrame.ProtoReflect.Descriptor instead.
 func (*AccessWithdrawnFrame) Descriptor() ([]byte, []int) {
-	return file_streamgateway_public_v1_streamgateway_proto_rawDescGZIP(), []int{6}
+	return file_streamgateway_public_v1_streamgateway_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *AccessWithdrawnFrame) GetAgentWorkId() string {
@@ -616,7 +647,7 @@ type WorkAccessFrame struct {
 
 func (x *WorkAccessFrame) Reset() {
 	*x = WorkAccessFrame{}
-	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[7]
+	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -628,7 +659,7 @@ func (x *WorkAccessFrame) String() string {
 func (*WorkAccessFrame) ProtoMessage() {}
 
 func (x *WorkAccessFrame) ProtoReflect() protoreflect.Message {
-	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[7]
+	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -641,7 +672,7 @@ func (x *WorkAccessFrame) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WorkAccessFrame.ProtoReflect.Descriptor instead.
 func (*WorkAccessFrame) Descriptor() ([]byte, []int) {
-	return file_streamgateway_public_v1_streamgateway_proto_rawDescGZIP(), []int{7}
+	return file_streamgateway_public_v1_streamgateway_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *WorkAccessFrame) GetAgentWorkId() string {
@@ -705,7 +736,7 @@ type RetainedWorkReaders struct {
 
 func (x *RetainedWorkReaders) Reset() {
 	*x = RetainedWorkReaders{}
-	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[8]
+	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -717,7 +748,7 @@ func (x *RetainedWorkReaders) String() string {
 func (*RetainedWorkReaders) ProtoMessage() {}
 
 func (x *RetainedWorkReaders) ProtoReflect() protoreflect.Message {
-	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[8]
+	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -730,7 +761,7 @@ func (x *RetainedWorkReaders) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RetainedWorkReaders.ProtoReflect.Descriptor instead.
 func (*RetainedWorkReaders) Descriptor() ([]byte, []int) {
-	return file_streamgateway_public_v1_streamgateway_proto_rawDescGZIP(), []int{8}
+	return file_streamgateway_public_v1_streamgateway_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *RetainedWorkReaders) GetReaderIds() []string {
@@ -753,7 +784,7 @@ type MessageHistoryCursor struct {
 
 func (x *MessageHistoryCursor) Reset() {
 	*x = MessageHistoryCursor{}
-	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[9]
+	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -765,7 +796,7 @@ func (x *MessageHistoryCursor) String() string {
 func (*MessageHistoryCursor) ProtoMessage() {}
 
 func (x *MessageHistoryCursor) ProtoReflect() protoreflect.Message {
-	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[9]
+	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -778,7 +809,7 @@ func (x *MessageHistoryCursor) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MessageHistoryCursor.ProtoReflect.Descriptor instead.
 func (*MessageHistoryCursor) Descriptor() ([]byte, []int) {
-	return file_streamgateway_public_v1_streamgateway_proto_rawDescGZIP(), []int{9}
+	return file_streamgateway_public_v1_streamgateway_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *MessageHistoryCursor) GetTimestamp() *timestamppb.Timestamp {
@@ -825,7 +856,7 @@ type ListMessagesBySessionRequest struct {
 
 func (x *ListMessagesBySessionRequest) Reset() {
 	*x = ListMessagesBySessionRequest{}
-	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[10]
+	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -837,7 +868,7 @@ func (x *ListMessagesBySessionRequest) String() string {
 func (*ListMessagesBySessionRequest) ProtoMessage() {}
 
 func (x *ListMessagesBySessionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[10]
+	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -850,7 +881,7 @@ func (x *ListMessagesBySessionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListMessagesBySessionRequest.ProtoReflect.Descriptor instead.
 func (*ListMessagesBySessionRequest) Descriptor() ([]byte, []int) {
-	return file_streamgateway_public_v1_streamgateway_proto_rawDescGZIP(), []int{10}
+	return file_streamgateway_public_v1_streamgateway_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *ListMessagesBySessionRequest) GetAgentWorkId() string {
@@ -938,7 +969,7 @@ type ListMessagesBySessionResponse struct {
 
 func (x *ListMessagesBySessionResponse) Reset() {
 	*x = ListMessagesBySessionResponse{}
-	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[11]
+	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -950,7 +981,7 @@ func (x *ListMessagesBySessionResponse) String() string {
 func (*ListMessagesBySessionResponse) ProtoMessage() {}
 
 func (x *ListMessagesBySessionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[11]
+	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -963,7 +994,7 @@ func (x *ListMessagesBySessionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListMessagesBySessionResponse.ProtoReflect.Descriptor instead.
 func (*ListMessagesBySessionResponse) Descriptor() ([]byte, []int) {
-	return file_streamgateway_public_v1_streamgateway_proto_rawDescGZIP(), []int{11}
+	return file_streamgateway_public_v1_streamgateway_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *ListMessagesBySessionResponse) GetMessages() []*v1.UnifiedMessage {
@@ -1000,7 +1031,7 @@ type WorkProgress struct {
 
 func (x *WorkProgress) Reset() {
 	*x = WorkProgress{}
-	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[12]
+	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1012,7 +1043,7 @@ func (x *WorkProgress) String() string {
 func (*WorkProgress) ProtoMessage() {}
 
 func (x *WorkProgress) ProtoReflect() protoreflect.Message {
-	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[12]
+	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1025,7 +1056,7 @@ func (x *WorkProgress) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WorkProgress.ProtoReflect.Descriptor instead.
 func (*WorkProgress) Descriptor() ([]byte, []int) {
-	return file_streamgateway_public_v1_streamgateway_proto_rawDescGZIP(), []int{12}
+	return file_streamgateway_public_v1_streamgateway_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *WorkProgress) GetItems() []*WorkProgressItem {
@@ -1059,7 +1090,7 @@ type WorkProgressItem struct {
 
 func (x *WorkProgressItem) Reset() {
 	*x = WorkProgressItem{}
-	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[13]
+	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1071,7 +1102,7 @@ func (x *WorkProgressItem) String() string {
 func (*WorkProgressItem) ProtoMessage() {}
 
 func (x *WorkProgressItem) ProtoReflect() protoreflect.Message {
-	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[13]
+	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1084,7 +1115,7 @@ func (x *WorkProgressItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WorkProgressItem.ProtoReflect.Descriptor instead.
 func (*WorkProgressItem) Descriptor() ([]byte, []int) {
-	return file_streamgateway_public_v1_streamgateway_proto_rawDescGZIP(), []int{13}
+	return file_streamgateway_public_v1_streamgateway_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *WorkProgressItem) GetId() string {
@@ -1139,7 +1170,7 @@ type WorkStateFrame struct {
 
 func (x *WorkStateFrame) Reset() {
 	*x = WorkStateFrame{}
-	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[14]
+	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1151,7 +1182,7 @@ func (x *WorkStateFrame) String() string {
 func (*WorkStateFrame) ProtoMessage() {}
 
 func (x *WorkStateFrame) ProtoReflect() protoreflect.Message {
-	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[14]
+	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1164,7 +1195,7 @@ func (x *WorkStateFrame) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WorkStateFrame.ProtoReflect.Descriptor instead.
 func (*WorkStateFrame) Descriptor() ([]byte, []int) {
-	return file_streamgateway_public_v1_streamgateway_proto_rawDescGZIP(), []int{14}
+	return file_streamgateway_public_v1_streamgateway_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *WorkStateFrame) GetAgentWorkId() string {
@@ -1238,7 +1269,7 @@ type StreamDiagnosticFrame struct {
 
 func (x *StreamDiagnosticFrame) Reset() {
 	*x = StreamDiagnosticFrame{}
-	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[15]
+	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1250,7 +1281,7 @@ func (x *StreamDiagnosticFrame) String() string {
 func (*StreamDiagnosticFrame) ProtoMessage() {}
 
 func (x *StreamDiagnosticFrame) ProtoReflect() protoreflect.Message {
-	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[15]
+	mi := &file_streamgateway_public_v1_streamgateway_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1263,7 +1294,7 @@ func (x *StreamDiagnosticFrame) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StreamDiagnosticFrame.ProtoReflect.Descriptor instead.
 func (*StreamDiagnosticFrame) Descriptor() ([]byte, []int) {
-	return file_streamgateway_public_v1_streamgateway_proto_rawDescGZIP(), []int{15}
+	return file_streamgateway_public_v1_streamgateway_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *StreamDiagnosticFrame) GetAgentWorkId() string {
@@ -1328,26 +1359,25 @@ const file_streamgateway_public_v1_streamgateway_proto_rawDesc = "" +
 	"\x04text\x18\x02 \x01(\tR\x04text\x12!\n" +
 	"\ftotal_length\x18\x03 \x01(\rR\vtotalLength\x12\x1f\n" +
 	"\vnext_offset\x18\x04 \x01(\rR\n" +
-	"nextOffset\"\xd8\x02\n" +
+	"nextOffset\"\x9f\x02\n" +
 	"\x12WatchStreamRequest\x12\"\n" +
-	"\ragent_work_id\x18\x01 \x01(\tR\vagentWorkId\x12C\n" +
-	"\x0fafter_timestamp\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x0eafterTimestamp\x12\x19\n" +
-	"\bafter_id\x18\x03 \x01(\tR\aafterId\x12\x19\n" +
+	"\ragent_work_id\x18\x01 \x01(\tR\vagentWorkId\x12\x19\n" +
 	"\x05agent\x18\x04 \x01(\tH\x00R\x05agent\x88\x01\x01\x12\x19\n" +
 	"\bturn_ids\x18\x05 \x03(\tR\aturnIds\x12>\n" +
 	"\x05kinds\x18\x06 \x03(\x0e2(.dispatcher.public.v1.UnifiedMessageKindR\x05kinds\x12>\n" +
 	"\x1binclude_unattributed_errors\x18\a \x01(\bR\x19includeUnattributedErrorsB\b\n" +
-	"\x06_agent\"\xf2\x02\n" +
-	"\x13WatchStreamResponse\x12\x16\n" +
-	"\x06replay\x18\x01 \x01(\bR\x06replay\x12@\n" +
+	"\x06_agentJ\x04\b\x02\x10\x03J\x04\b\x03\x10\x04R\x0fafter_timestampR\bafter_id\"\xb1\x03\n" +
+	"\x13WatchStreamResponse\x12@\n" +
 	"\amessage\x18\x02 \x01(\v2$.dispatcher.public.v1.UnifiedMessageH\x00R\amessage\x12H\n" +
 	"\n" +
 	"work_state\x18\x03 \x01(\v2'.streamgateway.public.v1.WorkStateFrameH\x00R\tworkState\x12P\n" +
 	"\n" +
 	"diagnostic\x18\x04 \x01(\v2..streamgateway.public.v1.StreamDiagnosticFrameH\x00R\n" +
 	"diagnostic\x12Z\n" +
-	"\x10access_withdrawn\x18\x05 \x01(\v2-.streamgateway.public.v1.AccessWithdrawnFrameH\x00R\x0faccessWithdrawnB\t\n" +
-	"\apayload\":\n" +
+	"\x10access_withdrawn\x18\x05 \x01(\v2-.streamgateway.public.v1.AccessWithdrawnFrameH\x00R\x0faccessWithdrawn\x12G\n" +
+	"\theartbeat\x18\x06 \x01(\v2'.streamgateway.public.v1.HeartbeatFrameH\x00R\theartbeatB\t\n" +
+	"\apayloadJ\x04\b\x01\x10\x02R\x06replay\"\x10\n" +
+	"\x0eHeartbeatFrame\":\n" +
 	"\x14AccessWithdrawnFrame\x12\"\n" +
 	"\ragent_work_id\x18\x01 \x01(\tR\vagentWorkId\"\xc0\x01\n" +
 	"\x0fWorkAccessFrame\x12\"\n" +
@@ -1427,7 +1457,7 @@ func file_streamgateway_public_v1_streamgateway_proto_rawDescGZIP() []byte {
 	return file_streamgateway_public_v1_streamgateway_proto_rawDescData
 }
 
-var file_streamgateway_public_v1_streamgateway_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_streamgateway_public_v1_streamgateway_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_streamgateway_public_v1_streamgateway_proto_goTypes = []any{
 	(*GetToolDetailRequest)(nil),          // 0: streamgateway.public.v1.GetToolDetailRequest
 	(*GetToolDetailResponse)(nil),         // 1: streamgateway.public.v1.GetToolDetailResponse
@@ -1435,55 +1465,56 @@ var file_streamgateway_public_v1_streamgateway_proto_goTypes = []any{
 	(*GetMessageDetailResponse)(nil),      // 3: streamgateway.public.v1.GetMessageDetailResponse
 	(*WatchStreamRequest)(nil),            // 4: streamgateway.public.v1.WatchStreamRequest
 	(*WatchStreamResponse)(nil),           // 5: streamgateway.public.v1.WatchStreamResponse
-	(*AccessWithdrawnFrame)(nil),          // 6: streamgateway.public.v1.AccessWithdrawnFrame
-	(*WorkAccessFrame)(nil),               // 7: streamgateway.public.v1.WorkAccessFrame
-	(*RetainedWorkReaders)(nil),           // 8: streamgateway.public.v1.RetainedWorkReaders
-	(*MessageHistoryCursor)(nil),          // 9: streamgateway.public.v1.MessageHistoryCursor
-	(*ListMessagesBySessionRequest)(nil),  // 10: streamgateway.public.v1.ListMessagesBySessionRequest
-	(*ListMessagesBySessionResponse)(nil), // 11: streamgateway.public.v1.ListMessagesBySessionResponse
-	(*WorkProgress)(nil),                  // 12: streamgateway.public.v1.WorkProgress
-	(*WorkProgressItem)(nil),              // 13: streamgateway.public.v1.WorkProgressItem
-	(*WorkStateFrame)(nil),                // 14: streamgateway.public.v1.WorkStateFrame
-	(*StreamDiagnosticFrame)(nil),         // 15: streamgateway.public.v1.StreamDiagnosticFrame
-	(*v1.ToolOutputPreview)(nil),          // 16: dispatcher.public.v1.ToolOutputPreview
-	(v1.MessageDetailFormat)(0),           // 17: dispatcher.public.v1.MessageDetailFormat
-	(*timestamppb.Timestamp)(nil),         // 18: google.protobuf.Timestamp
+	(*HeartbeatFrame)(nil),                // 6: streamgateway.public.v1.HeartbeatFrame
+	(*AccessWithdrawnFrame)(nil),          // 7: streamgateway.public.v1.AccessWithdrawnFrame
+	(*WorkAccessFrame)(nil),               // 8: streamgateway.public.v1.WorkAccessFrame
+	(*RetainedWorkReaders)(nil),           // 9: streamgateway.public.v1.RetainedWorkReaders
+	(*MessageHistoryCursor)(nil),          // 10: streamgateway.public.v1.MessageHistoryCursor
+	(*ListMessagesBySessionRequest)(nil),  // 11: streamgateway.public.v1.ListMessagesBySessionRequest
+	(*ListMessagesBySessionResponse)(nil), // 12: streamgateway.public.v1.ListMessagesBySessionResponse
+	(*WorkProgress)(nil),                  // 13: streamgateway.public.v1.WorkProgress
+	(*WorkProgressItem)(nil),              // 14: streamgateway.public.v1.WorkProgressItem
+	(*WorkStateFrame)(nil),                // 15: streamgateway.public.v1.WorkStateFrame
+	(*StreamDiagnosticFrame)(nil),         // 16: streamgateway.public.v1.StreamDiagnosticFrame
+	(*v1.ToolOutputPreview)(nil),          // 17: dispatcher.public.v1.ToolOutputPreview
+	(v1.MessageDetailFormat)(0),           // 18: dispatcher.public.v1.MessageDetailFormat
 	(v1.UnifiedMessageKind)(0),            // 19: dispatcher.public.v1.UnifiedMessageKind
 	(*v1.UnifiedMessage)(nil),             // 20: dispatcher.public.v1.UnifiedMessage
-	(*v11.StartupProgress)(nil),           // 21: agent.public.v1.StartupProgress
-	(*v11.SubAgent)(nil),                  // 22: agent.public.v1.SubAgent
+	(*timestamppb.Timestamp)(nil),         // 21: google.protobuf.Timestamp
+	(*v11.StartupProgress)(nil),           // 22: agent.public.v1.StartupProgress
+	(*v11.SubAgent)(nil),                  // 23: agent.public.v1.SubAgent
 }
 var file_streamgateway_public_v1_streamgateway_proto_depIdxs = []int32{
 	3,  // 0: streamgateway.public.v1.GetToolDetailResponse.input:type_name -> streamgateway.public.v1.GetMessageDetailResponse
 	3,  // 1: streamgateway.public.v1.GetToolDetailResponse.output:type_name -> streamgateway.public.v1.GetMessageDetailResponse
-	16, // 2: streamgateway.public.v1.GetToolDetailResponse.preview:type_name -> dispatcher.public.v1.ToolOutputPreview
-	17, // 3: streamgateway.public.v1.GetMessageDetailResponse.format:type_name -> dispatcher.public.v1.MessageDetailFormat
-	18, // 4: streamgateway.public.v1.WatchStreamRequest.after_timestamp:type_name -> google.protobuf.Timestamp
-	19, // 5: streamgateway.public.v1.WatchStreamRequest.kinds:type_name -> dispatcher.public.v1.UnifiedMessageKind
-	20, // 6: streamgateway.public.v1.WatchStreamResponse.message:type_name -> dispatcher.public.v1.UnifiedMessage
-	14, // 7: streamgateway.public.v1.WatchStreamResponse.work_state:type_name -> streamgateway.public.v1.WorkStateFrame
-	15, // 8: streamgateway.public.v1.WatchStreamResponse.diagnostic:type_name -> streamgateway.public.v1.StreamDiagnosticFrame
-	6,  // 9: streamgateway.public.v1.WatchStreamResponse.access_withdrawn:type_name -> streamgateway.public.v1.AccessWithdrawnFrame
-	8,  // 10: streamgateway.public.v1.WorkAccessFrame.made_private:type_name -> streamgateway.public.v1.RetainedWorkReaders
-	18, // 11: streamgateway.public.v1.MessageHistoryCursor.timestamp:type_name -> google.protobuf.Timestamp
-	9,  // 12: streamgateway.public.v1.ListMessagesBySessionRequest.before:type_name -> streamgateway.public.v1.MessageHistoryCursor
+	17, // 2: streamgateway.public.v1.GetToolDetailResponse.preview:type_name -> dispatcher.public.v1.ToolOutputPreview
+	18, // 3: streamgateway.public.v1.GetMessageDetailResponse.format:type_name -> dispatcher.public.v1.MessageDetailFormat
+	19, // 4: streamgateway.public.v1.WatchStreamRequest.kinds:type_name -> dispatcher.public.v1.UnifiedMessageKind
+	20, // 5: streamgateway.public.v1.WatchStreamResponse.message:type_name -> dispatcher.public.v1.UnifiedMessage
+	15, // 6: streamgateway.public.v1.WatchStreamResponse.work_state:type_name -> streamgateway.public.v1.WorkStateFrame
+	16, // 7: streamgateway.public.v1.WatchStreamResponse.diagnostic:type_name -> streamgateway.public.v1.StreamDiagnosticFrame
+	7,  // 8: streamgateway.public.v1.WatchStreamResponse.access_withdrawn:type_name -> streamgateway.public.v1.AccessWithdrawnFrame
+	6,  // 9: streamgateway.public.v1.WatchStreamResponse.heartbeat:type_name -> streamgateway.public.v1.HeartbeatFrame
+	9,  // 10: streamgateway.public.v1.WorkAccessFrame.made_private:type_name -> streamgateway.public.v1.RetainedWorkReaders
+	21, // 11: streamgateway.public.v1.MessageHistoryCursor.timestamp:type_name -> google.protobuf.Timestamp
+	10, // 12: streamgateway.public.v1.ListMessagesBySessionRequest.before:type_name -> streamgateway.public.v1.MessageHistoryCursor
 	19, // 13: streamgateway.public.v1.ListMessagesBySessionRequest.kinds:type_name -> dispatcher.public.v1.UnifiedMessageKind
-	9,  // 14: streamgateway.public.v1.ListMessagesBySessionRequest.from:type_name -> streamgateway.public.v1.MessageHistoryCursor
+	10, // 14: streamgateway.public.v1.ListMessagesBySessionRequest.from:type_name -> streamgateway.public.v1.MessageHistoryCursor
 	20, // 15: streamgateway.public.v1.ListMessagesBySessionResponse.messages:type_name -> dispatcher.public.v1.UnifiedMessage
-	9,  // 16: streamgateway.public.v1.ListMessagesBySessionResponse.next_before:type_name -> streamgateway.public.v1.MessageHistoryCursor
-	13, // 17: streamgateway.public.v1.WorkProgress.items:type_name -> streamgateway.public.v1.WorkProgressItem
-	18, // 18: streamgateway.public.v1.WorkProgress.updated_at:type_name -> google.protobuf.Timestamp
-	18, // 19: streamgateway.public.v1.WorkStateFrame.updated_at:type_name -> google.protobuf.Timestamp
-	12, // 20: streamgateway.public.v1.WorkStateFrame.work_progress:type_name -> streamgateway.public.v1.WorkProgress
-	21, // 21: streamgateway.public.v1.WorkStateFrame.preparation_progress:type_name -> agent.public.v1.StartupProgress
-	22, // 22: streamgateway.public.v1.WorkStateFrame.subagents:type_name -> agent.public.v1.SubAgent
-	18, // 23: streamgateway.public.v1.StreamDiagnosticFrame.occurred_at:type_name -> google.protobuf.Timestamp
+	10, // 16: streamgateway.public.v1.ListMessagesBySessionResponse.next_before:type_name -> streamgateway.public.v1.MessageHistoryCursor
+	14, // 17: streamgateway.public.v1.WorkProgress.items:type_name -> streamgateway.public.v1.WorkProgressItem
+	21, // 18: streamgateway.public.v1.WorkProgress.updated_at:type_name -> google.protobuf.Timestamp
+	21, // 19: streamgateway.public.v1.WorkStateFrame.updated_at:type_name -> google.protobuf.Timestamp
+	13, // 20: streamgateway.public.v1.WorkStateFrame.work_progress:type_name -> streamgateway.public.v1.WorkProgress
+	22, // 21: streamgateway.public.v1.WorkStateFrame.preparation_progress:type_name -> agent.public.v1.StartupProgress
+	23, // 22: streamgateway.public.v1.WorkStateFrame.subagents:type_name -> agent.public.v1.SubAgent
+	21, // 23: streamgateway.public.v1.StreamDiagnosticFrame.occurred_at:type_name -> google.protobuf.Timestamp
 	4,  // 24: streamgateway.public.v1.StreamGatewayService.WatchStream:input_type -> streamgateway.public.v1.WatchStreamRequest
-	10, // 25: streamgateway.public.v1.StreamGatewayService.ListMessagesBySession:input_type -> streamgateway.public.v1.ListMessagesBySessionRequest
+	11, // 25: streamgateway.public.v1.StreamGatewayService.ListMessagesBySession:input_type -> streamgateway.public.v1.ListMessagesBySessionRequest
 	2,  // 26: streamgateway.public.v1.StreamGatewayService.GetMessageDetail:input_type -> streamgateway.public.v1.GetMessageDetailRequest
 	0,  // 27: streamgateway.public.v1.StreamGatewayService.GetToolDetail:input_type -> streamgateway.public.v1.GetToolDetailRequest
 	5,  // 28: streamgateway.public.v1.StreamGatewayService.WatchStream:output_type -> streamgateway.public.v1.WatchStreamResponse
-	11, // 29: streamgateway.public.v1.StreamGatewayService.ListMessagesBySession:output_type -> streamgateway.public.v1.ListMessagesBySessionResponse
+	12, // 29: streamgateway.public.v1.StreamGatewayService.ListMessagesBySession:output_type -> streamgateway.public.v1.ListMessagesBySessionResponse
 	3,  // 30: streamgateway.public.v1.StreamGatewayService.GetMessageDetail:output_type -> streamgateway.public.v1.GetMessageDetailResponse
 	1,  // 31: streamgateway.public.v1.StreamGatewayService.GetToolDetail:output_type -> streamgateway.public.v1.GetToolDetailResponse
 	28, // [28:32] is the sub-list for method output_type
@@ -1504,19 +1535,20 @@ func file_streamgateway_public_v1_streamgateway_proto_init() {
 		(*WatchStreamResponse_WorkState)(nil),
 		(*WatchStreamResponse_Diagnostic)(nil),
 		(*WatchStreamResponse_AccessWithdrawn)(nil),
+		(*WatchStreamResponse_Heartbeat)(nil),
 	}
-	file_streamgateway_public_v1_streamgateway_proto_msgTypes[7].OneofWrappers = []any{
+	file_streamgateway_public_v1_streamgateway_proto_msgTypes[8].OneofWrappers = []any{
 		(*WorkAccessFrame_RevokedReaderId)(nil),
 		(*WorkAccessFrame_MadePrivate)(nil),
 	}
-	file_streamgateway_public_v1_streamgateway_proto_msgTypes[10].OneofWrappers = []any{}
+	file_streamgateway_public_v1_streamgateway_proto_msgTypes[11].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_streamgateway_public_v1_streamgateway_proto_rawDesc), len(file_streamgateway_public_v1_streamgateway_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   16,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

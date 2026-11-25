@@ -88,14 +88,13 @@ message GetMessageDetailResponse {
   uint32 next_offset = 4;
 }
 
-// WatchStreamRequest message.
+// WatchStreamRequest opens a Work's live stream. The stream carries only what
+// happens from now on; stored history is read through ListMessagesBySession.
 message WatchStreamRequest {
+  reserved 2, 3;
+  reserved "after_timestamp", "after_id";
   // AgentWork identity.
   string agent_work_id = 1;
-  // after timestamp field.
-  google.protobuf.Timestamp after_timestamp = 2;
-  // after id field.
-  string after_id = 3;
   // Same Agent, turn and kind scope as history.
   optional string agent = 4;
   // Match any listed turn; empty matches every turn.
@@ -106,13 +105,15 @@ message WatchStreamRequest {
   bool include_unattributed_errors = 7;
 }
 
-// WatchStreamResponse message.
+// WatchStreamResponse is one live frame. Live delivery is best-effort: frames
+// may be lost, repeated or reordered, and a reader that needs the complete
+// conversation reads it from history.
 message WatchStreamResponse {
-  // Stored-history replay must not trigger new-user-message scroll behavior.
-  bool replay = 1;
+  reserved 1;
+  reserved "replay";
   // payload choice.
   oneof payload {
-    // A live or replayed message, without its detail body.
+    // A live message, without its detail body.
     dispatcher.public.v1.UnifiedMessage message = 2;
     // work state field.
     WorkStateFrame work_state = 3;
@@ -121,8 +122,14 @@ message WatchStreamResponse {
     // The reader's access to this Work's conversation was withdrawn; the
     // stream ends after this frame. Distinct from a connection error.
     AccessWithdrawnFrame access_withdrawn = 5;
+    // Sent while the stream is otherwise quiet, so idle connections stay open
+    // and a reader that hears nothing for two intervals knows the stream died.
+    HeartbeatFrame heartbeat = 6;
   }
 }
+
+// HeartbeatFrame says only that the stream is alive.
+message HeartbeatFrame {}
 
 // AccessWithdrawnFrame ends a reader's stream after a Work Share was revoked
 // or the Work became private.

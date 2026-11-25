@@ -52,10 +52,14 @@ service DirectoryService {
   // ReplaceContent makes the given files a Directory's whole content in one
   // atomic switch, and completes only once the earlier content is removed.
   // Repeating it writes the same content again. Readers, mounted ones
-  // included, always see one complete current content.
+  // included, always see one complete current content. A replacement that
+  // names the content it expects changes nothing while another content is
+  // current and refuses with CONTENT_CHANGED, so a writer that made the new
+  // content from what it read never switches over a content it did not read.
   rpc ReplaceContent(ReplaceContentRequest) returns (ReplaceContentResponse);
   // ReadContent reads files of a Directory's current content by clean
-  // relative path; before its first replacement it has no files.
+  // relative path, with that content's revision; before its first
+  // replacement it has no files and no revision.
   rpc ReadContent(ReadContentRequest) returns (ReadContentResponse);
   // MapDirectory shows a located Directory's files at a mapped path of the
   // Mapped View as the same files, never copies, and keeps them current
@@ -124,6 +128,9 @@ enum ErrorReason {
   // A read-write Mount Grant was asked for a mapped Directory, which is only
   // ever mounted read-only.
   ERROR_REASON_DIRECTORY_MAPPED = 17;
+  // A replacement expected a content that is no longer current; it changed
+  // nothing. The caller reads the current content again before replacing.
+  ERROR_REASON_CONTENT_CHANGED = 18;
 }
 
 // Backend is where a Directory's files live, fixed at its first allocation.
@@ -422,10 +429,27 @@ message ReplaceContentRequest {
   string space_token = 2;
   // Every file of the new content.
   repeated ContentFile files = 3;
+  // The content the replacement expects to be current; unset replaces
+  // whichever content is current.
+  ContentExpectation expected = 4;
+}
+
+// ContentExpectation is the content a replacement expects to be current.
+message ContentExpectation {
+  // The expected content.
+  oneof content {
+    // No content: the Directory was never replaced. Only true is meaningful.
+    bool none = 1;
+    // The revision a read or an earlier replacement reported.
+    string revision = 2;
+  }
 }
 
 // ReplaceContentResponse acknowledges the replacement.
-message ReplaceContentResponse {}
+message ReplaceContentResponse {
+  // The revision of the content now current.
+  string revision = 1;
+}
 
 // ReadContentRequest names the Directory and the files wanted.
 message ReadContentRequest {
@@ -439,6 +463,9 @@ message ReadContentRequest {
 message ReadContentResponse {
   // The files of the current content.
   repeated ContentFile files = 1;
+  // The current content's revision, opaque to the caller; empty before the
+  // first replacement.
+  string revision = 2;
 }
 
 // MapDirectoryRequest names the located Directory and where it is shown.

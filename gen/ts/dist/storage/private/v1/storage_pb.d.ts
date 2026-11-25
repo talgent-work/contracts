@@ -853,6 +853,14 @@ export declare type ReplaceContentRequest = Message<"storage.private.v1.ReplaceC
    * @generated from field: repeated storage.private.v1.ContentFile files = 3;
    */
   files: ContentFile[];
+
+  /**
+   * The content the replacement expects to be current; unset replaces
+   * whichever content is current.
+   *
+   * @generated from field: storage.private.v1.ContentExpectation expected = 4;
+   */
+  expected?: ContentExpectation;
 };
 
 /**
@@ -862,11 +870,53 @@ export declare type ReplaceContentRequest = Message<"storage.private.v1.ReplaceC
 export declare const ReplaceContentRequestSchema: GenMessage<ReplaceContentRequest>;
 
 /**
+ * ContentExpectation is the content a replacement expects to be current.
+ *
+ * @generated from message storage.private.v1.ContentExpectation
+ */
+export declare type ContentExpectation = Message<"storage.private.v1.ContentExpectation"> & {
+  /**
+   * The expected content.
+   *
+   * @generated from oneof storage.private.v1.ContentExpectation.content
+   */
+  content: {
+    /**
+     * No content: the Directory was never replaced. Only true is meaningful.
+     *
+     * @generated from field: bool none = 1;
+     */
+    value: boolean;
+    case: "none";
+  } | {
+    /**
+     * The revision a read or an earlier replacement reported.
+     *
+     * @generated from field: string revision = 2;
+     */
+    value: string;
+    case: "revision";
+  } | { case: undefined; value?: undefined };
+};
+
+/**
+ * Describes the message storage.private.v1.ContentExpectation.
+ * Use `create(ContentExpectationSchema)` to create a new message.
+ */
+export declare const ContentExpectationSchema: GenMessage<ContentExpectation>;
+
+/**
  * ReplaceContentResponse acknowledges the replacement.
  *
  * @generated from message storage.private.v1.ReplaceContentResponse
  */
 export declare type ReplaceContentResponse = Message<"storage.private.v1.ReplaceContentResponse"> & {
+  /**
+   * The revision of the content now current.
+   *
+   * @generated from field: string revision = 1;
+   */
+  revision: string;
 };
 
 /**
@@ -914,6 +964,14 @@ export declare type ReadContentResponse = Message<"storage.private.v1.ReadConten
    * @generated from field: repeated storage.private.v1.ContentFile files = 1;
    */
   files: ContentFile[];
+
+  /**
+   * The current content's revision, opaque to the caller; empty before the
+   * first replacement.
+   *
+   * @generated from field: string revision = 2;
+   */
+  revision: string;
 };
 
 /**
@@ -1334,6 +1392,14 @@ export enum ErrorReason {
    * @generated from enum value: ERROR_REASON_DIRECTORY_MAPPED = 17;
    */
   DIRECTORY_MAPPED = 17,
+
+  /**
+   * A replacement expected a content that is no longer current; it changed
+   * nothing. The caller reads the current content again before replacing.
+   *
+   * @generated from enum value: ERROR_REASON_CONTENT_CHANGED = 18;
+   */
+  CONTENT_CHANGED = 18,
 }
 
 /**
@@ -1741,7 +1807,10 @@ export declare const DirectoryService: GenService<{
    * ReplaceContent makes the given files a Directory's whole content in one
    * atomic switch, and completes only once the earlier content is removed.
    * Repeating it writes the same content again. Readers, mounted ones
-   * included, always see one complete current content.
+   * included, always see one complete current content. A replacement that
+   * names the content it expects changes nothing while another content is
+   * current and refuses with CONTENT_CHANGED, so a writer that made the new
+   * content from what it read never switches over a content it did not read.
    *
    * @generated from rpc storage.private.v1.DirectoryService.ReplaceContent
    */
@@ -1752,7 +1821,8 @@ export declare const DirectoryService: GenService<{
   },
   /**
    * ReadContent reads files of a Directory's current content by clean
-   * relative path; before its first replacement it has no files.
+   * relative path, with that content's revision; before its first
+   * replacement it has no files and no revision.
    *
    * @generated from rpc storage.private.v1.DirectoryService.ReadContent
    */

@@ -219,10 +219,14 @@ type DirectoryServiceClient interface {
 	// ReplaceContent makes the given files a Directory's whole content in one
 	// atomic switch, and completes only once the earlier content is removed.
 	// Repeating it writes the same content again. Readers, mounted ones
-	// included, always see one complete current content.
+	// included, always see one complete current content. A replacement that
+	// names the content it expects changes nothing while another content is
+	// current and refuses with CONTENT_CHANGED, so a writer that made the new
+	// content from what it read never switches over a content it did not read.
 	ReplaceContent(context.Context, *v1.ReplaceContentRequest) (*v1.ReplaceContentResponse, error)
 	// ReadContent reads files of a Directory's current content by clean
-	// relative path; before its first replacement it has no files.
+	// relative path, with that content's revision; before its first
+	// replacement it has no files and no revision.
 	ReadContent(context.Context, *v1.ReadContentRequest) (*v1.ReadContentResponse, error)
 	// MapDirectory shows a located Directory's files at a mapped path of the
 	// Mapped View as the same files, never copies, and keeps them current
@@ -291,10 +295,14 @@ type DirectoryServiceHandler interface {
 	// ReplaceContent makes the given files a Directory's whole content in one
 	// atomic switch, and completes only once the earlier content is removed.
 	// Repeating it writes the same content again. Readers, mounted ones
-	// included, always see one complete current content.
+	// included, always see one complete current content. A replacement that
+	// names the content it expects changes nothing while another content is
+	// current and refuses with CONTENT_CHANGED, so a writer that made the new
+	// content from what it read never switches over a content it did not read.
 	ReplaceContent(context.Context, *v1.ReplaceContentRequest) (*v1.ReplaceContentResponse, error)
 	// ReadContent reads files of a Directory's current content by clean
-	// relative path; before its first replacement it has no files.
+	// relative path, with that content's revision; before its first
+	// replacement it has no files and no revision.
 	ReadContent(context.Context, *v1.ReadContentRequest) (*v1.ReadContentResponse, error)
 	// MapDirectory shows a located Directory's files at a mapped path of the
 	// Mapped View as the same files, never copies, and keeps them current

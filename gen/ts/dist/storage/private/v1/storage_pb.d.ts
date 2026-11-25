@@ -1806,8 +1806,9 @@ export declare const DirectoryService: GenService<{
   /**
    * ReplaceContent makes the given files a Directory's whole content in one
    * atomic switch, and completes only once the earlier content is removed.
-   * Repeating it writes the same content again. Readers, mounted ones
-   * included, always see one complete current content. A replacement that
+   * Repeating it without an expectation writes the same content again.
+   * Readers, mounted ones included, always see one complete current
+   * content. A replacement that
    * names the content it expects changes nothing while another content is
    * current and refuses with CONTENT_CHANGED, so a writer that made the new
    * content from what it read never switches over a content it did not read.

@@ -53,20 +53,23 @@ buf build -o - | go run github.com/talgent-work/contracts/cmd/check-admission
 
 ## Compatibility
 
-A package version is a wire promise. Within `vN` a contract only grows: new fields, RPCs and
-enum values, with removed field numbers reserved. A breaking change opens `vN+1` beside it until
-`vN` retires. The release version and the package version are independent; consumers ignore
-fields they do not know.
+A package version is a wire promise. Within `vN` a contract keeps binary and JSON wire
+compatibility: field numbers, types, names and JSON names stay, and a removed field or enum value
+reserves both its number and its name. JSON counts because Connect's JSON codec reads names.
+Consumers ignore fields they do not know and read a missing one as its default, so products built
+on different releases still talk to each other, and no consumer compares release versions.
 
-`vN+1` holds what the change replaces, and may import the unchanged messages of `vN`; what it
-replaces in `vN` is marked `deprecated` and still served. Once nothing consumes it, a release
-removes it: that release is a minor tagged by hand, and `buf.yaml` exempts the removed files from
-the breaking check until the next release compares against it.
+A change of shape expands, then contracts: it adds a field or RPC, or opens `vN+1` beside `vN`,
+which may import the unchanged messages of `vN`. What it replaces is marked `deprecated` and still
+served. Once nothing consumes it, a release removes it, reserving removed field numbers and names;
+removing or renaming a service or RPC follows the same order. The release version and the package
+version are independent.
 
 ## Releases
 
-Every push to `master` is a release. CI lints, checks every stable package for breaking changes
-against the previous release, checks the generated code is current, then tags the next patch.
+Every push to `master` is a release. CI lints, checks every stable package's wire compatibility
+against the previous release with buf's `WIRE_JSON` rules, checks the generated code is current,
+then tags the next patch.
 A minor version is tagged by hand; the patch count continues from it.
 
 ## Using the contracts

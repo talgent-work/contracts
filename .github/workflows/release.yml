@@ -37,7 +37,7 @@ jobs:
       - name: Lint
         run: buf lint
 
-      - name: Check stable packages only grow
+      - name: Check stable packages stay wire-compatible
         run: |
           previous=$(bash scripts/ci/release-version.sh previous)
           if [ -z "$previous" ]; then

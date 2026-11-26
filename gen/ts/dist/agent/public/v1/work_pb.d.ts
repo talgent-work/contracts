@@ -12,6 +12,7 @@ import type { WorkProgress } from "./progress_pb.js";
 import type { PendingInteraction } from "../../../dispatcher/public/v1/unified_message_pb.js";
 import type { ChangeWorkAgentAppearanceRequestSchema, ChangeWorkAgentAppearanceResponseSchema, EnsureMyWorkAgentRequestSchema, EnsureMyWorkAgentResponseSchema, GetMyWorkAgentRequestSchema, GetMyWorkAgentResponseSchema } from "./appearance_pb.js";
 import type { ChangeAgentSoulRequestSchema, ChangeAgentSoulResponseSchema, GetAgentSoulRequestSchema, GetAgentSoulResponseSchema } from "./soul_pb.js";
+import type { ChangeAgentWorkspaceInstructionsRequestSchema, ChangeAgentWorkspaceInstructionsResponseSchema, GetAgentWorkspaceInstructionsRequestSchema, GetAgentWorkspaceInstructionsResponseSchema } from "./workspace_instructions_pb.js";
 import type { ChangeAgentWorkDefaultsRequestSchema, ChangeAgentWorkDefaultsResponseSchema, EnsureApplicationAgentRequestSchema, EnsureApplicationAgentResponseSchema, GetAgentWorkDefaultsRequestSchema, GetAgentWorkDefaultsResponseSchema } from "./work_defaults_pb.js";
 import type { GetWorkCapabilitiesRequestSchema, GetWorkCapabilitiesResponseSchema } from "./capability_pb.js";
 import type { GetWorkPluginResultsRequestSchema, GetWorkPluginResultsResponseSchema } from "./plugin_pb.js";
@@ -1375,8 +1376,8 @@ export declare const WorkLifecycleEventSchema: GenMessage<WorkLifecycleEvent>;
  * AgentWorkService is the neutral "my Work" API. Every Work operation is
  * admitted only for the Work's owner, a person or an Application, which
  * reaches only its own Works. The Agent operations address an AgentDefinition:
- * its Owners, a person or the Application, read and replace its Soul and an
- * Application's Work defaults, and only a person changes an appearance, the
+ * its Owners, a person or the Application, read and replace its Soul, its
+ * Workspace Instructions and an Application's Work defaults, and only a person changes an appearance, the
  * one their Work Agent represents them with, or, as Application Owner, an
  * Application's Agent's. An Application Owner reaches an Application's Agent
  * under their own identity, admitted through Account's Application ownership.
@@ -1443,6 +1444,32 @@ export declare const AgentWorkService: GenService<{
     methodKind: "unary";
     input: typeof ChangeAgentSoulRequestSchema;
     output: typeof ChangeAgentSoulResponseSchema;
+  },
+  /**
+   * GetAgentWorkspaceInstructions reads an Agent's Workspace Instructions;
+   * only one of its Owners, or an Application's Agent's Application Owner,
+   * may read them here.
+   *
+   * @generated from rpc agent.public.v1.AgentWorkService.GetAgentWorkspaceInstructions
+   */
+  getAgentWorkspaceInstructions: {
+    methodKind: "unary";
+    input: typeof GetAgentWorkspaceInstructionsRequestSchema;
+    output: typeof GetAgentWorkspaceInstructionsResponseSchema;
+  },
+  /**
+   * ChangeAgentWorkspaceInstructions replaces an Agent's Workspace
+   * Instructions; only one of its Owners, or an Application's Agent's
+   * Application Owner, may. Each of its Works places them at its workspace
+   * root at its next start, where anyone who can read that workspace reads
+   * them; running Turns are unaffected.
+   *
+   * @generated from rpc agent.public.v1.AgentWorkService.ChangeAgentWorkspaceInstructions
+   */
+  changeAgentWorkspaceInstructions: {
+    methodKind: "unary";
+    input: typeof ChangeAgentWorkspaceInstructionsRequestSchema;
+    output: typeof ChangeAgentWorkspaceInstructionsResponseSchema;
   },
   /**
    * EnsureApplicationAgent returns the Agent of an Application the caller

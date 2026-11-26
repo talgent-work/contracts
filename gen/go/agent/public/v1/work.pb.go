@@ -2626,7 +2626,7 @@ var File_agent_public_v1_work_proto protoreflect.FileDescriptor
 
 const file_agent_public_v1_work_proto_rawDesc = "" +
 	"\n" +
-	"\x1aagent/public/v1/work.proto\x12\x0fagent.public.v1\x1a\x1cadmission/v1/admission.proto\x1a agent/public/v1/appearance.proto\x1a agent/public/v1/capability.proto\x1a\x1dagent/public/v1/harness.proto\x1a\x1bagent/public/v1/model.proto\x1a\x1cagent/public/v1/plugin.proto\x1a\x1eagent/public/v1/progress.proto\x1a$agent/public/v1/service_access.proto\x1a\x1aagent/public/v1/soul.proto\x1a\x1dagent/public/v1/startup.proto\x1a#agent/public/v1/work_defaults.proto\x1a*dispatcher/public/v1/unified_message.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"}\n" +
+	"\x1aagent/public/v1/work.proto\x12\x0fagent.public.v1\x1a\x1cadmission/v1/admission.proto\x1a agent/public/v1/appearance.proto\x1a agent/public/v1/capability.proto\x1a\x1dagent/public/v1/harness.proto\x1a\x1bagent/public/v1/model.proto\x1a\x1cagent/public/v1/plugin.proto\x1a\x1eagent/public/v1/progress.proto\x1a$agent/public/v1/service_access.proto\x1a\x1aagent/public/v1/soul.proto\x1a\x1dagent/public/v1/startup.proto\x1a#agent/public/v1/work_defaults.proto\x1a,agent/public/v1/workspace_instructions.proto\x1a*dispatcher/public/v1/unified_message.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"}\n" +
 	"\x18SetPermissionModeRequest\x12\x17\n" +
 	"\awork_id\x18\x01 \x01(\tR\x06workId\x12H\n" +
 	"\x0fpermission_mode\x18\x02 \x01(\x0e2\x1f.agent.public.v1.PermissionModeR\x0epermissionMode\"e\n" +
@@ -2812,7 +2812,7 @@ const file_agent_public_v1_work_proto_rawDesc = "" +
 	"\x12WorkLifecycleEvent\x12\x14\n" +
 	"\x05state\x18\x01 \x01(\tR\x05state\x12;\n" +
 	"\voccurred_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
-	"occurredAt2\xc8\x18\n" +
+	"occurredAt2\x87\x1b\n" +
 	"\x10AgentWorkService\x12\x8b\x01\n" +
 	"\x19ChangeWorkAgentAppearance\x121.agent.public.v1.ChangeWorkAgentAppearanceRequest\x1a2.agent.public.v1.ChangeWorkAgentAppearanceResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x01\x12k\n" +
@@ -2823,6 +2823,10 @@ const file_agent_public_v1_work_proto_rawDesc = "" +
 	"\fGetAgentSoul\x12$.agent.public.v1.GetAgentSoulRequest\x1a%.agent.public.v1.GetAgentSoulResponse\"\b\xc2\xf3\x18\x04\n" +
 	"\x02\x01\x03\x12n\n" +
 	"\x0fChangeAgentSoul\x12'.agent.public.v1.ChangeAgentSoulRequest\x1a(.agent.public.v1.ChangeAgentSoulResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12\x98\x01\n" +
+	"\x1dGetAgentWorkspaceInstructions\x125.agent.public.v1.GetAgentWorkspaceInstructionsRequest\x1a6.agent.public.v1.GetAgentWorkspaceInstructionsResponse\"\b\xc2\xf3\x18\x04\n" +
+	"\x02\x01\x03\x12\xa1\x01\n" +
+	" ChangeAgentWorkspaceInstructions\x128.agent.public.v1.ChangeAgentWorkspaceInstructionsRequest\x1a9.agent.public.v1.ChangeAgentWorkspaceInstructionsResponse\"\b\xc2\xf3\x18\x04\n" +
 	"\x02\x01\x03\x12\x82\x01\n" +
 	"\x16EnsureApplicationAgent\x12..agent.public.v1.EnsureApplicationAgentRequest\x1a/.agent.public.v1.EnsureApplicationAgentResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x01\x12}\n" +
@@ -2885,79 +2889,83 @@ func file_agent_public_v1_work_proto_rawDescGZIP() []byte {
 
 var file_agent_public_v1_work_proto_msgTypes = make([]protoimpl.MessageInfo, 43)
 var file_agent_public_v1_work_proto_goTypes = []any{
-	(*SetPermissionModeRequest)(nil),          // 0: agent.public.v1.SetPermissionModeRequest
-	(*SetPermissionModeResponse)(nil),         // 1: agent.public.v1.SetPermissionModeResponse
-	(*SetThinkingLevelRequest)(nil),           // 2: agent.public.v1.SetThinkingLevelRequest
-	(*SetThinkingLevelResponse)(nil),          // 3: agent.public.v1.SetThinkingLevelResponse
-	(*GetThinkingLevelRequest)(nil),           // 4: agent.public.v1.GetThinkingLevelRequest
-	(*GetThinkingLevelResponse)(nil),          // 5: agent.public.v1.GetThinkingLevelResponse
-	(*WorkInfo)(nil),                          // 6: agent.public.v1.WorkInfo
-	(*ChangeWorkVisibilityRequest)(nil),       // 7: agent.public.v1.ChangeWorkVisibilityRequest
-	(*ChangeWorkVisibilityResponse)(nil),      // 8: agent.public.v1.ChangeWorkVisibilityResponse
-	(*RevokeWorkShareRequest)(nil),            // 9: agent.public.v1.RevokeWorkShareRequest
-	(*RevokeWorkShareResponse)(nil),           // 10: agent.public.v1.RevokeWorkShareResponse
-	(*WorkStartupRequest)(nil),                // 11: agent.public.v1.WorkStartupRequest
-	(*WorkStartupRepository)(nil),             // 12: agent.public.v1.WorkStartupRepository
-	(*GetWorkRequest)(nil),                    // 13: agent.public.v1.GetWorkRequest
-	(*GetWorkResponse)(nil),                   // 14: agent.public.v1.GetWorkResponse
-	(*StopWorkRequest)(nil),                   // 15: agent.public.v1.StopWorkRequest
-	(*StopWorkResponse)(nil),                  // 16: agent.public.v1.StopWorkResponse
-	(*ResumeWorkRequest)(nil),                 // 17: agent.public.v1.ResumeWorkRequest
-	(*ResumeWorkResponse)(nil),                // 18: agent.public.v1.ResumeWorkResponse
-	(*RestartWorkRequest)(nil),                // 19: agent.public.v1.RestartWorkRequest
-	(*RestartWorkResponse)(nil),               // 20: agent.public.v1.RestartWorkResponse
-	(*ArchiveWorkRequest)(nil),                // 21: agent.public.v1.ArchiveWorkRequest
-	(*ArchiveWorkResponse)(nil),               // 22: agent.public.v1.ArchiveWorkResponse
-	(*SendMessageRequest)(nil),                // 23: agent.public.v1.SendMessageRequest
-	(*SendMessageResponse)(nil),               // 24: agent.public.v1.SendMessageResponse
-	(*RespondToInteractionRequest)(nil),       // 25: agent.public.v1.RespondToInteractionRequest
-	(*RespondToInteractionResponse)(nil),      // 26: agent.public.v1.RespondToInteractionResponse
-	(*RepositorySelection)(nil),               // 27: agent.public.v1.RepositorySelection
-	(*CreationCapabilities)(nil),              // 28: agent.public.v1.CreationCapabilities
-	(*CreationConnector)(nil),                 // 29: agent.public.v1.CreationConnector
-	(*CreationPlugin)(nil),                    // 30: agent.public.v1.CreationPlugin
-	(*WorkPeriodReport)(nil),                  // 31: agent.public.v1.WorkPeriodReport
-	(*WorkReportBucket)(nil),                  // 32: agent.public.v1.WorkReportBucket
-	(*WorkDistribution)(nil),                  // 33: agent.public.v1.WorkDistribution
-	(*ListPendingInteractionsRequest)(nil),    // 34: agent.public.v1.ListPendingInteractionsRequest
-	(*ListPendingInteractionsResponse)(nil),   // 35: agent.public.v1.ListPendingInteractionsResponse
-	(*CancelTurnRequest)(nil),                 // 36: agent.public.v1.CancelTurnRequest
-	(*CancelTurnResponse)(nil),                // 37: agent.public.v1.CancelTurnResponse
-	(*GetCurrentTurnRequest)(nil),             // 38: agent.public.v1.GetCurrentTurnRequest
-	(*GetCurrentTurnResponse)(nil),            // 39: agent.public.v1.GetCurrentTurnResponse
-	(*ListWorkLifecycleEventsRequest)(nil),    // 40: agent.public.v1.ListWorkLifecycleEventsRequest
-	(*ListWorkLifecycleEventsResponse)(nil),   // 41: agent.public.v1.ListWorkLifecycleEventsResponse
-	(*WorkLifecycleEvent)(nil),                // 42: agent.public.v1.WorkLifecycleEvent
-	(PermissionMode)(0),                       // 43: agent.public.v1.PermissionMode
-	(*timestamppb.Timestamp)(nil),             // 44: google.protobuf.Timestamp
-	(*StartupProgress)(nil),                   // 45: agent.public.v1.StartupProgress
-	(*WorkModelSelection)(nil),                // 46: agent.public.v1.WorkModelSelection
-	(*WorkProgress)(nil),                      // 47: agent.public.v1.WorkProgress
-	(*WorkModelOption)(nil),                   // 48: agent.public.v1.WorkModelOption
-	(*structpb.Struct)(nil),                   // 49: google.protobuf.Struct
-	(*v1.PendingInteraction)(nil),             // 50: dispatcher.public.v1.PendingInteraction
-	(*ChangeWorkAgentAppearanceRequest)(nil),  // 51: agent.public.v1.ChangeWorkAgentAppearanceRequest
-	(*GetMyWorkAgentRequest)(nil),             // 52: agent.public.v1.GetMyWorkAgentRequest
-	(*EnsureMyWorkAgentRequest)(nil),          // 53: agent.public.v1.EnsureMyWorkAgentRequest
-	(*GetAgentSoulRequest)(nil),               // 54: agent.public.v1.GetAgentSoulRequest
-	(*ChangeAgentSoulRequest)(nil),            // 55: agent.public.v1.ChangeAgentSoulRequest
-	(*EnsureApplicationAgentRequest)(nil),     // 56: agent.public.v1.EnsureApplicationAgentRequest
-	(*GetAgentWorkDefaultsRequest)(nil),       // 57: agent.public.v1.GetAgentWorkDefaultsRequest
-	(*ChangeAgentWorkDefaultsRequest)(nil),    // 58: agent.public.v1.ChangeAgentWorkDefaultsRequest
-	(*GetWorkCapabilitiesRequest)(nil),        // 59: agent.public.v1.GetWorkCapabilitiesRequest
-	(*GetWorkPluginResultsRequest)(nil),       // 60: agent.public.v1.GetWorkPluginResultsRequest
-	(*GetWorkServiceAccessRequest)(nil),       // 61: agent.public.v1.GetWorkServiceAccessRequest
-	(*ChangeWorkAgentAppearanceResponse)(nil), // 62: agent.public.v1.ChangeWorkAgentAppearanceResponse
-	(*GetMyWorkAgentResponse)(nil),            // 63: agent.public.v1.GetMyWorkAgentResponse
-	(*EnsureMyWorkAgentResponse)(nil),         // 64: agent.public.v1.EnsureMyWorkAgentResponse
-	(*GetAgentSoulResponse)(nil),              // 65: agent.public.v1.GetAgentSoulResponse
-	(*ChangeAgentSoulResponse)(nil),           // 66: agent.public.v1.ChangeAgentSoulResponse
-	(*EnsureApplicationAgentResponse)(nil),    // 67: agent.public.v1.EnsureApplicationAgentResponse
-	(*GetAgentWorkDefaultsResponse)(nil),      // 68: agent.public.v1.GetAgentWorkDefaultsResponse
-	(*ChangeAgentWorkDefaultsResponse)(nil),   // 69: agent.public.v1.ChangeAgentWorkDefaultsResponse
-	(*GetWorkCapabilitiesResponse)(nil),       // 70: agent.public.v1.GetWorkCapabilitiesResponse
-	(*GetWorkPluginResultsResponse)(nil),      // 71: agent.public.v1.GetWorkPluginResultsResponse
-	(*GetWorkServiceAccessResponse)(nil),      // 72: agent.public.v1.GetWorkServiceAccessResponse
+	(*SetPermissionModeRequest)(nil),                 // 0: agent.public.v1.SetPermissionModeRequest
+	(*SetPermissionModeResponse)(nil),                // 1: agent.public.v1.SetPermissionModeResponse
+	(*SetThinkingLevelRequest)(nil),                  // 2: agent.public.v1.SetThinkingLevelRequest
+	(*SetThinkingLevelResponse)(nil),                 // 3: agent.public.v1.SetThinkingLevelResponse
+	(*GetThinkingLevelRequest)(nil),                  // 4: agent.public.v1.GetThinkingLevelRequest
+	(*GetThinkingLevelResponse)(nil),                 // 5: agent.public.v1.GetThinkingLevelResponse
+	(*WorkInfo)(nil),                                 // 6: agent.public.v1.WorkInfo
+	(*ChangeWorkVisibilityRequest)(nil),              // 7: agent.public.v1.ChangeWorkVisibilityRequest
+	(*ChangeWorkVisibilityResponse)(nil),             // 8: agent.public.v1.ChangeWorkVisibilityResponse
+	(*RevokeWorkShareRequest)(nil),                   // 9: agent.public.v1.RevokeWorkShareRequest
+	(*RevokeWorkShareResponse)(nil),                  // 10: agent.public.v1.RevokeWorkShareResponse
+	(*WorkStartupRequest)(nil),                       // 11: agent.public.v1.WorkStartupRequest
+	(*WorkStartupRepository)(nil),                    // 12: agent.public.v1.WorkStartupRepository
+	(*GetWorkRequest)(nil),                           // 13: agent.public.v1.GetWorkRequest
+	(*GetWorkResponse)(nil),                          // 14: agent.public.v1.GetWorkResponse
+	(*StopWorkRequest)(nil),                          // 15: agent.public.v1.StopWorkRequest
+	(*StopWorkResponse)(nil),                         // 16: agent.public.v1.StopWorkResponse
+	(*ResumeWorkRequest)(nil),                        // 17: agent.public.v1.ResumeWorkRequest
+	(*ResumeWorkResponse)(nil),                       // 18: agent.public.v1.ResumeWorkResponse
+	(*RestartWorkRequest)(nil),                       // 19: agent.public.v1.RestartWorkRequest
+	(*RestartWorkResponse)(nil),                      // 20: agent.public.v1.RestartWorkResponse
+	(*ArchiveWorkRequest)(nil),                       // 21: agent.public.v1.ArchiveWorkRequest
+	(*ArchiveWorkResponse)(nil),                      // 22: agent.public.v1.ArchiveWorkResponse
+	(*SendMessageRequest)(nil),                       // 23: agent.public.v1.SendMessageRequest
+	(*SendMessageResponse)(nil),                      // 24: agent.public.v1.SendMessageResponse
+	(*RespondToInteractionRequest)(nil),              // 25: agent.public.v1.RespondToInteractionRequest
+	(*RespondToInteractionResponse)(nil),             // 26: agent.public.v1.RespondToInteractionResponse
+	(*RepositorySelection)(nil),                      // 27: agent.public.v1.RepositorySelection
+	(*CreationCapabilities)(nil),                     // 28: agent.public.v1.CreationCapabilities
+	(*CreationConnector)(nil),                        // 29: agent.public.v1.CreationConnector
+	(*CreationPlugin)(nil),                           // 30: agent.public.v1.CreationPlugin
+	(*WorkPeriodReport)(nil),                         // 31: agent.public.v1.WorkPeriodReport
+	(*WorkReportBucket)(nil),                         // 32: agent.public.v1.WorkReportBucket
+	(*WorkDistribution)(nil),                         // 33: agent.public.v1.WorkDistribution
+	(*ListPendingInteractionsRequest)(nil),           // 34: agent.public.v1.ListPendingInteractionsRequest
+	(*ListPendingInteractionsResponse)(nil),          // 35: agent.public.v1.ListPendingInteractionsResponse
+	(*CancelTurnRequest)(nil),                        // 36: agent.public.v1.CancelTurnRequest
+	(*CancelTurnResponse)(nil),                       // 37: agent.public.v1.CancelTurnResponse
+	(*GetCurrentTurnRequest)(nil),                    // 38: agent.public.v1.GetCurrentTurnRequest
+	(*GetCurrentTurnResponse)(nil),                   // 39: agent.public.v1.GetCurrentTurnResponse
+	(*ListWorkLifecycleEventsRequest)(nil),           // 40: agent.public.v1.ListWorkLifecycleEventsRequest
+	(*ListWorkLifecycleEventsResponse)(nil),          // 41: agent.public.v1.ListWorkLifecycleEventsResponse
+	(*WorkLifecycleEvent)(nil),                       // 42: agent.public.v1.WorkLifecycleEvent
+	(PermissionMode)(0),                              // 43: agent.public.v1.PermissionMode
+	(*timestamppb.Timestamp)(nil),                    // 44: google.protobuf.Timestamp
+	(*StartupProgress)(nil),                          // 45: agent.public.v1.StartupProgress
+	(*WorkModelSelection)(nil),                       // 46: agent.public.v1.WorkModelSelection
+	(*WorkProgress)(nil),                             // 47: agent.public.v1.WorkProgress
+	(*WorkModelOption)(nil),                          // 48: agent.public.v1.WorkModelOption
+	(*structpb.Struct)(nil),                          // 49: google.protobuf.Struct
+	(*v1.PendingInteraction)(nil),                    // 50: dispatcher.public.v1.PendingInteraction
+	(*ChangeWorkAgentAppearanceRequest)(nil),         // 51: agent.public.v1.ChangeWorkAgentAppearanceRequest
+	(*GetMyWorkAgentRequest)(nil),                    // 52: agent.public.v1.GetMyWorkAgentRequest
+	(*EnsureMyWorkAgentRequest)(nil),                 // 53: agent.public.v1.EnsureMyWorkAgentRequest
+	(*GetAgentSoulRequest)(nil),                      // 54: agent.public.v1.GetAgentSoulRequest
+	(*ChangeAgentSoulRequest)(nil),                   // 55: agent.public.v1.ChangeAgentSoulRequest
+	(*GetAgentWorkspaceInstructionsRequest)(nil),     // 56: agent.public.v1.GetAgentWorkspaceInstructionsRequest
+	(*ChangeAgentWorkspaceInstructionsRequest)(nil),  // 57: agent.public.v1.ChangeAgentWorkspaceInstructionsRequest
+	(*EnsureApplicationAgentRequest)(nil),            // 58: agent.public.v1.EnsureApplicationAgentRequest
+	(*GetAgentWorkDefaultsRequest)(nil),              // 59: agent.public.v1.GetAgentWorkDefaultsRequest
+	(*ChangeAgentWorkDefaultsRequest)(nil),           // 60: agent.public.v1.ChangeAgentWorkDefaultsRequest
+	(*GetWorkCapabilitiesRequest)(nil),               // 61: agent.public.v1.GetWorkCapabilitiesRequest
+	(*GetWorkPluginResultsRequest)(nil),              // 62: agent.public.v1.GetWorkPluginResultsRequest
+	(*GetWorkServiceAccessRequest)(nil),              // 63: agent.public.v1.GetWorkServiceAccessRequest
+	(*ChangeWorkAgentAppearanceResponse)(nil),        // 64: agent.public.v1.ChangeWorkAgentAppearanceResponse
+	(*GetMyWorkAgentResponse)(nil),                   // 65: agent.public.v1.GetMyWorkAgentResponse
+	(*EnsureMyWorkAgentResponse)(nil),                // 66: agent.public.v1.EnsureMyWorkAgentResponse
+	(*GetAgentSoulResponse)(nil),                     // 67: agent.public.v1.GetAgentSoulResponse
+	(*ChangeAgentSoulResponse)(nil),                  // 68: agent.public.v1.ChangeAgentSoulResponse
+	(*GetAgentWorkspaceInstructionsResponse)(nil),    // 69: agent.public.v1.GetAgentWorkspaceInstructionsResponse
+	(*ChangeAgentWorkspaceInstructionsResponse)(nil), // 70: agent.public.v1.ChangeAgentWorkspaceInstructionsResponse
+	(*EnsureApplicationAgentResponse)(nil),           // 71: agent.public.v1.EnsureApplicationAgentResponse
+	(*GetAgentWorkDefaultsResponse)(nil),             // 72: agent.public.v1.GetAgentWorkDefaultsResponse
+	(*ChangeAgentWorkDefaultsResponse)(nil),          // 73: agent.public.v1.ChangeAgentWorkDefaultsResponse
+	(*GetWorkCapabilitiesResponse)(nil),              // 74: agent.public.v1.GetWorkCapabilitiesResponse
+	(*GetWorkPluginResultsResponse)(nil),             // 75: agent.public.v1.GetWorkPluginResultsResponse
+	(*GetWorkServiceAccessResponse)(nil),             // 76: agent.public.v1.GetWorkServiceAccessResponse
 }
 var file_agent_public_v1_work_proto_depIdxs = []int32{
 	43, // 0: agent.public.v1.SetPermissionModeRequest.permission_mode:type_name -> agent.public.v1.PermissionMode
@@ -2994,57 +3002,61 @@ var file_agent_public_v1_work_proto_depIdxs = []int32{
 	53, // 31: agent.public.v1.AgentWorkService.EnsureMyWorkAgent:input_type -> agent.public.v1.EnsureMyWorkAgentRequest
 	54, // 32: agent.public.v1.AgentWorkService.GetAgentSoul:input_type -> agent.public.v1.GetAgentSoulRequest
 	55, // 33: agent.public.v1.AgentWorkService.ChangeAgentSoul:input_type -> agent.public.v1.ChangeAgentSoulRequest
-	56, // 34: agent.public.v1.AgentWorkService.EnsureApplicationAgent:input_type -> agent.public.v1.EnsureApplicationAgentRequest
-	57, // 35: agent.public.v1.AgentWorkService.GetAgentWorkDefaults:input_type -> agent.public.v1.GetAgentWorkDefaultsRequest
-	58, // 36: agent.public.v1.AgentWorkService.ChangeAgentWorkDefaults:input_type -> agent.public.v1.ChangeAgentWorkDefaultsRequest
-	59, // 37: agent.public.v1.AgentWorkService.GetWorkCapabilities:input_type -> agent.public.v1.GetWorkCapabilitiesRequest
-	60, // 38: agent.public.v1.AgentWorkService.GetWorkPluginResults:input_type -> agent.public.v1.GetWorkPluginResultsRequest
-	61, // 39: agent.public.v1.AgentWorkService.GetWorkServiceAccess:input_type -> agent.public.v1.GetWorkServiceAccessRequest
-	36, // 40: agent.public.v1.AgentWorkService.CancelTurn:input_type -> agent.public.v1.CancelTurnRequest
-	38, // 41: agent.public.v1.AgentWorkService.GetCurrentTurn:input_type -> agent.public.v1.GetCurrentTurnRequest
-	34, // 42: agent.public.v1.AgentWorkService.ListPendingInteractions:input_type -> agent.public.v1.ListPendingInteractionsRequest
-	13, // 43: agent.public.v1.AgentWorkService.GetWork:input_type -> agent.public.v1.GetWorkRequest
-	7,  // 44: agent.public.v1.AgentWorkService.ChangeWorkVisibility:input_type -> agent.public.v1.ChangeWorkVisibilityRequest
-	9,  // 45: agent.public.v1.AgentWorkService.RevokeWorkShare:input_type -> agent.public.v1.RevokeWorkShareRequest
-	40, // 46: agent.public.v1.AgentWorkService.ListWorkLifecycleEvents:input_type -> agent.public.v1.ListWorkLifecycleEventsRequest
-	15, // 47: agent.public.v1.AgentWorkService.StopWork:input_type -> agent.public.v1.StopWorkRequest
-	17, // 48: agent.public.v1.AgentWorkService.ResumeWork:input_type -> agent.public.v1.ResumeWorkRequest
-	19, // 49: agent.public.v1.AgentWorkService.RestartWork:input_type -> agent.public.v1.RestartWorkRequest
-	21, // 50: agent.public.v1.AgentWorkService.ArchiveWork:input_type -> agent.public.v1.ArchiveWorkRequest
-	23, // 51: agent.public.v1.AgentWorkService.SendMessage:input_type -> agent.public.v1.SendMessageRequest
-	25, // 52: agent.public.v1.AgentWorkService.RespondToInteraction:input_type -> agent.public.v1.RespondToInteractionRequest
-	2,  // 53: agent.public.v1.AgentWorkService.SetThinkingLevel:input_type -> agent.public.v1.SetThinkingLevelRequest
-	4,  // 54: agent.public.v1.AgentWorkService.GetThinkingLevel:input_type -> agent.public.v1.GetThinkingLevelRequest
-	0,  // 55: agent.public.v1.AgentWorkService.SetPermissionMode:input_type -> agent.public.v1.SetPermissionModeRequest
-	62, // 56: agent.public.v1.AgentWorkService.ChangeWorkAgentAppearance:output_type -> agent.public.v1.ChangeWorkAgentAppearanceResponse
-	63, // 57: agent.public.v1.AgentWorkService.GetMyWorkAgent:output_type -> agent.public.v1.GetMyWorkAgentResponse
-	64, // 58: agent.public.v1.AgentWorkService.EnsureMyWorkAgent:output_type -> agent.public.v1.EnsureMyWorkAgentResponse
-	65, // 59: agent.public.v1.AgentWorkService.GetAgentSoul:output_type -> agent.public.v1.GetAgentSoulResponse
-	66, // 60: agent.public.v1.AgentWorkService.ChangeAgentSoul:output_type -> agent.public.v1.ChangeAgentSoulResponse
-	67, // 61: agent.public.v1.AgentWorkService.EnsureApplicationAgent:output_type -> agent.public.v1.EnsureApplicationAgentResponse
-	68, // 62: agent.public.v1.AgentWorkService.GetAgentWorkDefaults:output_type -> agent.public.v1.GetAgentWorkDefaultsResponse
-	69, // 63: agent.public.v1.AgentWorkService.ChangeAgentWorkDefaults:output_type -> agent.public.v1.ChangeAgentWorkDefaultsResponse
-	70, // 64: agent.public.v1.AgentWorkService.GetWorkCapabilities:output_type -> agent.public.v1.GetWorkCapabilitiesResponse
-	71, // 65: agent.public.v1.AgentWorkService.GetWorkPluginResults:output_type -> agent.public.v1.GetWorkPluginResultsResponse
-	72, // 66: agent.public.v1.AgentWorkService.GetWorkServiceAccess:output_type -> agent.public.v1.GetWorkServiceAccessResponse
-	37, // 67: agent.public.v1.AgentWorkService.CancelTurn:output_type -> agent.public.v1.CancelTurnResponse
-	39, // 68: agent.public.v1.AgentWorkService.GetCurrentTurn:output_type -> agent.public.v1.GetCurrentTurnResponse
-	35, // 69: agent.public.v1.AgentWorkService.ListPendingInteractions:output_type -> agent.public.v1.ListPendingInteractionsResponse
-	14, // 70: agent.public.v1.AgentWorkService.GetWork:output_type -> agent.public.v1.GetWorkResponse
-	8,  // 71: agent.public.v1.AgentWorkService.ChangeWorkVisibility:output_type -> agent.public.v1.ChangeWorkVisibilityResponse
-	10, // 72: agent.public.v1.AgentWorkService.RevokeWorkShare:output_type -> agent.public.v1.RevokeWorkShareResponse
-	41, // 73: agent.public.v1.AgentWorkService.ListWorkLifecycleEvents:output_type -> agent.public.v1.ListWorkLifecycleEventsResponse
-	16, // 74: agent.public.v1.AgentWorkService.StopWork:output_type -> agent.public.v1.StopWorkResponse
-	18, // 75: agent.public.v1.AgentWorkService.ResumeWork:output_type -> agent.public.v1.ResumeWorkResponse
-	20, // 76: agent.public.v1.AgentWorkService.RestartWork:output_type -> agent.public.v1.RestartWorkResponse
-	22, // 77: agent.public.v1.AgentWorkService.ArchiveWork:output_type -> agent.public.v1.ArchiveWorkResponse
-	24, // 78: agent.public.v1.AgentWorkService.SendMessage:output_type -> agent.public.v1.SendMessageResponse
-	26, // 79: agent.public.v1.AgentWorkService.RespondToInteraction:output_type -> agent.public.v1.RespondToInteractionResponse
-	3,  // 80: agent.public.v1.AgentWorkService.SetThinkingLevel:output_type -> agent.public.v1.SetThinkingLevelResponse
-	5,  // 81: agent.public.v1.AgentWorkService.GetThinkingLevel:output_type -> agent.public.v1.GetThinkingLevelResponse
-	1,  // 82: agent.public.v1.AgentWorkService.SetPermissionMode:output_type -> agent.public.v1.SetPermissionModeResponse
-	56, // [56:83] is the sub-list for method output_type
-	29, // [29:56] is the sub-list for method input_type
+	56, // 34: agent.public.v1.AgentWorkService.GetAgentWorkspaceInstructions:input_type -> agent.public.v1.GetAgentWorkspaceInstructionsRequest
+	57, // 35: agent.public.v1.AgentWorkService.ChangeAgentWorkspaceInstructions:input_type -> agent.public.v1.ChangeAgentWorkspaceInstructionsRequest
+	58, // 36: agent.public.v1.AgentWorkService.EnsureApplicationAgent:input_type -> agent.public.v1.EnsureApplicationAgentRequest
+	59, // 37: agent.public.v1.AgentWorkService.GetAgentWorkDefaults:input_type -> agent.public.v1.GetAgentWorkDefaultsRequest
+	60, // 38: agent.public.v1.AgentWorkService.ChangeAgentWorkDefaults:input_type -> agent.public.v1.ChangeAgentWorkDefaultsRequest
+	61, // 39: agent.public.v1.AgentWorkService.GetWorkCapabilities:input_type -> agent.public.v1.GetWorkCapabilitiesRequest
+	62, // 40: agent.public.v1.AgentWorkService.GetWorkPluginResults:input_type -> agent.public.v1.GetWorkPluginResultsRequest
+	63, // 41: agent.public.v1.AgentWorkService.GetWorkServiceAccess:input_type -> agent.public.v1.GetWorkServiceAccessRequest
+	36, // 42: agent.public.v1.AgentWorkService.CancelTurn:input_type -> agent.public.v1.CancelTurnRequest
+	38, // 43: agent.public.v1.AgentWorkService.GetCurrentTurn:input_type -> agent.public.v1.GetCurrentTurnRequest
+	34, // 44: agent.public.v1.AgentWorkService.ListPendingInteractions:input_type -> agent.public.v1.ListPendingInteractionsRequest
+	13, // 45: agent.public.v1.AgentWorkService.GetWork:input_type -> agent.public.v1.GetWorkRequest
+	7,  // 46: agent.public.v1.AgentWorkService.ChangeWorkVisibility:input_type -> agent.public.v1.ChangeWorkVisibilityRequest
+	9,  // 47: agent.public.v1.AgentWorkService.RevokeWorkShare:input_type -> agent.public.v1.RevokeWorkShareRequest
+	40, // 48: agent.public.v1.AgentWorkService.ListWorkLifecycleEvents:input_type -> agent.public.v1.ListWorkLifecycleEventsRequest
+	15, // 49: agent.public.v1.AgentWorkService.StopWork:input_type -> agent.public.v1.StopWorkRequest
+	17, // 50: agent.public.v1.AgentWorkService.ResumeWork:input_type -> agent.public.v1.ResumeWorkRequest
+	19, // 51: agent.public.v1.AgentWorkService.RestartWork:input_type -> agent.public.v1.RestartWorkRequest
+	21, // 52: agent.public.v1.AgentWorkService.ArchiveWork:input_type -> agent.public.v1.ArchiveWorkRequest
+	23, // 53: agent.public.v1.AgentWorkService.SendMessage:input_type -> agent.public.v1.SendMessageRequest
+	25, // 54: agent.public.v1.AgentWorkService.RespondToInteraction:input_type -> agent.public.v1.RespondToInteractionRequest
+	2,  // 55: agent.public.v1.AgentWorkService.SetThinkingLevel:input_type -> agent.public.v1.SetThinkingLevelRequest
+	4,  // 56: agent.public.v1.AgentWorkService.GetThinkingLevel:input_type -> agent.public.v1.GetThinkingLevelRequest
+	0,  // 57: agent.public.v1.AgentWorkService.SetPermissionMode:input_type -> agent.public.v1.SetPermissionModeRequest
+	64, // 58: agent.public.v1.AgentWorkService.ChangeWorkAgentAppearance:output_type -> agent.public.v1.ChangeWorkAgentAppearanceResponse
+	65, // 59: agent.public.v1.AgentWorkService.GetMyWorkAgent:output_type -> agent.public.v1.GetMyWorkAgentResponse
+	66, // 60: agent.public.v1.AgentWorkService.EnsureMyWorkAgent:output_type -> agent.public.v1.EnsureMyWorkAgentResponse
+	67, // 61: agent.public.v1.AgentWorkService.GetAgentSoul:output_type -> agent.public.v1.GetAgentSoulResponse
+	68, // 62: agent.public.v1.AgentWorkService.ChangeAgentSoul:output_type -> agent.public.v1.ChangeAgentSoulResponse
+	69, // 63: agent.public.v1.AgentWorkService.GetAgentWorkspaceInstructions:output_type -> agent.public.v1.GetAgentWorkspaceInstructionsResponse
+	70, // 64: agent.public.v1.AgentWorkService.ChangeAgentWorkspaceInstructions:output_type -> agent.public.v1.ChangeAgentWorkspaceInstructionsResponse
+	71, // 65: agent.public.v1.AgentWorkService.EnsureApplicationAgent:output_type -> agent.public.v1.EnsureApplicationAgentResponse
+	72, // 66: agent.public.v1.AgentWorkService.GetAgentWorkDefaults:output_type -> agent.public.v1.GetAgentWorkDefaultsResponse
+	73, // 67: agent.public.v1.AgentWorkService.ChangeAgentWorkDefaults:output_type -> agent.public.v1.ChangeAgentWorkDefaultsResponse
+	74, // 68: agent.public.v1.AgentWorkService.GetWorkCapabilities:output_type -> agent.public.v1.GetWorkCapabilitiesResponse
+	75, // 69: agent.public.v1.AgentWorkService.GetWorkPluginResults:output_type -> agent.public.v1.GetWorkPluginResultsResponse
+	76, // 70: agent.public.v1.AgentWorkService.GetWorkServiceAccess:output_type -> agent.public.v1.GetWorkServiceAccessResponse
+	37, // 71: agent.public.v1.AgentWorkService.CancelTurn:output_type -> agent.public.v1.CancelTurnResponse
+	39, // 72: agent.public.v1.AgentWorkService.GetCurrentTurn:output_type -> agent.public.v1.GetCurrentTurnResponse
+	35, // 73: agent.public.v1.AgentWorkService.ListPendingInteractions:output_type -> agent.public.v1.ListPendingInteractionsResponse
+	14, // 74: agent.public.v1.AgentWorkService.GetWork:output_type -> agent.public.v1.GetWorkResponse
+	8,  // 75: agent.public.v1.AgentWorkService.ChangeWorkVisibility:output_type -> agent.public.v1.ChangeWorkVisibilityResponse
+	10, // 76: agent.public.v1.AgentWorkService.RevokeWorkShare:output_type -> agent.public.v1.RevokeWorkShareResponse
+	41, // 77: agent.public.v1.AgentWorkService.ListWorkLifecycleEvents:output_type -> agent.public.v1.ListWorkLifecycleEventsResponse
+	16, // 78: agent.public.v1.AgentWorkService.StopWork:output_type -> agent.public.v1.StopWorkResponse
+	18, // 79: agent.public.v1.AgentWorkService.ResumeWork:output_type -> agent.public.v1.ResumeWorkResponse
+	20, // 80: agent.public.v1.AgentWorkService.RestartWork:output_type -> agent.public.v1.RestartWorkResponse
+	22, // 81: agent.public.v1.AgentWorkService.ArchiveWork:output_type -> agent.public.v1.ArchiveWorkResponse
+	24, // 82: agent.public.v1.AgentWorkService.SendMessage:output_type -> agent.public.v1.SendMessageResponse
+	26, // 83: agent.public.v1.AgentWorkService.RespondToInteraction:output_type -> agent.public.v1.RespondToInteractionResponse
+	3,  // 84: agent.public.v1.AgentWorkService.SetThinkingLevel:output_type -> agent.public.v1.SetThinkingLevelResponse
+	5,  // 85: agent.public.v1.AgentWorkService.GetThinkingLevel:output_type -> agent.public.v1.GetThinkingLevelResponse
+	1,  // 86: agent.public.v1.AgentWorkService.SetPermissionMode:output_type -> agent.public.v1.SetPermissionModeResponse
+	58, // [58:87] is the sub-list for method output_type
+	29, // [29:58] is the sub-list for method input_type
 	29, // [29:29] is the sub-list for extension type_name
 	29, // [29:29] is the sub-list for extension extendee
 	0,  // [0:29] is the sub-list for field type_name
@@ -3065,6 +3077,7 @@ func file_agent_public_v1_work_proto_init() {
 	file_agent_public_v1_soul_proto_init()
 	file_agent_public_v1_startup_proto_init()
 	file_agent_public_v1_work_defaults_proto_init()
+	file_agent_public_v1_workspace_instructions_proto_init()
 	file_agent_public_v1_work_proto_msgTypes[15].OneofWrappers = []any{}
 	file_agent_public_v1_work_proto_msgTypes[17].OneofWrappers = []any{}
 	file_agent_public_v1_work_proto_msgTypes[19].OneofWrappers = []any{}

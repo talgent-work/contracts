@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package agent.public.v1;
+
+option go_package = "github.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1";
+
+// GetAgentWorkspaceInstructionsRequest names the Agent whose Workspace
+// Instructions are read.
+message GetAgentWorkspaceInstructionsRequest {
+  // AgentDefinition identity.
+  string agent_id = 1;
+}
+
+// GetAgentWorkspaceInstructionsResponse carries the Agent's Workspace
+// Instructions.
+message GetAgentWorkspaceInstructionsResponse {
+  // Project instructions for its Works' workspaces, at most 40000
+  // characters; empty when unset.
+  string instructions = 1;
+}
+
+// ChangeAgentWorkspaceInstructionsRequest replaces the Agent's Workspace
+// Instructions.
+message ChangeAgentWorkspaceInstructionsRequest {
+  // AgentDefinition identity.
+  string agent_id = 1;
+  // Project instructions for its Works' workspaces, at most 40000
+  // characters; empty clears them.
+  string instructions = 2;
+}
+
+// ChangeAgentWorkspaceInstructionsResponse carries the Workspace Instructions
+// as saved.
+message ChangeAgentWorkspaceInstructionsResponse {
+  // The saved Workspace Instructions.
+  string instructions = 1;
+}

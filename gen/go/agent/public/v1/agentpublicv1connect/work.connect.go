@@ -39,6 +39,12 @@ const (
 	// AgentWorkServiceChangeAgentSoulProcedure is the procedure name of the AgentWorkService's
 	// ChangeAgentSoul RPC.
 	AgentWorkServiceChangeAgentSoulProcedure = "/agent.public.v1.AgentWorkService/ChangeAgentSoul"
+	// AgentWorkServiceGetAgentWorkspaceInstructionsProcedure is the procedure name of the
+	// AgentWorkService's GetAgentWorkspaceInstructions RPC.
+	AgentWorkServiceGetAgentWorkspaceInstructionsProcedure = "/agent.public.v1.AgentWorkService/GetAgentWorkspaceInstructions"
+	// AgentWorkServiceChangeAgentWorkspaceInstructionsProcedure is the procedure name of the
+	// AgentWorkService's ChangeAgentWorkspaceInstructions RPC.
+	AgentWorkServiceChangeAgentWorkspaceInstructionsProcedure = "/agent.public.v1.AgentWorkService/ChangeAgentWorkspaceInstructions"
 	// AgentWorkServiceEnsureApplicationAgentProcedure is the procedure name of the AgentWorkService's
 	// EnsureApplicationAgent RPC.
 	AgentWorkServiceEnsureApplicationAgentProcedure = "/agent.public.v1.AgentWorkService/EnsureApplicationAgent"
@@ -139,6 +145,20 @@ var (
 			StreamType: connect.StreamTypeUnary,
 			Schema:     v1.File_agent_public_v1_work_proto.Services().ByName("AgentWorkService").Methods().ByName("ChangeAgentSoul"),
 			Procedure:  AgentWorkServiceChangeAgentSoulProcedure,
+		}
+	})
+	agentWorkServiceGetAgentWorkspaceInstructionsSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_agent_public_v1_work_proto.Services().ByName("AgentWorkService").Methods().ByName("GetAgentWorkspaceInstructions"),
+			Procedure:  AgentWorkServiceGetAgentWorkspaceInstructionsProcedure,
+		}
+	})
+	agentWorkServiceChangeAgentWorkspaceInstructionsSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_agent_public_v1_work_proto.Services().ByName("AgentWorkService").Methods().ByName("ChangeAgentWorkspaceInstructions"),
+			Procedure:  AgentWorkServiceChangeAgentWorkspaceInstructionsProcedure,
 		}
 	})
 	agentWorkServiceEnsureApplicationAgentSpec = sync.OnceValue(func() connect.Spec {
@@ -317,6 +337,16 @@ type AgentWorkServiceClient interface {
 	// Application's Agent's Application Owner, may. Each
 	// of its Works takes it up at its next start; running Turns are unaffected.
 	ChangeAgentSoul(context.Context, *v1.ChangeAgentSoulRequest) (*v1.ChangeAgentSoulResponse, error)
+	// GetAgentWorkspaceInstructions reads an Agent's Workspace Instructions;
+	// only one of its Owners, or an Application's Agent's Application Owner,
+	// may read them here.
+	GetAgentWorkspaceInstructions(context.Context, *v1.GetAgentWorkspaceInstructionsRequest) (*v1.GetAgentWorkspaceInstructionsResponse, error)
+	// ChangeAgentWorkspaceInstructions replaces an Agent's Workspace
+	// Instructions; only one of its Owners, or an Application's Agent's
+	// Application Owner, may. Each of its Works places them at its workspace
+	// root at its next start, where anyone who can read that workspace reads
+	// them; running Turns are unaffected.
+	ChangeAgentWorkspaceInstructions(context.Context, *v1.ChangeAgentWorkspaceInstructionsRequest) (*v1.ChangeAgentWorkspaceInstructionsResponse, error)
 	// EnsureApplicationAgent returns the Agent of an Application the caller
 	// owns, establishing it on its first need; PermissionDenied for any other
 	// Application and for a removed one.
@@ -406,6 +436,16 @@ type AgentWorkServiceHandler interface {
 	// Application's Agent's Application Owner, may. Each
 	// of its Works takes it up at its next start; running Turns are unaffected.
 	ChangeAgentSoul(context.Context, *v1.ChangeAgentSoulRequest) (*v1.ChangeAgentSoulResponse, error)
+	// GetAgentWorkspaceInstructions reads an Agent's Workspace Instructions;
+	// only one of its Owners, or an Application's Agent's Application Owner,
+	// may read them here.
+	GetAgentWorkspaceInstructions(context.Context, *v1.GetAgentWorkspaceInstructionsRequest) (*v1.GetAgentWorkspaceInstructionsResponse, error)
+	// ChangeAgentWorkspaceInstructions replaces an Agent's Workspace
+	// Instructions; only one of its Owners, or an Application's Agent's
+	// Application Owner, may. Each of its Works places them at its workspace
+	// root at its next start, where anyone who can read that workspace reads
+	// them; running Turns are unaffected.
+	ChangeAgentWorkspaceInstructions(context.Context, *v1.ChangeAgentWorkspaceInstructionsRequest) (*v1.ChangeAgentWorkspaceInstructionsResponse, error)
 	// EnsureApplicationAgent returns the Agent of an Application the caller
 	// owns, establishing it on its first need; PermissionDenied for any other
 	// Application and for a removed one.
@@ -479,6 +519,8 @@ func RegisterAgentWorkServiceHandler(server *connect.Server, svc AgentWorkServic
 		connect.Method{Spec: agentWorkServiceEnsureMyWorkAgentSpec(), Handler: adapter.ensureMyWorkAgent},
 		connect.Method{Spec: agentWorkServiceGetAgentSoulSpec(), Handler: adapter.getAgentSoul},
 		connect.Method{Spec: agentWorkServiceChangeAgentSoulSpec(), Handler: adapter.changeAgentSoul},
+		connect.Method{Spec: agentWorkServiceGetAgentWorkspaceInstructionsSpec(), Handler: adapter.getAgentWorkspaceInstructions},
+		connect.Method{Spec: agentWorkServiceChangeAgentWorkspaceInstructionsSpec(), Handler: adapter.changeAgentWorkspaceInstructions},
 		connect.Method{Spec: agentWorkServiceEnsureApplicationAgentSpec(), Handler: adapter.ensureApplicationAgent},
 		connect.Method{Spec: agentWorkServiceGetAgentWorkDefaultsSpec(), Handler: adapter.getAgentWorkDefaults},
 		connect.Method{Spec: agentWorkServiceChangeAgentWorkDefaultsSpec(), Handler: adapter.changeAgentWorkDefaults},
@@ -525,6 +567,14 @@ func (UnimplementedAgentWorkServiceHandler) GetAgentSoul(context.Context, *v1.Ge
 
 func (UnimplementedAgentWorkServiceHandler) ChangeAgentSoul(context.Context, *v1.ChangeAgentSoulRequest) (*v1.ChangeAgentSoulResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, "agent.public.v1.AgentWorkService.ChangeAgentSoul is not implemented")
+}
+
+func (UnimplementedAgentWorkServiceHandler) GetAgentWorkspaceInstructions(context.Context, *v1.GetAgentWorkspaceInstructionsRequest) (*v1.GetAgentWorkspaceInstructionsResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "agent.public.v1.AgentWorkService.GetAgentWorkspaceInstructions is not implemented")
+}
+
+func (UnimplementedAgentWorkServiceHandler) ChangeAgentWorkspaceInstructions(context.Context, *v1.ChangeAgentWorkspaceInstructionsRequest) (*v1.ChangeAgentWorkspaceInstructionsResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "agent.public.v1.AgentWorkService.ChangeAgentWorkspaceInstructions is not implemented")
 }
 
 func (UnimplementedAgentWorkServiceHandler) EnsureApplicationAgent(context.Context, *v1.EnsureApplicationAgentRequest) (*v1.EnsureApplicationAgentResponse, error) {
@@ -654,6 +704,22 @@ func (c *agentWorkServiceClient) GetAgentSoul(ctx context.Context, req *v1.GetAg
 func (c *agentWorkServiceClient) ChangeAgentSoul(ctx context.Context, req *v1.ChangeAgentSoulRequest) (*v1.ChangeAgentSoulResponse, error) {
 	var res v1.ChangeAgentSoulResponse
 	if err := c.client.CallUnary(ctx, agentWorkServiceChangeAgentSoulSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *agentWorkServiceClient) GetAgentWorkspaceInstructions(ctx context.Context, req *v1.GetAgentWorkspaceInstructionsRequest) (*v1.GetAgentWorkspaceInstructionsResponse, error) {
+	var res v1.GetAgentWorkspaceInstructionsResponse
+	if err := c.client.CallUnary(ctx, agentWorkServiceGetAgentWorkspaceInstructionsSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *agentWorkServiceClient) ChangeAgentWorkspaceInstructions(ctx context.Context, req *v1.ChangeAgentWorkspaceInstructionsRequest) (*v1.ChangeAgentWorkspaceInstructionsResponse, error) {
+	var res v1.ChangeAgentWorkspaceInstructionsResponse
+	if err := c.client.CallUnary(ctx, agentWorkServiceChangeAgentWorkspaceInstructionsSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
@@ -891,6 +957,30 @@ func (h agentWorkServiceHandler) changeAgentSoul(ctx context.Context, _ connect.
 		return err
 	}
 	res, err := h.svc.ChangeAgentSoul(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h agentWorkServiceHandler) getAgentWorkspaceInstructions(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.GetAgentWorkspaceInstructionsRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.GetAgentWorkspaceInstructions(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h agentWorkServiceHandler) changeAgentWorkspaceInstructions(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.ChangeAgentWorkspaceInstructionsRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.ChangeAgentWorkspaceInstructions(ctx, &req)
 	if err != nil {
 		return err
 	}

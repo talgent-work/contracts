@@ -959,14 +959,14 @@ export declare type CreationConnector = Message<"agent.public.v1.CreationConnect
   /**
    * True adds the Connector; false removes a default. Required entries stay.
    *
-   * @generated from field: bool include = 2;
+   * @generated from field: bool include = 1;
    */
   include: boolean;
 
   /**
    * Connector identity. A Work refuses two selected Connectors of one name.
    *
-   * @generated from field: string connector_id = 3;
+   * @generated from field: string connector_id = 2;
    */
   connectorId: string;
 };

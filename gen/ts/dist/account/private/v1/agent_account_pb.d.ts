@@ -28,14 +28,14 @@ export declare type IssueWorkIdentityTokenRequest = Message<"account.private.v1.
   /**
    * The Work's AgentDefinition.
    *
-   * @generated from field: string agent_id = 3;
+   * @generated from field: string agent_id = 2;
    */
   agentId: string;
 
   /**
    * The purpose of the Work's AgentDefinition.
    *
-   * @generated from field: string purpose = 4;
+   * @generated from field: string purpose = 3;
    */
   purpose: string;
 
@@ -43,7 +43,7 @@ export declare type IssueWorkIdentityTokenRequest = Message<"account.private.v1.
    * The Account id of the person the Agent represents; empty for an Agent
    * that represents no one, such as the PM Coordinator.
    *
-   * @generated from field: string represented_user_id = 7;
+   * @generated from field: string represented_user_id = 4;
    */
   representedUserId: string;
 
@@ -51,7 +51,7 @@ export declare type IssueWorkIdentityTokenRequest = Message<"account.private.v1.
    * The Application that owns the Work, a canonical lowercase UUID; empty for
    * a Work no Application owns. Such a Work represents no person.
    *
-   * @generated from field: string application_id = 8;
+   * @generated from field: string application_id = 5;
    */
   applicationId: string;
 
@@ -59,7 +59,7 @@ export declare type IssueWorkIdentityTokenRequest = Message<"account.private.v1.
    * The Work's Work Labels, which its starter defined: at most 16 pairs, keys
    * of at most 64 characters and values of at most 256.
    *
-   * @generated from field: map<string, string> work_labels = 9;
+   * @generated from field: map<string, string> work_labels = 6;
    */
   workLabels: { [key: string]: string };
 
@@ -67,14 +67,14 @@ export declare type IssueWorkIdentityTokenRequest = Message<"account.private.v1.
    * The kind of the Work's Work Caller, in whose name it was started, such as
    * "person", "application" or "project"; required.
    *
-   * @generated from field: string work_caller_kind = 10;
+   * @generated from field: string work_caller_kind = 7;
    */
   workCallerKind: string;
 
   /**
    * The identity of the Work's Work Caller; required.
    *
-   * @generated from field: string work_caller_id = 11;
+   * @generated from field: string work_caller_id = 8;
    */
   workCallerId: string;
 
@@ -82,14 +82,14 @@ export declare type IssueWorkIdentityTokenRequest = Message<"account.private.v1.
    * The kind of the Work's Work Key; empty, with work_key_id, for a Work
    * without one.
    *
-   * @generated from field: string work_key_kind = 12;
+   * @generated from field: string work_key_kind = 9;
    */
   workKeyKind: string;
 
   /**
    * The identity of the Work's Work Key.
    *
-   * @generated from field: string work_key_id = 13;
+   * @generated from field: string work_key_id = 10;
    */
   workKeyId: string;
 
@@ -97,14 +97,14 @@ export declare type IssueWorkIdentityTokenRequest = Message<"account.private.v1.
    * The kind of the Work's File Home; empty, with file_home_id, for a Work
    * without one.
    *
-   * @generated from field: string file_home_kind = 14;
+   * @generated from field: string file_home_kind = 11;
    */
   fileHomeKind: string;
 
   /**
    * The identity of the Work's File Home.
    *
-   * @generated from field: string file_home_id = 15;
+   * @generated from field: string file_home_id = 12;
    */
   fileHomeId: string;
 };

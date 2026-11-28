@@ -28,72 +28,68 @@ service WorkFactsService {
 message WorkFacts {
   // Stable Work identity.
   string work_id = 1;
-  reserved 2, 3;
-  reserved "subject", "project_id";
   // The Work Caller the Work was started in the name of.
-  agent.public.v1.WorkCaller work_caller = 18;
+  agent.public.v1.WorkCaller work_caller = 2;
   // The Work's Work Key; absent for a Work without one.
-  agent.public.v1.WorkKey work_key = 19;
+  agent.public.v1.WorkKey work_key = 3;
   // The Work's File Home; absent for a Work without one.
-  agent.public.v1.FileHome file_home = 20;
+  agent.public.v1.FileHome file_home = 4;
   // The Work's Agent Owner: its definition's Owner.
-  string agent_owner = 4;
+  string agent_owner = 5;
   // Who started the Work, a fact.
-  string started_by = 5;
+  string started_by = 6;
   // Authoritative Work lifecycle state.
-  string state = 6;
+  string state = 7;
   // Accepted stop or abnormal-completion reason.
-  string state_reason = 7;
+  string state_reason = 8;
   // Retained runtime diagnostic; set only by GetWorkFacts.
-  string diagnostic_reason = 8;
+  string diagnostic_reason = 9;
   // Persisted Plan/TODO snapshot; set only by GetWorkFacts.
-  agent.public.v1.WorkProgress work_progress = 9;
+  agent.public.v1.WorkProgress work_progress = 10;
   // Recoverable startup facts; set only by GetWorkFacts.
-  agent.public.v1.StartupProgress startup_progress = 10;
+  agent.public.v1.StartupProgress startup_progress = 11;
   // When the Work was started.
-  google.protobuf.Timestamp created_at = 11;
+  google.protobuf.Timestamp created_at = 12;
   // Last persisted Work update.
-  google.protobuf.Timestamp updated_at = 12;
+  google.protobuf.Timestamp updated_at = 13;
   // The Work's Turn awaits the user's answer; Waiting is not a lifecycle
   // state.
-  bool waiting = 13;
+  bool waiting = 14;
   // Permanent closure has been accepted and is awaiting completion.
-  bool archive_pending = 14;
+  bool archive_pending = 15;
   // The message stream is public to the members of the Work's Work Caller;
   // otherwise private.
-  bool visibility_public = 15;
+  bool visibility_public = 16;
   // The Work's start waits in its Computer's line for room; set only by
   // GetWorkFacts.
-  bool desk_waiting = 16;
+  bool desk_waiting = 17;
   // The origin of the Work's current Disconnection; absent while its
   // execution environment is observed.
-  google.protobuf.Timestamp disconnected_since = 17;
+  google.protobuf.Timestamp disconnected_since = 18;
 }
 
 // ListWorksRequest selects Works; at least a Work Caller, an owner or
 // identities.
 message ListWorksRequest {
-  reserved 1;
-  reserved "project_id";
   // The Work Caller of every listed Work.
-  agent.public.v1.WorkCaller work_caller = 9;
+  agent.public.v1.WorkCaller work_caller = 1;
   // The Work Key of every listed Work, across definitions; requires a Work
   // Caller.
-  agent.public.v1.WorkKey work_key = 10;
+  agent.public.v1.WorkKey work_key = 2;
   // Opaque definition purpose.
-  string purpose = 2;
+  string purpose = 3;
   // Works whose definition this person owns.
-  string agent_owner = 3;
+  string agent_owner = 4;
   // Work identities, at most 500.
-  repeated string work_ids = 4;
+  repeated string work_ids = 5;
   // Order by last update descending instead of identity ascending.
-  bool recent = 5;
+  bool recent = 6;
   // Optional archive category.
-  optional bool archived = 6;
+  optional bool archived = 7;
   // Maximum results; defaults and caps at 500.
-  int32 limit = 7;
+  int32 limit = 8;
   // Exclusive identity cursor for ascending order.
-  string after = 8;
+  string after = 9;
 }
 
 // ListWorksResponse lists the matching Works.
@@ -116,10 +112,8 @@ message GetWorkFactsResponse {
 
 // GetWorkReportRequest selects reported Works and fixed UTC buckets.
 message GetWorkReportRequest {
-  reserved 1;
-  reserved "project_id";
   // The Work Caller of every reported Work; required.
-  agent.public.v1.WorkCaller work_caller = 5;
+  agent.public.v1.WorkCaller work_caller = 1;
   // Opaque definition purpose.
   string purpose = 2;
   // One of 24h, 7d or 30d.

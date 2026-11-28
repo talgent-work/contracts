@@ -266,49 +266,49 @@ export declare type File = Message<"storage.private.v1.File"> & {
   /**
    * Size in bytes.
    *
-   * @generated from field: int64 size_bytes = 4;
+   * @generated from field: int64 size_bytes = 2;
    */
   sizeBytes: bigint;
 
   /**
    * Media type: the uploaded type, or the one of the name's extension.
    *
-   * @generated from field: string content_type = 5;
+   * @generated from field: string content_type = 3;
    */
   contentType: string;
 
   /**
    * Last time the content changed.
    *
-   * @generated from field: google.protobuf.Timestamp updated_at = 6;
+   * @generated from field: google.protobuf.Timestamp updated_at = 4;
    */
   updatedAt?: Timestamp;
 
   /**
    * Human who uploaded an Attachment.
    *
-   * @generated from field: string uploader_user_id = 7;
+   * @generated from field: string uploader_user_id = 5;
    */
   uploaderUserId: string;
 
   /**
    * Work that published an Artifact.
    *
-   * @generated from field: string work_id = 8;
+   * @generated from field: string work_id = 6;
    */
   workId: string;
 
   /**
    * Active Share Links.
    *
-   * @generated from field: repeated storage.private.v1.ShareLink share_links = 9;
+   * @generated from field: repeated storage.private.v1.ShareLink share_links = 7;
    */
   shareLinks: ShareLink[];
 
   /**
    * Application that uploaded an Attachment.
    *
-   * @generated from field: string uploader_application_id = 10;
+   * @generated from field: string uploader_application_id = 8;
    */
   uploaderApplicationId: string;
 };

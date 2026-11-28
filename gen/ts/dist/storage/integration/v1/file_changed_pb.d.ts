@@ -94,49 +94,49 @@ export declare type FileChangedV1 = Message<"storage.integration.v1.FileChangedV
   /**
    * The Directory the file is in.
    *
-   * @generated from field: storage.integration.v1.Directory directory = 10;
+   * @generated from field: storage.integration.v1.Directory directory = 3;
    */
   directory?: Directory;
 
   /**
    * The file's name after the change; for a deletion, the name it had.
    *
-   * @generated from field: string name = 5;
+   * @generated from field: string name = 4;
    */
   name: string;
 
   /**
    * The former name of a renamed file; empty otherwise.
    *
-   * @generated from field: string previous_name = 6;
+   * @generated from field: string previous_name = 5;
    */
   previousName: string;
 
   /**
    * How the file changed.
    *
-   * @generated from field: storage.integration.v1.FileOperation operation = 7;
+   * @generated from field: storage.integration.v1.FileOperation operation = 6;
    */
   operation: FileOperation;
 
   /**
    * The person who made the change.
    *
-   * @generated from field: string actor_user_id = 8;
+   * @generated from field: string actor_user_id = 7;
    */
   actorUserId: string;
 
   /**
    * The Work whose Agent made the change.
    *
-   * @generated from field: string actor_work_id = 9;
+   * @generated from field: string actor_work_id = 8;
    */
   actorWorkId: string;
 
   /**
    * The Application that made the change.
    *
-   * @generated from field: string actor_application_id = 11;
+   * @generated from field: string actor_application_id = 9;
    */
   actorApplicationId: string;
 };

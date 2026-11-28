@@ -654,9 +654,9 @@ func (x *CapabilityDifferences) GetRequiredPlugins() []string {
 type ConnectorChoice struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// True adds the Connector; false removes a default. Required entries stay.
-	Include bool `protobuf:"varint,2,opt,name=include,proto3" json:"include,omitempty"`
+	Include bool `protobuf:"varint,1,opt,name=include,proto3" json:"include,omitempty"`
 	// Connector identity. A Work refuses two selected Connectors of one name.
-	ConnectorId   string `protobuf:"bytes,3,opt,name=connector_id,json=connectorId,proto3" json:"connector_id,omitempty"`
+	ConnectorId   string `protobuf:"bytes,2,opt,name=connector_id,json=connectorId,proto3" json:"connector_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -774,7 +774,7 @@ type CreateAgentDefinitionRequest struct {
 	// Usage scope authorized by the calling business context.
 	UsageScope *UsageScope `protobuf:"bytes,5,opt,name=usage_scope,json=usageScope,proto3" json:"usage_scope,omitempty"`
 	// Visibility of the definition's new Works.
-	VisibilityRule *VisibilityRule `protobuf:"bytes,7,opt,name=visibility_rule,json=visibilityRule,proto3" json:"visibility_rule,omitempty"`
+	VisibilityRule *VisibilityRule `protobuf:"bytes,6,opt,name=visibility_rule,json=visibilityRule,proto3" json:"visibility_rule,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -958,41 +958,41 @@ type CreateWorkRequest struct {
 	// AgentDefinition whose capabilities are captured.
 	AgentId string `protobuf:"bytes,4,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
 	// Immutable attribution supplied by the extension; not an authorization credential.
-	TraceAttributes map[string]string `protobuf:"bytes,6,rep,name=trace_attributes,json=traceAttributes,proto3" json:"trace_attributes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	TraceAttributes map[string]string `protobuf:"bytes,5,rep,name=trace_attributes,json=traceAttributes,proto3" json:"trace_attributes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	// Used only when establishing the Session capability snapshot.
-	CapabilityDifferences *CapabilityDifferences `protobuf:"bytes,7,opt,name=capability_differences,json=capabilityDifferences,proto3" json:"capability_differences,omitempty"`
+	CapabilityDifferences *CapabilityDifferences `protobuf:"bytes,6,opt,name=capability_differences,json=capabilityDifferences,proto3" json:"capability_differences,omitempty"`
 	// Optional Model Configuration; absence selects the first provided one.
-	Model *v11.WorkModelSelection `protobuf:"bytes,10,opt,name=model,proto3" json:"model,omitempty"`
+	Model *v11.WorkModelSelection `protobuf:"bytes,7,opt,name=model,proto3" json:"model,omitempty"`
 	// Optional context a new Work starts from: another Work of the same
 	// definition up to a position this Agent named. Reuse of an existing Work
 	// neither compares nor replaces it.
-	StartingContext *WorkStartingContext `protobuf:"bytes,14,opt,name=starting_context,json=startingContext,proto3" json:"starting_context,omitempty"`
+	StartingContext *WorkStartingContext `protobuf:"bytes,8,opt,name=starting_context,json=startingContext,proto3" json:"starting_context,omitempty"`
 	// The Computer a new Work runs on for its life: a Cloud or one of the
 	// represented person's own Managed Computers; empty runs it on the first
 	// Cloud. Reuse of an existing Work neither compares nor replaces it.
-	ComputerId string `protobuf:"bytes,15,opt,name=computer_id,json=computerId,proto3" json:"computer_id,omitempty"`
+	ComputerId string `protobuf:"bytes,9,opt,name=computer_id,json=computerId,proto3" json:"computer_id,omitempty"`
 	// The Harness choices of a new Work, admitted only on a Managed Computer.
 	// Reuse of an existing Work neither compares nor replaces them.
-	Harness *v11.HarnessChoice `protobuf:"bytes,16,opt,name=harness,proto3" json:"harness,omitempty"`
+	Harness *v11.HarnessChoice `protobuf:"bytes,10,opt,name=harness,proto3" json:"harness,omitempty"`
 	// The Agent Harness a new Work runs, by its identity, such as
 	// "claude-code"; empty chooses the default. The Work keeps it for its
 	// life; an unknown one is refused. Reuse of an existing Work neither
 	// compares nor replaces it.
-	AgentHarness string `protobuf:"bytes,17,opt,name=agent_harness,json=agentHarness,proto3" json:"agent_harness,omitempty"`
+	AgentHarness string `protobuf:"bytes,11,opt,name=agent_harness,json=agentHarness,proto3" json:"agent_harness,omitempty"`
 	// The Work Caller the Work is started in the name of; required. Only the
 	// extension that defines its kind starts Works under it, so the core kinds
 	// "person" and "application" are refused here: a Standalone Work records
 	// its owner as its Work Caller through the public Work API.
-	WorkCaller *v11.WorkCaller `protobuf:"bytes,18,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
+	WorkCaller *v11.WorkCaller `protobuf:"bytes,12,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
 	// The optional name the extension finds the Work by again; an existing Work
 	// of the definition for it is returned instead of a new one, and one of
 	// another Work Caller or File Home is refused with FailedPrecondition.
 	// Absent, every request identity creates its own Work, which has no Work
 	// Key for good.
-	WorkKey *v11.WorkKey `protobuf:"bytes,19,opt,name=work_key,json=workKey,proto3" json:"work_key,omitempty"`
+	WorkKey *v11.WorkKey `protobuf:"bytes,13,opt,name=work_key,json=workKey,proto3" json:"work_key,omitempty"`
 	// The optional owner of the shared File Spaces the Work reads its inputs
 	// from and publishes into; absent, the Work's own File Spaces.
-	FileHome      *v11.FileHome `protobuf:"bytes,20,opt,name=file_home,json=fileHome,proto3" json:"file_home,omitempty"`
+	FileHome      *v11.FileHome `protobuf:"bytes,14,opt,name=file_home,json=fileHome,proto3" json:"file_home,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1185,7 +1185,7 @@ func (x *WorkStartingContext) GetPosition() string {
 type ResolveWorkContextPositionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The Work's Work Caller; a Work of another Work Caller is unknown.
-	WorkCaller *v11.WorkCaller `protobuf:"bytes,4,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
+	WorkCaller *v11.WorkCaller `protobuf:"bytes,1,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
 	// The Work that made the call.
 	WorkId string `protobuf:"bytes,2,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
 	// Harness identity of the call.
@@ -2294,7 +2294,7 @@ type GetAgentDefinitionResponse struct {
 	// Declared business-authorized scope.
 	UsageScope *UsageScope `protobuf:"bytes,6,opt,name=usage_scope,json=usageScope,proto3" json:"usage_scope,omitempty"`
 	// Visibility declared for the definition's new Works.
-	VisibilityRule *VisibilityRule `protobuf:"bytes,8,opt,name=visibility_rule,json=visibilityRule,proto3" json:"visibility_rule,omitempty"`
+	VisibilityRule *VisibilityRule `protobuf:"bytes,7,opt,name=visibility_rule,json=visibilityRule,proto3" json:"visibility_rule,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -2523,10 +2523,10 @@ type LocateWorkRequest struct {
 	// Definition within which to locate the Work.
 	AgentId string `protobuf:"bytes,2,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
 	// The Work Key; capabilities are not lookup keys.
-	WorkKey *v11.WorkKey `protobuf:"bytes,4,opt,name=work_key,json=workKey,proto3" json:"work_key,omitempty"`
+	WorkKey *v11.WorkKey `protobuf:"bytes,3,opt,name=work_key,json=workKey,proto3" json:"work_key,omitempty"`
 	// The Work Caller of the located Work; a Work of another Work Caller is not
 	// found.
-	WorkCaller    *v11.WorkCaller `protobuf:"bytes,5,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
+	WorkCaller    *v11.WorkCaller `protobuf:"bytes,4,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3767,7 +3767,7 @@ type ResolveWorkStartsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The Work Caller whose Works may be resolved; Works of another Work Caller
 	// are unknown.
-	WorkCaller *v11.WorkCaller `protobuf:"bytes,3,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
+	WorkCaller *v11.WorkCaller `protobuf:"bytes,1,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
 	// Works to resolve, at most 200.
 	WorkIds       []string `protobuf:"bytes,2,rep,name=work_ids,json=workIds,proto3" json:"work_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -3994,11 +3994,11 @@ type GetWorkOriginResponse struct {
 	// Definition purpose.
 	Purpose string `protobuf:"bytes,3,opt,name=purpose,proto3" json:"purpose,omitempty"`
 	// The Work Caller the Work was started in the name of.
-	WorkCaller *v11.WorkCaller `protobuf:"bytes,6,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
+	WorkCaller *v11.WorkCaller `protobuf:"bytes,4,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
 	// The Work's Work Key; absent for a Work without one.
-	WorkKey *v11.WorkKey `protobuf:"bytes,7,opt,name=work_key,json=workKey,proto3" json:"work_key,omitempty"`
+	WorkKey *v11.WorkKey `protobuf:"bytes,5,opt,name=work_key,json=workKey,proto3" json:"work_key,omitempty"`
 	// The Work's File Home; absent for a Work without one.
-	FileHome      *v11.FileHome `protobuf:"bytes,8,opt,name=file_home,json=fileHome,proto3" json:"file_home,omitempty"`
+	FileHome      *v11.FileHome `protobuf:"bytes,6,opt,name=file_home,json=fileHome,proto3" json:"file_home,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4089,11 +4089,11 @@ type EnsureAgentDefinitionRequest struct {
 	// Authoritative employee display name; required for employee work.
 	EmployeeDisplayName string `protobuf:"bytes,4,opt,name=employee_display_name,json=employeeDisplayName,proto3" json:"employee_display_name,omitempty"`
 	// Caller-selected base capabilities; existing definitions retain their values.
-	Capabilities *Capabilities `protobuf:"bytes,6,opt,name=capabilities,proto3" json:"capabilities,omitempty"`
+	Capabilities *Capabilities `protobuf:"bytes,5,opt,name=capabilities,proto3" json:"capabilities,omitempty"`
 	// Initial public name for a non-employee definition, if supplied.
-	AgentName string `protobuf:"bytes,7,opt,name=agent_name,json=agentName,proto3" json:"agent_name,omitempty"`
+	AgentName string `protobuf:"bytes,6,opt,name=agent_name,json=agentName,proto3" json:"agent_name,omitempty"`
 	// Visibility of a new definition's Works; existing definitions retain theirs.
-	VisibilityRule *VisibilityRule `protobuf:"bytes,8,opt,name=visibility_rule,json=visibilityRule,proto3" json:"visibility_rule,omitempty"`
+	VisibilityRule *VisibilityRule `protobuf:"bytes,7,opt,name=visibility_rule,json=visibilityRule,proto3" json:"visibility_rule,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -4386,7 +4386,7 @@ type GetWorkStartOptionsRequest struct {
 	// The Work Caller a new Work is started in the name of; the Built-in
 	// Plugins of its kind are offered as required. Absent means the person's
 	// own Standalone Work; ignored for an existing Work.
-	WorkCaller    *v11.WorkCaller `protobuf:"bytes,6,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
+	WorkCaller    *v11.WorkCaller `protobuf:"bytes,5,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4656,14 +4656,14 @@ const file_agent_private_v1_work_proto_rawDesc = "" +
 	"connectors\x12)\n" +
 	"\x10required_plugins\x18\x05 \x03(\tR\x0frequiredPluginsB\t\n" +
 	"\a_promptB\x10\n" +
-	"\x0e_startup_agent\"Z\n" +
+	"\x0e_startup_agent\"N\n" +
 	"\x0fConnectorChoice\x12\x18\n" +
-	"\ainclude\x18\x02 \x01(\bR\ainclude\x12!\n" +
-	"\fconnector_id\x18\x03 \x01(\tR\vconnectorIdJ\x04\b\x01\x10\x02R\x04name\">\n" +
+	"\ainclude\x18\x01 \x01(\bR\ainclude\x12!\n" +
+	"\fconnector_id\x18\x02 \x01(\tR\vconnectorId\">\n" +
 	"\n" +
 	"UsageScope\x12\x12\n" +
 	"\x04kind\x18\x01 \x01(\tR\x04kind\x12\x1c\n" +
-	"\treference\x18\x02 \x01(\tR\treference\"\xd1\x02\n" +
+	"\treference\x18\x02 \x01(\tR\treference\"\xbd\x02\n" +
 	"\x1cCreateAgentDefinitionRequest\x12\x16\n" +
 	"\x06owners\x18\x01 \x03(\tR\x06owners\x12\x1d\n" +
 	"\n" +
@@ -4672,11 +4672,11 @@ const file_agent_private_v1_work_proto_rawDesc = "" +
 	"\fcapabilities\x18\x04 \x01(\v2\x1e.agent.private.v1.CapabilitiesR\fcapabilities\x12=\n" +
 	"\vusage_scope\x18\x05 \x01(\v2\x1c.agent.private.v1.UsageScopeR\n" +
 	"usageScope\x12I\n" +
-	"\x0fvisibility_rule\x18\a \x01(\v2 .agent.private.v1.VisibilityRuleR\x0evisibilityRuleJ\x04\b\x06\x10\aR\fhome_binding\"(\n" +
+	"\x0fvisibility_rule\x18\x06 \x01(\v2 .agent.private.v1.VisibilityRuleR\x0evisibilityRule\"(\n" +
 	"\x0eVisibilityRule\x12\x16\n" +
 	"\x06public\x18\x01 \x01(\bR\x06public\":\n" +
 	"\x1dCreateAgentDefinitionResponse\x12\x19\n" +
-	"\bagent_id\x18\x01 \x01(\tR\aagentId\"\xd8\a\n" +
+	"\bagent_id\x18\x01 \x01(\tR\aagentId\"\xd7\x06\n" +
 	"\x11CreateWorkRequest\x12(\n" +
 	"\x10starting_user_id\x18\x01 \x01(\tR\x0estartingUserId\x12\x1d\n" +
 	"\n" +
@@ -4684,33 +4684,30 @@ const file_agent_private_v1_work_proto_rawDesc = "" +
 	"\n" +
 	"subject_id\x18\x03 \x01(\tR\tsubjectId\x12\x19\n" +
 	"\bagent_id\x18\x04 \x01(\tR\aagentId\x12c\n" +
-	"\x10trace_attributes\x18\x06 \x03(\v28.agent.private.v1.CreateWorkRequest.TraceAttributesEntryR\x0ftraceAttributes\x12^\n" +
-	"\x16capability_differences\x18\a \x01(\v2'.agent.private.v1.CapabilityDifferencesR\x15capabilityDifferences\x129\n" +
-	"\x05model\x18\n" +
-	" \x01(\v2#.agent.public.v1.WorkModelSelectionR\x05model\x12P\n" +
-	"\x10starting_context\x18\x0e \x01(\v2%.agent.private.v1.WorkStartingContextR\x0fstartingContext\x12\x1f\n" +
-	"\vcomputer_id\x18\x0f \x01(\tR\n" +
+	"\x10trace_attributes\x18\x05 \x03(\v28.agent.private.v1.CreateWorkRequest.TraceAttributesEntryR\x0ftraceAttributes\x12^\n" +
+	"\x16capability_differences\x18\x06 \x01(\v2'.agent.private.v1.CapabilityDifferencesR\x15capabilityDifferences\x129\n" +
+	"\x05model\x18\a \x01(\v2#.agent.public.v1.WorkModelSelectionR\x05model\x12P\n" +
+	"\x10starting_context\x18\b \x01(\v2%.agent.private.v1.WorkStartingContextR\x0fstartingContext\x12\x1f\n" +
+	"\vcomputer_id\x18\t \x01(\tR\n" +
 	"computerId\x128\n" +
-	"\aharness\x18\x10 \x01(\v2\x1e.agent.public.v1.HarnessChoiceR\aharness\x12#\n" +
-	"\ragent_harness\x18\x11 \x01(\tR\fagentHarness\x12<\n" +
-	"\vwork_caller\x18\x12 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"\aharness\x18\n" +
+	" \x01(\v2\x1e.agent.public.v1.HarnessChoiceR\aharness\x12#\n" +
+	"\ragent_harness\x18\v \x01(\tR\fagentHarness\x12<\n" +
+	"\vwork_caller\x18\f \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
 	"workCaller\x123\n" +
-	"\bwork_key\x18\x13 \x01(\v2\x18.agent.public.v1.WorkKeyR\aworkKey\x126\n" +
-	"\tfile_home\x18\x14 \x01(\v2\x19.agent.public.v1.FileHomeR\bfileHome\x1aB\n" +
+	"\bwork_key\x18\r \x01(\v2\x18.agent.public.v1.WorkKeyR\aworkKey\x126\n" +
+	"\tfile_home\x18\x0e \x01(\v2\x19.agent.public.v1.FileHomeR\bfileHome\x1aB\n" +
 	"\x14TraceAttributesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01J\x04\b\x05\x10\x06J\x04\b\v\x10\fJ\x04\b\f\x10\rJ\x04\b\r\x10\x0eJ\x04\b\b\x10\tJ\x04\b\t\x10\n" +
-	"R\x13workspace_referenceR\finput_sourceR\x11input_space_tokenR\x10read_only_mountsR\asubjectR\n" +
-	"project_id\"W\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"W\n" +
 	"\x13WorkStartingContext\x12$\n" +
 	"\x0esource_work_id\x18\x01 \x01(\tR\fsourceWorkId\x12\x1a\n" +
-	"\bposition\x18\x02 \x01(\tR\bposition\"\xa5\x01\n" +
+	"\bposition\x18\x02 \x01(\tR\bposition\"\x93\x01\n" +
 	"!ResolveWorkContextPositionRequest\x12<\n" +
-	"\vwork_caller\x18\x04 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"\vwork_caller\x18\x01 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
 	"workCaller\x12\x17\n" +
 	"\awork_id\x18\x02 \x01(\tR\x06workId\x12\x17\n" +
-	"\acall_id\x18\x03 \x01(\tR\x06callIdJ\x04\b\x01\x10\x02R\n" +
-	"project_id\"\\\n" +
+	"\acall_id\x18\x03 \x01(\tR\x06callId\"\\\n" +
 	"\"ResolveWorkContextPositionResponse\x12\x1a\n" +
 	"\breturned\x18\x01 \x01(\bR\breturned\x12\x1a\n" +
 	"\bposition\x18\x02 \x01(\tR\bposition\"-\n" +
@@ -4721,7 +4718,7 @@ const file_agent_private_v1_work_proto_rawDesc = "" +
 	"subject_id\x18\x01 \x01(\tR\tsubjectId\x12\x17\n" +
 	"\awork_id\x18\x02 \x01(\tR\x06workId\x12\x14\n" +
 	"\x05input\x18\x03 \x01(\tR\x05input\x12\x19\n" +
-	"\binput_id\x18\x04 \x01(\tR\ainputId\"\xbc\x04\n" +
+	"\binput_id\x18\x04 \x01(\tR\ainputId\"\xa1\x04\n" +
 	"\x0fGetWorkResponse\x12B\n" +
 	"\rwork_progress\x18\x01 \x01(\v2\x1d.agent.public.v1.WorkProgressR\fworkProgress\x12\x1d\n" +
 	"\n" +
@@ -4738,7 +4735,7 @@ const file_agent_private_v1_work_proto_rawDesc = "" +
 	" \x01(\bR\x10requiredResponse\x12%\n" +
 	"\x0efailure_reason\x18\v \x01(\tR\rfailureReason\x12\x18\n" +
 	"\aversion\x18\f \x01(\x03R\aversion\x12&\n" +
-	"\x0fstop_request_id\x18\r \x01(\tR\rstopRequestIdJ\x04\b\x0e\x10\x0fR\x13workspace_reference\"j\n" +
+	"\x0fstop_request_id\x18\r \x01(\tR\rstopRequestId\"j\n" +
 	"\x11ResumeWorkRequest\x12\x1d\n" +
 	"\n" +
 	"subject_id\x18\x01 \x01(\tR\tsubjectId\x12\x17\n" +
@@ -4787,7 +4784,7 @@ const file_agent_private_v1_work_proto_rawDesc = "" +
 	"\fcapabilities\x18\x02 \x01(\v2\x1e.agent.private.v1.CapabilitiesR\fcapabilities\"+\n" +
 	")ChangeAgentDefinitionCapabilitiesResponse\"6\n" +
 	"\x19GetAgentDefinitionRequest\x12\x19\n" +
-	"\bagent_id\x18\x01 \x01(\tR\aagentId\"\xea\x02\n" +
+	"\bagent_id\x18\x01 \x01(\tR\aagentId\"\xd6\x02\n" +
 	"\x1aGetAgentDefinitionResponse\x12\x16\n" +
 	"\x06owners\x18\x01 \x03(\tR\x06owners\x12\x1d\n" +
 	"\n" +
@@ -4797,7 +4794,7 @@ const file_agent_private_v1_work_proto_rawDesc = "" +
 	"\fcapabilities\x18\x05 \x01(\v2\x1e.agent.private.v1.CapabilitiesR\fcapabilities\x12=\n" +
 	"\vusage_scope\x18\x06 \x01(\v2\x1c.agent.private.v1.UsageScopeR\n" +
 	"usageScope\x12I\n" +
-	"\x0fvisibility_rule\x18\b \x01(\v2 .agent.private.v1.VisibilityRuleR\x0evisibilityRuleJ\x04\b\a\x10\bR\fhome_binding\"\xfb\x01\n" +
+	"\x0fvisibility_rule\x18\a \x01(\v2 .agent.private.v1.VisibilityRuleR\x0evisibilityRule\"\xfb\x01\n" +
 	"\x1bRespondToInteractionRequest\x12\x1d\n" +
 	"\n" +
 	"subject_id\x18\x01 \x01(\tR\tsubjectId\x12\x17\n" +
@@ -4807,14 +4804,14 @@ const file_agent_private_v1_work_proto_rawDesc = "" +
 	"\falways_allow\x18\x05 \x01(\bR\valwaysAllow\x12\x16\n" +
 	"\x06reason\x18\x06 \x01(\tR\x06reason\x12,\n" +
 	"\x12updated_input_json\x18\a \x01(\tR\x10updatedInputJson\"\x1e\n" +
-	"\x1cRespondToInteractionResponse\"\xcf\x01\n" +
+	"\x1cRespondToInteractionResponse\"\xc0\x01\n" +
 	"\x11LocateWorkRequest\x12\x1d\n" +
 	"\n" +
 	"subject_id\x18\x01 \x01(\tR\tsubjectId\x12\x19\n" +
 	"\bagent_id\x18\x02 \x01(\tR\aagentId\x123\n" +
-	"\bwork_key\x18\x04 \x01(\v2\x18.agent.public.v1.WorkKeyR\aworkKey\x12<\n" +
-	"\vwork_caller\x18\x05 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
-	"workCallerJ\x04\b\x03\x10\x04R\asubject\"C\n" +
+	"\bwork_key\x18\x03 \x01(\v2\x18.agent.public.v1.WorkKeyR\aworkKey\x12<\n" +
+	"\vwork_caller\x18\x04 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"workCaller\"C\n" +
 	"\x12LocateWorkResponse\x12\x14\n" +
 	"\x05found\x18\x01 \x01(\bR\x05found\x12\x17\n" +
 	"\awork_id\x18\x02 \x01(\tR\x06workId\"\x9a\x01\n" +
@@ -4905,12 +4902,11 @@ const file_agent_private_v1_work_proto_rawDesc = "" +
 	"\vtarget_path\x18\t \x01(\tR\n" +
 	"targetPath\x12.\n" +
 	"\x13credential_grant_id\x18\n" +
-	" \x01(\tR\x11credentialGrantId\"\x85\x01\n" +
+	" \x01(\tR\x11credentialGrantId\"s\n" +
 	"\x18ResolveWorkStartsRequest\x12<\n" +
-	"\vwork_caller\x18\x03 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"\vwork_caller\x18\x01 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
 	"workCaller\x12\x19\n" +
-	"\bwork_ids\x18\x02 \x03(\tR\aworkIdsJ\x04\b\x01\x10\x02R\n" +
-	"project_id\"\x8e\x01\n" +
+	"\bwork_ids\x18\x02 \x03(\tR\aworkIds\"\x8e\x01\n" +
 	"\x11ResolvedWorkStart\x12\x17\n" +
 	"\awork_id\x18\x01 \x01(\tR\x06workId\x12\x14\n" +
 	"\x05known\x18\x02 \x01(\bR\x05known\x12\x1d\n" +
@@ -4920,26 +4916,25 @@ const file_agent_private_v1_work_proto_rawDesc = "" +
 	"\x19ResolveWorkStartsResponse\x129\n" +
 	"\x05works\x18\x01 \x03(\v2#.agent.private.v1.ResolvedWorkStartR\x05works\"/\n" +
 	"\x14GetWorkOriginRequest\x12\x17\n" +
-	"\awork_id\x18\x01 \x01(\tR\x06workId\"\xb1\x02\n" +
+	"\awork_id\x18\x01 \x01(\tR\x06workId\"\x90\x02\n" +
 	"\x15GetWorkOriginResponse\x12\x17\n" +
 	"\awork_id\x18\x01 \x01(\tR\x06workId\x12\x19\n" +
 	"\bagent_id\x18\x02 \x01(\tR\aagentId\x12\x18\n" +
 	"\apurpose\x18\x03 \x01(\tR\apurpose\x12<\n" +
-	"\vwork_caller\x18\x06 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"\vwork_caller\x18\x04 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
 	"workCaller\x123\n" +
-	"\bwork_key\x18\a \x01(\v2\x18.agent.public.v1.WorkKeyR\aworkKey\x126\n" +
-	"\tfile_home\x18\b \x01(\v2\x19.agent.public.v1.FileHomeR\bfileHomeJ\x04\b\x04\x10\x05J\x04\b\x05\x10\x06R\asubjectR\n" +
-	"project_id\"\x85\x03\n" +
+	"\bwork_key\x18\x05 \x01(\v2\x18.agent.public.v1.WorkKeyR\aworkKey\x126\n" +
+	"\tfile_home\x18\x06 \x01(\v2\x19.agent.public.v1.FileHomeR\bfileHome\"\xf1\x02\n" +
 	"\x1cEnsureAgentDefinitionRequest\x12\x16\n" +
 	"\x06owners\x18\x01 \x03(\tR\x06owners\x12=\n" +
 	"\vusage_scope\x18\x02 \x01(\v2\x1c.agent.private.v1.UsageScopeR\n" +
 	"usageScope\x12\x18\n" +
 	"\apurpose\x18\x03 \x01(\tR\apurpose\x122\n" +
 	"\x15employee_display_name\x18\x04 \x01(\tR\x13employeeDisplayName\x12B\n" +
-	"\fcapabilities\x18\x06 \x01(\v2\x1e.agent.private.v1.CapabilitiesR\fcapabilities\x12\x1d\n" +
+	"\fcapabilities\x18\x05 \x01(\v2\x1e.agent.private.v1.CapabilitiesR\fcapabilities\x12\x1d\n" +
 	"\n" +
-	"agent_name\x18\a \x01(\tR\tagentName\x12I\n" +
-	"\x0fvisibility_rule\x18\b \x01(\v2 .agent.private.v1.VisibilityRuleR\x0evisibilityRuleJ\x04\b\x05\x10\x06R\fhome_binding\"q\n" +
+	"agent_name\x18\x06 \x01(\tR\tagentName\x12I\n" +
+	"\x0fvisibility_rule\x18\a \x01(\v2 .agent.private.v1.VisibilityRuleR\x0evisibilityRule\"q\n" +
 	"\x1aEnsureEmployeeAgentRequest\x12\x1f\n" +
 	"\vemployee_id\x18\x01 \x01(\tR\n" +
 	"employeeId\x122\n" +
@@ -4956,7 +4951,7 @@ const file_agent_private_v1_work_proto_rawDesc = "" +
 	"\n" +
 	"agent_name\x18\x03 \x01(\tR\tagentName\x129\n" +
 	"\n" +
-	"agent_icon\x18\x04 \x01(\v2\x1a.agent.public.v1.AgentIconR\tagentIcon\"\xf0\x01\n" +
+	"agent_icon\x18\x04 \x01(\v2\x1a.agent.public.v1.AgentIconR\tagentIcon\"\xde\x01\n" +
 	"\x1aGetWorkStartOptionsRequest\x12\x1d\n" +
 	"\n" +
 	"subject_id\x18\x01 \x01(\tR\tsubjectId\x12\x17\n" +
@@ -4964,9 +4959,8 @@ const file_agent_private_v1_work_proto_rawDesc = "" +
 	"\vemployee_id\x18\x03 \x01(\tR\n" +
 	"employeeId\x12)\n" +
 	"\x10required_plugins\x18\x04 \x03(\tR\x0frequiredPlugins\x12<\n" +
-	"\vwork_caller\x18\x06 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
-	"workCallerJ\x04\b\x05\x10\x06R\n" +
-	"project_id\"R\n" +
+	"\vwork_caller\x18\x05 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"workCaller\"R\n" +
 	" ListWorkStartRepositoriesRequest\x12.\n" +
 	"\x13repository_owner_id\x18\x01 \x01(\tR\x11repositoryOwnerId\"Y\n" +
 	"$TransferAgentDefinitionOwnersRequest\x12\x19\n" +

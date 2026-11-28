@@ -197,28 +197,28 @@ export declare type WatchStreamRequest = Message<"streamgateway.public.v1.WatchS
   /**
    * Same Agent, turn and kind scope as history.
    *
-   * @generated from field: optional string agent = 4;
+   * @generated from field: optional string agent = 2;
    */
   agent?: string;
 
   /**
    * Match any listed turn; empty matches every turn.
    *
-   * @generated from field: repeated string turn_ids = 5;
+   * @generated from field: repeated string turn_ids = 3;
    */
   turnIds: string[];
 
   /**
    * Match any listed product kind; empty matches every kind.
    *
-   * @generated from field: repeated dispatcher.public.v1.UnifiedMessageKind kinds = 6;
+   * @generated from field: repeated dispatcher.public.v1.UnifiedMessageKind kinds = 4;
    */
   kinds: UnifiedMessageKind[];
 
   /**
    * Include Session errors with unknown Agent attribution without relabeling them.
    *
-   * @generated from field: bool include_unattributed_errors = 7;
+   * @generated from field: bool include_unattributed_errors = 5;
    */
   includeUnattributedErrors: boolean;
 };
@@ -246,7 +246,7 @@ export declare type WatchStreamResponse = Message<"streamgateway.public.v1.Watch
     /**
      * A live message, without its detail body.
      *
-     * @generated from field: dispatcher.public.v1.UnifiedMessage message = 2;
+     * @generated from field: dispatcher.public.v1.UnifiedMessage message = 1;
      */
     value: UnifiedMessage;
     case: "message";
@@ -254,7 +254,7 @@ export declare type WatchStreamResponse = Message<"streamgateway.public.v1.Watch
     /**
      * work state field.
      *
-     * @generated from field: streamgateway.public.v1.WorkStateFrame work_state = 3;
+     * @generated from field: streamgateway.public.v1.WorkStateFrame work_state = 2;
      */
     value: WorkStateFrame;
     case: "workState";
@@ -262,7 +262,7 @@ export declare type WatchStreamResponse = Message<"streamgateway.public.v1.Watch
     /**
      * diagnostic field.
      *
-     * @generated from field: streamgateway.public.v1.StreamDiagnosticFrame diagnostic = 4;
+     * @generated from field: streamgateway.public.v1.StreamDiagnosticFrame diagnostic = 3;
      */
     value: StreamDiagnosticFrame;
     case: "diagnostic";
@@ -271,7 +271,7 @@ export declare type WatchStreamResponse = Message<"streamgateway.public.v1.Watch
      * The reader's access to this Work's conversation was withdrawn; the
      * stream ends after this frame. Distinct from a connection error.
      *
-     * @generated from field: streamgateway.public.v1.AccessWithdrawnFrame access_withdrawn = 5;
+     * @generated from field: streamgateway.public.v1.AccessWithdrawnFrame access_withdrawn = 4;
      */
     value: AccessWithdrawnFrame;
     case: "accessWithdrawn";
@@ -280,7 +280,7 @@ export declare type WatchStreamResponse = Message<"streamgateway.public.v1.Watch
      * Sent while the stream is otherwise quiet, so idle connections stay open
      * and a reader that hears nothing for two intervals knows the stream died.
      *
-     * @generated from field: streamgateway.public.v1.HeartbeatFrame heartbeat = 6;
+     * @generated from field: streamgateway.public.v1.HeartbeatFrame heartbeat = 5;
      */
     value: HeartbeatFrame;
     case: "heartbeat";

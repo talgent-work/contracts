@@ -118,26 +118,22 @@ message Span {
   string parent_native_agent_id = 16;
   // AgentSession identity.
   string agent_work_id = 17;
-  reserved 18;
-  reserved "project_id";
   // runtime purpose field.
-  string runtime_purpose = 19;
+  string runtime_purpose = 18;
   // owner context field.
-  string owner_context = 20;
+  string owner_context = 19;
   // owner id field.
-  string owner_id = 21;
+  string owner_id = 20;
   // The Work Caller of the span's Work.
-  agent.public.v1.WorkCaller work_caller = 22;
+  agent.public.v1.WorkCaller work_caller = 21;
   // The Work Key of the span's Work; absent for a Work without one.
-  agent.public.v1.WorkKey work_key = 23;
+  agent.public.v1.WorkKey work_key = 22;
 }
 
 // ListSpansByOwnerRequest message.
 message ListSpansByOwnerRequest {
-  reserved 1;
-  reserved "project_id";
   // The Work Caller, of an extension-defined kind, whose spans are listed.
-  agent.public.v1.WorkCaller work_caller = 7;
+  agent.public.v1.WorkCaller work_caller = 1;
   // owner context field.
   string owner_context = 2;
   // owner id field.
@@ -160,14 +156,12 @@ message ListSpansByOwnerResponse {
 
 // ListSpansBySessionRequest message.
 message ListSpansBySessionRequest {
-  reserved 1;
-  reserved "project_id";
   // The Work's Work Caller when it is of an extension-defined kind, which
   // scopes the read and whose extension admits the reader; absent for a
   // Standalone Work, which Agent's Work access admits. A Work Caller other than
   // the Work's own, or an Extension Work named without its Work Caller, is
   // NotFound.
-  agent.public.v1.WorkCaller work_caller = 6;
+  agent.public.v1.WorkCaller work_caller = 1;
   // AgentSession identity.
   string agent_work_id = 2;
   // Opaque cursor returned by the previous page.
@@ -191,16 +185,14 @@ message ListSpansBySessionResponse {
 message GetSpanRequest {
   // Native span identity is scoped by Trace ID and trusted Work attribution.
   string span_id = 1;
-  reserved 2;
-  reserved "project_id";
   // Required native Trace ID; Span ID alone is not globally unique.
-  string trace_id = 3;
+  string trace_id = 2;
   // The Work the span belongs to; required without a Work Caller.
-  string agent_work_id = 4;
+  string agent_work_id = 3;
   // The Work Caller scope, authorized before looking up evidence, when the
   // span's Work is an Extension Work; absent for a Standalone Work. A Work
   // Caller other than the Work's own is NotFound.
-  agent.public.v1.WorkCaller work_caller = 5;
+  agent.public.v1.WorkCaller work_caller = 4;
 }
 
 // GetSpanResponse message.
@@ -221,14 +213,12 @@ message GetSessionTraceMetricsRequest {
   int32 step_seconds = 4;
   // metric kinds field.
   repeated string metric_kinds = 5;
-  reserved 6;
-  reserved "project_id";
   // The Work's Work Caller when it is of an extension-defined kind, which
   // scopes the read and whose extension admits the reader; absent for a
   // Standalone Work, which Agent's Work access admits. A Work Caller other than
   // the Work's own, or an Extension Work named without its Work Caller, is
   // NotFound.
-  agent.public.v1.WorkCaller work_caller = 7;
+  agent.public.v1.WorkCaller work_caller = 6;
 }
 
 // GetWorkCallerTraceMetricsRequest names a window of a Work Caller's usage.
@@ -292,34 +282,32 @@ message TraceMetricBucket {
   google.protobuf.Timestamp bucket_start = 1;
   // bucket seconds field.
   int32 bucket_seconds = 2;
-  reserved 3, 14;
-  reserved "project_id", "application_id";
   // AgentSession identity.
-  string agent_work_id = 4;
+  string agent_work_id = 3;
   // metric kind field.
-  string metric_kind = 5;
+  string metric_kind = 4;
   // dimension field.
-  string dimension = 6;
+  string dimension = 5;
   // value field.
-  double value = 7;
+  double value = 6;
   // Number of observed facts with unknown values for this metric.
-  uint64 unknown_count = 8;
+  uint64 unknown_count = 7;
   // Known interpretation gaps; absence does not prove lossless collection.
-  repeated string gaps = 9;
+  repeated string gaps = 8;
   // The person whose Agent made the Work, empty for a Work of an Agent that
   // represents no person.
-  string user_id = 10;
+  string user_id = 9;
   // runtime purpose field.
-  string runtime_purpose = 11;
+  string runtime_purpose = 10;
   // Caller attribute naming the kind of business object that started the Work.
-  string owner_context = 12;
+  string owner_context = 11;
   // Caller attribute naming that business object.
-  string owner_id = 13;
+  string owner_id = 12;
   // The Work Caller of the measured Work: a person, an Application or an
   // object of an extension-defined kind.
-  agent.public.v1.WorkCaller work_caller = 15;
+  agent.public.v1.WorkCaller work_caller = 13;
   // The Work Key of the measured Work; absent for a Work without one.
-  agent.public.v1.WorkKey work_key = 16;
+  agent.public.v1.WorkKey work_key = 14;
 }
 
 // TraceMetricTotal message.
@@ -336,12 +324,10 @@ message TraceMetricTotal {
 
 // Bounded query of retained native OTLP log evidence.
 message ListEventsRequest {
-  reserved 1;
-  reserved "project_id";
   // The authorized Work Caller scope, of an extension-defined kind; absent for
   // a Standalone Work. An Extension Work named without its Work Caller is
   // NotFound.
-  agent.public.v1.WorkCaller work_caller = 9;
+  agent.public.v1.WorkCaller work_caller = 1;
   // The Work filter; required without a Work Caller.
   string agent_work_id = 2;
   // Optional native Trace ID filter.
@@ -376,14 +362,12 @@ message NativeEvent {
   map<string, string> attributes = 7;
   // Native resource attributes, excluding retired internal platform identities.
   map<string, string> resource_attributes = 8;
-  reserved 9;
-  reserved "project_id";
   // Trusted platform Session attribution.
-  string agent_work_id = 10;
+  string agent_work_id = 9;
   // Trusted platform Work Caller attribution.
-  agent.public.v1.WorkCaller work_caller = 11;
+  agent.public.v1.WorkCaller work_caller = 10;
   // Trusted platform Work Key attribution; absent for a Work without one.
-  agent.public.v1.WorkKey work_key = 12;
+  agent.public.v1.WorkKey work_key = 11;
 }
 
 // One page of authorized retained native event evidence.

@@ -14,3 +14,21 @@ breaking:
   use:
     - WIRE_JSON
   ignore_unstable_packages: true
+  # The v0.11.0 release drops every reserved field number and name and
+  # renumbers the fields of the messages that held them from 1 in declaration
+  # order. That breaks the wire for these files once: the development
+  # environment deploys every consumer on v0.11 in step. The commit after that
+  # release removes this exemption, once the check compares against it.
+  ignore:
+    - proto/account/private/v1/agent_account.proto
+    - proto/agent/private/v1/work.proto
+    - proto/agent/private/v1/work_access.proto
+    - proto/agent/private/v1/work_facts.proto
+    - proto/agent/public/v1/identity.proto
+    - proto/agent/public/v1/work.proto
+    - proto/marketplace/public/v1/marketplace.proto
+    - proto/storage/integration/v1/file_changed.proto
+    - proto/storage/private/v1/storage.proto
+    - proto/storage/private/v1/workspace.proto
+    - proto/streamgateway/public/v1/streamgateway.proto
+    - proto/trace/public/v1/trace.proto

@@ -65,15 +65,15 @@ type WhoAmIResponse struct {
 	// The Work.
 	WorkId string `protobuf:"bytes,1,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
 	// The purpose of the Work's AgentDefinition.
-	Purpose string `protobuf:"bytes,5,opt,name=purpose,proto3" json:"purpose,omitempty"`
+	Purpose string `protobuf:"bytes,2,opt,name=purpose,proto3" json:"purpose,omitempty"`
 	// The Work's AgentDefinition.
-	AgentId string `protobuf:"bytes,6,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
+	AgentId string `protobuf:"bytes,3,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
 	// The Work Caller the Work was started in the name of.
-	WorkCaller *WorkCaller `protobuf:"bytes,7,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
+	WorkCaller *WorkCaller `protobuf:"bytes,4,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
 	// The Work's Work Key; absent for a Work without one.
-	WorkKey *WorkKey `protobuf:"bytes,8,opt,name=work_key,json=workKey,proto3" json:"work_key,omitempty"`
+	WorkKey *WorkKey `protobuf:"bytes,5,opt,name=work_key,json=workKey,proto3" json:"work_key,omitempty"`
 	// The Work's File Home; absent for a Work without one.
-	FileHome      *FileHome `protobuf:"bytes,9,opt,name=file_home,json=fileHome,proto3" json:"file_home,omitempty"`
+	FileHome      *FileHome `protobuf:"bytes,6,opt,name=file_home,json=fileHome,proto3" json:"file_home,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -155,17 +155,15 @@ var File_agent_public_v1_identity_proto protoreflect.FileDescriptor
 const file_agent_public_v1_identity_proto_rawDesc = "" +
 	"\n" +
 	"\x1eagent/public/v1/identity.proto\x12\x0fagent.public.v1\x1a\x1cadmission/v1/admission.proto\x1a!agent/public/v1/work_caller.proto\"\x0f\n" +
-	"\rWhoAmIRequest\"\xc1\x02\n" +
+	"\rWhoAmIRequest\"\x89\x02\n" +
 	"\x0eWhoAmIResponse\x12\x17\n" +
 	"\awork_id\x18\x01 \x01(\tR\x06workId\x12\x18\n" +
-	"\apurpose\x18\x05 \x01(\tR\apurpose\x12\x19\n" +
-	"\bagent_id\x18\x06 \x01(\tR\aagentId\x12<\n" +
-	"\vwork_caller\x18\a \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"\apurpose\x18\x02 \x01(\tR\apurpose\x12\x19\n" +
+	"\bagent_id\x18\x03 \x01(\tR\aagentId\x12<\n" +
+	"\vwork_caller\x18\x04 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
 	"workCaller\x123\n" +
-	"\bwork_key\x18\b \x01(\v2\x18.agent.public.v1.WorkKeyR\aworkKey\x126\n" +
-	"\tfile_home\x18\t \x01(\v2\x19.agent.public.v1.FileHomeR\bfileHomeJ\x04\b\x02\x10\x03J\x04\b\x03\x10\x04J\x04\b\x04\x10\x05R\n" +
-	"project_idR\fsubject_kindR\n" +
-	"subject_id2e\n" +
+	"\bwork_key\x18\x05 \x01(\v2\x18.agent.public.v1.WorkKeyR\aworkKey\x126\n" +
+	"\tfile_home\x18\x06 \x01(\v2\x19.agent.public.v1.FileHomeR\bfileHome2e\n" +
 	"\x0fIdentityService\x12R\n" +
 	"\x06WhoAmI\x12\x1e.agent.public.v1.WhoAmIRequest\x1a\x1f.agent.public.v1.WhoAmIResponse\"\a\xc2\xf3\x18\x03\n" +
 	"\x01\x02BHZFgithub.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1b\x06proto3"

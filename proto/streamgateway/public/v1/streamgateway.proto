@@ -91,40 +91,36 @@ message GetMessageDetailResponse {
 // WatchStreamRequest opens a Work's live stream. The stream carries only what
 // happens from now on; stored history is read through ListMessagesBySession.
 message WatchStreamRequest {
-  reserved 2, 3;
-  reserved "after_timestamp", "after_id";
   // AgentWork identity.
   string agent_work_id = 1;
   // Same Agent, turn and kind scope as history.
-  optional string agent = 4;
+  optional string agent = 2;
   // Match any listed turn; empty matches every turn.
-  repeated string turn_ids = 5;
+  repeated string turn_ids = 3;
   // Match any listed product kind; empty matches every kind.
-  repeated dispatcher.public.v1.UnifiedMessageKind kinds = 6;
+  repeated dispatcher.public.v1.UnifiedMessageKind kinds = 4;
   // Include Session errors with unknown Agent attribution without relabeling them.
-  bool include_unattributed_errors = 7;
+  bool include_unattributed_errors = 5;
 }
 
 // WatchStreamResponse is one live frame. Live delivery is best-effort: frames
 // may be lost, repeated or reordered, and a reader that needs the complete
 // conversation reads it from history.
 message WatchStreamResponse {
-  reserved 1;
-  reserved "replay";
   // payload choice.
   oneof payload {
     // A live message, without its detail body.
-    dispatcher.public.v1.UnifiedMessage message = 2;
+    dispatcher.public.v1.UnifiedMessage message = 1;
     // work state field.
-    WorkStateFrame work_state = 3;
+    WorkStateFrame work_state = 2;
     // diagnostic field.
-    StreamDiagnosticFrame diagnostic = 4;
+    StreamDiagnosticFrame diagnostic = 3;
     // The reader's access to this Work's conversation was withdrawn; the
     // stream ends after this frame. Distinct from a connection error.
-    AccessWithdrawnFrame access_withdrawn = 5;
+    AccessWithdrawnFrame access_withdrawn = 4;
     // Sent while the stream is otherwise quiet, so idle connections stay open
     // and a reader that hears nothing for two intervals knows the stream died.
-    HeartbeatFrame heartbeat = 6;
+    HeartbeatFrame heartbeat = 5;
   }
 }
 

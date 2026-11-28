@@ -954,19 +954,19 @@ type File struct {
 	// Position: Directory and name.
 	Position *FilePosition `protobuf:"bytes,1,opt,name=position,proto3" json:"position,omitempty"`
 	// Size in bytes.
-	SizeBytes int64 `protobuf:"varint,4,opt,name=size_bytes,json=sizeBytes,proto3" json:"size_bytes,omitempty"`
+	SizeBytes int64 `protobuf:"varint,2,opt,name=size_bytes,json=sizeBytes,proto3" json:"size_bytes,omitempty"`
 	// Media type: the uploaded type, or the one of the name's extension.
-	ContentType string `protobuf:"bytes,5,opt,name=content_type,json=contentType,proto3" json:"content_type,omitempty"`
+	ContentType string `protobuf:"bytes,3,opt,name=content_type,json=contentType,proto3" json:"content_type,omitempty"`
 	// Last time the content changed.
-	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
 	// Human who uploaded an Attachment.
-	UploaderUserId string `protobuf:"bytes,7,opt,name=uploader_user_id,json=uploaderUserId,proto3" json:"uploader_user_id,omitempty"`
+	UploaderUserId string `protobuf:"bytes,5,opt,name=uploader_user_id,json=uploaderUserId,proto3" json:"uploader_user_id,omitempty"`
 	// Work that published an Artifact.
-	WorkId string `protobuf:"bytes,8,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
+	WorkId string `protobuf:"bytes,6,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
 	// Active Share Links.
-	ShareLinks []*ShareLink `protobuf:"bytes,9,rep,name=share_links,json=shareLinks,proto3" json:"share_links,omitempty"`
+	ShareLinks []*ShareLink `protobuf:"bytes,7,rep,name=share_links,json=shareLinks,proto3" json:"share_links,omitempty"`
 	// Application that uploaded an Attachment.
-	UploaderApplicationId string `protobuf:"bytes,10,opt,name=uploader_application_id,json=uploaderApplicationId,proto3" json:"uploader_application_id,omitempty"`
+	UploaderApplicationId string `protobuf:"bytes,8,opt,name=uploader_application_id,json=uploaderApplicationId,proto3" json:"uploader_application_id,omitempty"`
 	unknownFields         protoimpl.UnknownFields
 	sizeCache             protoimpl.SizeCache
 }
@@ -2971,20 +2971,19 @@ const file_storage_private_v1_storage_proto_rawDesc = "" +
 	"\x12created_by_user_id\x18\x03 \x01(\tR\x0fcreatedByUserId\x129\n" +
 	"\n" +
 	"created_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
-	"\x19created_by_application_id\x18\x05 \x01(\tR\x16createdByApplicationId\"\x94\x03\n" +
+	"\x19created_by_application_id\x18\x05 \x01(\tR\x16createdByApplicationId\"\xfc\x02\n" +
 	"\x04File\x12<\n" +
 	"\bposition\x18\x01 \x01(\v2 .storage.private.v1.FilePositionR\bposition\x12\x1d\n" +
 	"\n" +
-	"size_bytes\x18\x04 \x01(\x03R\tsizeBytes\x12!\n" +
-	"\fcontent_type\x18\x05 \x01(\tR\vcontentType\x129\n" +
+	"size_bytes\x18\x02 \x01(\x03R\tsizeBytes\x12!\n" +
+	"\fcontent_type\x18\x03 \x01(\tR\vcontentType\x129\n" +
 	"\n" +
-	"updated_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12(\n" +
-	"\x10uploader_user_id\x18\a \x01(\tR\x0euploaderUserId\x12\x17\n" +
-	"\awork_id\x18\b \x01(\tR\x06workId\x12>\n" +
-	"\vshare_links\x18\t \x03(\v2\x1d.storage.private.v1.ShareLinkR\n" +
+	"updated_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12(\n" +
+	"\x10uploader_user_id\x18\x05 \x01(\tR\x0euploaderUserId\x12\x17\n" +
+	"\awork_id\x18\x06 \x01(\tR\x06workId\x12>\n" +
+	"\vshare_links\x18\a \x03(\v2\x1d.storage.private.v1.ShareLinkR\n" +
 	"shareLinks\x126\n" +
-	"\x17uploader_application_id\x18\n" +
-	" \x01(\tR\x15uploaderApplicationIdJ\x04\b\x02\x10\x03J\x04\b\x03\x10\x04R\x04kindR\x04name\"Z\n" +
+	"\x17uploader_application_id\x18\b \x01(\tR\x15uploaderApplicationId\"Z\n" +
 	"\x14OpenDirectoryRequest\x12B\n" +
 	"\tdirectory\x18\x01 \x01(\v2$.storage.private.v1.LocatedDirectoryR\tdirectory\"8\n" +
 	"\x15OpenDirectoryResponse\x12\x1f\n" +

@@ -29,43 +29,43 @@ type WorkFacts struct {
 	// Stable Work identity.
 	WorkId string `protobuf:"bytes,1,opt,name=work_id,json=workId,proto3" json:"work_id,omitempty"`
 	// The Work Caller the Work was started in the name of.
-	WorkCaller *v1.WorkCaller `protobuf:"bytes,18,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
+	WorkCaller *v1.WorkCaller `protobuf:"bytes,2,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
 	// The Work's Work Key; absent for a Work without one.
-	WorkKey *v1.WorkKey `protobuf:"bytes,19,opt,name=work_key,json=workKey,proto3" json:"work_key,omitempty"`
+	WorkKey *v1.WorkKey `protobuf:"bytes,3,opt,name=work_key,json=workKey,proto3" json:"work_key,omitempty"`
 	// The Work's File Home; absent for a Work without one.
-	FileHome *v1.FileHome `protobuf:"bytes,20,opt,name=file_home,json=fileHome,proto3" json:"file_home,omitempty"`
+	FileHome *v1.FileHome `protobuf:"bytes,4,opt,name=file_home,json=fileHome,proto3" json:"file_home,omitempty"`
 	// The Work's Agent Owner: its definition's Owner.
-	AgentOwner string `protobuf:"bytes,4,opt,name=agent_owner,json=agentOwner,proto3" json:"agent_owner,omitempty"`
+	AgentOwner string `protobuf:"bytes,5,opt,name=agent_owner,json=agentOwner,proto3" json:"agent_owner,omitempty"`
 	// Who started the Work, a fact.
-	StartedBy string `protobuf:"bytes,5,opt,name=started_by,json=startedBy,proto3" json:"started_by,omitempty"`
+	StartedBy string `protobuf:"bytes,6,opt,name=started_by,json=startedBy,proto3" json:"started_by,omitempty"`
 	// Authoritative Work lifecycle state.
-	State string `protobuf:"bytes,6,opt,name=state,proto3" json:"state,omitempty"`
+	State string `protobuf:"bytes,7,opt,name=state,proto3" json:"state,omitempty"`
 	// Accepted stop or abnormal-completion reason.
-	StateReason string `protobuf:"bytes,7,opt,name=state_reason,json=stateReason,proto3" json:"state_reason,omitempty"`
+	StateReason string `protobuf:"bytes,8,opt,name=state_reason,json=stateReason,proto3" json:"state_reason,omitempty"`
 	// Retained runtime diagnostic; set only by GetWorkFacts.
-	DiagnosticReason string `protobuf:"bytes,8,opt,name=diagnostic_reason,json=diagnosticReason,proto3" json:"diagnostic_reason,omitempty"`
+	DiagnosticReason string `protobuf:"bytes,9,opt,name=diagnostic_reason,json=diagnosticReason,proto3" json:"diagnostic_reason,omitempty"`
 	// Persisted Plan/TODO snapshot; set only by GetWorkFacts.
-	WorkProgress *v1.WorkProgress `protobuf:"bytes,9,opt,name=work_progress,json=workProgress,proto3" json:"work_progress,omitempty"`
+	WorkProgress *v1.WorkProgress `protobuf:"bytes,10,opt,name=work_progress,json=workProgress,proto3" json:"work_progress,omitempty"`
 	// Recoverable startup facts; set only by GetWorkFacts.
-	StartupProgress *v1.StartupProgress `protobuf:"bytes,10,opt,name=startup_progress,json=startupProgress,proto3" json:"startup_progress,omitempty"`
+	StartupProgress *v1.StartupProgress `protobuf:"bytes,11,opt,name=startup_progress,json=startupProgress,proto3" json:"startup_progress,omitempty"`
 	// When the Work was started.
-	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	// Last persisted Work update.
-	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,13,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
 	// The Work's Turn awaits the user's answer; Waiting is not a lifecycle
 	// state.
-	Waiting bool `protobuf:"varint,13,opt,name=waiting,proto3" json:"waiting,omitempty"`
+	Waiting bool `protobuf:"varint,14,opt,name=waiting,proto3" json:"waiting,omitempty"`
 	// Permanent closure has been accepted and is awaiting completion.
-	ArchivePending bool `protobuf:"varint,14,opt,name=archive_pending,json=archivePending,proto3" json:"archive_pending,omitempty"`
+	ArchivePending bool `protobuf:"varint,15,opt,name=archive_pending,json=archivePending,proto3" json:"archive_pending,omitempty"`
 	// The message stream is public to the members of the Work's Work Caller;
 	// otherwise private.
-	VisibilityPublic bool `protobuf:"varint,15,opt,name=visibility_public,json=visibilityPublic,proto3" json:"visibility_public,omitempty"`
+	VisibilityPublic bool `protobuf:"varint,16,opt,name=visibility_public,json=visibilityPublic,proto3" json:"visibility_public,omitempty"`
 	// The Work's start waits in its Computer's line for room; set only by
 	// GetWorkFacts.
-	DeskWaiting bool `protobuf:"varint,16,opt,name=desk_waiting,json=deskWaiting,proto3" json:"desk_waiting,omitempty"`
+	DeskWaiting bool `protobuf:"varint,17,opt,name=desk_waiting,json=deskWaiting,proto3" json:"desk_waiting,omitempty"`
 	// The origin of the Work's current Disconnection; absent while its
 	// execution environment is observed.
-	DisconnectedSince *timestamppb.Timestamp `protobuf:"bytes,17,opt,name=disconnected_since,json=disconnectedSince,proto3" json:"disconnected_since,omitempty"`
+	DisconnectedSince *timestamppb.Timestamp `protobuf:"bytes,18,opt,name=disconnected_since,json=disconnectedSince,proto3" json:"disconnected_since,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -231,24 +231,24 @@ func (x *WorkFacts) GetDisconnectedSince() *timestamppb.Timestamp {
 type ListWorksRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The Work Caller of every listed Work.
-	WorkCaller *v1.WorkCaller `protobuf:"bytes,9,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
+	WorkCaller *v1.WorkCaller `protobuf:"bytes,1,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
 	// The Work Key of every listed Work, across definitions; requires a Work
 	// Caller.
-	WorkKey *v1.WorkKey `protobuf:"bytes,10,opt,name=work_key,json=workKey,proto3" json:"work_key,omitempty"`
+	WorkKey *v1.WorkKey `protobuf:"bytes,2,opt,name=work_key,json=workKey,proto3" json:"work_key,omitempty"`
 	// Opaque definition purpose.
-	Purpose string `protobuf:"bytes,2,opt,name=purpose,proto3" json:"purpose,omitempty"`
+	Purpose string `protobuf:"bytes,3,opt,name=purpose,proto3" json:"purpose,omitempty"`
 	// Works whose definition this person owns.
-	AgentOwner string `protobuf:"bytes,3,opt,name=agent_owner,json=agentOwner,proto3" json:"agent_owner,omitempty"`
+	AgentOwner string `protobuf:"bytes,4,opt,name=agent_owner,json=agentOwner,proto3" json:"agent_owner,omitempty"`
 	// Work identities, at most 500.
-	WorkIds []string `protobuf:"bytes,4,rep,name=work_ids,json=workIds,proto3" json:"work_ids,omitempty"`
+	WorkIds []string `protobuf:"bytes,5,rep,name=work_ids,json=workIds,proto3" json:"work_ids,omitempty"`
 	// Order by last update descending instead of identity ascending.
-	Recent bool `protobuf:"varint,5,opt,name=recent,proto3" json:"recent,omitempty"`
+	Recent bool `protobuf:"varint,6,opt,name=recent,proto3" json:"recent,omitempty"`
 	// Optional archive category.
-	Archived *bool `protobuf:"varint,6,opt,name=archived,proto3,oneof" json:"archived,omitempty"`
+	Archived *bool `protobuf:"varint,7,opt,name=archived,proto3,oneof" json:"archived,omitempty"`
 	// Maximum results; defaults and caps at 500.
-	Limit int32 `protobuf:"varint,7,opt,name=limit,proto3" json:"limit,omitempty"`
+	Limit int32 `protobuf:"varint,8,opt,name=limit,proto3" json:"limit,omitempty"`
 	// Exclusive identity cursor for ascending order.
-	After         string `protobuf:"bytes,8,opt,name=after,proto3" json:"after,omitempty"`
+	After         string `protobuf:"bytes,9,opt,name=after,proto3" json:"after,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -488,7 +488,7 @@ func (x *GetWorkFactsResponse) GetWork() *WorkFacts {
 type GetWorkReportRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The Work Caller of every reported Work; required.
-	WorkCaller *v1.WorkCaller `protobuf:"bytes,5,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
+	WorkCaller *v1.WorkCaller `protobuf:"bytes,1,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
 	// Opaque definition purpose.
 	Purpose string `protobuf:"bytes,2,opt,name=purpose,proto3" json:"purpose,omitempty"`
 	// One of 24h, 7d or 30d.
@@ -652,61 +652,57 @@ var File_agent_private_v1_work_facts_proto protoreflect.FileDescriptor
 
 const file_agent_private_v1_work_facts_proto_rawDesc = "" +
 	"\n" +
-	"!agent/private/v1/work_facts.proto\x12\x10agent.private.v1\x1a\x1eagent/public/v1/progress.proto\x1a\x1dagent/public/v1/startup.proto\x1a\x1aagent/public/v1/work.proto\x1a!agent/public/v1/work_caller.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xfb\x06\n" +
+	"!agent/private/v1/work_facts.proto\x12\x10agent.private.v1\x1a\x1eagent/public/v1/progress.proto\x1a\x1dagent/public/v1/startup.proto\x1a\x1aagent/public/v1/work.proto\x1a!agent/public/v1/work_caller.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xda\x06\n" +
 	"\tWorkFacts\x12\x17\n" +
 	"\awork_id\x18\x01 \x01(\tR\x06workId\x12<\n" +
-	"\vwork_caller\x18\x12 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"\vwork_caller\x18\x02 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
 	"workCaller\x123\n" +
-	"\bwork_key\x18\x13 \x01(\v2\x18.agent.public.v1.WorkKeyR\aworkKey\x126\n" +
-	"\tfile_home\x18\x14 \x01(\v2\x19.agent.public.v1.FileHomeR\bfileHome\x12\x1f\n" +
-	"\vagent_owner\x18\x04 \x01(\tR\n" +
+	"\bwork_key\x18\x03 \x01(\v2\x18.agent.public.v1.WorkKeyR\aworkKey\x126\n" +
+	"\tfile_home\x18\x04 \x01(\v2\x19.agent.public.v1.FileHomeR\bfileHome\x12\x1f\n" +
+	"\vagent_owner\x18\x05 \x01(\tR\n" +
 	"agentOwner\x12\x1d\n" +
 	"\n" +
-	"started_by\x18\x05 \x01(\tR\tstartedBy\x12\x14\n" +
-	"\x05state\x18\x06 \x01(\tR\x05state\x12!\n" +
-	"\fstate_reason\x18\a \x01(\tR\vstateReason\x12+\n" +
-	"\x11diagnostic_reason\x18\b \x01(\tR\x10diagnosticReason\x12B\n" +
-	"\rwork_progress\x18\t \x01(\v2\x1d.agent.public.v1.WorkProgressR\fworkProgress\x12K\n" +
-	"\x10startup_progress\x18\n" +
-	" \x01(\v2 .agent.public.v1.StartupProgressR\x0fstartupProgress\x129\n" +
+	"started_by\x18\x06 \x01(\tR\tstartedBy\x12\x14\n" +
+	"\x05state\x18\a \x01(\tR\x05state\x12!\n" +
+	"\fstate_reason\x18\b \x01(\tR\vstateReason\x12+\n" +
+	"\x11diagnostic_reason\x18\t \x01(\tR\x10diagnosticReason\x12B\n" +
+	"\rwork_progress\x18\n" +
+	" \x01(\v2\x1d.agent.public.v1.WorkProgressR\fworkProgress\x12K\n" +
+	"\x10startup_progress\x18\v \x01(\v2 .agent.public.v1.StartupProgressR\x0fstartupProgress\x129\n" +
 	"\n" +
-	"created_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"created_at\x18\f \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\f \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12\x18\n" +
-	"\awaiting\x18\r \x01(\bR\awaiting\x12'\n" +
-	"\x0farchive_pending\x18\x0e \x01(\bR\x0earchivePending\x12+\n" +
-	"\x11visibility_public\x18\x0f \x01(\bR\x10visibilityPublic\x12!\n" +
-	"\fdesk_waiting\x18\x10 \x01(\bR\vdeskWaiting\x12I\n" +
-	"\x12disconnected_since\x18\x11 \x01(\v2\x1a.google.protobuf.TimestampR\x11disconnectedSinceJ\x04\b\x02\x10\x03J\x04\b\x03\x10\x04R\asubjectR\n" +
-	"project_id\"\xdf\x02\n" +
+	"updated_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12\x18\n" +
+	"\awaiting\x18\x0e \x01(\bR\awaiting\x12'\n" +
+	"\x0farchive_pending\x18\x0f \x01(\bR\x0earchivePending\x12+\n" +
+	"\x11visibility_public\x18\x10 \x01(\bR\x10visibilityPublic\x12!\n" +
+	"\fdesk_waiting\x18\x11 \x01(\bR\vdeskWaiting\x12I\n" +
+	"\x12disconnected_since\x18\x12 \x01(\v2\x1a.google.protobuf.TimestampR\x11disconnectedSince\"\xcd\x02\n" +
 	"\x10ListWorksRequest\x12<\n" +
-	"\vwork_caller\x18\t \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"\vwork_caller\x18\x01 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
 	"workCaller\x123\n" +
-	"\bwork_key\x18\n" +
-	" \x01(\v2\x18.agent.public.v1.WorkKeyR\aworkKey\x12\x18\n" +
-	"\apurpose\x18\x02 \x01(\tR\apurpose\x12\x1f\n" +
-	"\vagent_owner\x18\x03 \x01(\tR\n" +
+	"\bwork_key\x18\x02 \x01(\v2\x18.agent.public.v1.WorkKeyR\aworkKey\x12\x18\n" +
+	"\apurpose\x18\x03 \x01(\tR\apurpose\x12\x1f\n" +
+	"\vagent_owner\x18\x04 \x01(\tR\n" +
 	"agentOwner\x12\x19\n" +
-	"\bwork_ids\x18\x04 \x03(\tR\aworkIds\x12\x16\n" +
-	"\x06recent\x18\x05 \x01(\bR\x06recent\x12\x1f\n" +
-	"\barchived\x18\x06 \x01(\bH\x00R\barchived\x88\x01\x01\x12\x14\n" +
-	"\x05limit\x18\a \x01(\x05R\x05limit\x12\x14\n" +
-	"\x05after\x18\b \x01(\tR\x05afterB\v\n" +
-	"\t_archivedJ\x04\b\x01\x10\x02R\n" +
-	"project_id\"F\n" +
+	"\bwork_ids\x18\x05 \x03(\tR\aworkIds\x12\x16\n" +
+	"\x06recent\x18\x06 \x01(\bR\x06recent\x12\x1f\n" +
+	"\barchived\x18\a \x01(\bH\x00R\barchived\x88\x01\x01\x12\x14\n" +
+	"\x05limit\x18\b \x01(\x05R\x05limit\x12\x14\n" +
+	"\x05after\x18\t \x01(\tR\x05afterB\v\n" +
+	"\t_archived\"F\n" +
 	"\x11ListWorksResponse\x121\n" +
 	"\x05works\x18\x01 \x03(\v2\x1b.agent.private.v1.WorkFactsR\x05works\".\n" +
 	"\x13GetWorkFactsRequest\x12\x17\n" +
 	"\awork_id\x18\x01 \x01(\tR\x06workId\"G\n" +
 	"\x14GetWorkFactsResponse\x12/\n" +
-	"\x04work\x18\x01 \x01(\v2\x1b.agent.private.v1.WorkFactsR\x04work\"\xc6\x01\n" +
+	"\x04work\x18\x01 \x01(\v2\x1b.agent.private.v1.WorkFactsR\x04work\"\xb4\x01\n" +
 	"\x14GetWorkReportRequest\x12<\n" +
-	"\vwork_caller\x18\x05 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"\vwork_caller\x18\x01 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
 	"workCaller\x12\x18\n" +
 	"\apurpose\x18\x02 \x01(\tR\apurpose\x12\x16\n" +
 	"\x06window\x18\x03 \x01(\tR\x06window\x12,\n" +
-	"\x03end\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\x03endJ\x04\b\x01\x10\x02R\n" +
-	"project_id\"\xd3\x02\n" +
+	"\x03end\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\x03end\"\xd3\x02\n" +
 	"\x15GetWorkReportResponse\x120\n" +
 	"\x05start\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x05start\x12,\n" +
 	"\x03end\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x03end\x12;\n" +

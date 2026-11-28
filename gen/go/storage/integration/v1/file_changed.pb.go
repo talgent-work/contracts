@@ -208,19 +208,19 @@ type FileChangedV1 struct {
 	// Time the change was committed.
 	OccurredAt *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=occurred_at,json=occurredAt,proto3" json:"occurred_at,omitempty"`
 	// The Directory the file is in.
-	Directory *Directory `protobuf:"bytes,10,opt,name=directory,proto3" json:"directory,omitempty"`
+	Directory *Directory `protobuf:"bytes,3,opt,name=directory,proto3" json:"directory,omitempty"`
 	// The file's name after the change; for a deletion, the name it had.
-	Name string `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`
+	Name string `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
 	// The former name of a renamed file; empty otherwise.
-	PreviousName string `protobuf:"bytes,6,opt,name=previous_name,json=previousName,proto3" json:"previous_name,omitempty"`
+	PreviousName string `protobuf:"bytes,5,opt,name=previous_name,json=previousName,proto3" json:"previous_name,omitempty"`
 	// How the file changed.
-	Operation FileOperation `protobuf:"varint,7,opt,name=operation,proto3,enum=storage.integration.v1.FileOperation" json:"operation,omitempty"`
+	Operation FileOperation `protobuf:"varint,6,opt,name=operation,proto3,enum=storage.integration.v1.FileOperation" json:"operation,omitempty"`
 	// The person who made the change.
-	ActorUserId string `protobuf:"bytes,8,opt,name=actor_user_id,json=actorUserId,proto3" json:"actor_user_id,omitempty"`
+	ActorUserId string `protobuf:"bytes,7,opt,name=actor_user_id,json=actorUserId,proto3" json:"actor_user_id,omitempty"`
 	// The Work whose Agent made the change.
-	ActorWorkId string `protobuf:"bytes,9,opt,name=actor_work_id,json=actorWorkId,proto3" json:"actor_work_id,omitempty"`
+	ActorWorkId string `protobuf:"bytes,8,opt,name=actor_work_id,json=actorWorkId,proto3" json:"actor_work_id,omitempty"`
 	// The Application that made the change.
-	ActorApplicationId string `protobuf:"bytes,11,opt,name=actor_application_id,json=actorApplicationId,proto3" json:"actor_application_id,omitempty"`
+	ActorApplicationId string `protobuf:"bytes,9,opt,name=actor_application_id,json=actorApplicationId,proto3" json:"actor_application_id,omitempty"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -328,19 +328,18 @@ const file_storage_integration_v1_file_changed_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\tR\x05value\"X\n" +
 	"\tDirectory\x127\n" +
 	"\x05owner\x18\x01 \x03(\v2!.storage.integration.v1.OwnerFactR\x05owner\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\"\xb9\x03\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\"\xa0\x03\n" +
 	"\rFileChangedV1\x12\x19\n" +
 	"\bevent_id\x18\x01 \x01(\tR\aeventId\x12;\n" +
 	"\voccurred_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
 	"occurredAt\x12?\n" +
-	"\tdirectory\x18\n" +
-	" \x01(\v2!.storage.integration.v1.DirectoryR\tdirectory\x12\x12\n" +
-	"\x04name\x18\x05 \x01(\tR\x04name\x12#\n" +
-	"\rprevious_name\x18\x06 \x01(\tR\fpreviousName\x12C\n" +
-	"\toperation\x18\a \x01(\x0e2%.storage.integration.v1.FileOperationR\toperation\x12\"\n" +
-	"\ractor_user_id\x18\b \x01(\tR\vactorUserId\x12\"\n" +
-	"\ractor_work_id\x18\t \x01(\tR\vactorWorkId\x120\n" +
-	"\x14actor_application_id\x18\v \x01(\tR\x12actorApplicationIdJ\x04\b\x03\x10\x04J\x04\b\x04\x10\x05R\x05ownerR\x04kind*\xa0\x01\n" +
+	"\tdirectory\x18\x03 \x01(\v2!.storage.integration.v1.DirectoryR\tdirectory\x12\x12\n" +
+	"\x04name\x18\x04 \x01(\tR\x04name\x12#\n" +
+	"\rprevious_name\x18\x05 \x01(\tR\fpreviousName\x12C\n" +
+	"\toperation\x18\x06 \x01(\x0e2%.storage.integration.v1.FileOperationR\toperation\x12\"\n" +
+	"\ractor_user_id\x18\a \x01(\tR\vactorUserId\x12\"\n" +
+	"\ractor_work_id\x18\b \x01(\tR\vactorWorkId\x120\n" +
+	"\x14actor_application_id\x18\t \x01(\tR\x12actorApplicationId*\xa0\x01\n" +
 	"\rFileOperation\x12\x1e\n" +
 	"\x1aFILE_OPERATION_UNSPECIFIED\x10\x00\x12\x1a\n" +
 	"\x16FILE_OPERATION_CREATED\x10\x01\x12\x1b\n" +

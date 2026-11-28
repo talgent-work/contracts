@@ -41,35 +41,35 @@ export declare type WhoAmIResponse = Message<"agent.public.v1.WhoAmIResponse"> &
   /**
    * The purpose of the Work's AgentDefinition.
    *
-   * @generated from field: string purpose = 5;
+   * @generated from field: string purpose = 2;
    */
   purpose: string;
 
   /**
    * The Work's AgentDefinition.
    *
-   * @generated from field: string agent_id = 6;
+   * @generated from field: string agent_id = 3;
    */
   agentId: string;
 
   /**
    * The Work Caller the Work was started in the name of.
    *
-   * @generated from field: agent.public.v1.WorkCaller work_caller = 7;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 4;
    */
   workCaller?: WorkCaller;
 
   /**
    * The Work's Work Key; absent for a Work without one.
    *
-   * @generated from field: agent.public.v1.WorkKey work_key = 8;
+   * @generated from field: agent.public.v1.WorkKey work_key = 5;
    */
   workKey?: WorkKey;
 
   /**
    * The Work's File Home; absent for a Work without one.
    *
-   * @generated from field: agent.public.v1.FileHome file_home = 9;
+   * @generated from field: agent.public.v1.FileHome file_home = 6;
    */
   fileHome?: FileHome;
 };

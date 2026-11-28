@@ -31,84 +31,84 @@ export declare type WorkFacts = Message<"agent.private.v1.WorkFacts"> & {
   /**
    * The Work Caller the Work was started in the name of.
    *
-   * @generated from field: agent.public.v1.WorkCaller work_caller = 18;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 2;
    */
   workCaller?: WorkCaller;
 
   /**
    * The Work's Work Key; absent for a Work without one.
    *
-   * @generated from field: agent.public.v1.WorkKey work_key = 19;
+   * @generated from field: agent.public.v1.WorkKey work_key = 3;
    */
   workKey?: WorkKey;
 
   /**
    * The Work's File Home; absent for a Work without one.
    *
-   * @generated from field: agent.public.v1.FileHome file_home = 20;
+   * @generated from field: agent.public.v1.FileHome file_home = 4;
    */
   fileHome?: FileHome;
 
   /**
    * The Work's Agent Owner: its definition's Owner.
    *
-   * @generated from field: string agent_owner = 4;
+   * @generated from field: string agent_owner = 5;
    */
   agentOwner: string;
 
   /**
    * Who started the Work, a fact.
    *
-   * @generated from field: string started_by = 5;
+   * @generated from field: string started_by = 6;
    */
   startedBy: string;
 
   /**
    * Authoritative Work lifecycle state.
    *
-   * @generated from field: string state = 6;
+   * @generated from field: string state = 7;
    */
   state: string;
 
   /**
    * Accepted stop or abnormal-completion reason.
    *
-   * @generated from field: string state_reason = 7;
+   * @generated from field: string state_reason = 8;
    */
   stateReason: string;
 
   /**
    * Retained runtime diagnostic; set only by GetWorkFacts.
    *
-   * @generated from field: string diagnostic_reason = 8;
+   * @generated from field: string diagnostic_reason = 9;
    */
   diagnosticReason: string;
 
   /**
    * Persisted Plan/TODO snapshot; set only by GetWorkFacts.
    *
-   * @generated from field: agent.public.v1.WorkProgress work_progress = 9;
+   * @generated from field: agent.public.v1.WorkProgress work_progress = 10;
    */
   workProgress?: WorkProgress;
 
   /**
    * Recoverable startup facts; set only by GetWorkFacts.
    *
-   * @generated from field: agent.public.v1.StartupProgress startup_progress = 10;
+   * @generated from field: agent.public.v1.StartupProgress startup_progress = 11;
    */
   startupProgress?: StartupProgress;
 
   /**
    * When the Work was started.
    *
-   * @generated from field: google.protobuf.Timestamp created_at = 11;
+   * @generated from field: google.protobuf.Timestamp created_at = 12;
    */
   createdAt?: Timestamp;
 
   /**
    * Last persisted Work update.
    *
-   * @generated from field: google.protobuf.Timestamp updated_at = 12;
+   * @generated from field: google.protobuf.Timestamp updated_at = 13;
    */
   updatedAt?: Timestamp;
 
@@ -116,14 +116,14 @@ export declare type WorkFacts = Message<"agent.private.v1.WorkFacts"> & {
    * The Work's Turn awaits the user's answer; Waiting is not a lifecycle
    * state.
    *
-   * @generated from field: bool waiting = 13;
+   * @generated from field: bool waiting = 14;
    */
   waiting: boolean;
 
   /**
    * Permanent closure has been accepted and is awaiting completion.
    *
-   * @generated from field: bool archive_pending = 14;
+   * @generated from field: bool archive_pending = 15;
    */
   archivePending: boolean;
 
@@ -131,7 +131,7 @@ export declare type WorkFacts = Message<"agent.private.v1.WorkFacts"> & {
    * The message stream is public to the members of the Work's Work Caller;
    * otherwise private.
    *
-   * @generated from field: bool visibility_public = 15;
+   * @generated from field: bool visibility_public = 16;
    */
   visibilityPublic: boolean;
 
@@ -139,7 +139,7 @@ export declare type WorkFacts = Message<"agent.private.v1.WorkFacts"> & {
    * The Work's start waits in its Computer's line for room; set only by
    * GetWorkFacts.
    *
-   * @generated from field: bool desk_waiting = 16;
+   * @generated from field: bool desk_waiting = 17;
    */
   deskWaiting: boolean;
 
@@ -147,7 +147,7 @@ export declare type WorkFacts = Message<"agent.private.v1.WorkFacts"> & {
    * The origin of the Work's current Disconnection; absent while its
    * execution environment is observed.
    *
-   * @generated from field: google.protobuf.Timestamp disconnected_since = 17;
+   * @generated from field: google.protobuf.Timestamp disconnected_since = 18;
    */
   disconnectedSince?: Timestamp;
 };
@@ -168,7 +168,7 @@ export declare type ListWorksRequest = Message<"agent.private.v1.ListWorksReques
   /**
    * The Work Caller of every listed Work.
    *
-   * @generated from field: agent.public.v1.WorkCaller work_caller = 9;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 1;
    */
   workCaller?: WorkCaller;
 
@@ -176,56 +176,56 @@ export declare type ListWorksRequest = Message<"agent.private.v1.ListWorksReques
    * The Work Key of every listed Work, across definitions; requires a Work
    * Caller.
    *
-   * @generated from field: agent.public.v1.WorkKey work_key = 10;
+   * @generated from field: agent.public.v1.WorkKey work_key = 2;
    */
   workKey?: WorkKey;
 
   /**
    * Opaque definition purpose.
    *
-   * @generated from field: string purpose = 2;
+   * @generated from field: string purpose = 3;
    */
   purpose: string;
 
   /**
    * Works whose definition this person owns.
    *
-   * @generated from field: string agent_owner = 3;
+   * @generated from field: string agent_owner = 4;
    */
   agentOwner: string;
 
   /**
    * Work identities, at most 500.
    *
-   * @generated from field: repeated string work_ids = 4;
+   * @generated from field: repeated string work_ids = 5;
    */
   workIds: string[];
 
   /**
    * Order by last update descending instead of identity ascending.
    *
-   * @generated from field: bool recent = 5;
+   * @generated from field: bool recent = 6;
    */
   recent: boolean;
 
   /**
    * Optional archive category.
    *
-   * @generated from field: optional bool archived = 6;
+   * @generated from field: optional bool archived = 7;
    */
   archived?: boolean;
 
   /**
    * Maximum results; defaults and caps at 500.
    *
-   * @generated from field: int32 limit = 7;
+   * @generated from field: int32 limit = 8;
    */
   limit: number;
 
   /**
    * Exclusive identity cursor for ascending order.
    *
-   * @generated from field: string after = 8;
+   * @generated from field: string after = 9;
    */
   after: string;
 };
@@ -305,7 +305,7 @@ export declare type GetWorkReportRequest = Message<"agent.private.v1.GetWorkRepo
   /**
    * The Work Caller of every reported Work; required.
    *
-   * @generated from field: agent.public.v1.WorkCaller work_caller = 5;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 1;
    */
   workCaller?: WorkCaller;
 

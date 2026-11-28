@@ -490,7 +490,7 @@ type WorkspaceEntry struct {
 	Kind WorkspaceEntryKind `protobuf:"varint,4,opt,name=kind,proto3,enum=storage.private.v1.WorkspaceEntryKind" json:"kind,omitempty"`
 	// A file Storage wrote into a mounted Directory: its position, read and
 	// previewed as that file.
-	Position      *FilePosition `protobuf:"bytes,6,opt,name=position,proto3" json:"position,omitempty"`
+	Position      *FilePosition `protobuf:"bytes,5,opt,name=position,proto3" json:"position,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1059,7 +1059,7 @@ const file_storage_private_v1_workspace_proto_rawDesc = "" +
 	"\x06mounts\x18\x02 \x03(\v2$.storage.private.v1.MountedDirectoryR\x06mounts\"j\n" +
 	"\x17GetWorkspaceViewRequest\x12;\n" +
 	"\x06layout\x18\x01 \x01(\v2#.storage.private.v1.WorkspaceLayoutR\x06layout\x12\x12\n" +
-	"\x04path\x18\x02 \x01(\tR\x04path\"\x91\x02\n" +
+	"\x04path\x18\x02 \x01(\tR\x04path\"\xfa\x01\n" +
 	"\x0eWorkspaceEntry\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1d\n" +
 	"\n" +
@@ -1067,7 +1067,7 @@ const file_storage_private_v1_workspace_proto_rawDesc = "" +
 	"\vmodified_at\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
 	"modifiedAt\x12:\n" +
 	"\x04kind\x18\x04 \x01(\x0e2&.storage.private.v1.WorkspaceEntryKindR\x04kind\x12<\n" +
-	"\bposition\x18\x06 \x01(\v2 .storage.private.v1.FilePositionR\bpositionJ\x04\b\x05\x10\x06R\x0fattachment_name\"n\n" +
+	"\bposition\x18\x05 \x01(\v2 .storage.private.v1.FilePositionR\bposition\"n\n" +
 	"\x18GetWorkspaceViewResponse\x12<\n" +
 	"\aentries\x18\x01 \x03(\v2\".storage.private.v1.WorkspaceEntryR\aentries\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\rR\x05total\"q\n" +

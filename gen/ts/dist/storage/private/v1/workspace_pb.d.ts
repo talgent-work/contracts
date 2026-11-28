@@ -250,7 +250,7 @@ export declare type WorkspaceEntry = Message<"storage.private.v1.WorkspaceEntry"
    * A file Storage wrote into a mounted Directory: its position, read and
    * previewed as that file.
    *
-   * @generated from field: storage.private.v1.FilePosition position = 6;
+   * @generated from field: storage.private.v1.FilePosition position = 5;
    */
   position?: FilePosition;
 };

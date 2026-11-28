@@ -176,12 +176,10 @@ message CapabilityDifferences {
 
 // ConnectorChoice adds or removes one catalog Connector for this Work only.
 message ConnectorChoice {
-  reserved 1;
-  reserved "name";
   // True adds the Connector; false removes a default. Required entries stay.
-  bool include = 2;
+  bool include = 1;
   // Connector identity. A Work refuses two selected Connectors of one name.
-  string connector_id = 3;
+  string connector_id = 2;
 }
 
 // UsageScope declares business-authorized ownership without importing a business aggregate.
@@ -202,12 +200,10 @@ message CreateAgentDefinitionRequest {
   string purpose = 3;
   // Reusable capability definition.
   Capabilities capabilities = 4;
-  reserved 6;
-  reserved "home_binding";
   // Usage scope authorized by the calling business context.
   UsageScope usage_scope = 5;
   // Visibility of the definition's new Works.
-  VisibilityRule visibility_rule = 7;
+  VisibilityRule visibility_rule = 6;
 }
 
 // VisibilityRule declares the visibility of a definition's new Works.
@@ -224,8 +220,6 @@ message CreateAgentDefinitionResponse {
 
 // CreateWorkRequest carries Agent control data.
 message CreateWorkRequest {
-  reserved 5, 11, 12, 13;
-  reserved "workspace_reference", "input_source", "input_space_token", "read_only_mounts";
   // Trusted human initiating creation, distinct from the represented owner.
   // Empty for automated starts, which do not load personal Plugin defaults.
   string starting_user_id = 1;
@@ -238,43 +232,41 @@ message CreateWorkRequest {
   // AgentDefinition whose capabilities are captured.
   string agent_id = 4;
   // Immutable attribution supplied by the extension; not an authorization credential.
-  map<string, string> trace_attributes = 6;
+  map<string, string> trace_attributes = 5;
   // Used only when establishing the Session capability snapshot.
-  CapabilityDifferences capability_differences = 7;
-  reserved 8, 9;
-  reserved "subject", "project_id";
+  CapabilityDifferences capability_differences = 6;
   // Optional Model Configuration; absence selects the first provided one.
-  agent.public.v1.WorkModelSelection model = 10;
+  agent.public.v1.WorkModelSelection model = 7;
   // Optional context a new Work starts from: another Work of the same
   // definition up to a position this Agent named. Reuse of an existing Work
   // neither compares nor replaces it.
-  WorkStartingContext starting_context = 14;
+  WorkStartingContext starting_context = 8;
   // The Computer a new Work runs on for its life: a Cloud or one of the
   // represented person's own Managed Computers; empty runs it on the first
   // Cloud. Reuse of an existing Work neither compares nor replaces it.
-  string computer_id = 15;
+  string computer_id = 9;
   // The Harness choices of a new Work, admitted only on a Managed Computer.
   // Reuse of an existing Work neither compares nor replaces them.
-  agent.public.v1.HarnessChoice harness = 16;
+  agent.public.v1.HarnessChoice harness = 10;
   // The Agent Harness a new Work runs, by its identity, such as
   // "claude-code"; empty chooses the default. The Work keeps it for its
   // life; an unknown one is refused. Reuse of an existing Work neither
   // compares nor replaces it.
-  string agent_harness = 17;
+  string agent_harness = 11;
   // The Work Caller the Work is started in the name of; required. Only the
   // extension that defines its kind starts Works under it, so the core kinds
   // "person" and "application" are refused here: a Standalone Work records
   // its owner as its Work Caller through the public Work API.
-  agent.public.v1.WorkCaller work_caller = 18;
+  agent.public.v1.WorkCaller work_caller = 12;
   // The optional name the extension finds the Work by again; an existing Work
   // of the definition for it is returned instead of a new one, and one of
   // another Work Caller or File Home is refused with FailedPrecondition.
   // Absent, every request identity creates its own Work, which has no Work
   // Key for good.
-  agent.public.v1.WorkKey work_key = 19;
+  agent.public.v1.WorkKey work_key = 13;
   // The optional owner of the shared File Spaces the Work reads its inputs
   // from and publishes into; absent, the Work's own File Spaces.
-  agent.public.v1.FileHome file_home = 20;
+  agent.public.v1.FileHome file_home = 14;
 }
 
 // WorkStartingContext names another Work of the same definition and Work
@@ -288,10 +280,8 @@ message WorkStartingContext {
 
 // ResolveWorkContextPositionRequest names one call of one Work.
 message ResolveWorkContextPositionRequest {
-  reserved 1;
-  reserved "project_id";
   // The Work's Work Caller; a Work of another Work Caller is unknown.
-  agent.public.v1.WorkCaller work_caller = 4;
+  agent.public.v1.WorkCaller work_caller = 1;
   // The Work that made the call.
   string work_id = 2;
   // Harness identity of the call.
@@ -351,8 +341,6 @@ message GetWorkResponse {
   string failure_reason = 11;
   // Monotonic persisted Session revision; consumers reject older observations.
   int64 version = 12;
-  reserved 14;
-  reserved "workspace_reference";
   // Current stop correlation, retained through confirmed stop completion.
   string stop_request_id = 13;
 }
@@ -495,12 +483,10 @@ message GetAgentDefinitionResponse {
   string agent_id = 4;
   // Current reusable configuration.
   Capabilities capabilities = 5;
-  reserved 7;
-  reserved "home_binding";
   // Declared business-authorized scope.
   UsageScope usage_scope = 6;
   // Visibility declared for the definition's new Works.
-  VisibilityRule visibility_rule = 8;
+  VisibilityRule visibility_rule = 7;
 }
 
 // RespondToInteractionRequest answers a required interaction in a Session.
@@ -530,13 +516,11 @@ message LocateWorkRequest {
   string subject_id = 1;
   // Definition within which to locate the Work.
   string agent_id = 2;
-  reserved 3;
-  reserved "subject";
   // The Work Key; capabilities are not lookup keys.
-  agent.public.v1.WorkKey work_key = 4;
+  agent.public.v1.WorkKey work_key = 3;
   // The Work Caller of the located Work; a Work of another Work Caller is not
   // found.
-  agent.public.v1.WorkCaller work_caller = 5;
+  agent.public.v1.WorkCaller work_caller = 4;
 }
 
 // LocateWorkResponse reports an existing conversation without execution admission.
@@ -722,11 +706,9 @@ message PreparedCheckout {
 
 // ResolveWorkStartsRequest asks for the start of Works of one Work Caller.
 message ResolveWorkStartsRequest {
-  reserved 1;
-  reserved "project_id";
   // The Work Caller whose Works may be resolved; Works of another Work Caller
   // are unknown.
-  agent.public.v1.WorkCaller work_caller = 3;
+  agent.public.v1.WorkCaller work_caller = 1;
   // Works to resolve, at most 200.
   repeated string work_ids = 2;
 }
@@ -764,14 +746,12 @@ message GetWorkOriginResponse {
   string agent_id = 2;
   // Definition purpose.
   string purpose = 3;
-  reserved 4, 5;
-  reserved "subject", "project_id";
   // The Work Caller the Work was started in the name of.
-  agent.public.v1.WorkCaller work_caller = 6;
+  agent.public.v1.WorkCaller work_caller = 4;
   // The Work's Work Key; absent for a Work without one.
-  agent.public.v1.WorkKey work_key = 7;
+  agent.public.v1.WorkKey work_key = 5;
   // The Work's File Home; absent for a Work without one.
-  agent.public.v1.FileHome file_home = 8;
+  agent.public.v1.FileHome file_home = 6;
 }
 
 // EnsureAgentDefinitionRequest is accepted only from authenticated internal callers.
@@ -786,14 +766,12 @@ message EnsureAgentDefinitionRequest {
   string purpose = 3;
   // Authoritative employee display name; required for employee work.
   string employee_display_name = 4;
-  reserved 5;
-  reserved "home_binding";
   // Caller-selected base capabilities; existing definitions retain their values.
-  Capabilities capabilities = 6;
+  Capabilities capabilities = 5;
   // Initial public name for a non-employee definition, if supplied.
-  string agent_name = 7;
+  string agent_name = 6;
   // Visibility of a new definition's Works; existing definitions retain theirs.
-  VisibilityRule visibility_rule = 8;
+  VisibilityRule visibility_rule = 7;
 }
 
 // EnsureEmployeeAgentRequest names the person.
@@ -839,12 +817,10 @@ message GetWorkStartOptionsRequest {
   // Plugins a new Work of the caller requires beside the definition's,
   // offered as required; ignored for an existing Work.
   repeated string required_plugins = 4;
-  reserved 5;
-  reserved "project_id";
   // The Work Caller a new Work is started in the name of; the Built-in
   // Plugins of its kind are offered as required. Absent means the person's
   // own Standalone Work; ignored for an existing Work.
-  agent.public.v1.WorkCaller work_caller = 6;
+  agent.public.v1.WorkCaller work_caller = 5;
 }
 
 // ListWorkStartRepositoriesRequest names the owner the trusted service

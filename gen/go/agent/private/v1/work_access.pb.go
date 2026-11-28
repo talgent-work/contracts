@@ -91,7 +91,7 @@ func (WorkReadBasis) EnumDescriptor() ([]byte, []int) {
 type ReaderAdmission struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The Work Caller the reader is a member of.
-	WorkCaller    *v1.WorkCaller `protobuf:"bytes,3,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
+	WorkCaller    *v1.WorkCaller `protobuf:"bytes,1,opt,name=work_caller,json=workCaller,proto3" json:"work_caller,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -471,10 +471,10 @@ var File_agent_private_v1_work_access_proto protoreflect.FileDescriptor
 
 const file_agent_private_v1_work_access_proto_rawDesc = "" +
 	"\n" +
-	"\"agent/private/v1/work_access.proto\x12\x10agent.private.v1\x1a!agent/public/v1/work_caller.proto\x1a+streamgateway/public/v1/streamgateway.proto\"m\n" +
+	"\"agent/private/v1/work_access.proto\x12\x10agent.private.v1\x1a!agent/public/v1/work_caller.proto\x1a+streamgateway/public/v1/streamgateway.proto\"O\n" +
 	"\x0fReaderAdmission\x12<\n" +
-	"\vwork_caller\x18\x03 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
-	"workCallerJ\x04\b\x01\x10\x02J\x04\b\x02\x10\x03R\treferenceR\x05value\"\xbd\x01\n" +
+	"\vwork_caller\x18\x01 \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
+	"workCaller\"\xbd\x01\n" +
 	"\x16AdmitWorkReaderRequest\x12\x17\n" +
 	"\awork_id\x18\x01 \x01(\tR\x06workId\x12\x1b\n" +
 	"\treader_id\x18\x02 \x01(\tR\breaderId\x12?\n" +

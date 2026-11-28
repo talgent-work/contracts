@@ -330,14 +330,14 @@ export declare type ConnectorChoice = Message<"agent.private.v1.ConnectorChoice"
   /**
    * True adds the Connector; false removes a default. Required entries stay.
    *
-   * @generated from field: bool include = 2;
+   * @generated from field: bool include = 1;
    */
   include: boolean;
 
   /**
    * Connector identity. A Work refuses two selected Connectors of one name.
    *
-   * @generated from field: string connector_id = 3;
+   * @generated from field: string connector_id = 2;
    */
   connectorId: string;
 };
@@ -419,7 +419,7 @@ export declare type CreateAgentDefinitionRequest = Message<"agent.private.v1.Cre
   /**
    * Visibility of the definition's new Works.
    *
-   * @generated from field: agent.private.v1.VisibilityRule visibility_rule = 7;
+   * @generated from field: agent.private.v1.VisibilityRule visibility_rule = 6;
    */
   visibilityRule?: VisibilityRule;
 };
@@ -510,21 +510,21 @@ export declare type CreateWorkRequest = Message<"agent.private.v1.CreateWorkRequ
   /**
    * Immutable attribution supplied by the extension; not an authorization credential.
    *
-   * @generated from field: map<string, string> trace_attributes = 6;
+   * @generated from field: map<string, string> trace_attributes = 5;
    */
   traceAttributes: { [key: string]: string };
 
   /**
    * Used only when establishing the Session capability snapshot.
    *
-   * @generated from field: agent.private.v1.CapabilityDifferences capability_differences = 7;
+   * @generated from field: agent.private.v1.CapabilityDifferences capability_differences = 6;
    */
   capabilityDifferences?: CapabilityDifferences;
 
   /**
    * Optional Model Configuration; absence selects the first provided one.
    *
-   * @generated from field: agent.public.v1.WorkModelSelection model = 10;
+   * @generated from field: agent.public.v1.WorkModelSelection model = 7;
    */
   model?: WorkModelSelection;
 
@@ -533,7 +533,7 @@ export declare type CreateWorkRequest = Message<"agent.private.v1.CreateWorkRequ
    * definition up to a position this Agent named. Reuse of an existing Work
    * neither compares nor replaces it.
    *
-   * @generated from field: agent.private.v1.WorkStartingContext starting_context = 14;
+   * @generated from field: agent.private.v1.WorkStartingContext starting_context = 8;
    */
   startingContext?: WorkStartingContext;
 
@@ -542,7 +542,7 @@ export declare type CreateWorkRequest = Message<"agent.private.v1.CreateWorkRequ
    * represented person's own Managed Computers; empty runs it on the first
    * Cloud. Reuse of an existing Work neither compares nor replaces it.
    *
-   * @generated from field: string computer_id = 15;
+   * @generated from field: string computer_id = 9;
    */
   computerId: string;
 
@@ -550,7 +550,7 @@ export declare type CreateWorkRequest = Message<"agent.private.v1.CreateWorkRequ
    * The Harness choices of a new Work, admitted only on a Managed Computer.
    * Reuse of an existing Work neither compares nor replaces them.
    *
-   * @generated from field: agent.public.v1.HarnessChoice harness = 16;
+   * @generated from field: agent.public.v1.HarnessChoice harness = 10;
    */
   harness?: HarnessChoice;
 
@@ -560,7 +560,7 @@ export declare type CreateWorkRequest = Message<"agent.private.v1.CreateWorkRequ
    * life; an unknown one is refused. Reuse of an existing Work neither
    * compares nor replaces it.
    *
-   * @generated from field: string agent_harness = 17;
+   * @generated from field: string agent_harness = 11;
    */
   agentHarness: string;
 
@@ -570,7 +570,7 @@ export declare type CreateWorkRequest = Message<"agent.private.v1.CreateWorkRequ
    * "person" and "application" are refused here: a Standalone Work records
    * its owner as its Work Caller through the public Work API.
    *
-   * @generated from field: agent.public.v1.WorkCaller work_caller = 18;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 12;
    */
   workCaller?: WorkCaller;
 
@@ -581,7 +581,7 @@ export declare type CreateWorkRequest = Message<"agent.private.v1.CreateWorkRequ
    * Absent, every request identity creates its own Work, which has no Work
    * Key for good.
    *
-   * @generated from field: agent.public.v1.WorkKey work_key = 19;
+   * @generated from field: agent.public.v1.WorkKey work_key = 13;
    */
   workKey?: WorkKey;
 
@@ -589,7 +589,7 @@ export declare type CreateWorkRequest = Message<"agent.private.v1.CreateWorkRequ
    * The optional owner of the shared File Spaces the Work reads its inputs
    * from and publishes into; absent, the Work's own File Spaces.
    *
-   * @generated from field: agent.public.v1.FileHome file_home = 20;
+   * @generated from field: agent.public.v1.FileHome file_home = 14;
    */
   fileHome?: FileHome;
 };
@@ -637,7 +637,7 @@ export declare type ResolveWorkContextPositionRequest = Message<"agent.private.v
   /**
    * The Work's Work Caller; a Work of another Work Caller is unknown.
    *
-   * @generated from field: agent.public.v1.WorkCaller work_caller = 4;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 1;
    */
   workCaller?: WorkCaller;
 
@@ -1252,7 +1252,7 @@ export declare type GetAgentDefinitionResponse = Message<"agent.private.v1.GetAg
   /**
    * Visibility declared for the definition's new Works.
    *
-   * @generated from field: agent.private.v1.VisibilityRule visibility_rule = 8;
+   * @generated from field: agent.private.v1.VisibilityRule visibility_rule = 7;
    */
   visibilityRule?: VisibilityRule;
 };
@@ -1362,7 +1362,7 @@ export declare type LocateWorkRequest = Message<"agent.private.v1.LocateWorkRequ
   /**
    * The Work Key; capabilities are not lookup keys.
    *
-   * @generated from field: agent.public.v1.WorkKey work_key = 4;
+   * @generated from field: agent.public.v1.WorkKey work_key = 3;
    */
   workKey?: WorkKey;
 
@@ -1370,7 +1370,7 @@ export declare type LocateWorkRequest = Message<"agent.private.v1.LocateWorkRequ
    * The Work Caller of the located Work; a Work of another Work Caller is not
    * found.
    *
-   * @generated from field: agent.public.v1.WorkCaller work_caller = 5;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 4;
    */
   workCaller?: WorkCaller;
 };
@@ -2005,7 +2005,7 @@ export declare type ResolveWorkStartsRequest = Message<"agent.private.v1.Resolve
    * The Work Caller whose Works may be resolved; Works of another Work Caller
    * are unknown.
    *
-   * @generated from field: agent.public.v1.WorkCaller work_caller = 3;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 1;
    */
   workCaller?: WorkCaller;
 
@@ -2135,21 +2135,21 @@ export declare type GetWorkOriginResponse = Message<"agent.private.v1.GetWorkOri
   /**
    * The Work Caller the Work was started in the name of.
    *
-   * @generated from field: agent.public.v1.WorkCaller work_caller = 6;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 4;
    */
   workCaller?: WorkCaller;
 
   /**
    * The Work's Work Key; absent for a Work without one.
    *
-   * @generated from field: agent.public.v1.WorkKey work_key = 7;
+   * @generated from field: agent.public.v1.WorkKey work_key = 5;
    */
   workKey?: WorkKey;
 
   /**
    * The Work's File Home; absent for a Work without one.
    *
-   * @generated from field: agent.public.v1.FileHome file_home = 8;
+   * @generated from field: agent.public.v1.FileHome file_home = 6;
    */
   fileHome?: FileHome;
 };
@@ -2199,21 +2199,21 @@ export declare type EnsureAgentDefinitionRequest = Message<"agent.private.v1.Ens
   /**
    * Caller-selected base capabilities; existing definitions retain their values.
    *
-   * @generated from field: agent.private.v1.Capabilities capabilities = 6;
+   * @generated from field: agent.private.v1.Capabilities capabilities = 5;
    */
   capabilities?: Capabilities;
 
   /**
    * Initial public name for a non-employee definition, if supplied.
    *
-   * @generated from field: string agent_name = 7;
+   * @generated from field: string agent_name = 6;
    */
   agentName: string;
 
   /**
    * Visibility of a new definition's Works; existing definitions retain theirs.
    *
-   * @generated from field: agent.private.v1.VisibilityRule visibility_rule = 8;
+   * @generated from field: agent.private.v1.VisibilityRule visibility_rule = 7;
    */
   visibilityRule?: VisibilityRule;
 };
@@ -2368,7 +2368,7 @@ export declare type GetWorkStartOptionsRequest = Message<"agent.private.v1.GetWo
    * Plugins of its kind are offered as required. Absent means the person's
    * own Standalone Work; ignored for an existing Work.
    *
-   * @generated from field: agent.public.v1.WorkCaller work_caller = 6;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 5;
    */
   workCaller?: WorkCaller;
 };

@@ -140,35 +140,35 @@ export declare type Span = Message<"trace.public.v1.Span"> & {
   /**
    * runtime purpose field.
    *
-   * @generated from field: string runtime_purpose = 19;
+   * @generated from field: string runtime_purpose = 18;
    */
   runtimePurpose: string;
 
   /**
    * owner context field.
    *
-   * @generated from field: string owner_context = 20;
+   * @generated from field: string owner_context = 19;
    */
   ownerContext: string;
 
   /**
    * owner id field.
    *
-   * @generated from field: string owner_id = 21;
+   * @generated from field: string owner_id = 20;
    */
   ownerId: string;
 
   /**
    * The Work Caller of the span's Work.
    *
-   * @generated from field: agent.public.v1.WorkCaller work_caller = 22;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 21;
    */
   workCaller?: WorkCaller;
 
   /**
    * The Work Key of the span's Work; absent for a Work without one.
    *
-   * @generated from field: agent.public.v1.WorkKey work_key = 23;
+   * @generated from field: agent.public.v1.WorkKey work_key = 22;
    */
   workKey?: WorkKey;
 };
@@ -188,7 +188,7 @@ export declare type ListSpansByOwnerRequest = Message<"trace.public.v1.ListSpans
   /**
    * The Work Caller, of an extension-defined kind, whose spans are listed.
    *
-   * @generated from field: agent.public.v1.WorkCaller work_caller = 7;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 1;
    */
   workCaller?: WorkCaller;
 
@@ -274,7 +274,7 @@ export declare type ListSpansBySessionRequest = Message<"trace.public.v1.ListSpa
    * the Work's own, or an Extension Work named without its Work Caller, is
    * NotFound.
    *
-   * @generated from field: agent.public.v1.WorkCaller work_caller = 6;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 1;
    */
   workCaller?: WorkCaller;
 
@@ -357,14 +357,14 @@ export declare type GetSpanRequest = Message<"trace.public.v1.GetSpanRequest"> &
   /**
    * Required native Trace ID; Span ID alone is not globally unique.
    *
-   * @generated from field: string trace_id = 3;
+   * @generated from field: string trace_id = 2;
    */
   traceId: string;
 
   /**
    * The Work the span belongs to; required without a Work Caller.
    *
-   * @generated from field: string agent_work_id = 4;
+   * @generated from field: string agent_work_id = 3;
    */
   agentWorkId: string;
 
@@ -373,7 +373,7 @@ export declare type GetSpanRequest = Message<"trace.public.v1.GetSpanRequest"> &
    * span's Work is an Extension Work; absent for a Standalone Work. A Work
    * Caller other than the Work's own is NotFound.
    *
-   * @generated from field: agent.public.v1.WorkCaller work_caller = 5;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 4;
    */
   workCaller?: WorkCaller;
 };
@@ -452,7 +452,7 @@ export declare type GetSessionTraceMetricsRequest = Message<"trace.public.v1.Get
    * the Work's own, or an Extension Work named without its Work Caller, is
    * NotFound.
    *
-   * @generated from field: agent.public.v1.WorkCaller work_caller = 7;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 6;
    */
   workCaller?: WorkCaller;
 };
@@ -671,42 +671,42 @@ export declare type TraceMetricBucket = Message<"trace.public.v1.TraceMetricBuck
   /**
    * AgentSession identity.
    *
-   * @generated from field: string agent_work_id = 4;
+   * @generated from field: string agent_work_id = 3;
    */
   agentWorkId: string;
 
   /**
    * metric kind field.
    *
-   * @generated from field: string metric_kind = 5;
+   * @generated from field: string metric_kind = 4;
    */
   metricKind: string;
 
   /**
    * dimension field.
    *
-   * @generated from field: string dimension = 6;
+   * @generated from field: string dimension = 5;
    */
   dimension: string;
 
   /**
    * value field.
    *
-   * @generated from field: double value = 7;
+   * @generated from field: double value = 6;
    */
   value: number;
 
   /**
    * Number of observed facts with unknown values for this metric.
    *
-   * @generated from field: uint64 unknown_count = 8;
+   * @generated from field: uint64 unknown_count = 7;
    */
   unknownCount: bigint;
 
   /**
    * Known interpretation gaps; absence does not prove lossless collection.
    *
-   * @generated from field: repeated string gaps = 9;
+   * @generated from field: repeated string gaps = 8;
    */
   gaps: string[];
 
@@ -714,28 +714,28 @@ export declare type TraceMetricBucket = Message<"trace.public.v1.TraceMetricBuck
    * The person whose Agent made the Work, empty for a Work of an Agent that
    * represents no person.
    *
-   * @generated from field: string user_id = 10;
+   * @generated from field: string user_id = 9;
    */
   userId: string;
 
   /**
    * runtime purpose field.
    *
-   * @generated from field: string runtime_purpose = 11;
+   * @generated from field: string runtime_purpose = 10;
    */
   runtimePurpose: string;
 
   /**
    * Caller attribute naming the kind of business object that started the Work.
    *
-   * @generated from field: string owner_context = 12;
+   * @generated from field: string owner_context = 11;
    */
   ownerContext: string;
 
   /**
    * Caller attribute naming that business object.
    *
-   * @generated from field: string owner_id = 13;
+   * @generated from field: string owner_id = 12;
    */
   ownerId: string;
 
@@ -743,14 +743,14 @@ export declare type TraceMetricBucket = Message<"trace.public.v1.TraceMetricBuck
    * The Work Caller of the measured Work: a person, an Application or an
    * object of an extension-defined kind.
    *
-   * @generated from field: agent.public.v1.WorkCaller work_caller = 15;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 13;
    */
   workCaller?: WorkCaller;
 
   /**
    * The Work Key of the measured Work; absent for a Work without one.
    *
-   * @generated from field: agent.public.v1.WorkKey work_key = 16;
+   * @generated from field: agent.public.v1.WorkKey work_key = 14;
    */
   workKey?: WorkKey;
 };
@@ -813,7 +813,7 @@ export declare type ListEventsRequest = Message<"trace.public.v1.ListEventsReque
    * a Standalone Work. An Extension Work named without its Work Caller is
    * NotFound.
    *
-   * @generated from field: agent.public.v1.WorkCaller work_caller = 9;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 1;
    */
   workCaller?: WorkCaller;
 
@@ -938,21 +938,21 @@ export declare type NativeEvent = Message<"trace.public.v1.NativeEvent"> & {
   /**
    * Trusted platform Session attribution.
    *
-   * @generated from field: string agent_work_id = 10;
+   * @generated from field: string agent_work_id = 9;
    */
   agentWorkId: string;
 
   /**
    * Trusted platform Work Caller attribution.
    *
-   * @generated from field: agent.public.v1.WorkCaller work_caller = 11;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 10;
    */
   workCaller?: WorkCaller;
 
   /**
    * Trusted platform Work Key attribution; absent for a Work without one.
    *
-   * @generated from field: agent.public.v1.WorkKey work_key = 12;
+   * @generated from field: agent.public.v1.WorkKey work_key = 11;
    */
   workKey?: WorkKey;
 };

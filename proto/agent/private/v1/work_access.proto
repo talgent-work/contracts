@@ -31,10 +31,8 @@ service WorkAccessService {
 // of a Work Caller of an extension-defined kind; it admits a reader only to
 // Works of that Work Caller.
 message ReaderAdmission {
-  reserved 1, 2;
-  reserved "reference", "value";
   // The Work Caller the reader is a member of.
-  agent.public.v1.WorkCaller work_caller = 3;
+  agent.public.v1.WorkCaller work_caller = 1;
 }
 
 // WorkReadBasis is why a reader is admitted.

@@ -609,14 +609,12 @@ message ListConnectorsResponse {
 // GetConnectorRequest selects one Connector of the owner's catalog, one the
 // owner installed or one the owner made.
 message GetConnectorRequest {
-  reserved 1;
-  reserved "name";
   // An Application the caller owns, whose installations the request
   // reaches; empty for the caller's own. An Application leaves it empty or
   // names itself.
-  string application_id = 2;
+  string application_id = 1;
   // Connector identity.
-  string connector_id = 3;
+  string connector_id = 2;
 }
 
 // GetConnectorResponse describes one catalog entry and its related Plugins.
@@ -643,14 +641,12 @@ message ListInstalledConnectorsResponse {
 
 // InstallConnectorRequest installs one catalog entry; repeating keeps it.
 message InstallConnectorRequest {
-  reserved 1;
-  reserved "name";
   // An Application the caller owns, whose installations the request
   // reaches; empty for the caller's own. An Application leaves it empty or
   // names itself.
-  string application_id = 2;
+  string application_id = 1;
   // Connector identity.
-  string connector_id = 3;
+  string connector_id = 2;
 }
 
 // InstallConnectorResponse returns the entry after installation.
@@ -661,16 +657,14 @@ message InstallConnectorResponse {
 
 // EnableConnectorRequest changes a personal installation.
 message EnableConnectorRequest {
-  reserved 1;
-  reserved "name";
   // Installation version read before this mutation; stale values are rejected.
-  uint32 version = 2;
+  uint32 version = 1;
   // An Application the caller owns, whose installations the request
   // reaches; empty for the caller's own. An Application leaves it empty or
   // names itself.
-  string application_id = 3;
+  string application_id = 2;
   // Connector identity.
-  string connector_id = 4;
+  string connector_id = 3;
 }
 
 // EnableConnectorResponse returns the entry after the change.
@@ -681,16 +675,14 @@ message EnableConnectorResponse {
 
 // DisableConnectorRequest changes a personal installation.
 message DisableConnectorRequest {
-  reserved 1;
-  reserved "name";
   // Installation version read before this mutation; stale values are rejected.
-  uint32 version = 2;
+  uint32 version = 1;
   // An Application the caller owns, whose installations the request
   // reaches; empty for the caller's own. An Application leaves it empty or
   // names itself.
-  string application_id = 3;
+  string application_id = 2;
   // Connector identity.
-  string connector_id = 4;
+  string connector_id = 3;
 }
 
 // DisableConnectorResponse returns the entry after the change.
@@ -701,16 +693,14 @@ message DisableConnectorResponse {
 
 // UninstallConnectorRequest removes a personal installation.
 message UninstallConnectorRequest {
-  reserved 1;
-  reserved "name";
   // Installation version read before this mutation; stale values are rejected.
-  uint32 version = 2;
+  uint32 version = 1;
   // An Application the caller owns, whose installations the request
   // reaches; empty for the caller's own. An Application leaves it empty or
   // names itself.
-  string application_id = 3;
+  string application_id = 2;
   // Connector identity.
-  string connector_id = 4;
+  string connector_id = 3;
 }
 
 // UninstallConnectorResponse confirms removal.

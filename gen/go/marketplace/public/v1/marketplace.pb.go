@@ -2327,9 +2327,9 @@ type GetConnectorRequest struct {
 	// An Application the caller owns, whose installations the request
 	// reaches; empty for the caller's own. An Application leaves it empty or
 	// names itself.
-	ApplicationId string `protobuf:"bytes,2,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
+	ApplicationId string `protobuf:"bytes,1,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	// Connector identity.
-	ConnectorId   string `protobuf:"bytes,3,opt,name=connector_id,json=connectorId,proto3" json:"connector_id,omitempty"`
+	ConnectorId   string `protobuf:"bytes,2,opt,name=connector_id,json=connectorId,proto3" json:"connector_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2533,9 +2533,9 @@ type InstallConnectorRequest struct {
 	// An Application the caller owns, whose installations the request
 	// reaches; empty for the caller's own. An Application leaves it empty or
 	// names itself.
-	ApplicationId string `protobuf:"bytes,2,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
+	ApplicationId string `protobuf:"bytes,1,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	// Connector identity.
-	ConnectorId   string `protobuf:"bytes,3,opt,name=connector_id,json=connectorId,proto3" json:"connector_id,omitempty"`
+	ConnectorId   string `protobuf:"bytes,2,opt,name=connector_id,json=connectorId,proto3" json:"connector_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2634,13 +2634,13 @@ func (x *InstallConnectorResponse) GetConnector() *Connector {
 type EnableConnectorRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Installation version read before this mutation; stale values are rejected.
-	Version uint32 `protobuf:"varint,2,opt,name=version,proto3" json:"version,omitempty"`
+	Version uint32 `protobuf:"varint,1,opt,name=version,proto3" json:"version,omitempty"`
 	// An Application the caller owns, whose installations the request
 	// reaches; empty for the caller's own. An Application leaves it empty or
 	// names itself.
-	ApplicationId string `protobuf:"bytes,3,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
+	ApplicationId string `protobuf:"bytes,2,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	// Connector identity.
-	ConnectorId   string `protobuf:"bytes,4,opt,name=connector_id,json=connectorId,proto3" json:"connector_id,omitempty"`
+	ConnectorId   string `protobuf:"bytes,3,opt,name=connector_id,json=connectorId,proto3" json:"connector_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2746,13 +2746,13 @@ func (x *EnableConnectorResponse) GetConnector() *Connector {
 type DisableConnectorRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Installation version read before this mutation; stale values are rejected.
-	Version uint32 `protobuf:"varint,2,opt,name=version,proto3" json:"version,omitempty"`
+	Version uint32 `protobuf:"varint,1,opt,name=version,proto3" json:"version,omitempty"`
 	// An Application the caller owns, whose installations the request
 	// reaches; empty for the caller's own. An Application leaves it empty or
 	// names itself.
-	ApplicationId string `protobuf:"bytes,3,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
+	ApplicationId string `protobuf:"bytes,2,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	// Connector identity.
-	ConnectorId   string `protobuf:"bytes,4,opt,name=connector_id,json=connectorId,proto3" json:"connector_id,omitempty"`
+	ConnectorId   string `protobuf:"bytes,3,opt,name=connector_id,json=connectorId,proto3" json:"connector_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2858,13 +2858,13 @@ func (x *DisableConnectorResponse) GetConnector() *Connector {
 type UninstallConnectorRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Installation version read before this mutation; stale values are rejected.
-	Version uint32 `protobuf:"varint,2,opt,name=version,proto3" json:"version,omitempty"`
+	Version uint32 `protobuf:"varint,1,opt,name=version,proto3" json:"version,omitempty"`
 	// An Application the caller owns, whose installations the request
 	// reaches; empty for the caller's own. An Application leaves it empty or
 	// names itself.
-	ApplicationId string `protobuf:"bytes,3,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
+	ApplicationId string `protobuf:"bytes,2,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
 	// Connector identity.
-	ConnectorId   string `protobuf:"bytes,4,opt,name=connector_id,json=connectorId,proto3" json:"connector_id,omitempty"`
+	ConnectorId   string `protobuf:"bytes,3,opt,name=connector_id,json=connectorId,proto3" json:"connector_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3125,10 +3125,10 @@ const file_marketplace_public_v1_marketplace_proto_rawDesc = "" +
 	"\x16ListConnectorsResponse\x12@\n" +
 	"\n" +
 	"connectors\x18\x01 \x03(\v2 .marketplace.public.v1.ConnectorR\n" +
-	"connectors\"k\n" +
+	"connectors\"_\n" +
 	"\x13GetConnectorRequest\x12%\n" +
-	"\x0eapplication_id\x18\x02 \x01(\tR\rapplicationId\x12!\n" +
-	"\fconnector_id\x18\x03 \x01(\tR\vconnectorIdJ\x04\b\x01\x10\x02R\x04name\"\x98\x01\n" +
+	"\x0eapplication_id\x18\x01 \x01(\tR\rapplicationId\x12!\n" +
+	"\fconnector_id\x18\x02 \x01(\tR\vconnectorId\"\x98\x01\n" +
 	"\x14GetConnectorResponse\x12>\n" +
 	"\tconnector\x18\x01 \x01(\v2 .marketplace.public.v1.ConnectorR\tconnector\x12@\n" +
 	"\aplugins\x18\x02 \x03(\v2&.marketplace.public.v1.ConnectorPluginR\aplugins\"G\n" +
@@ -3137,28 +3137,28 @@ const file_marketplace_public_v1_marketplace_proto_rawDesc = "" +
 	"\x1fListInstalledConnectorsResponse\x12@\n" +
 	"\n" +
 	"connectors\x18\x01 \x03(\v2 .marketplace.public.v1.ConnectorR\n" +
-	"connectors\"o\n" +
+	"connectors\"c\n" +
 	"\x17InstallConnectorRequest\x12%\n" +
-	"\x0eapplication_id\x18\x02 \x01(\tR\rapplicationId\x12!\n" +
-	"\fconnector_id\x18\x03 \x01(\tR\vconnectorIdJ\x04\b\x01\x10\x02R\x04name\"Z\n" +
+	"\x0eapplication_id\x18\x01 \x01(\tR\rapplicationId\x12!\n" +
+	"\fconnector_id\x18\x02 \x01(\tR\vconnectorId\"Z\n" +
 	"\x18InstallConnectorResponse\x12>\n" +
-	"\tconnector\x18\x01 \x01(\v2 .marketplace.public.v1.ConnectorR\tconnector\"\x88\x01\n" +
+	"\tconnector\x18\x01 \x01(\v2 .marketplace.public.v1.ConnectorR\tconnector\"|\n" +
 	"\x16EnableConnectorRequest\x12\x18\n" +
-	"\aversion\x18\x02 \x01(\rR\aversion\x12%\n" +
-	"\x0eapplication_id\x18\x03 \x01(\tR\rapplicationId\x12!\n" +
-	"\fconnector_id\x18\x04 \x01(\tR\vconnectorIdJ\x04\b\x01\x10\x02R\x04name\"Y\n" +
+	"\aversion\x18\x01 \x01(\rR\aversion\x12%\n" +
+	"\x0eapplication_id\x18\x02 \x01(\tR\rapplicationId\x12!\n" +
+	"\fconnector_id\x18\x03 \x01(\tR\vconnectorId\"Y\n" +
 	"\x17EnableConnectorResponse\x12>\n" +
-	"\tconnector\x18\x01 \x01(\v2 .marketplace.public.v1.ConnectorR\tconnector\"\x89\x01\n" +
+	"\tconnector\x18\x01 \x01(\v2 .marketplace.public.v1.ConnectorR\tconnector\"}\n" +
 	"\x17DisableConnectorRequest\x12\x18\n" +
-	"\aversion\x18\x02 \x01(\rR\aversion\x12%\n" +
-	"\x0eapplication_id\x18\x03 \x01(\tR\rapplicationId\x12!\n" +
-	"\fconnector_id\x18\x04 \x01(\tR\vconnectorIdJ\x04\b\x01\x10\x02R\x04name\"Z\n" +
+	"\aversion\x18\x01 \x01(\rR\aversion\x12%\n" +
+	"\x0eapplication_id\x18\x02 \x01(\tR\rapplicationId\x12!\n" +
+	"\fconnector_id\x18\x03 \x01(\tR\vconnectorId\"Z\n" +
 	"\x18DisableConnectorResponse\x12>\n" +
-	"\tconnector\x18\x01 \x01(\v2 .marketplace.public.v1.ConnectorR\tconnector\"\x8b\x01\n" +
+	"\tconnector\x18\x01 \x01(\v2 .marketplace.public.v1.ConnectorR\tconnector\"\x7f\n" +
 	"\x19UninstallConnectorRequest\x12\x18\n" +
-	"\aversion\x18\x02 \x01(\rR\aversion\x12%\n" +
-	"\x0eapplication_id\x18\x03 \x01(\tR\rapplicationId\x12!\n" +
-	"\fconnector_id\x18\x04 \x01(\tR\vconnectorIdJ\x04\b\x01\x10\x02R\x04name\"\x1c\n" +
+	"\aversion\x18\x01 \x01(\rR\aversion\x12%\n" +
+	"\x0eapplication_id\x18\x02 \x01(\tR\rapplicationId\x12!\n" +
+	"\fconnector_id\x18\x03 \x01(\tR\vconnectorId\"\x1c\n" +
 	"\x1aUninstallConnectorResponse2\xcd#\n" +
 	"\x12MarketplaceService\x12\x9a\x01\n" +
 	"\x1aBeginProviderAuthorization\x128.marketplace.public.v1.BeginProviderAuthorizationRequest\x1a9.marketplace.public.v1.BeginProviderAuthorizationResponse\"\a\xc2\xf3\x18\x03\n" +

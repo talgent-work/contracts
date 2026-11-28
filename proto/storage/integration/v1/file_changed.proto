@@ -45,24 +45,22 @@ enum FileOperation {
 // never published. Exactly one of actor_user_id, actor_application_id and
 // actor_work_id is set.
 message FileChangedV1 {
-  reserved 3, 4;
-  reserved "owner", "kind";
   // Unique identity of this publication and of the change.
   string event_id = 1;
   // Time the change was committed.
   google.protobuf.Timestamp occurred_at = 2;
   // The Directory the file is in.
-  Directory directory = 10;
+  Directory directory = 3;
   // The file's name after the change; for a deletion, the name it had.
-  string name = 5;
+  string name = 4;
   // The former name of a renamed file; empty otherwise.
-  string previous_name = 6;
+  string previous_name = 5;
   // How the file changed.
-  FileOperation operation = 7;
+  FileOperation operation = 6;
   // The person who made the change.
-  string actor_user_id = 8;
+  string actor_user_id = 7;
   // The Work whose Agent made the change.
-  string actor_work_id = 9;
+  string actor_work_id = 8;
   // The Application that made the change.
-  string actor_application_id = 11;
+  string actor_application_id = 9;
 }

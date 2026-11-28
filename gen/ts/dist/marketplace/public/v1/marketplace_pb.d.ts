@@ -1251,14 +1251,14 @@ export declare type GetConnectorRequest = Message<"marketplace.public.v1.GetConn
    * reaches; empty for the caller's own. An Application leaves it empty or
    * names itself.
    *
-   * @generated from field: string application_id = 2;
+   * @generated from field: string application_id = 1;
    */
   applicationId: string;
 
   /**
    * Connector identity.
    *
-   * @generated from field: string connector_id = 3;
+   * @generated from field: string connector_id = 2;
    */
   connectorId: string;
 };
@@ -1349,14 +1349,14 @@ export declare type InstallConnectorRequest = Message<"marketplace.public.v1.Ins
    * reaches; empty for the caller's own. An Application leaves it empty or
    * names itself.
    *
-   * @generated from field: string application_id = 2;
+   * @generated from field: string application_id = 1;
    */
   applicationId: string;
 
   /**
    * Connector identity.
    *
-   * @generated from field: string connector_id = 3;
+   * @generated from field: string connector_id = 2;
    */
   connectorId: string;
 };
@@ -1396,7 +1396,7 @@ export declare type EnableConnectorRequest = Message<"marketplace.public.v1.Enab
   /**
    * Installation version read before this mutation; stale values are rejected.
    *
-   * @generated from field: uint32 version = 2;
+   * @generated from field: uint32 version = 1;
    */
   version: number;
 
@@ -1405,14 +1405,14 @@ export declare type EnableConnectorRequest = Message<"marketplace.public.v1.Enab
    * reaches; empty for the caller's own. An Application leaves it empty or
    * names itself.
    *
-   * @generated from field: string application_id = 3;
+   * @generated from field: string application_id = 2;
    */
   applicationId: string;
 
   /**
    * Connector identity.
    *
-   * @generated from field: string connector_id = 4;
+   * @generated from field: string connector_id = 3;
    */
   connectorId: string;
 };
@@ -1452,7 +1452,7 @@ export declare type DisableConnectorRequest = Message<"marketplace.public.v1.Dis
   /**
    * Installation version read before this mutation; stale values are rejected.
    *
-   * @generated from field: uint32 version = 2;
+   * @generated from field: uint32 version = 1;
    */
   version: number;
 
@@ -1461,14 +1461,14 @@ export declare type DisableConnectorRequest = Message<"marketplace.public.v1.Dis
    * reaches; empty for the caller's own. An Application leaves it empty or
    * names itself.
    *
-   * @generated from field: string application_id = 3;
+   * @generated from field: string application_id = 2;
    */
   applicationId: string;
 
   /**
    * Connector identity.
    *
-   * @generated from field: string connector_id = 4;
+   * @generated from field: string connector_id = 3;
    */
   connectorId: string;
 };
@@ -1508,7 +1508,7 @@ export declare type UninstallConnectorRequest = Message<"marketplace.public.v1.U
   /**
    * Installation version read before this mutation; stale values are rejected.
    *
-   * @generated from field: uint32 version = 2;
+   * @generated from field: uint32 version = 1;
    */
   version: number;
 
@@ -1517,14 +1517,14 @@ export declare type UninstallConnectorRequest = Message<"marketplace.public.v1.U
    * reaches; empty for the caller's own. An Application leaves it empty or
    * names itself.
    *
-   * @generated from field: string application_id = 3;
+   * @generated from field: string application_id = 2;
    */
   applicationId: string;
 
   /**
    * Connector identity.
    *
-   * @generated from field: string connector_id = 4;
+   * @generated from field: string connector_id = 3;
    */
   connectorId: string;
 };

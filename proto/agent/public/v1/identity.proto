@@ -25,16 +25,14 @@ message WhoAmIRequest {}
 message WhoAmIResponse {
   // The Work.
   string work_id = 1;
-  reserved 2, 3, 4;
-  reserved "project_id", "subject_kind", "subject_id";
   // The purpose of the Work's AgentDefinition.
-  string purpose = 5;
+  string purpose = 2;
   // The Work's AgentDefinition.
-  string agent_id = 6;
+  string agent_id = 3;
   // The Work Caller the Work was started in the name of.
-  WorkCaller work_caller = 7;
+  WorkCaller work_caller = 4;
   // The Work's Work Key; absent for a Work without one.
-  WorkKey work_key = 8;
+  WorkKey work_key = 5;
   // The Work's File Home; absent for a Work without one.
-  FileHome file_home = 9;
+  FileHome file_home = 6;
 }

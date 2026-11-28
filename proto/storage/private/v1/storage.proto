@@ -247,24 +247,22 @@ message ShareLink {
 // File is one Attachment or Artifact at its File position: an Attachment
 // names its uploader, an Artifact the Work that published it.
 message File {
-  reserved 2, 3;
-  reserved "kind", "name";
   // Position: Directory and name.
   FilePosition position = 1;
   // Size in bytes.
-  int64 size_bytes = 4;
+  int64 size_bytes = 2;
   // Media type: the uploaded type, or the one of the name's extension.
-  string content_type = 5;
+  string content_type = 3;
   // Last time the content changed.
-  google.protobuf.Timestamp updated_at = 6;
+  google.protobuf.Timestamp updated_at = 4;
   // Human who uploaded an Attachment.
-  string uploader_user_id = 7;
+  string uploader_user_id = 5;
   // Work that published an Artifact.
-  string work_id = 8;
+  string work_id = 6;
   // Active Share Links.
-  repeated ShareLink share_links = 9;
+  repeated ShareLink share_links = 7;
   // Application that uploaded an Attachment.
-  string uploader_application_id = 10;
+  string uploader_application_id = 8;
 }
 
 // OpenDirectoryRequest names the located Directory.

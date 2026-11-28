@@ -23,7 +23,7 @@ export declare type ReaderAdmission = Message<"agent.private.v1.ReaderAdmission"
   /**
    * The Work Caller the reader is a member of.
    *
-   * @generated from field: agent.public.v1.WorkCaller work_caller = 3;
+   * @generated from field: agent.public.v1.WorkCaller work_caller = 1;
    */
   workCaller?: WorkCaller;
 };

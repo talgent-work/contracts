@@ -520,12 +520,10 @@ message CreationCapabilities {
 
 // CreationConnector adds or removes one catalog Connector for this Work only.
 message CreationConnector {
-  reserved 1;
-  reserved "name";
   // True adds the Connector; false removes a default. Required entries stay.
-  bool include = 2;
+  bool include = 1;
   // Connector identity. A Work refuses two selected Connectors of one name.
-  string connector_id = 3;
+  string connector_id = 2;
 }
 
 // CreationPlugin requests a plugin under existing Agent composition rules.

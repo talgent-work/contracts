@@ -119,8 +119,6 @@ enum WorkspaceEntryKind {
 
 // WorkspaceEntry is one entry of a workspace directory.
 message WorkspaceEntry {
-  reserved 5;
-  reserved "attachment_name";
   // Name within the directory.
   string name = 1;
   // Size in bytes of a file.
@@ -131,7 +129,7 @@ message WorkspaceEntry {
   WorkspaceEntryKind kind = 4;
   // A file Storage wrote into a mounted Directory: its position, read and
   // previewed as that file.
-  FilePosition position = 6;
+  FilePosition position = 5;
 }
 
 // GetWorkspaceViewResponse lists the directory's first entries by name.

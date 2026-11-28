@@ -326,13 +326,13 @@ type WatchStreamRequest struct {
 	// AgentWork identity.
 	AgentWorkId string `protobuf:"bytes,1,opt,name=agent_work_id,json=agentWorkId,proto3" json:"agent_work_id,omitempty"`
 	// Same Agent, turn and kind scope as history.
-	Agent *string `protobuf:"bytes,4,opt,name=agent,proto3,oneof" json:"agent,omitempty"`
+	Agent *string `protobuf:"bytes,2,opt,name=agent,proto3,oneof" json:"agent,omitempty"`
 	// Match any listed turn; empty matches every turn.
-	TurnIds []string `protobuf:"bytes,5,rep,name=turn_ids,json=turnIds,proto3" json:"turn_ids,omitempty"`
+	TurnIds []string `protobuf:"bytes,3,rep,name=turn_ids,json=turnIds,proto3" json:"turn_ids,omitempty"`
 	// Match any listed product kind; empty matches every kind.
-	Kinds []v1.UnifiedMessageKind `protobuf:"varint,6,rep,packed,name=kinds,proto3,enum=dispatcher.public.v1.UnifiedMessageKind" json:"kinds,omitempty"`
+	Kinds []v1.UnifiedMessageKind `protobuf:"varint,4,rep,packed,name=kinds,proto3,enum=dispatcher.public.v1.UnifiedMessageKind" json:"kinds,omitempty"`
 	// Include Session errors with unknown Agent attribution without relabeling them.
-	IncludeUnattributedErrors bool `protobuf:"varint,7,opt,name=include_unattributed_errors,json=includeUnattributedErrors,proto3" json:"include_unattributed_errors,omitempty"`
+	IncludeUnattributedErrors bool `protobuf:"varint,5,opt,name=include_unattributed_errors,json=includeUnattributedErrors,proto3" json:"include_unattributed_errors,omitempty"`
 	unknownFields             protoimpl.UnknownFields
 	sizeCache                 protoimpl.SizeCache
 }
@@ -509,29 +509,29 @@ type isWatchStreamResponse_Payload interface {
 
 type WatchStreamResponse_Message struct {
 	// A live message, without its detail body.
-	Message *v1.UnifiedMessage `protobuf:"bytes,2,opt,name=message,proto3,oneof"`
+	Message *v1.UnifiedMessage `protobuf:"bytes,1,opt,name=message,proto3,oneof"`
 }
 
 type WatchStreamResponse_WorkState struct {
 	// work state field.
-	WorkState *WorkStateFrame `protobuf:"bytes,3,opt,name=work_state,json=workState,proto3,oneof"`
+	WorkState *WorkStateFrame `protobuf:"bytes,2,opt,name=work_state,json=workState,proto3,oneof"`
 }
 
 type WatchStreamResponse_Diagnostic struct {
 	// diagnostic field.
-	Diagnostic *StreamDiagnosticFrame `protobuf:"bytes,4,opt,name=diagnostic,proto3,oneof"`
+	Diagnostic *StreamDiagnosticFrame `protobuf:"bytes,3,opt,name=diagnostic,proto3,oneof"`
 }
 
 type WatchStreamResponse_AccessWithdrawn struct {
 	// The reader's access to this Work's conversation was withdrawn; the
 	// stream ends after this frame. Distinct from a connection error.
-	AccessWithdrawn *AccessWithdrawnFrame `protobuf:"bytes,5,opt,name=access_withdrawn,json=accessWithdrawn,proto3,oneof"`
+	AccessWithdrawn *AccessWithdrawnFrame `protobuf:"bytes,4,opt,name=access_withdrawn,json=accessWithdrawn,proto3,oneof"`
 }
 
 type WatchStreamResponse_Heartbeat struct {
 	// Sent while the stream is otherwise quiet, so idle connections stay open
 	// and a reader that hears nothing for two intervals knows the stream died.
-	Heartbeat *HeartbeatFrame `protobuf:"bytes,6,opt,name=heartbeat,proto3,oneof"`
+	Heartbeat *HeartbeatFrame `protobuf:"bytes,5,opt,name=heartbeat,proto3,oneof"`
 }
 
 func (*WatchStreamResponse_Message) isWatchStreamResponse_Payload() {}
@@ -1359,24 +1359,24 @@ const file_streamgateway_public_v1_streamgateway_proto_rawDesc = "" +
 	"\x04text\x18\x02 \x01(\tR\x04text\x12!\n" +
 	"\ftotal_length\x18\x03 \x01(\rR\vtotalLength\x12\x1f\n" +
 	"\vnext_offset\x18\x04 \x01(\rR\n" +
-	"nextOffset\"\x9f\x02\n" +
+	"nextOffset\"\xf8\x01\n" +
 	"\x12WatchStreamRequest\x12\"\n" +
 	"\ragent_work_id\x18\x01 \x01(\tR\vagentWorkId\x12\x19\n" +
-	"\x05agent\x18\x04 \x01(\tH\x00R\x05agent\x88\x01\x01\x12\x19\n" +
-	"\bturn_ids\x18\x05 \x03(\tR\aturnIds\x12>\n" +
-	"\x05kinds\x18\x06 \x03(\x0e2(.dispatcher.public.v1.UnifiedMessageKindR\x05kinds\x12>\n" +
-	"\x1binclude_unattributed_errors\x18\a \x01(\bR\x19includeUnattributedErrorsB\b\n" +
-	"\x06_agentJ\x04\b\x02\x10\x03J\x04\b\x03\x10\x04R\x0fafter_timestampR\bafter_id\"\xb1\x03\n" +
+	"\x05agent\x18\x02 \x01(\tH\x00R\x05agent\x88\x01\x01\x12\x19\n" +
+	"\bturn_ids\x18\x03 \x03(\tR\aturnIds\x12>\n" +
+	"\x05kinds\x18\x04 \x03(\x0e2(.dispatcher.public.v1.UnifiedMessageKindR\x05kinds\x12>\n" +
+	"\x1binclude_unattributed_errors\x18\x05 \x01(\bR\x19includeUnattributedErrorsB\b\n" +
+	"\x06_agent\"\xa3\x03\n" +
 	"\x13WatchStreamResponse\x12@\n" +
-	"\amessage\x18\x02 \x01(\v2$.dispatcher.public.v1.UnifiedMessageH\x00R\amessage\x12H\n" +
+	"\amessage\x18\x01 \x01(\v2$.dispatcher.public.v1.UnifiedMessageH\x00R\amessage\x12H\n" +
 	"\n" +
-	"work_state\x18\x03 \x01(\v2'.streamgateway.public.v1.WorkStateFrameH\x00R\tworkState\x12P\n" +
+	"work_state\x18\x02 \x01(\v2'.streamgateway.public.v1.WorkStateFrameH\x00R\tworkState\x12P\n" +
 	"\n" +
-	"diagnostic\x18\x04 \x01(\v2..streamgateway.public.v1.StreamDiagnosticFrameH\x00R\n" +
+	"diagnostic\x18\x03 \x01(\v2..streamgateway.public.v1.StreamDiagnosticFrameH\x00R\n" +
 	"diagnostic\x12Z\n" +
-	"\x10access_withdrawn\x18\x05 \x01(\v2-.streamgateway.public.v1.AccessWithdrawnFrameH\x00R\x0faccessWithdrawn\x12G\n" +
-	"\theartbeat\x18\x06 \x01(\v2'.streamgateway.public.v1.HeartbeatFrameH\x00R\theartbeatB\t\n" +
-	"\apayloadJ\x04\b\x01\x10\x02R\x06replay\"\x10\n" +
+	"\x10access_withdrawn\x18\x04 \x01(\v2-.streamgateway.public.v1.AccessWithdrawnFrameH\x00R\x0faccessWithdrawn\x12G\n" +
+	"\theartbeat\x18\x05 \x01(\v2'.streamgateway.public.v1.HeartbeatFrameH\x00R\theartbeatB\t\n" +
+	"\apayload\"\x10\n" +
 	"\x0eHeartbeatFrame\":\n" +
 	"\x14AccessWithdrawnFrame\x12\"\n" +
 	"\ragent_work_id\x18\x01 \x01(\tR\vagentWorkId\"\xc0\x01\n" +

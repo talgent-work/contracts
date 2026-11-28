@@ -221,9 +221,12 @@ type StartWorkRequest struct {
 	// 64 characters of letters, digits, '.', '_', '-' and '/', starting with a
 	// letter or digit; a value is 1 to 256 characters on one line, without
 	// surrounding whitespace. A malformed label is InvalidArgument.
-	Labels        map[string]string `protobuf:"bytes,10,rep,name=labels,proto3" json:"labels,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	Labels map[string]string `protobuf:"bytes,10,rep,name=labels,proto3" json:"labels,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	// The Personal Variables the new Work enables; absent enables every
+	// Personal Variable of the person the Work's Agent represents.
+	PersonalVariables *v1.PersonalVariableSelection `protobuf:"bytes,11,opt,name=personal_variables,json=personalVariables,proto3" json:"personal_variables,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
 }
 
 func (x *StartWorkRequest) Reset() {
@@ -322,6 +325,13 @@ func (x *StartWorkRequest) GetApplicationMcpEndpoints() []*ApplicationMcpEndpoin
 func (x *StartWorkRequest) GetLabels() map[string]string {
 	if x != nil {
 		return x.Labels
+	}
+	return nil
+}
+
+func (x *StartWorkRequest) GetPersonalVariables() *v1.PersonalVariableSelection {
+	if x != nil {
+		return x.PersonalVariables
 	}
 	return nil
 }
@@ -1455,13 +1465,13 @@ var File_agent_public_v2_work_proto protoreflect.FileDescriptor
 
 const file_agent_public_v2_work_proto_rawDesc = "" +
 	"\n" +
-	"\x1aagent/public/v2/work.proto\x12\x0fagent.public.v2\x1a\x1cadmission/v1/admission.proto\x1a\x1dagent/public/v1/harness.proto\x1a\x1bagent/public/v1/model.proto\x1a\x1aagent/public/v1/work.proto\x1a(agent/public/v1/work_start_options.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x1c\n" +
+	"\x1aagent/public/v2/work.proto\x12\x0fagent.public.v2\x1a\x1cadmission/v1/admission.proto\x1a\x1dagent/public/v1/harness.proto\x1a\x1bagent/public/v1/model.proto\x1a'agent/public/v1/personal_variable.proto\x1a\x1aagent/public/v1/work.proto\x1a(agent/public/v1/work_start_options.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x1c\n" +
 	"\x1aGetWorkStartOptionsRequest\"e\n" +
 	"\x1bGetWorkStartOptionsResponse\x12F\n" +
 	"\aoptions\x18\x01 \x01(\v2,.agent.public.v1.GetWorkStartOptionsResponseR\aoptions\"\"\n" +
 	" ListWorkStartRepositoriesRequest\"o\n" +
 	"!ListWorkStartRepositoriesResponse\x12J\n" +
-	"\frepositories\x18\x01 \x01(\v2&.agent.public.v1.WorkStartRepositoriesR\frepositories\"\xb5\x05\n" +
+	"\frepositories\x18\x01 \x01(\v2&.agent.public.v1.WorkStartRepositoriesR\frepositories\"\x90\x06\n" +
 	"\x10StartWorkRequest\x12\x1d\n" +
 	"\n" +
 	"request_id\x18\x01 \x01(\tR\trequestId\x12'\n" +
@@ -1475,7 +1485,8 @@ const file_agent_public_v2_work_proto_rawDesc = "" +
 	"\aharness\x18\b \x01(\v2\x1e.agent.public.v1.HarnessChoiceR\aharness\x12c\n" +
 	"\x19application_mcp_endpoints\x18\t \x03(\v2'.agent.public.v2.ApplicationMcpEndpointR\x17applicationMcpEndpoints\x12E\n" +
 	"\x06labels\x18\n" +
-	" \x03(\v2-.agent.public.v2.StartWorkRequest.LabelsEntryR\x06labels\x1a9\n" +
+	" \x03(\v2-.agent.public.v2.StartWorkRequest.LabelsEntryR\x06labels\x12Y\n" +
+	"\x12personal_variables\x18\v \x01(\v2*.agent.public.v1.PersonalVariableSelectionR\x11personalVariables\x1a9\n" +
 	"\vLabelsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xca\x01\n" +
@@ -1631,7 +1642,8 @@ var file_agent_public_v2_work_proto_goTypes = []any{
 	(*v1.CreationCapabilities)(nil),           // 30: agent.public.v1.CreationCapabilities
 	(*v1.WorkModelSelection)(nil),             // 31: agent.public.v1.WorkModelSelection
 	(*v1.HarnessChoice)(nil),                  // 32: agent.public.v1.HarnessChoice
-	(*timestamppb.Timestamp)(nil),             // 33: google.protobuf.Timestamp
+	(*v1.PersonalVariableSelection)(nil),      // 33: agent.public.v1.PersonalVariableSelection
+	(*timestamppb.Timestamp)(nil),             // 34: google.protobuf.Timestamp
 }
 var file_agent_public_v2_work_proto_depIdxs = []int32{
 	27, // 0: agent.public.v2.GetWorkStartOptionsResponse.options:type_name -> agent.public.v1.GetWorkStartOptionsResponse
@@ -1642,43 +1654,44 @@ var file_agent_public_v2_work_proto_depIdxs = []int32{
 	32, // 5: agent.public.v2.StartWorkRequest.harness:type_name -> agent.public.v1.HarnessChoice
 	5,  // 6: agent.public.v2.StartWorkRequest.application_mcp_endpoints:type_name -> agent.public.v2.ApplicationMcpEndpoint
 	23, // 7: agent.public.v2.StartWorkRequest.labels:type_name -> agent.public.v2.StartWorkRequest.LabelsEntry
-	24, // 8: agent.public.v2.ApplicationMcpEndpoint.headers:type_name -> agent.public.v2.ApplicationMcpEndpoint.HeadersEntry
-	25, // 9: agent.public.v2.ListWorksRequest.labels:type_name -> agent.public.v2.ListWorksRequest.LabelsEntry
-	33, // 10: agent.public.v2.WorkSummary.created_at:type_name -> google.protobuf.Timestamp
-	33, // 11: agent.public.v2.WorkSummary.updated_at:type_name -> google.protobuf.Timestamp
-	33, // 12: agent.public.v2.WorkSummary.disconnected_since:type_name -> google.protobuf.Timestamp
-	26, // 13: agent.public.v2.WorkSummary.labels:type_name -> agent.public.v2.WorkSummary.LabelsEntry
-	8,  // 14: agent.public.v2.ListWorksResponse.works:type_name -> agent.public.v2.WorkSummary
-	12, // 15: agent.public.v2.SearchShareReadersResponse.users:type_name -> agent.public.v2.DirectoryUser
-	12, // 16: agent.public.v2.GetShareReadersResponse.users:type_name -> agent.public.v2.DirectoryUser
-	33, // 17: agent.public.v2.ListLibraryFilesRequest.added_after:type_name -> google.protobuf.Timestamp
-	33, // 18: agent.public.v2.ListLibraryFilesRequest.added_before:type_name -> google.protobuf.Timestamp
-	33, // 19: agent.public.v2.LibraryFile.added_at:type_name -> google.protobuf.Timestamp
-	20, // 20: agent.public.v2.ListLibraryFilesResponse.files:type_name -> agent.public.v2.LibraryFile
-	21, // 21: agent.public.v2.ListLibraryFilesResponse.works:type_name -> agent.public.v2.LibraryWork
-	0,  // 22: agent.public.v2.WorkService.GetWorkStartOptions:input_type -> agent.public.v2.GetWorkStartOptionsRequest
-	2,  // 23: agent.public.v2.WorkService.ListWorkStartRepositories:input_type -> agent.public.v2.ListWorkStartRepositoriesRequest
-	4,  // 24: agent.public.v2.WorkService.StartWork:input_type -> agent.public.v2.StartWorkRequest
-	7,  // 25: agent.public.v2.WorkService.ListWorks:input_type -> agent.public.v2.ListWorksRequest
-	10, // 26: agent.public.v2.WorkService.ChangeWorkTitle:input_type -> agent.public.v2.ChangeWorkTitleRequest
-	13, // 27: agent.public.v2.WorkService.SearchShareReaders:input_type -> agent.public.v2.SearchShareReadersRequest
-	15, // 28: agent.public.v2.WorkService.GetShareReaders:input_type -> agent.public.v2.GetShareReadersRequest
-	17, // 29: agent.public.v2.WorkService.GrantWorkShare:input_type -> agent.public.v2.GrantWorkShareRequest
-	19, // 30: agent.public.v2.WorkService.ListLibraryFiles:input_type -> agent.public.v2.ListLibraryFilesRequest
-	1,  // 31: agent.public.v2.WorkService.GetWorkStartOptions:output_type -> agent.public.v2.GetWorkStartOptionsResponse
-	3,  // 32: agent.public.v2.WorkService.ListWorkStartRepositories:output_type -> agent.public.v2.ListWorkStartRepositoriesResponse
-	6,  // 33: agent.public.v2.WorkService.StartWork:output_type -> agent.public.v2.StartWorkResponse
-	9,  // 34: agent.public.v2.WorkService.ListWorks:output_type -> agent.public.v2.ListWorksResponse
-	11, // 35: agent.public.v2.WorkService.ChangeWorkTitle:output_type -> agent.public.v2.ChangeWorkTitleResponse
-	14, // 36: agent.public.v2.WorkService.SearchShareReaders:output_type -> agent.public.v2.SearchShareReadersResponse
-	16, // 37: agent.public.v2.WorkService.GetShareReaders:output_type -> agent.public.v2.GetShareReadersResponse
-	18, // 38: agent.public.v2.WorkService.GrantWorkShare:output_type -> agent.public.v2.GrantWorkShareResponse
-	22, // 39: agent.public.v2.WorkService.ListLibraryFiles:output_type -> agent.public.v2.ListLibraryFilesResponse
-	31, // [31:40] is the sub-list for method output_type
-	22, // [22:31] is the sub-list for method input_type
-	22, // [22:22] is the sub-list for extension type_name
-	22, // [22:22] is the sub-list for extension extendee
-	0,  // [0:22] is the sub-list for field type_name
+	33, // 8: agent.public.v2.StartWorkRequest.personal_variables:type_name -> agent.public.v1.PersonalVariableSelection
+	24, // 9: agent.public.v2.ApplicationMcpEndpoint.headers:type_name -> agent.public.v2.ApplicationMcpEndpoint.HeadersEntry
+	25, // 10: agent.public.v2.ListWorksRequest.labels:type_name -> agent.public.v2.ListWorksRequest.LabelsEntry
+	34, // 11: agent.public.v2.WorkSummary.created_at:type_name -> google.protobuf.Timestamp
+	34, // 12: agent.public.v2.WorkSummary.updated_at:type_name -> google.protobuf.Timestamp
+	34, // 13: agent.public.v2.WorkSummary.disconnected_since:type_name -> google.protobuf.Timestamp
+	26, // 14: agent.public.v2.WorkSummary.labels:type_name -> agent.public.v2.WorkSummary.LabelsEntry
+	8,  // 15: agent.public.v2.ListWorksResponse.works:type_name -> agent.public.v2.WorkSummary
+	12, // 16: agent.public.v2.SearchShareReadersResponse.users:type_name -> agent.public.v2.DirectoryUser
+	12, // 17: agent.public.v2.GetShareReadersResponse.users:type_name -> agent.public.v2.DirectoryUser
+	34, // 18: agent.public.v2.ListLibraryFilesRequest.added_after:type_name -> google.protobuf.Timestamp
+	34, // 19: agent.public.v2.ListLibraryFilesRequest.added_before:type_name -> google.protobuf.Timestamp
+	34, // 20: agent.public.v2.LibraryFile.added_at:type_name -> google.protobuf.Timestamp
+	20, // 21: agent.public.v2.ListLibraryFilesResponse.files:type_name -> agent.public.v2.LibraryFile
+	21, // 22: agent.public.v2.ListLibraryFilesResponse.works:type_name -> agent.public.v2.LibraryWork
+	0,  // 23: agent.public.v2.WorkService.GetWorkStartOptions:input_type -> agent.public.v2.GetWorkStartOptionsRequest
+	2,  // 24: agent.public.v2.WorkService.ListWorkStartRepositories:input_type -> agent.public.v2.ListWorkStartRepositoriesRequest
+	4,  // 25: agent.public.v2.WorkService.StartWork:input_type -> agent.public.v2.StartWorkRequest
+	7,  // 26: agent.public.v2.WorkService.ListWorks:input_type -> agent.public.v2.ListWorksRequest
+	10, // 27: agent.public.v2.WorkService.ChangeWorkTitle:input_type -> agent.public.v2.ChangeWorkTitleRequest
+	13, // 28: agent.public.v2.WorkService.SearchShareReaders:input_type -> agent.public.v2.SearchShareReadersRequest
+	15, // 29: agent.public.v2.WorkService.GetShareReaders:input_type -> agent.public.v2.GetShareReadersRequest
+	17, // 30: agent.public.v2.WorkService.GrantWorkShare:input_type -> agent.public.v2.GrantWorkShareRequest
+	19, // 31: agent.public.v2.WorkService.ListLibraryFiles:input_type -> agent.public.v2.ListLibraryFilesRequest
+	1,  // 32: agent.public.v2.WorkService.GetWorkStartOptions:output_type -> agent.public.v2.GetWorkStartOptionsResponse
+	3,  // 33: agent.public.v2.WorkService.ListWorkStartRepositories:output_type -> agent.public.v2.ListWorkStartRepositoriesResponse
+	6,  // 34: agent.public.v2.WorkService.StartWork:output_type -> agent.public.v2.StartWorkResponse
+	9,  // 35: agent.public.v2.WorkService.ListWorks:output_type -> agent.public.v2.ListWorksResponse
+	11, // 36: agent.public.v2.WorkService.ChangeWorkTitle:output_type -> agent.public.v2.ChangeWorkTitleResponse
+	14, // 37: agent.public.v2.WorkService.SearchShareReaders:output_type -> agent.public.v2.SearchShareReadersResponse
+	16, // 38: agent.public.v2.WorkService.GetShareReaders:output_type -> agent.public.v2.GetShareReadersResponse
+	18, // 39: agent.public.v2.WorkService.GrantWorkShare:output_type -> agent.public.v2.GrantWorkShareResponse
+	22, // 40: agent.public.v2.WorkService.ListLibraryFiles:output_type -> agent.public.v2.ListLibraryFilesResponse
+	32, // [32:41] is the sub-list for method output_type
+	23, // [23:32] is the sub-list for method input_type
+	23, // [23:23] is the sub-list for extension type_name
+	23, // [23:23] is the sub-list for extension extendee
+	0,  // [0:23] is the sub-list for field type_name
 }
 
 func init() { file_agent_public_v2_work_proto_init() }

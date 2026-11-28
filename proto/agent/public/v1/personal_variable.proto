@@ -1,0 +1,109 @@
+syntax = "proto3";
+
+package agent.public.v1;
+
+import "admission/v1/admission.proto";
+
+option go_package = "github.com/talgent-work/contracts/gen/go/agent/public/v1;agentpublicv1";
+
+// PersonalVariableService keeps a person's Personal Variables: named values
+// that the Works their Agent does for them receive as environment variables at
+// every start. Every operation reaches only the signed-in person's own
+// variables. Listing returns names only; a value is read one at a time through
+// RevealPersonalVariable.
+service PersonalVariableService {
+  // ListPersonalVariables lists the caller's Personal Variables by name,
+  // without values.
+  rpc ListPersonalVariables(ListPersonalVariablesRequest) returns (ListPersonalVariablesResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
+  // RevealPersonalVariable reads the value of one of the caller's Personal
+  // Variables.
+  rpc RevealPersonalVariable(RevealPersonalVariableRequest) returns (RevealPersonalVariableResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
+  // SetPersonalVariable saves a Personal Variable of the caller, replacing any
+  // value of that name. It rejects a name that is not a POSIX environment
+  // variable name, a name starting with TALGENT_, a value containing NUL or
+  // over the size limit, and a variable beyond the count limit, with
+  // InvalidArgument.
+  rpc SetPersonalVariable(SetPersonalVariableRequest) returns (SetPersonalVariableResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
+  // DeletePersonalVariable removes one of the caller's Personal Variables;
+  // removing a name the caller does not keep succeeds.
+  rpc DeletePersonalVariable(DeletePersonalVariableRequest) returns (DeletePersonalVariableResponse) {
+    option (admission.v1.admits) = {
+      principals: [PRINCIPAL_USER]
+    };
+  }
+}
+
+// ListPersonalVariablesRequest reads the caller's own Personal Variables.
+message ListPersonalVariablesRequest {}
+
+// ListPersonalVariablesResponse names the caller's Personal Variables.
+message ListPersonalVariablesResponse {
+  // The Personal Variables, ordered by name.
+  repeated PersonalVariableSummary variables = 1;
+}
+
+// PersonalVariableSummary names one Personal Variable without its value.
+message PersonalVariableSummary {
+  // Environment variable name.
+  string name = 1;
+}
+
+// RevealPersonalVariableRequest names the Personal Variable whose value is
+// read.
+message RevealPersonalVariableRequest {
+  // Environment variable name.
+  string name = 1;
+}
+
+// RevealPersonalVariableResponse carries one Personal Variable's value.
+message RevealPersonalVariableResponse {
+  // The saved value, possibly multi-line.
+  string value = 1;
+}
+
+// SetPersonalVariableRequest saves one Personal Variable.
+message SetPersonalVariableRequest {
+  // Environment variable name: a letter or underscore followed by letters,
+  // digits or underscores, not starting with TALGENT_.
+  string name = 1;
+  // Any text without NUL, possibly multi-line, within the size limit.
+  string value = 2;
+}
+
+// SetPersonalVariableResponse confirms the saved Personal Variable.
+message SetPersonalVariableResponse {
+  // The saved Personal Variable, without its value.
+  PersonalVariableSummary variable = 1;
+}
+
+// DeletePersonalVariableRequest names the Personal Variable to remove.
+message DeletePersonalVariableRequest {
+  // Environment variable name.
+  string name = 1;
+}
+
+// DeletePersonalVariableResponse confirms the removal.
+message DeletePersonalVariableResponse {}
+
+// PersonalVariableSelection is the Work Variable Selection a start chooses:
+// the names of the starter's Personal Variables that the new Work enables. A
+// start without it enables every Personal Variable of the represented person;
+// an empty list enables none. A name the person does not keep is ignored. The
+// Work keeps the selection for its life; a Personal Variable added later stays
+// out of it.
+message PersonalVariableSelection {
+  // Enabled Personal Variable names.
+  repeated string names = 1;
+}

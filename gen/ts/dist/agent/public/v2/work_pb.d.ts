@@ -8,6 +8,7 @@ import type { GetWorkStartOptionsResponse as GetWorkStartOptionsResponse$1, Work
 import type { CreationCapabilities, RepositorySelection } from "../v1/work_pb.js";
 import type { WorkModelSelection } from "../v1/model_pb.js";
 import type { HarnessChoice } from "../v1/harness_pb.js";
+import type { PersonalVariableSelection } from "../v1/personal_variable_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 
 /**
@@ -167,6 +168,14 @@ export declare type StartWorkRequest = Message<"agent.public.v2.StartWorkRequest
    * @generated from field: map<string, string> labels = 10;
    */
   labels: { [key: string]: string };
+
+  /**
+   * The Personal Variables the new Work enables; absent enables every
+   * Personal Variable of the person the Work's Agent represents.
+   *
+   * @generated from field: agent.public.v1.PersonalVariableSelection personal_variables = 11;
+   */
+  personalVariables?: PersonalVariableSelection;
 };
 
 /**

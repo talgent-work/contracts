@@ -5,6 +5,7 @@ package agent.public.v2;
 import "admission/v1/admission.proto";
 import "agent/public/v1/harness.proto";
 import "agent/public/v1/model.proto";
+import "agent/public/v1/personal_variable.proto";
 import "agent/public/v1/work.proto";
 import "agent/public/v1/work_start_options.proto";
 import "google/protobuf/timestamp.proto";
@@ -138,6 +139,9 @@ message StartWorkRequest {
   // letter or digit; a value is 1 to 256 characters on one line, without
   // surrounding whitespace. A malformed label is InvalidArgument.
   map<string, string> labels = 10;
+  // The Personal Variables the new Work enables; absent enables every
+  // Personal Variable of the person the Work's Agent represents.
+  agent.public.v1.PersonalVariableSelection personal_variables = 11;
 }
 
 // ApplicationMcpEndpoint is one of the Application's own MCP servers that a

@@ -382,6 +382,10 @@ message WorkStartupRequest {
   repeated string plugins = 5;
   // Selected repositories, enriched by committed checkout preparation when available.
   repeated WorkStartupRepository repositories = 6;
+  // Names of the platform-set environment variables that the current run's
+  // Personal Variables replaced at its launch, never their values; returned
+  // only to the person the Work's Agent represents.
+  repeated string replaced_variables = 7;
 }
 
 // WorkStartupRepository is a safe display of a retained checkout selection.

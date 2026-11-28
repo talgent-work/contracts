@@ -992,9 +992,13 @@ type CreateWorkRequest struct {
 	WorkKey *v11.WorkKey `protobuf:"bytes,13,opt,name=work_key,json=workKey,proto3" json:"work_key,omitempty"`
 	// The optional owner of the shared File Spaces the Work reads its inputs
 	// from and publishes into; absent, the Work's own File Spaces.
-	FileHome      *v11.FileHome `protobuf:"bytes,14,opt,name=file_home,json=fileHome,proto3" json:"file_home,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	FileHome *v11.FileHome `protobuf:"bytes,14,opt,name=file_home,json=fileHome,proto3" json:"file_home,omitempty"`
+	// The Personal Variables a new Work enables; absent enables every Personal
+	// Variable of the person the definition represents. Reuse of an existing
+	// Work neither compares nor replaces its selection.
+	PersonalVariables *v11.PersonalVariableSelection `protobuf:"bytes,15,opt,name=personal_variables,json=personalVariables,proto3" json:"personal_variables,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
 }
 
 func (x *CreateWorkRequest) Reset() {
@@ -1121,6 +1125,13 @@ func (x *CreateWorkRequest) GetWorkKey() *v11.WorkKey {
 func (x *CreateWorkRequest) GetFileHome() *v11.FileHome {
 	if x != nil {
 		return x.FileHome
+	}
+	return nil
+}
+
+func (x *CreateWorkRequest) GetPersonalVariables() *v11.PersonalVariableSelection {
+	if x != nil {
+		return x.PersonalVariables
 	}
 	return nil
 }
@@ -4608,7 +4619,7 @@ var File_agent_private_v1_work_proto protoreflect.FileDescriptor
 
 const file_agent_private_v1_work_proto_rawDesc = "" +
 	"\n" +
-	"\x1bagent/private/v1/work.proto\x12\x10agent.private.v1\x1a agent/public/v1/appearance.proto\x1a\x1dagent/public/v1/harness.proto\x1a\x1bagent/public/v1/model.proto\x1a\x1eagent/public/v1/progress.proto\x1a!agent/public/v1/work_caller.proto\x1a(agent/public/v1/work_start_options.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a'marketplace/public/v1/marketplace.proto\"[\n" +
+	"\x1bagent/private/v1/work.proto\x12\x10agent.private.v1\x1a agent/public/v1/appearance.proto\x1a\x1dagent/public/v1/harness.proto\x1a\x1bagent/public/v1/model.proto\x1a'agent/public/v1/personal_variable.proto\x1a\x1eagent/public/v1/progress.proto\x1a!agent/public/v1/work_caller.proto\x1a(agent/public/v1/work_start_options.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a'marketplace/public/v1/marketplace.proto\"[\n" +
 	"\x13RepositorySelection\x12#\n" +
 	"\rrepository_id\x18\x01 \x01(\tR\frepositoryId\x12\x1f\n" +
 	"\vbase_branch\x18\x02 \x01(\tR\n" +
@@ -4676,7 +4687,7 @@ const file_agent_private_v1_work_proto_rawDesc = "" +
 	"\x0eVisibilityRule\x12\x16\n" +
 	"\x06public\x18\x01 \x01(\bR\x06public\":\n" +
 	"\x1dCreateAgentDefinitionResponse\x12\x19\n" +
-	"\bagent_id\x18\x01 \x01(\tR\aagentId\"\xd7\x06\n" +
+	"\bagent_id\x18\x01 \x01(\tR\aagentId\"\xb2\a\n" +
 	"\x11CreateWorkRequest\x12(\n" +
 	"\x10starting_user_id\x18\x01 \x01(\tR\x0estartingUserId\x12\x1d\n" +
 	"\n" +
@@ -4696,7 +4707,8 @@ const file_agent_private_v1_work_proto_rawDesc = "" +
 	"\vwork_caller\x18\f \x01(\v2\x1b.agent.public.v1.WorkCallerR\n" +
 	"workCaller\x123\n" +
 	"\bwork_key\x18\r \x01(\v2\x18.agent.public.v1.WorkKeyR\aworkKey\x126\n" +
-	"\tfile_home\x18\x0e \x01(\v2\x19.agent.public.v1.FileHomeR\bfileHome\x1aB\n" +
+	"\tfile_home\x18\x0e \x01(\v2\x19.agent.public.v1.FileHomeR\bfileHome\x12Y\n" +
+	"\x12personal_variables\x18\x0f \x01(\v2*.agent.public.v1.PersonalVariableSelectionR\x11personalVariables\x1aB\n" +
 	"\x14TraceAttributesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"W\n" +
@@ -5103,11 +5115,12 @@ var file_agent_private_v1_work_proto_goTypes = []any{
 	(*v11.WorkCaller)(nil),                  // 75: agent.public.v1.WorkCaller
 	(*v11.WorkKey)(nil),                     // 76: agent.public.v1.WorkKey
 	(*v11.FileHome)(nil),                    // 77: agent.public.v1.FileHome
-	(*v11.WorkProgress)(nil),                // 78: agent.public.v1.WorkProgress
-	(*v11.AgentAppearance)(nil),             // 79: agent.public.v1.AgentAppearance
-	(*v11.AgentIcon)(nil),                   // 80: agent.public.v1.AgentIcon
-	(*v11.GetWorkStartOptionsResponse)(nil), // 81: agent.public.v1.GetWorkStartOptionsResponse
-	(*v11.WorkStartRepositories)(nil),       // 82: agent.public.v1.WorkStartRepositories
+	(*v11.PersonalVariableSelection)(nil),   // 78: agent.public.v1.PersonalVariableSelection
+	(*v11.WorkProgress)(nil),                // 79: agent.public.v1.WorkProgress
+	(*v11.AgentAppearance)(nil),             // 80: agent.public.v1.AgentAppearance
+	(*v11.AgentIcon)(nil),                   // 81: agent.public.v1.AgentIcon
+	(*v11.GetWorkStartOptionsResponse)(nil), // 82: agent.public.v1.GetWorkStartOptionsResponse
+	(*v11.WorkStartRepositories)(nil),       // 83: agent.public.v1.WorkStartRepositories
 }
 var file_agent_private_v1_work_proto_depIdxs = []int32{
 	1,  // 0: agent.private.v1.PrepareWorkExecutionRequest.selections:type_name -> agent.private.v1.RepositorySelection
@@ -5129,97 +5142,98 @@ var file_agent_private_v1_work_proto_depIdxs = []int32{
 	75, // 16: agent.private.v1.CreateWorkRequest.work_caller:type_name -> agent.public.v1.WorkCaller
 	76, // 17: agent.private.v1.CreateWorkRequest.work_key:type_name -> agent.public.v1.WorkKey
 	77, // 18: agent.private.v1.CreateWorkRequest.file_home:type_name -> agent.public.v1.FileHome
-	75, // 19: agent.private.v1.ResolveWorkContextPositionRequest.work_caller:type_name -> agent.public.v1.WorkCaller
-	78, // 20: agent.private.v1.GetWorkResponse.work_progress:type_name -> agent.public.v1.WorkProgress
-	0,  // 21: agent.private.v1.GetWorkResponse.state:type_name -> agent.private.v1.WorkState
-	6,  // 22: agent.private.v1.GetWorkResponse.capabilities:type_name -> agent.private.v1.WorkCapabilities
-	5,  // 23: agent.private.v1.ChangeAgentDefinitionCapabilitiesRequest.capabilities:type_name -> agent.private.v1.Capabilities
-	5,  // 24: agent.private.v1.GetAgentDefinitionResponse.capabilities:type_name -> agent.private.v1.Capabilities
-	10, // 25: agent.private.v1.GetAgentDefinitionResponse.usage_scope:type_name -> agent.private.v1.UsageScope
-	12, // 26: agent.private.v1.GetAgentDefinitionResponse.visibility_rule:type_name -> agent.private.v1.VisibilityRule
-	76, // 27: agent.private.v1.LocateWorkRequest.work_key:type_name -> agent.public.v1.WorkKey
-	75, // 28: agent.private.v1.LocateWorkRequest.work_caller:type_name -> agent.public.v1.WorkCaller
-	10, // 29: agent.private.v1.GetAgentDefinitionForPurposeRequest.usage_scope:type_name -> agent.private.v1.UsageScope
-	79, // 30: agent.private.v1.ResolvedEmployeeAgent.appearance:type_name -> agent.public.v1.AgentAppearance
-	44, // 31: agent.private.v1.ResolveEmployeeAgentsResponse.agents:type_name -> agent.private.v1.ResolvedEmployeeAgent
-	79, // 32: agent.private.v1.GetEmployeeAgentResponse.appearance:type_name -> agent.public.v1.AgentAppearance
-	79, // 33: agent.private.v1.ResolvedWorkAgent.appearance:type_name -> agent.public.v1.AgentAppearance
-	49, // 34: agent.private.v1.ResolveWorkAgentsResponse.agents:type_name -> agent.private.v1.ResolvedWorkAgent
-	55, // 35: agent.private.v1.GetWorkPreparationResponse.preparation:type_name -> agent.private.v1.WorkPreparation
-	55, // 36: agent.private.v1.ListSubmittedPreparationsResponse.preparations:type_name -> agent.private.v1.WorkPreparation
-	56, // 37: agent.private.v1.WorkPreparation.checkouts:type_name -> agent.private.v1.PreparedCheckout
-	75, // 38: agent.private.v1.ResolveWorkStartsRequest.work_caller:type_name -> agent.public.v1.WorkCaller
-	58, // 39: agent.private.v1.ResolveWorkStartsResponse.works:type_name -> agent.private.v1.ResolvedWorkStart
-	75, // 40: agent.private.v1.GetWorkOriginResponse.work_caller:type_name -> agent.public.v1.WorkCaller
-	76, // 41: agent.private.v1.GetWorkOriginResponse.work_key:type_name -> agent.public.v1.WorkKey
-	77, // 42: agent.private.v1.GetWorkOriginResponse.file_home:type_name -> agent.public.v1.FileHome
-	10, // 43: agent.private.v1.EnsureAgentDefinitionRequest.usage_scope:type_name -> agent.private.v1.UsageScope
-	5,  // 44: agent.private.v1.EnsureAgentDefinitionRequest.capabilities:type_name -> agent.private.v1.Capabilities
-	12, // 45: agent.private.v1.EnsureAgentDefinitionRequest.visibility_rule:type_name -> agent.private.v1.VisibilityRule
-	80, // 46: agent.private.v1.EnsureEmployeeAgentResponse.agent_icon:type_name -> agent.public.v1.AgentIcon
-	80, // 47: agent.private.v1.EnsureAgentDefinitionResponse.agent_icon:type_name -> agent.public.v1.AgentIcon
-	75, // 48: agent.private.v1.GetWorkStartOptionsRequest.work_caller:type_name -> agent.public.v1.WorkCaller
-	66, // 49: agent.private.v1.AgentService.GetWorkStartOptions:input_type -> agent.private.v1.GetWorkStartOptionsRequest
-	67, // 50: agent.private.v1.AgentService.ListWorkStartRepositories:input_type -> agent.private.v1.ListWorkStartRepositoriesRequest
-	60, // 51: agent.private.v1.AgentService.GetWorkOrigin:input_type -> agent.private.v1.GetWorkOriginRequest
-	16, // 52: agent.private.v1.AgentService.ResolveWorkContextPosition:input_type -> agent.private.v1.ResolveWorkContextPositionRequest
-	57, // 53: agent.private.v1.AgentService.ResolveWorkStarts:input_type -> agent.private.v1.ResolveWorkStartsRequest
-	51, // 54: agent.private.v1.AgentService.GetWorkPreparation:input_type -> agent.private.v1.GetWorkPreparationRequest
-	53, // 55: agent.private.v1.AgentService.ListSubmittedPreparations:input_type -> agent.private.v1.ListSubmittedPreparationsRequest
-	2,  // 56: agent.private.v1.AgentService.PrepareWorkExecution:input_type -> agent.private.v1.PrepareWorkExecutionRequest
-	31, // 57: agent.private.v1.AgentService.ChangeAgentDefinitionCapabilities:input_type -> agent.private.v1.ChangeAgentDefinitionCapabilitiesRequest
-	33, // 58: agent.private.v1.AgentService.GetAgentDefinition:input_type -> agent.private.v1.GetAgentDefinitionRequest
-	41, // 59: agent.private.v1.AgentService.GetAgentDefinitionForPurpose:input_type -> agent.private.v1.GetAgentDefinitionForPurposeRequest
-	43, // 60: agent.private.v1.AgentService.ResolveEmployeeAgents:input_type -> agent.private.v1.ResolveEmployeeAgentsRequest
-	46, // 61: agent.private.v1.AgentService.GetEmployeeAgent:input_type -> agent.private.v1.GetEmployeeAgentRequest
-	48, // 62: agent.private.v1.AgentService.ResolveWorkAgents:input_type -> agent.private.v1.ResolveWorkAgentsRequest
-	11, // 63: agent.private.v1.AgentService.CreateAgentDefinition:input_type -> agent.private.v1.CreateAgentDefinitionRequest
-	62, // 64: agent.private.v1.AgentService.EnsureAgentDefinition:input_type -> agent.private.v1.EnsureAgentDefinitionRequest
-	63, // 65: agent.private.v1.AgentService.EnsureEmployeeAgent:input_type -> agent.private.v1.EnsureEmployeeAgentRequest
-	68, // 66: agent.private.v1.AgentService.TransferAgentDefinitionOwners:input_type -> agent.private.v1.TransferAgentDefinitionOwnersRequest
-	14, // 67: agent.private.v1.AgentService.CreateWork:input_type -> agent.private.v1.CreateWorkRequest
-	37, // 68: agent.private.v1.AgentService.LocateWork:input_type -> agent.private.v1.LocateWorkRequest
-	21, // 69: agent.private.v1.AgentService.ResumeWork:input_type -> agent.private.v1.ResumeWorkRequest
-	23, // 70: agent.private.v1.AgentService.RestartWork:input_type -> agent.private.v1.RestartWorkRequest
-	39, // 71: agent.private.v1.AgentService.EndWorkExecution:input_type -> agent.private.v1.EndWorkExecutionRequest
-	25, // 72: agent.private.v1.AgentService.StopWork:input_type -> agent.private.v1.StopWorkRequest
-	27, // 73: agent.private.v1.AgentService.CloseWork:input_type -> agent.private.v1.CloseWorkRequest
-	19, // 74: agent.private.v1.AgentService.DeliverInput:input_type -> agent.private.v1.DeliverInputRequest
-	35, // 75: agent.private.v1.AgentService.RespondToInteraction:input_type -> agent.private.v1.RespondToInteractionRequest
-	30, // 76: agent.private.v1.AgentService.GetWork:input_type -> agent.private.v1.GetWorkRequest
-	81, // 77: agent.private.v1.AgentService.GetWorkStartOptions:output_type -> agent.public.v1.GetWorkStartOptionsResponse
-	82, // 78: agent.private.v1.AgentService.ListWorkStartRepositories:output_type -> agent.public.v1.WorkStartRepositories
-	61, // 79: agent.private.v1.AgentService.GetWorkOrigin:output_type -> agent.private.v1.GetWorkOriginResponse
-	17, // 80: agent.private.v1.AgentService.ResolveWorkContextPosition:output_type -> agent.private.v1.ResolveWorkContextPositionResponse
-	59, // 81: agent.private.v1.AgentService.ResolveWorkStarts:output_type -> agent.private.v1.ResolveWorkStartsResponse
-	52, // 82: agent.private.v1.AgentService.GetWorkPreparation:output_type -> agent.private.v1.GetWorkPreparationResponse
-	54, // 83: agent.private.v1.AgentService.ListSubmittedPreparations:output_type -> agent.private.v1.ListSubmittedPreparationsResponse
-	3,  // 84: agent.private.v1.AgentService.PrepareWorkExecution:output_type -> agent.private.v1.PrepareWorkExecutionResponse
-	32, // 85: agent.private.v1.AgentService.ChangeAgentDefinitionCapabilities:output_type -> agent.private.v1.ChangeAgentDefinitionCapabilitiesResponse
-	34, // 86: agent.private.v1.AgentService.GetAgentDefinition:output_type -> agent.private.v1.GetAgentDefinitionResponse
-	42, // 87: agent.private.v1.AgentService.GetAgentDefinitionForPurpose:output_type -> agent.private.v1.GetAgentDefinitionForPurposeResponse
-	45, // 88: agent.private.v1.AgentService.ResolveEmployeeAgents:output_type -> agent.private.v1.ResolveEmployeeAgentsResponse
-	47, // 89: agent.private.v1.AgentService.GetEmployeeAgent:output_type -> agent.private.v1.GetEmployeeAgentResponse
-	50, // 90: agent.private.v1.AgentService.ResolveWorkAgents:output_type -> agent.private.v1.ResolveWorkAgentsResponse
-	13, // 91: agent.private.v1.AgentService.CreateAgentDefinition:output_type -> agent.private.v1.CreateAgentDefinitionResponse
-	65, // 92: agent.private.v1.AgentService.EnsureAgentDefinition:output_type -> agent.private.v1.EnsureAgentDefinitionResponse
-	64, // 93: agent.private.v1.AgentService.EnsureEmployeeAgent:output_type -> agent.private.v1.EnsureEmployeeAgentResponse
-	69, // 94: agent.private.v1.AgentService.TransferAgentDefinitionOwners:output_type -> agent.private.v1.TransferAgentDefinitionOwnersResponse
-	18, // 95: agent.private.v1.AgentService.CreateWork:output_type -> agent.private.v1.CreateWorkResponse
-	38, // 96: agent.private.v1.AgentService.LocateWork:output_type -> agent.private.v1.LocateWorkResponse
-	22, // 97: agent.private.v1.AgentService.ResumeWork:output_type -> agent.private.v1.ResumeWorkResponse
-	24, // 98: agent.private.v1.AgentService.RestartWork:output_type -> agent.private.v1.RestartWorkResponse
-	40, // 99: agent.private.v1.AgentService.EndWorkExecution:output_type -> agent.private.v1.EndWorkExecutionResponse
-	26, // 100: agent.private.v1.AgentService.StopWork:output_type -> agent.private.v1.StopWorkResponse
-	28, // 101: agent.private.v1.AgentService.CloseWork:output_type -> agent.private.v1.CloseWorkResponse
-	29, // 102: agent.private.v1.AgentService.DeliverInput:output_type -> agent.private.v1.DeliverInputResponse
-	36, // 103: agent.private.v1.AgentService.RespondToInteraction:output_type -> agent.private.v1.RespondToInteractionResponse
-	20, // 104: agent.private.v1.AgentService.GetWork:output_type -> agent.private.v1.GetWorkResponse
-	77, // [77:105] is the sub-list for method output_type
-	49, // [49:77] is the sub-list for method input_type
-	49, // [49:49] is the sub-list for extension type_name
-	49, // [49:49] is the sub-list for extension extendee
-	0,  // [0:49] is the sub-list for field type_name
+	78, // 19: agent.private.v1.CreateWorkRequest.personal_variables:type_name -> agent.public.v1.PersonalVariableSelection
+	75, // 20: agent.private.v1.ResolveWorkContextPositionRequest.work_caller:type_name -> agent.public.v1.WorkCaller
+	79, // 21: agent.private.v1.GetWorkResponse.work_progress:type_name -> agent.public.v1.WorkProgress
+	0,  // 22: agent.private.v1.GetWorkResponse.state:type_name -> agent.private.v1.WorkState
+	6,  // 23: agent.private.v1.GetWorkResponse.capabilities:type_name -> agent.private.v1.WorkCapabilities
+	5,  // 24: agent.private.v1.ChangeAgentDefinitionCapabilitiesRequest.capabilities:type_name -> agent.private.v1.Capabilities
+	5,  // 25: agent.private.v1.GetAgentDefinitionResponse.capabilities:type_name -> agent.private.v1.Capabilities
+	10, // 26: agent.private.v1.GetAgentDefinitionResponse.usage_scope:type_name -> agent.private.v1.UsageScope
+	12, // 27: agent.private.v1.GetAgentDefinitionResponse.visibility_rule:type_name -> agent.private.v1.VisibilityRule
+	76, // 28: agent.private.v1.LocateWorkRequest.work_key:type_name -> agent.public.v1.WorkKey
+	75, // 29: agent.private.v1.LocateWorkRequest.work_caller:type_name -> agent.public.v1.WorkCaller
+	10, // 30: agent.private.v1.GetAgentDefinitionForPurposeRequest.usage_scope:type_name -> agent.private.v1.UsageScope
+	80, // 31: agent.private.v1.ResolvedEmployeeAgent.appearance:type_name -> agent.public.v1.AgentAppearance
+	44, // 32: agent.private.v1.ResolveEmployeeAgentsResponse.agents:type_name -> agent.private.v1.ResolvedEmployeeAgent
+	80, // 33: agent.private.v1.GetEmployeeAgentResponse.appearance:type_name -> agent.public.v1.AgentAppearance
+	80, // 34: agent.private.v1.ResolvedWorkAgent.appearance:type_name -> agent.public.v1.AgentAppearance
+	49, // 35: agent.private.v1.ResolveWorkAgentsResponse.agents:type_name -> agent.private.v1.ResolvedWorkAgent
+	55, // 36: agent.private.v1.GetWorkPreparationResponse.preparation:type_name -> agent.private.v1.WorkPreparation
+	55, // 37: agent.private.v1.ListSubmittedPreparationsResponse.preparations:type_name -> agent.private.v1.WorkPreparation
+	56, // 38: agent.private.v1.WorkPreparation.checkouts:type_name -> agent.private.v1.PreparedCheckout
+	75, // 39: agent.private.v1.ResolveWorkStartsRequest.work_caller:type_name -> agent.public.v1.WorkCaller
+	58, // 40: agent.private.v1.ResolveWorkStartsResponse.works:type_name -> agent.private.v1.ResolvedWorkStart
+	75, // 41: agent.private.v1.GetWorkOriginResponse.work_caller:type_name -> agent.public.v1.WorkCaller
+	76, // 42: agent.private.v1.GetWorkOriginResponse.work_key:type_name -> agent.public.v1.WorkKey
+	77, // 43: agent.private.v1.GetWorkOriginResponse.file_home:type_name -> agent.public.v1.FileHome
+	10, // 44: agent.private.v1.EnsureAgentDefinitionRequest.usage_scope:type_name -> agent.private.v1.UsageScope
+	5,  // 45: agent.private.v1.EnsureAgentDefinitionRequest.capabilities:type_name -> agent.private.v1.Capabilities
+	12, // 46: agent.private.v1.EnsureAgentDefinitionRequest.visibility_rule:type_name -> agent.private.v1.VisibilityRule
+	81, // 47: agent.private.v1.EnsureEmployeeAgentResponse.agent_icon:type_name -> agent.public.v1.AgentIcon
+	81, // 48: agent.private.v1.EnsureAgentDefinitionResponse.agent_icon:type_name -> agent.public.v1.AgentIcon
+	75, // 49: agent.private.v1.GetWorkStartOptionsRequest.work_caller:type_name -> agent.public.v1.WorkCaller
+	66, // 50: agent.private.v1.AgentService.GetWorkStartOptions:input_type -> agent.private.v1.GetWorkStartOptionsRequest
+	67, // 51: agent.private.v1.AgentService.ListWorkStartRepositories:input_type -> agent.private.v1.ListWorkStartRepositoriesRequest
+	60, // 52: agent.private.v1.AgentService.GetWorkOrigin:input_type -> agent.private.v1.GetWorkOriginRequest
+	16, // 53: agent.private.v1.AgentService.ResolveWorkContextPosition:input_type -> agent.private.v1.ResolveWorkContextPositionRequest
+	57, // 54: agent.private.v1.AgentService.ResolveWorkStarts:input_type -> agent.private.v1.ResolveWorkStartsRequest
+	51, // 55: agent.private.v1.AgentService.GetWorkPreparation:input_type -> agent.private.v1.GetWorkPreparationRequest
+	53, // 56: agent.private.v1.AgentService.ListSubmittedPreparations:input_type -> agent.private.v1.ListSubmittedPreparationsRequest
+	2,  // 57: agent.private.v1.AgentService.PrepareWorkExecution:input_type -> agent.private.v1.PrepareWorkExecutionRequest
+	31, // 58: agent.private.v1.AgentService.ChangeAgentDefinitionCapabilities:input_type -> agent.private.v1.ChangeAgentDefinitionCapabilitiesRequest
+	33, // 59: agent.private.v1.AgentService.GetAgentDefinition:input_type -> agent.private.v1.GetAgentDefinitionRequest
+	41, // 60: agent.private.v1.AgentService.GetAgentDefinitionForPurpose:input_type -> agent.private.v1.GetAgentDefinitionForPurposeRequest
+	43, // 61: agent.private.v1.AgentService.ResolveEmployeeAgents:input_type -> agent.private.v1.ResolveEmployeeAgentsRequest
+	46, // 62: agent.private.v1.AgentService.GetEmployeeAgent:input_type -> agent.private.v1.GetEmployeeAgentRequest
+	48, // 63: agent.private.v1.AgentService.ResolveWorkAgents:input_type -> agent.private.v1.ResolveWorkAgentsRequest
+	11, // 64: agent.private.v1.AgentService.CreateAgentDefinition:input_type -> agent.private.v1.CreateAgentDefinitionRequest
+	62, // 65: agent.private.v1.AgentService.EnsureAgentDefinition:input_type -> agent.private.v1.EnsureAgentDefinitionRequest
+	63, // 66: agent.private.v1.AgentService.EnsureEmployeeAgent:input_type -> agent.private.v1.EnsureEmployeeAgentRequest
+	68, // 67: agent.private.v1.AgentService.TransferAgentDefinitionOwners:input_type -> agent.private.v1.TransferAgentDefinitionOwnersRequest
+	14, // 68: agent.private.v1.AgentService.CreateWork:input_type -> agent.private.v1.CreateWorkRequest
+	37, // 69: agent.private.v1.AgentService.LocateWork:input_type -> agent.private.v1.LocateWorkRequest
+	21, // 70: agent.private.v1.AgentService.ResumeWork:input_type -> agent.private.v1.ResumeWorkRequest
+	23, // 71: agent.private.v1.AgentService.RestartWork:input_type -> agent.private.v1.RestartWorkRequest
+	39, // 72: agent.private.v1.AgentService.EndWorkExecution:input_type -> agent.private.v1.EndWorkExecutionRequest
+	25, // 73: agent.private.v1.AgentService.StopWork:input_type -> agent.private.v1.StopWorkRequest
+	27, // 74: agent.private.v1.AgentService.CloseWork:input_type -> agent.private.v1.CloseWorkRequest
+	19, // 75: agent.private.v1.AgentService.DeliverInput:input_type -> agent.private.v1.DeliverInputRequest
+	35, // 76: agent.private.v1.AgentService.RespondToInteraction:input_type -> agent.private.v1.RespondToInteractionRequest
+	30, // 77: agent.private.v1.AgentService.GetWork:input_type -> agent.private.v1.GetWorkRequest
+	82, // 78: agent.private.v1.AgentService.GetWorkStartOptions:output_type -> agent.public.v1.GetWorkStartOptionsResponse
+	83, // 79: agent.private.v1.AgentService.ListWorkStartRepositories:output_type -> agent.public.v1.WorkStartRepositories
+	61, // 80: agent.private.v1.AgentService.GetWorkOrigin:output_type -> agent.private.v1.GetWorkOriginResponse
+	17, // 81: agent.private.v1.AgentService.ResolveWorkContextPosition:output_type -> agent.private.v1.ResolveWorkContextPositionResponse
+	59, // 82: agent.private.v1.AgentService.ResolveWorkStarts:output_type -> agent.private.v1.ResolveWorkStartsResponse
+	52, // 83: agent.private.v1.AgentService.GetWorkPreparation:output_type -> agent.private.v1.GetWorkPreparationResponse
+	54, // 84: agent.private.v1.AgentService.ListSubmittedPreparations:output_type -> agent.private.v1.ListSubmittedPreparationsResponse
+	3,  // 85: agent.private.v1.AgentService.PrepareWorkExecution:output_type -> agent.private.v1.PrepareWorkExecutionResponse
+	32, // 86: agent.private.v1.AgentService.ChangeAgentDefinitionCapabilities:output_type -> agent.private.v1.ChangeAgentDefinitionCapabilitiesResponse
+	34, // 87: agent.private.v1.AgentService.GetAgentDefinition:output_type -> agent.private.v1.GetAgentDefinitionResponse
+	42, // 88: agent.private.v1.AgentService.GetAgentDefinitionForPurpose:output_type -> agent.private.v1.GetAgentDefinitionForPurposeResponse
+	45, // 89: agent.private.v1.AgentService.ResolveEmployeeAgents:output_type -> agent.private.v1.ResolveEmployeeAgentsResponse
+	47, // 90: agent.private.v1.AgentService.GetEmployeeAgent:output_type -> agent.private.v1.GetEmployeeAgentResponse
+	50, // 91: agent.private.v1.AgentService.ResolveWorkAgents:output_type -> agent.private.v1.ResolveWorkAgentsResponse
+	13, // 92: agent.private.v1.AgentService.CreateAgentDefinition:output_type -> agent.private.v1.CreateAgentDefinitionResponse
+	65, // 93: agent.private.v1.AgentService.EnsureAgentDefinition:output_type -> agent.private.v1.EnsureAgentDefinitionResponse
+	64, // 94: agent.private.v1.AgentService.EnsureEmployeeAgent:output_type -> agent.private.v1.EnsureEmployeeAgentResponse
+	69, // 95: agent.private.v1.AgentService.TransferAgentDefinitionOwners:output_type -> agent.private.v1.TransferAgentDefinitionOwnersResponse
+	18, // 96: agent.private.v1.AgentService.CreateWork:output_type -> agent.private.v1.CreateWorkResponse
+	38, // 97: agent.private.v1.AgentService.LocateWork:output_type -> agent.private.v1.LocateWorkResponse
+	22, // 98: agent.private.v1.AgentService.ResumeWork:output_type -> agent.private.v1.ResumeWorkResponse
+	24, // 99: agent.private.v1.AgentService.RestartWork:output_type -> agent.private.v1.RestartWorkResponse
+	40, // 100: agent.private.v1.AgentService.EndWorkExecution:output_type -> agent.private.v1.EndWorkExecutionResponse
+	26, // 101: agent.private.v1.AgentService.StopWork:output_type -> agent.private.v1.StopWorkResponse
+	28, // 102: agent.private.v1.AgentService.CloseWork:output_type -> agent.private.v1.CloseWorkResponse
+	29, // 103: agent.private.v1.AgentService.DeliverInput:output_type -> agent.private.v1.DeliverInputResponse
+	36, // 104: agent.private.v1.AgentService.RespondToInteraction:output_type -> agent.private.v1.RespondToInteractionResponse
+	20, // 105: agent.private.v1.AgentService.GetWork:output_type -> agent.private.v1.GetWorkResponse
+	78, // [78:106] is the sub-list for method output_type
+	50, // [50:78] is the sub-list for method input_type
+	50, // [50:50] is the sub-list for extension type_name
+	50, // [50:50] is the sub-list for extension extendee
+	0,  // [0:50] is the sub-list for field type_name
 }
 
 func init() { file_agent_private_v1_work_proto_init() }

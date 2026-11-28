@@ -8,6 +8,7 @@ import type { PluginRelease } from "../../../marketplace/public/v1/marketplace_p
 import type { WorkModelSelection } from "../../public/v1/model_pb.js";
 import type { HarnessChoice } from "../../public/v1/harness_pb.js";
 import type { FileHome, WorkCaller, WorkKey } from "../../public/v1/work_caller_pb.js";
+import type { PersonalVariableSelection } from "../../public/v1/personal_variable_pb.js";
 import type { WorkProgress } from "../../public/v1/progress_pb.js";
 import type { AgentAppearance, AgentIcon } from "../../public/v1/appearance_pb.js";
 import type { GetWorkStartOptionsResponseSchema, WorkStartRepositoriesSchema } from "../../public/v1/work_start_options_pb.js";
@@ -592,6 +593,15 @@ export declare type CreateWorkRequest = Message<"agent.private.v1.CreateWorkRequ
    * @generated from field: agent.public.v1.FileHome file_home = 14;
    */
   fileHome?: FileHome;
+
+  /**
+   * The Personal Variables a new Work enables; absent enables every Personal
+   * Variable of the person the definition represents. Reuse of an existing
+   * Work neither compares nor replaces its selection.
+   *
+   * @generated from field: agent.public.v1.PersonalVariableSelection personal_variables = 15;
+   */
+  personalVariables?: PersonalVariableSelection;
 };
 
 /**

@@ -5,6 +5,7 @@ package agent.private.v1;
 import "agent/public/v1/appearance.proto";
 import "agent/public/v1/harness.proto";
 import "agent/public/v1/model.proto";
+import "agent/public/v1/personal_variable.proto";
 import "agent/public/v1/progress.proto";
 import "agent/public/v1/work_caller.proto";
 import "agent/public/v1/work_start_options.proto";
@@ -267,6 +268,10 @@ message CreateWorkRequest {
   // The optional owner of the shared File Spaces the Work reads its inputs
   // from and publishes into; absent, the Work's own File Spaces.
   agent.public.v1.FileHome file_home = 14;
+  // The Personal Variables a new Work enables; absent enables every Personal
+  // Variable of the person the definition represents. Reuse of an existing
+  // Work neither compares nor replaces its selection.
+  agent.public.v1.PersonalVariableSelection personal_variables = 15;
 }
 
 // WorkStartingContext names another Work of the same definition and Work

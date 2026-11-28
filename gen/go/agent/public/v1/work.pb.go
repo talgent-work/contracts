@@ -792,9 +792,13 @@ type WorkStartupRequest struct {
 	// Fixed Plugin identities; no Plugin configuration or credentials.
 	Plugins []string `protobuf:"bytes,5,rep,name=plugins,proto3" json:"plugins,omitempty"`
 	// Selected repositories, enriched by committed checkout preparation when available.
-	Repositories  []*WorkStartupRepository `protobuf:"bytes,6,rep,name=repositories,proto3" json:"repositories,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	Repositories []*WorkStartupRepository `protobuf:"bytes,6,rep,name=repositories,proto3" json:"repositories,omitempty"`
+	// Names of the platform-set environment variables that the current run's
+	// Personal Variables replaced at its launch, never their values; returned
+	// only to the person the Work's Agent represents.
+	ReplacedVariables []string `protobuf:"bytes,7,rep,name=replaced_variables,json=replacedVariables,proto3" json:"replaced_variables,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
 }
 
 func (x *WorkStartupRequest) Reset() {
@@ -865,6 +869,13 @@ func (x *WorkStartupRequest) GetPlugins() []string {
 func (x *WorkStartupRequest) GetRepositories() []*WorkStartupRepository {
 	if x != nil {
 		return x.Repositories
+	}
+	return nil
+}
+
+func (x *WorkStartupRequest) GetReplacedVariables() []string {
+	if x != nil {
+		return x.ReplacedVariables
 	}
 	return nil
 }
@@ -2678,7 +2689,7 @@ const file_agent_public_v1_work_proto_rawDesc = "" +
 	"\awork_id\x18\x01 \x01(\tR\x06workId\x12$\n" +
 	"\x0ereader_user_id\x18\x02 \x01(\tR\freaderUserId\"H\n" +
 	"\x17RevokeWorkShareResponse\x12-\n" +
-	"\x04work\x18\x01 \x01(\v2\x19.agent.public.v1.WorkInfoR\x04work\"\x9d\x02\n" +
+	"\x04work\x18\x01 \x01(\v2\x19.agent.public.v1.WorkInfoR\x04work\"\xcc\x02\n" +
 	"\x12WorkStartupRequest\x12\x1d\n" +
 	"\n" +
 	"request_id\x18\x01 \x01(\tR\trequestId\x12'\n" +
@@ -2686,7 +2697,8 @@ const file_agent_public_v1_work_proto_rawDesc = "" +
 	"\x16initial_thinking_level\x18\x03 \x01(\tR\x14initialThinkingLevel\x12#\n" +
 	"\rstartup_agent\x18\x04 \x01(\tR\fstartupAgent\x12\x18\n" +
 	"\aplugins\x18\x05 \x03(\tR\aplugins\x12J\n" +
-	"\frepositories\x18\x06 \x03(\v2&.agent.public.v1.WorkStartupRepositoryR\frepositories\"\xc3\x01\n" +
+	"\frepositories\x18\x06 \x03(\v2&.agent.public.v1.WorkStartupRepositoryR\frepositories\x12-\n" +
+	"\x12replaced_variables\x18\a \x03(\tR\x11replacedVariables\"\xc3\x01\n" +
 	"\x15WorkStartupRepository\x12#\n" +
 	"\rrepository_id\x18\x01 \x01(\tR\frepositoryId\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1f\n" +

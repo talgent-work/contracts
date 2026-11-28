@@ -486,6 +486,15 @@ export declare type WorkStartupRequest = Message<"agent.public.v1.WorkStartupReq
    * @generated from field: repeated agent.public.v1.WorkStartupRepository repositories = 6;
    */
   repositories: WorkStartupRepository[];
+
+  /**
+   * Names of the platform-set environment variables that the current run's
+   * Personal Variables replaced at its launch, never their values; returned
+   * only to the person the Work's Agent represents.
+   *
+   * @generated from field: repeated string replaced_variables = 7;
+   */
+  replacedVariables: string[];
 };
 
 /**
